@@ -1,7 +1,7 @@
 """
-Universal Recon Tool (v2 Beta)
+Universal Recon Tool (v2 Beta with Log Manager)
 Recursively scans any Bar directory site to collect key scraping metadata.
-Outputs JSON recon report + screenshots.
+Outputs JSON recon report + screenshots + logs.
 """
 
 import os
@@ -17,23 +17,35 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from bs4 import BeautifulSoup
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+OUTPUT_DIR = os.path.join(BASE_DIR, "..", "output")
+SCREENSHOTS_DIR = os.path.join(BASE_DIR, "..", "screenshots")
+LOGS_DIR = os.path.join(BASE_DIR, "..", "logs")
 CHROMEDRIVER_PATH = r"C:/Users/samq/Downloads/chromedriver-win64 (2)/chromedriver-win64/chromedriver.exe"
-OUTPUT_DIR = "output"
 TIMEOUT = 15
 MAX_IFRAME_DEPTH = 5
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-logging.basicConfig(level=logging.INFO)
+for directory in [OUTPUT_DIR, SCREENSHOTS_DIR, LOGS_DIR]:
+    os.makedirs(directory, exist_ok=True)
+
+log_filename = os.path.join(LOGS_DIR, f"recon_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log")
+logging.basicConfig(
+    filename=log_filename,
+    filemode="w",
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO
+)
 
 def timestamp():
     return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 def save_json(data, name):
-    with open(f"{OUTPUT_DIR}/{name}.json", "w", encoding="utf-8") as f:
+    with open(os.path.join(OUTPUT_DIR, f"{name}.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 def save_screenshot(driver, name):
-    driver.save_screenshot(f"{OUTPUT_DIR}/{name}.png")
+    driver.save_screenshot(os.path.join(SCREENSHOTS_DIR, f"{name}.png"))
 
 def recon_page(driver, depth=0, path="root"):
     if depth > MAX_IFRAME_DEPTH:
