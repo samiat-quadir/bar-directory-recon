@@ -1,0 +1,167 @@
+### 🔧 **Universal Setup Information**
+
+---
+## **🖥️ Devices & File Paths**
+
+### **ASUS Laptop**
+#### **Google API Credentials**
+- **Service Account Key Path:**  
+  `C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Files\Python\GoogleAPIs\service_account_key.json`
+- **Gmail API Credentials Path:**  
+  `C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Files\Python\GoogleAPIs\gmail_api_credentials.json`
+- **Token Pickle Path:**  
+  `C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Files\Python\GoogleAPIs\token.pickle`
+
+#### **Project Directories**
+- **Project Script Folder:**  
+  `C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py`
+- **ChromeDriver Path:**  
+  `C:\Python312\Lib\site-packages\chromedriver_autoinstaller\134\chromedriver.exe`
+- **GitHub Repository Location:**  
+  `C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon`
+
+---
+### **Work Desktop**
+#### **Google API Credentials**
+- **Service Account Key Path:**  
+  `C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Files\Python\GoogleAPIs\service_account_key.json`
+- **Gmail API Credentials Path:**  
+  `C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Files\Python\GoogleAPIs\gmail_api_credentials.json`
+- **Token Pickle Path:**  
+  `C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Files\Python\GoogleAPIs\token.pickle`
+
+#### **Project Directories**
+- **Project Script Folder:**  
+  `C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py`
+- **ChromeDriver Path:**  
+  `C:\Python312\Lib\site-packages\chromedriver_autoinstaller\134\chromedriver.exe`
+- **GitHub Repository Location:**  
+  `C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon`
+
+---
+## **🐍 Python Environment**
+
+### **ASUS Laptop**
+- **Python Version:**  `3.13.2`
+- **Installed Libraries:**
+  ```sh
+  pip install --upgrade pip setuptools wheel && pip install --upgrade \
+  selenium python-dotenv pandas requests google-api-python-client oauth2client \
+  matplotlib openpyxl beautifulsoup4 webdriver-manager
+  ```
+
+### **Work Desktop**
+- **Python Version:**  `3.12.6`
+- **Installed Libraries:** *(same as above)*
+
+---
+## **📌 .env File Configuration**
+
+```
+# Google API Credentials
+SERVICE_ACCOUNT_KEY_PATH=C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Files\Python\GoogleAPIs\service_account_key.json
+GMAIL_CREDENTIALS_PATH=C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Files\Python\GoogleAPIs\gmail_api_credentials.json
+GMAIL_TOKEN_PATH=C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Files\Python\GoogleAPIs\token.pickle
+
+# ChromeDriver Path
+CHROMEDRIVER_PATH=C:\Python312\Lib\site-packages\chromedriver_autoinstaller\134\chromedriver.exe
+
+# Local Git Repository
+LOCAL_GIT_REPO=C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon
+```
+
+---
+## **🔑 GitHub Configuration**
+
+### **Set Global Git Identity**
+```sh
+git config --global user.name "Samiat Quadir"
+git config --global user.email "sam.quadir@gmail.com"
+```
+
+### **GitHub SSH Key Setup**
+#### **Check if SSH Key Exists**
+```sh
+dir %USERPROFILE%\.ssh
+```
+#### **If No Key Exists, Generate One:**
+```sh
+ssh-keygen -t rsa -b 4096 -C "sam.quadir@gmail.com"
+```
+#### **Start SSH Agent & Add Key:**
+```sh
+Start-Service ssh-agent
+ssh-add %USERPROFILE%\.ssh\id_rsa
+```
+#### **Verify GitHub Connection:**
+```sh
+ssh -T git@github.com
+```
+
+---
+## **📂 Google API Configuration**
+
+### **Google Sheets & Drive API**
+- **Service Account Email:**  
+  `sheetsdriveserviceaccount@astute-elixir-443801-v8.iam.gserviceaccount.com`
+- **Project ID:**  
+  `astute-elixir-443801-v8`
+- **Google Drive Folder ID:**  
+  `1dM1M4F1uk_riMktDCwM_ri4_x2kJhdIv`
+- **Ensure API Permissions:**
+  ✅ Enable **Google Sheets API**  
+  ✅ Enable **Google Drive API**  
+  ✅ Grant **Editor** access to service account
+
+---
+## **🛠️ Automation Scripts**
+
+### **Google Drive Upload Script**
+```python
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+import os
+
+gauth = GoogleAuth()
+gauth.LoadCredentialsFile(os.getenv("SERVICE_ACCOUNT_KEY_PATH"))
+drive = GoogleDrive(gauth)
+
+folder_id = os.getenv("DRIVE_FOLDER_ID")
+
+for file_name in os.listdir("."):
+    if file_name.endswith(".csv"):
+        file = drive.CreateFile({"parents": [{"id": folder_id}], "title": file_name})
+        file.SetContentFile(file_name)
+        file.Upload()
+        print(f"Uploaded: {file_name}")
+```
+
+### **Automated Email Notifications**
+```python
+import smtplib
+from email.mime.text import MIMEText
+import os
+
+EMAIL = os.getenv("GMAIL_CREDENTIALS_PATH")
+PASSWORD = os.getenv("GMAIL_TOKEN_PATH")
+
+def send_email(subject, body):
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = EMAIL
+    msg['To'] = "samq@damg.com"
+
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        server.login(EMAIL, PASSWORD)
+        server.sendmail(EMAIL, "samq@damg.com", msg.as_string())
+```
+
+---
+## ✅ **Next Steps**
+1. **Ensure this file is saved** in a **secure, accessible location.**
+2. **Run scheduled automation scripts** to verify everything works.
+3. **Notify me if any changes need to be made.**
+
+🚀 **You’re now fully set up on both devices!**
+
