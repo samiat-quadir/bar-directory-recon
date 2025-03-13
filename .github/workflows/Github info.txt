@@ -1,0 +1,105 @@
+github_repository:
+  name: "bar-directory-recon"
+  visibility: "private"
+  default_branch: "main"
+  url: "https://github.com/samiat-quadir/bar-directory-recon"
+
+branches:
+  - main
+  - dev
+  - feature/iframe-handling
+
+branch_protection_rules:
+  - branch: main
+    require_pull_request: true
+    github_team_or_enterprise_required: true
+
+issue_templates:
+  bug_report:
+    name: "Bug report"
+    about: "Report an issue with the scraper"
+    labels: ["bug"]
+    fields:
+      - description: "A clear description of the bug"
+      - reproduction_steps: "Steps to reproduce the issue"
+      - error_logs: "Relevant logs or error messages"
+      - screenshots: "Any relevant screenshots"
+  feature_request:
+    name: "Feature request"
+    about: "Suggest an enhancement"
+    labels: ["enhancement"]
+    fields:
+      - description: "A clear description of the feature"
+      - motivation: "Why is this feature needed?"
+      - implementation_ideas: "Ideas on how to implement this"
+
+actions_workflows:
+  basic_test:
+    name: "Basic Test"
+    on:
+      push:
+        branches: ["dev", "feature/*"]
+      pull_request:
+        branches: ["main", "dev"]
+    jobs:
+      test:
+        runs_on: "windows-latest"
+        steps:
+          - name: "Check out code"
+            uses: "actions/checkout@v4"
+          - name: "Set up Python"
+            uses: "actions/setup-python@v4"
+            with:
+              python_version: "3.12"
+          - name: "Install dependencies"
+            run: |
+              python -m pip install --upgrade pip
+              pip install selenium==4.11.0
+          - name: "Syntax Check"
+            run: python -m py_compile utah_bar_scraper.py
+
+gitignore:
+  - logs/
+  - screenshots/
+  - data/
+  - config.json
+  - "*.env"
+  - "chromedriver*.exe"
+  - __pycache__/
+  - "*.py[cod]"
+  - "*$py.class"
+  - "*.so"
+  - .Python
+  - env/
+  - build/
+  - develop-eggs/
+  - dist/
+  - downloads/
+  - eggs/
+  - .eggs/
+  - lib/
+  - lib64/
+  - parts/
+  - sdist/
+  - var/
+  - "*.egg-info/"
+  - .installed.cfg
+  - "*.egg"
+
+local_environment:
+  base_directory: "C:/Users/samq/bar-directory-recon"
+  structure:
+    src: "/src"
+    output: "/output"
+    screenshots: "/screenshots"
+    logs: "/logs"
+    config: "/config"
+    docs: "/docs"
+  main_script: "/src/universal_recon.py"
+  readme: "/README.md"
+  gitignore: "/.gitignore"
+  requirements: "/requirements.txt"
+
+user_identity:
+  username: "samiat-quadir"
+  email: "sam.quadir@gmail.com"
