@@ -1,3 +1,10 @@
 selenium
+webdriver-manager
+python-dotenv
 beautifulsoup4
-lxml
+requests
+pytesseract
+pillow
+tqdm
+rich
+psutil
