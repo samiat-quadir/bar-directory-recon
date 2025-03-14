@@ -1,157 +1,77 @@
-"""
-Universal Recon Tool (v3 - Final Resolved)
-Includes: Pagination, Profile Detection, Iframe Recursion, AJAX Monitoring, Logging, JSON Output
-Local paths matched to your environment.
-"""
-
 import os
 import time
-import json
 import logging
-from datetime import datetime
+import json
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, WebDriverException
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
-# Load .env file
-load_dotenv(dotenv_path=r"C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env")
-
-# Constants
+# Load environment variables
+load_dotenv()
 CHROMEDRIVER_PATH = os.getenv("CHROMEDRIVER_PATH")
-TIMEOUT = 15
-MAX_IFRAME_DEPTH = 5
-AJAX_RETRIES = 3
-
-# Directories
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-OUTPUT_DIR = os.path.join(BASE_DIR, "..", "output")
-SCREENSHOTS_DIR = os.path.join(BASE_DIR, "..", "screenshots")
-LOGS_DIR = os.path.join(BASE_DIR, "..", "logs")
+OUTPUT_DIR = "output/"
+LOGS_DIR = "logs/"
+GOOGLE_DRIVE_UPLOAD = os.getenv("GOOGLE_DRIVE_UPLOAD", "false").lower() == "true"
 
 # Ensure directories exist
-for directory in [OUTPUT_DIR, SCREENSHOTS_DIR, LOGS_DIR]:
+for directory in [OUTPUT_DIR, LOGS_DIR]:
     os.makedirs(directory, exist_ok=True)
 
-# Logging configuration
-log_filename = os.path.join(LOGS_DIR, f"recon_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log")
+# Configure logging
 logging.basicConfig(
-    filename=log_filename,
-    filemode="w",
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    level=logging.INFO
+    filename=os.path.join(LOGS_DIR, "recon.log"),
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
-# Utility functions
-def timestamp():
-    return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+def init_driver():
+    """Initialize the WebDriver with proper configurations."""
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    
+    service = Service(CHROMEDRIVER_PATH)
+    driver = webdriver.Chrome(service=service, options=options)
+    return driver
 
 def save_json(data, name):
     """Save extracted data as JSON."""
     with open(os.path.join(OUTPUT_DIR, f"{name}.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
-def save_screenshot(driver, name):
-    """Capture and save screenshots."""
-    driver.save_screenshot(os.path.join(SCREENSHOTS_DIR, f"{name}.png"))
+def extract_lawyers(driver, url):
+    """Extract lawyer profiles from a given directory."""
+    driver.get(url)
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+    
+    profiles = []
+    profile_elements = driver.find_elements(By.CLASS_NAME, "profile-card")
+    for profile in profile_elements:
+        name = profile.find_element(By.CLASS_NAME, "name").text.strip()
+        email = profile.find_element(By.XPATH, ".//a[contains(@href, 'mailto')]").get_attribute("href").replace("mailto:", "")
+        profiles.append({"name": name, "email": email})
+    
+    return profiles
 
-def wait_for_ajax(driver):
-    """Wait for AJAX content to load with retries."""
-    for attempt in range(AJAX_RETRIES):
-        time.sleep(2 ** attempt)
-        if driver.execute_script("return document.readyState") == "complete":
-            return True
-    logging.warning("AJAX content may not have fully loaded after retries.")
-    return False
-
-def recon_page(driver, depth=0, path="root"):
-    """Recursive function to analyze webpage content."""
-    if depth > MAX_IFRAME_DEPTH:
-        return []
-
-    logging.info(f"Recon at depth {depth}, path: {path}")
-    frame_data = {"path": path, "forms": [], "buttons": [], "pagination": [], "profiles": []}
-
-    wait_for_ajax(driver)
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-
-    # Extract forms
-    for form in driver.find_elements(By.TAG_NAME, "form"):
-        inputs = []
-        for field in form.find_elements(By.XPATH, ".//input | .//textarea | .//select"):
-            inputs.append({
-                "name": field.get_attribute("name"),
-                "type": field.get_attribute("type"),
-                "placeholder": field.get_attribute("placeholder")
-            })
-        frame_data["forms"].append({"form_id": form.get_attribute("id"), "inputs": inputs})
-
-    # Extract buttons
-    for button in driver.find_elements(By.XPATH, "//button | //input[@type='submit']"):
-        frame_data["buttons"].append({
-            "text": button.text,
-            "classes": button.get_attribute("class"),
-            "id": button.get_attribute("id")
-        })
-
-    # Extract pagination elements
-    for btn in driver.find_elements(By.XPATH, "//a[contains(text(), 'Next')] | //button[contains(text(), 'Next')] | //a[contains(text(), 'Load More')]"):
-        frame_data["pagination"].append({
-            "text": btn.text,
-            "outerHTML": btn.get_attribute("outerHTML")
-        })
-
-    # Extract profile containers
-    for div in soup.find_all("div", class_=lambda x: x and "profile" in x.lower()):
-        frame_data["profiles"].append({
-            "class": div.get("class"),
-            "sample_text": div.get_text(strip=True)[:100]
-        })
-
-    save_screenshot(driver, f"{path}_depth_{depth}_{timestamp()}")
-
-    # Handle iframes recursively
-    iframes = driver.find_elements(By.TAG_NAME, "iframe")
-    for idx, iframe in enumerate(iframes):
-        iframe_id = iframe.get_attribute("id") or f"iframe-{idx}"
-        try:
-            driver.switch_to.frame(iframe)
-            frame_data.setdefault("iframes", []).append(
-                recon_page(driver, depth + 1, f"{path}/{iframe_id}")
-            )
-            driver.switch_to.parent_frame()
-        except WebDriverException as e:
-            logging.warning(f"Failed to switch to iframe {iframe_id}: {e}")
-
-    return frame_data
-
-def universal_recon(target_url):
-    """Main function to initiate the recon process."""
-    report = {"url": target_url, "recon": []}
-    options = webdriver.ChromeOptions()
-    options.add_argument("--start-maximized")
-    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=options)
-
+def main():
+    url = input("Enter the URL to analyze: ")
+    driver = init_driver()
+    
     try:
-        driver.get(target_url)
-        WebDriverWait(driver, TIMEOUT).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        save_screenshot(driver, f"landing_{timestamp()}")
-
-        report["recon"] = recon_page(driver)
-        save_json(report, f"recon_{timestamp()}")
-        logging.info("Recon completed successfully.")
-
+        logging.info(f"Starting recon on {url}")
+        extracted_data = extract_lawyers(driver, url)
+        save_json(extracted_data, "recon_results")
+        logging.info("Data extraction completed successfully.")
     except Exception as e:
-        logging.error(f"Error during recon: {e}")
-        save_screenshot(driver, f"error_{timestamp()}")
+        logging.error(f"Error during extraction: {e}")
     finally:
         driver.quit()
-
+    
 if __name__ == "__main__":
-    target = input("Enter the URL to analyze: ")
-    universal_recon(target)
+    main()
