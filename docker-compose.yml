@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  bardirectoryrecon:
+    image: bardirectoryrecon
+    build:
+      context: .
+      dockerfile: ./Dockerfile
