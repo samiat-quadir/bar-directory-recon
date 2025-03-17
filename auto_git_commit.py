@@ -1,23 +1,25 @@
 import os
 import subprocess
+from dotenv import load_dotenv
 
-GIT_REPO_PATH = r"C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon"
+# Load environment variables
+env_path = r"C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
+load_dotenv(env_path)
 
-def auto_commit_push():
-    """Automatically commit and push updates to GitHub if there are changes."""
-    os.chdir(GIT_REPO_PATH)
-    
-    # Check if there are changes before committing
-    status_output = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
-    
-    if not status_output.stdout.strip():
-        print("✅ No changes detected. Repository is up to date.")
-        return
-    
-    subprocess.run(["git", "add", "."])
-    subprocess.run(["git", "commit", "-m", "Auto-commit: Scheduled update"])
-    subprocess.run(["git", "push", "origin", "main"])
-    print("✅ Repository updated successfully!")
+# Retrieve GitHub token from environment variables
+GITHUB_ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
+GITHUB_REPO = "https://github.com/samiat-quadir/bar-directory-recon.git"
+GITHUB_AUTH_REPO = f"https://{GITHUB_ACCESS_TOKEN}@github.com/samiat-quadir/bar-directory-recon.git"
+
+def git_commit_and_push():
+    """Auto-commits and pushes changes to GitHub."""
+    try:
+        subprocess.run(["git", "add", "."], check=True)
+        subprocess.run(["git", "commit", "-m", "Auto-commit: Scheduled update"], check=True)
+        subprocess.run(["git", "push", GITHUB_AUTH_REPO, "main"], check=True)
+        print("✅ Repository updated successfully!")
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Error: {e}")
 
 if __name__ == "__main__":
-    auto_commit_push()
+    git_commit_and_push()
