@@ -1,68 +1,34 @@
 import os
 import smtplib
-import time
-import logging
+import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
+from dotenv import load_dotenv
 
 # Load environment variables
-GMAIL_CREDENTIALS_PATH = os.getenv("GMAIL_CREDENTIALS_PATH")
-GMAIL_TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")
-EMAIL_RECIPIENTS = os.getenv("EMAIL_RECIPIENTS").split(",")
+env_path = r"C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
+load_dotenv(env_path)
 
-# Configure logging
-LOG_FILE = "notifier_log.txt"
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(message)s")
+GMAIL_USER = os.getenv("GMAIL_CREDENTIALS_PATH")
+GMAIL_PASS = os.getenv("GMAIL_TOKEN_PATH")
+TO_EMAILS = ["samq@damg.com", "jasmin@damg.com", "sam.quadir@gmail.com"]  # Add recipients
 
-def authenticate_gmail():
-    """Authenticate Gmail API and return credentials."""
-    creds = None
-    if os.path.exists(GMAIL_TOKEN_PATH):
-        creds = Credentials.from_authorized_user_file(GMAIL_TOKEN_PATH)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            raise Exception("🔴 Authentication Failed! Please reauthorize Gmail API.")
-    return creds
+def send_email_notification(subject, body):
+    """Send an email notification."""
+    msg = MIMEMultipart()
+    msg["From"] = GMAIL_USER
+    msg["To"] = ", ".join(TO_EMAILS)
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
 
-def send_email_notification(commit_message):
-    """Send an email notification with the latest commit details."""
+    # Send email
     try:
-        creds = authenticate_gmail()
-        service = build("gmail", "v1", credentials=creds)
-
-        # Email content
-        sender_email = "your_email@gmail.com"  # Update this to your email
-        subject = "🚀 GitHub Auto-Commit Notification"
-        body = f"""
-        <h2>✅ Auto-Commit Successful!</h2>
-        <p><strong>Commit Message:</strong> {commit_message}</p>
-        <p><strong>Time:</strong> {time.strftime('%Y-%m-%d %H:%M:%S')}</p>
-        <p>Check your GitHub repository for changes.</p>
-        """
-
-        for recipient in EMAIL_RECIPIENTS:
-            message = MIMEMultipart()
-            message["From"] = sender_email
-            message["To"] = recipient
-            message["Subject"] = subject
-            message.attach(MIMEText(body, "html"))
-
-            # Send email
-            send_message = {"raw": message.as_string().encode("utf-8")}
-            service.users().messages().send(userId="me", body=send_message).execute()
-
-            logging.info(f"📧 Notification sent to {recipient}")
-
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as server:
+            server.login(GMAIL_USER, GMAIL_PASS)
+            server.sendmail(GMAIL_USER, TO_EMAILS, msg.as_string())
+        print("✅ Email notification sent successfully.")
     except Exception as e:
-        logging.error(f"❌ Email notification failed: {e}")
+        print(f"❌ Email notification failed: {e}")
 
-# Watch for new commits every 15 minutes
-while True:
-    latest_commit = os.popen("git log -1 --pretty=%B").read().strip()
-    send_email_notification(latest_commit)
-    time.sleep(900)  # 15-minute interval
+if __name__ == "__main__":
+    send_email_notification("Test Email", "Git commit automation notification test.")
