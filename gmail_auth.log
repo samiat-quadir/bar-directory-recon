@@ -1,2 +1,4 @@
 2025-03-18 16:46:41,059 - INFO - \u2705 Token refreshed successfully.
 2025-03-18 16:46:50,231 - INFO - \U0001f5d1\ufe0f Token revoked and deleted successfully.
+2025-03-18 17:12:20,140 - INFO - "GET /?state=4pqvH5VMb1rG8a5hyCpdVgo3WLSZ8L&code=4/0AQSTgQG-qpkBZbCEhHcitZuyGQaLiMVldBoEieJbWaX49yIOr27u1XKdnAOByo5jWrF53w&scope=https://www.googleapis.com/auth/gmail.send HTTP/1.1" 200 65
+2025-03-18 17:12:20,331 - INFO - \u2705 New token saved successfully.
