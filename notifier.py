@@ -1,10 +1,7 @@
 import os
 import pickle
-import base64
 import logging
-from email.mime.text import MIMEText
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from dotenv import load_dotenv
@@ -14,55 +11,50 @@ env_path = r"C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local 
 load_dotenv(env_path)
 
 # Environment Variables
-TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")
-TO_EMAILS = ["samq@damg.com", "jasmin@damg.com", "sam.quadir@gmail.com"]  # Recipients
+GMAIL_TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")
+EMAIL_SENDER = os.getenv("SENDER_EMAIL")
+EMAIL_RECIPIENTS = ["samq@damg.com", "jasmin@damg.com", "sam.quadir@gmail.com"]
 
 # Configure logging
-LOG_FILE = "notifier.log"
+LOG_FILE = "gmail_notifier.log"
 logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def load_credentials():
-    """Load Gmail API credentials, refresh token if expired."""
+    """Loads Gmail API credentials from token file."""
+    creds = None
     try:
-        creds = None
-        if os.path.exists(TOKEN_PATH):
-            with open(TOKEN_PATH, "rb") as token_file:
+        if os.path.exists(GMAIL_TOKEN_PATH):
+            with open(GMAIL_TOKEN_PATH, "rb") as token_file:
                 creds = pickle.load(token_file)
-
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
-                with open(TOKEN_PATH, "wb") as token_file:
+                with open(GMAIL_TOKEN_PATH, "wb") as token_file:
                     pickle.dump(creds, token_file)
-            else:
-                raise Exception("❌ No valid credentials available. Run the authentication script.")
         return creds
     except Exception as e:
-        logging.error(f"❌ Error loading credentials: {e}")
-        raise
+        logging.error(f"❌ Failed to load Gmail credentials: {e}")
+        return None
 
-def send_email(subject, body, html=False):
-    """Send an email using Gmail API."""
+def send_email(subject, body):
+    """Sends an email using the Gmail API."""
+    creds = load_credentials()
+    if not creds:
+        logging.error("❌ Unable to authenticate Gmail API.")
+        return
+
     try:
-        creds = load_credentials()
         service = build("gmail", "v1", credentials=creds)
-
-        message = MIMEText(body, "html" if html else "plain")
-        message["to"] = ", ".join(TO_EMAILS)
-        message["subject"] = subject
-        raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-
-        send_message = {"raw": raw_message}
-        service.users().messages().send(userId="me", body=send_message).execute()
-
-        logging.info("✅ Email notification sent successfully.")
-        print("✅ Email notification sent successfully.")
-    except HttpError as error:
-        logging.error(f"❌ Gmail API error: {error}")
-        print(f"❌ Gmail API error: {error}")
+        message = {
+            "raw": base64.urlsafe_b64encode(
+                f"From: {EMAIL_SENDER}\nTo: {', '.join(EMAIL_RECIPIENTS)}\nSubject: {subject}\n\n{body}".encode("utf-8")
+            ).decode("utf-8")
+        }
+        service.users().messages().send(userId="me", body=message).execute()
+        logging.info(f"✅ Email sent: {subject}")
     except Exception as e:
         logging.error(f"❌ Email notification failed: {e}")
-        print(f"❌ Email notification failed: {e}")
 
 if __name__ == "__main__":
-    send_email("Test Email", "<b>✅ Gmail API notification is working successfully.</b>", html=True)
+    # Test email for errors
+    send_email("Test Email", "✅ Gmail API notification is working successfully.")
