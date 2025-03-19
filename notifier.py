@@ -2,6 +2,7 @@ import os
 import pickle
 import logging
 from googleapiclient.discovery import build
+import base64
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from dotenv import load_dotenv
