@@ -1,2 +1,4 @@
 2025-03-18 16:59:47,696 - INFO - \u2705 Google Sheets authentication successful.
 2025-03-18 16:59:48,406 - INFO - \u2705 Data successfully added: ['Test Lawyer', 'test@example.com', '123 Test St', 'Test City', '12345']
+2025-03-19 15:54:27,876 - INFO - \u2705 Google Sheets authentication successful.
+2025-03-19 15:54:28,768 - INFO - \u2705 Data successfully added: ['Test Lawyer', 'test@example.com', '123 Test St', 'Test City', '12345']
