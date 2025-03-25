@@ -1,7 +1,7 @@
 """
 Final Merged Utah State Bar Directory Scraper
 Includes iframe handling, dynamic retries, concurrency, and profile detail scraping.
-Improved with robust selectors, exception handling, anti-block headers.
+Improved with robust selectors, exception handling, CAPTCHA detection, anti-block headers.
 """
 
 import os
@@ -39,10 +39,12 @@ class UtahBarScraper:
         self.logger = self._setup_logger()
 
     def _load_env(self):
-        load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+        env_file = ".env.work" if "samq" in os.getcwd().lower() else ".env"
+        env_path = os.path.join("C:/Users/samq/OneDrive - Digital Age Marketing Group/Desktop/Local Py", env_file)
+        load_dotenv(env_path)
         self.chromedriver_path = os.getenv("CHROMEDRIVER_PATH")
-        if not os.path.exists(self.chromedriver_path):
-            raise ValueError("Invalid CHROMEDRIVER_PATH")
+        if not self.chromedriver_path or not os.path.exists(self.chromedriver_path):
+            raise ValueError(f"Invalid CHROMEDRIVER_PATH: {self.chromedriver_path}")
 
     def _setup_dirs(self):
         self.base_dir = os.path.dirname(__file__)
