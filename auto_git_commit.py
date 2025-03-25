@@ -2,39 +2,67 @@ import os
 import subprocess
 import logging
 from datetime import datetime
+from env_loader import load_environment  # Smart loader for ASUS vs Work .env
 
-# === Configuration ===
-GIT_EXE = r"C:\Program Files\Git\bin\git.exe"
-LOCAL_GIT_REPO = os.getenv("LOCAL_GIT_REPO", r"C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon")
-LOG_FILE = os.path.join(LOCAL_GIT_REPO, "git_commit.log")
+# Load environment based on current device
+load_environment()
 
-# === Logging Setup ===
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO,
-                    format="%(asctime)s - %(levelname)s - %(message)s")
+# Set up logging (UTF-8 encoded)
+log_file = "git_commit.log"
+logging.basicConfig(
+    filename=log_file,
+    level=logging.INFO,
+    format="%(asctime)s — %(levelname)s — %(message)s",
+    encoding="utf-8"
+)
 
-def git_commit_and_push():
-    os.chdir(LOCAL_GIT_REPO)
+# Environment Variables
+LOCAL_GIT_REPO = os.getenv("LOCAL_GIT_REPO")
+COMMIT_PREFIX = os.getenv("COMMIT_PREFIX", "Auto-commit:")
 
+def run_git_command(command_list, allow_fail=False):
+    """Helper to run subprocess commands and return output."""
     try:
-        status_output = subprocess.run([GIT_EXE, "status", "--porcelain"],
-                                       capture_output=True, text=True, check=True)
-
-        if not status_output.stdout.strip():
-            logging.info("No changes detected. Forcing an empty commit.")
-            subprocess.run([GIT_EXE, "commit", "--allow-empty", "-m", f"Auto-commit: No changes detected"],
-                           check=True)
-        else:
-            subprocess.run([GIT_EXE, "add", "."], check=True)
-            commit_msg = f"Auto-commit: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-            subprocess.run([GIT_EXE, "commit", "-m", commit_msg], check=True)
-
-        subprocess.run([GIT_EXE, "push", "origin", "main"], check=True)
-        logging.info("Git push successful.")
-
+        result = subprocess.run(
+            command_list,
+            cwd=LOCAL_GIT_REPO,
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        return result.stdout.strip()
     except subprocess.CalledProcessError as e:
-        logging.error(f"Git command failed: {e}")
-    except Exception as e:
-        logging.error(f"Unexpected error during git commit: {e}")
+        logging.error(f"❌ Git command failed: {' '.join(command_list)}\n{e.stderr}")
+        if not allow_fail:
+            raise
+        return None
+
+def main():
+    os.chdir(LOCAL_GIT_REPO)
+    
+    # Check if there are any staged or unstaged changes
+    changes = run_git_command(["git", "status", "--porcelain"], allow_fail=True)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    if not changes:
+        logging.info("⚠️ No changes detected. Forcing an empty commit.")
+        commit_msg = f"{COMMIT_PREFIX} No changes detected"
+        run_git_command(["git", "commit", "--allow-empty", "-m", commit_msg])
+    else:
+        run_git_command(["git", "add", "-A"])
+        commit_msg = f"{COMMIT_PREFIX} {timestamp}"
+        run_git_command(["git", "commit", "-m", commit_msg])
+        logging.info(f"✅ Commit created: {commit_msg}")
+
+    # Push the changes
+    run_git_command(["git", "push", "origin", "main"])
+    logging.info("✅ Git push successful.")
 
 if __name__ == "__main__":
-    git_commit_and_push()
+    try:
+        main()
+    except Exception as e:
+        logging.error(f"🔥 Auto Git Commit failed: {e}")
+        print(f"❌ Error: {e}")
+    else:
+        print("✅ Auto Git Commit completed successfully.")

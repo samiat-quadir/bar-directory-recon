@@ -1,79 +1,68 @@
 import os
 import pickle
+import base64
 import logging
 from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from base64 import urlsafe_b64encode
-from dotenv import load_dotenv
+from env_loader import load_environment
 
-# Load environment variables
-env_path = r"C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
-load_dotenv(env_path)
+# Load environment from correct file
+load_environment()
 
-TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")
-TO_EMAILS = ["samq@damg.com", "sam.quadir@gmail.com"]
-SENDER_EMAIL = "sam.quadir@gmail.com"  # Must match the token sender
-LOG_FILE = "email_notifier.log"
+# Setup logging
+LOG_PATH = os.getenv("LOG_EMAIL_NOTIFIER", "email_notifier.log")
+logging.basicConfig(filename=LOG_PATH, level=logging.INFO, encoding='utf-8', format="%(asctime)s - %(levelname)s - %(message)s")
 
-# Logging Setup
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+# Environment variables
+GMAIL_TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")
+GMAIL_CREDENTIALS_PATH = os.getenv("GMAIL_CREDENTIALS_PATH")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL")
+TO_EMAILS = os.getenv("TO_EMAILS", "").split(",")
 
 def load_credentials():
+    """Load and refresh Gmail API credentials."""
     try:
-        if os.path.exists(TOKEN_PATH):
-            with open(TOKEN_PATH, "rb") as token:
-                creds = pickle.load(token)
-            if creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-                with open(TOKEN_PATH, "wb") as token_file:
-                    pickle.dump(creds, token_file)
-            return creds
-        else:
-            raise FileNotFoundError("Token file not found.")
+        if not GMAIL_TOKEN_PATH or not os.path.exists(GMAIL_TOKEN_PATH):
+            raise FileNotFoundError("❌ GMAIL_TOKEN_PATH is not set or file doesn't exist.")
+
+        with open(GMAIL_TOKEN_PATH, "rb") as token_file:
+            creds = pickle.load(token_file)
+
+        if creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+            with open(GMAIL_TOKEN_PATH, "wb") as token_file:
+                pickle.dump(creds, token_file)
+
+        return creds
     except Exception as e:
-        logging.error(f"Error loading credentials: {e}")
-        return None
+        logging.error(f"❌ Failed to load Gmail credentials: {e}")
+        raise
 
-def send_email(subject, body_html):
-    creds = load_credentials()
-    if not creds:
-        logging.error("❌ No valid credentials found. Email not sent.")
-        return
-
+def send_email_notification(subject, body):
+    """Send an HTML email via Gmail API."""
     try:
+        creds = load_credentials()
         service = build("gmail", "v1", credentials=creds)
 
-        # Build MIME Message
-        message = MIMEMultipart("alternative")
-        message["To"] = ", ".join(TO_EMAILS)
-        message["From"] = SENDER_EMAIL
-        message["Subject"] = subject
+        message = MIMEText(body, "html")
+        message["to"] = ", ".join(TO_EMAILS)
+        message["from"] = SENDER_EMAIL
+        message["subject"] = subject
 
-        mime_html = MIMEText(body_html, "html")
-        message.attach(mime_html)
+        raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode("utf-8")
+        send_message = {"raw": raw_message}
 
-        raw = urlsafe_b64encode(message.as_bytes()).decode()
-        message_body = {"raw": raw}
+        service.users().messages().send(userId="me", body=send_message).execute()
 
-        service.users().messages().send(userId="me", body=message_body).execute()
-        logging.info("✅ HTML Email sent successfully.")
-        print(" HTML Email sent successfully.")
-
-    except HttpError as http_err:
-        logging.error(f"📛 Gmail API error: {http_err}")
-        print(f" Gmail API error: {http_err}")
+        logging.info("✅ Email notification sent successfully.")
+        print("✅ Email notification sent successfully.")
     except Exception as e:
-        logging.error(f"❌ Unexpected error: {e}")
-        print(f" Unexpected error: {e}")
+        logging.error(f"❌ General email error: {e}")
+        print(f"❌ General email error: {e}")
 
 if __name__ == "__main__":
-    html_content = """
-    <h2>✅ Gmail API HTML Notification</h2>
-    <p>This is a <strong>formatted</strong> HTML email sent from the Gmail API.</p>
-    <p>Auto-commit task is running as scheduled.</p>
-    """
-    send_email("🚀 Test HTML Notification from ASUS", html_content)
+    print("✅ Loaded environment from .env.asus")
+    print(f"📄 GMAIL_TOKEN_PATH = {GMAIL_TOKEN_PATH}")
+    send_email_notification("ASUS Notification Test", "<b>This is a test email from ASUS script</b>")

@@ -1,0 +1,2 @@
+2025-03-23 00:50:02,024 - ERROR - ❌ Failed to create task: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
+2025-03-23 01:08:46,449 - ERROR - ❌ MOTION_API_KEY is not set. Please check your .env file.

@@ -1,26 +1,63 @@
+import os
 import subprocess
-import logging
 from datetime import datetime
+from env_loader import load_environment  # Correct loader for per-device env
+from asus_notifier import send_html_notification  # Correctly named function
+from dotenv import load_dotenv
 
-# Log file setup (optional, can be reused across systems)
-LOG_FILE = "git_commit_notify.log"
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+# Load ASUS environment
+load_environment()
 
-def run_script(script_name):
+# Logging setup
+log_path = os.getenv("GIT_LOG_PATH", "git_commit_notify.log")
+
+def log(message):
+    timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+    with open(log_path, "a", encoding="utf-8") as log_file:
+        log_file.write(f"{timestamp} {message}\n")
+    print(message)
+
+def run_git_command(command, cwd=None):
     try:
-        result = subprocess.run(["python", script_name], capture_output=True, text=True)
-        if result.returncode == 0:
-            logging.info(f"✅ {script_name} ran successfully.")
-            logging.info(result.stdout)
-        else:
-            logging.error(f"❌ Error running {script_name}: {result.stderr}")
+        result = subprocess.run(command, cwd=cwd, shell=True, capture_output=True, text=True)
+        if result.returncode != 0:
+            log(f"❌ Error running command: {command}\n{result.stderr.strip()}")
+            return False, result.stderr.strip()
+        return True, result.stdout.strip()
     except Exception as e:
-        logging.error(f"❌ Exception occurred while running {script_name}: {e}")
+        log(f"❌ Exception during git command: {e}")
+        return False, str(e)
+
+def main():
+    repo_path = os.getenv("LOCAL_GIT_REPO")
+    if not repo_path:
+        log("❌ LOCAL_GIT_REPO not found in .env")
+        return
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    commit_message = f"Auto-commit: {timestamp}"
+
+    log("📁 Checking repository for changes...")
+    changes_detected, output = run_git_command("git status --porcelain", cwd=repo_path)
+    if not changes_detected:
+        return
+
+    if output.strip() == "":
+        log("⚠️ No changes detected. Forcing an empty commit.")
+        run_git_command("git commit --allow-empty -m \"Auto-commit: No changes detected\"", cwd=repo_path)
+    else:
+        run_git_command("git add .", cwd=repo_path)
+        run_git_command(f"git commit -m \"{commit_message}\"", cwd=repo_path)
+
+    pushed, push_output = run_git_command("git push origin main", cwd=repo_path)
+    if pushed:
+        log("✅ Git push successful.")
+        try:
+            send_html_notification("✅ Git Commit Completed", f"<b>{commit_message}</b><br>Git push was successful.")
+        except Exception as e:
+            log(f"❌ Email notification error: {e}")
+    else:
+        log("❌ Git push failed.")
 
 if __name__ == "__main__":
-    logging.info("🚀 Starting Git commit and notification process...")
-
-    run_script("auto_git_commit.py")         # Step 1: Run Git commit script
-    run_script("asus_notifier.py")           # Step 2: Send notification email via ASUS-specific notifier
-
-    logging.info("✅ Process complete.\n")
+    main()
