@@ -1,18 +1,19 @@
-# env_loader.py
 import os
-import platform
 from dotenv import load_dotenv
+import getpass
 
 def load_environment():
-    machine_name = platform.node().lower()
+    username = getpass.getuser().lower()
 
-    if "rog" in machine_name or "asus" in machine_name:
-        env_file = ".env.asus"
-    elif "damg" in machine_name or "acer" in machine_name:
+    if username == "samq":
         env_file = ".env.work"
+    elif username == "samqu":
+        env_file = ".env.asus"
     else:
-        raise EnvironmentError("⚠️ Unknown machine. Could not determine which .env file to load.")
+        raise EnvironmentError(f"⚠️ Unknown machine username '{username}'. Check env_loader.py settings.")
 
-    env_path = os.path.join(os.path.dirname(__file__), env_file)
-    load_dotenv(env_path)
+    load_dotenv(env_file)
     print(f"✅ Loaded environment from {env_file}")
+
+if __name__ == "__main__":
+    load_environment()

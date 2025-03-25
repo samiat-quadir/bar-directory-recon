@@ -12,3 +12,5 @@
 2025-03-23 00:07:42,595 - ERROR - ⚠️ Git commit process failed: [WinError 2] The system cannot find the file specified
 2025-03-23 20:57:06,536 — ERROR — 🔥 Auto Git Commit failed: chdir: path should be string, bytes or os.PathLike, not NoneType
 2025-03-23 21:04:50,658 — ERROR — 🔥 Auto Git Commit failed: chdir: path should be string, bytes or os.PathLike, not NoneType
+2025-03-25 13:58:46,280 - INFO - ✅ Successfully committed and pushed changes.
+2025-03-25 13:58:46,295 - ERROR - ❌ Combined operation failed: 'utf-8' codec can't decode byte 0x80 in position 0: invalid start byte
