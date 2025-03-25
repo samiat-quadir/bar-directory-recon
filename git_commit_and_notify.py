@@ -1,12 +1,11 @@
 import os
 import subprocess
 from datetime import datetime
-from env_loader import load_environment  # Correct loader for per-device env
-from asus_notifier import send_html_notification  # Correctly named function
+from env_loader import load_environment
+load_environment()
+from notifier import send_html_notification  # Correctly named function
 from dotenv import load_dotenv
 
-# Load ASUS environment
-load_environment()
 
 # Logging setup
 log_path = os.getenv("GIT_LOG_PATH", "git_commit_notify.log")
