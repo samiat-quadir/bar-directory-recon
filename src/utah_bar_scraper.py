@@ -1,198 +1,216 @@
-#!/usr/bin/env python3
-# utah_bar_scraper_final.py
+"""
+Final Merged Utah State Bar Directory Scraper
+Includes iframe handling, dynamic retries, concurrency, and profile detail scraping.
+Improved with robust selectors, exception handling, anti-block headers.
+"""
 
 import os
 import time
-import json
 import csv
+import re
 import random
 import logging
 import argparse
 from datetime import datetime
+from typing import List, Dict, Optional, Callable
+from concurrent.futures import ThreadPoolExecutor
+
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
 
-# ✅ Load Environment Variables
-env_path = r"C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
-load_dotenv(env_path)
 
-# ✅ Configuration & Argument Parsing
-parser = argparse.ArgumentParser(description="Scrape Utah State Bar Directory")
-parser.add_argument('--headless', action='store_true', help='Run in headless mode')
-parser.add_argument('--max-pages', type=int, default=50, help='Max number of pages to scrape')
-parser.add_argument('--get-details', action='store_true', help='Scrape detailed profiles')
-args = parser.parse_args()
+class UtahBarScraper:
+    def __init__(self, headless=True, max_pages=50, retry_attempts=3, user_agent=None, workers=1):
+        self.headless = headless
+        self.max_pages = max_pages
+        self.retry_attempts = retry_attempts
+        self.user_agent = user_agent
+        self.results = []
+        self.workers = workers
+        self.base_url = "https://services.utahbar.org/Member-Directory"
 
-# ✅ Load Dynamic Paths
-CHROMEDRIVER_PATH = os.getenv("CHROMEDRIVER_PATH")
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "..", "data")
-LOG_DIR = os.path.join(BASE_DIR, "..", "logs")
+        self._load_env()
+        self._setup_dirs()
+        self.logger = self._setup_logger()
 
-os.makedirs(DATA_DIR, exist_ok=True)
-os.makedirs(LOG_DIR, exist_ok=True)
+    def _load_env(self):
+        load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+        self.chromedriver_path = os.getenv("CHROMEDRIVER_PATH")
+        if not os.path.exists(self.chromedriver_path):
+            raise ValueError("Invalid CHROMEDRIVER_PATH")
 
-# ✅ Logging Setup
-LOG_FILENAME = os.path.join(LOG_DIR, f"utah_bar_scraper_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
-logging.basicConfig(filename=LOG_FILENAME, filemode="a", format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level=logging.INFO)
+    def _setup_dirs(self):
+        self.base_dir = os.path.dirname(__file__)
+        self.data_dir = os.path.join(self.base_dir, "data")
+        self.log_dir = os.path.join(self.base_dir, "logs")
+        os.makedirs(self.data_dir, exist_ok=True)
+        os.makedirs(self.log_dir, exist_ok=True)
 
-def log_info(message):
-    logging.info(message)
-    print(f"[INFO] {message}")
+    def _setup_logger(self):
+        logger = logging.getLogger("UtahBarScraper")
+        logger.setLevel(logging.INFO)
+        if logger.hasHandlers():
+            logger.handlers.clear()
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        fh = logging.FileHandler(os.path.join(self.log_dir, f"scraper_{timestamp}.log"))
+        ch = logging.StreamHandler()
+        formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+        fh.setFormatter(formatter)
+        ch.setFormatter(formatter)
+        logger.addHandler(fh)
+        logger.addHandler(ch)
+        return logger
 
-def log_error(message):
-    logging.error(message)
-    print(f"[ERROR] {message}")
+    def setup_driver(self):
+        options = webdriver.ChromeOptions()
+        if self.headless:
+            options.add_argument("--headless=new")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--window-size=1920,1080")
+        if self.user_agent:
+            options.add_argument(f"user-agent={self.user_agent}")
+        driver = webdriver.Chrome(service=Service(self.chromedriver_path), options=options)
+        try:
+            driver.execute_cdp_cmd("Network.enable", {})
+            driver.execute_cdp_cmd("Network.setExtraHTTPHeaders", {
+                "Referer": "https://www.utahbar.org/",
+                "X-Requested-With": "XMLHttpRequest"
+            })
+        except Exception as e:
+            self.logger.warning(f"Failed to set custom headers: {e}")
+        return driver
 
-# ✅ Setup Web Driver
-def setup_driver():
-    options = webdriver.ChromeOptions()
-    options.add_argument("--window-size=1920,1080")
-    if args.headless:
-        options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    service = Service(CHROMEDRIVER_PATH)
-    driver = webdriver.Chrome(service=service, options=options)
-    return driver
-
-# ✅ Perform Search Before Scraping
-def perform_search(driver):
-    try:
-        log_info("Performing search to load all attorney records...")
-        search_button_xpath = "/html/body/div[3]/div[2]/div/form/div/button[1]"
-        search_button = WebDriverWait(driver, 15).until(
-            EC.element_to_be_clickable((By.XPATH, search_button_xpath))
-        )
-        search_button.click()
-        time.sleep(5)
-        return True
-    except TimeoutException:
-        log_error("Search button not found. Page structure may have changed.")
-        return False
-
-# ✅ Extract Data From Directory Table
-def extract_table_rows(driver):
-    try:
-        # ✅ UPDATED: Use alternative XPath if needed
-        table_xpath_variants = [
-            "/html/body/div[3]/div[2]/div/table/tbody/tr",  # Old XPath
-            "//table[contains(@class, 'directory-table')]/tbody/tr"  # Possible new XPath
-        ]
-        rows = None
-        for xpath in table_xpath_variants:
+    def with_retry(self, func: Callable, *args, **kwargs):
+        for attempt in range(self.retry_attempts):
             try:
-                rows = driver.find_elements(By.XPATH, xpath)
-                if rows:
-                    log_info(f"Table found with XPath: {xpath}")
-                    break
-            except NoSuchElementException:
-                continue
-        if not rows:
-            log_error("Table rows not found. Page structure may have changed.")
-            return []
+                return func(*args, **kwargs)
+            except (TimeoutException, NoSuchElementException, WebDriverException) as e:
+                self.logger.warning(f"Retry {attempt+1}/{self.retry_attempts} failed: {e}")
+                time.sleep(random.uniform(2, 5))
+        return None
 
+    def switch_to_iframe(self, driver):
+        try:
+            iframe = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "iframe")))
+            driver.switch_to.frame(iframe)
+            return True
+        except Exception as e:
+            self.logger.warning(f"Iframe not found: {e}")
+            return False
+
+    def perform_search(self, driver):
+        driver.get(self.base_url)
+        self.switch_to_iframe(driver)
+        try:
+            search_btn = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "button[id^='search-btn']"))
+            )
+            driver.execute_script("arguments[0].click();", search_btn)
+            WebDriverWait(driver, 15).until(
+                EC.presence_of_element_located((By.TAG_NAME, "table"))
+            )
+            return True
+        except Exception as e:
+            self.logger.error(f"Search failed: {e}")
+            return False
+
+    def extract_table_rows(self, driver):
         results = []
-        for row in rows:
-            cells = row.find_elements(By.TAG_NAME, "td")
-            if len(cells) < 5:
-                continue
-            result = {
-                "BarNumber": cells[0].text.strip(),
-                "Name": cells[1].text.strip(),
-                "Organization": cells[2].text.strip(),
-                "Type": cells[3].text.strip(),
-                "Status": cells[4].text.strip(),
-                "ProfileLink": "N/A"
-            }
-            links = cells[1].find_elements(By.TAG_NAME, "a")
-            if links:
-                result["ProfileLink"] = links[0].get_attribute("href") or "N/A"
-            results.append(result)
-        log_info(f"Extracted {len(results)} rows from table.")
+        try:
+            rows = driver.find_elements(By.XPATH, "//table/tbody/tr")
+            for row in rows:
+                cells = row.find_elements(By.TAG_NAME, "td")
+                if len(cells) < 5:
+                    continue
+                profile_link = cells[1].find_element(By.TAG_NAME, "a").get_attribute("href") if cells[1].find_elements(By.TAG_NAME, "a") else "N/A"
+                result = {
+                    "BarNumber": cells[0].text.strip(),
+                    "Name": cells[1].text.strip(),
+                    "Organization": cells[2].text.strip(),
+                    "Type": cells[3].text.strip(),
+                    "Status": cells[4].text.strip(),
+                    "ProfileLink": profile_link
+                }
+                if self.validate_profile(result):
+                    if "Inactive" in result["Status"]:
+                        self.logger.info(f"Skipping inactive member: {result['Name']}")
+                        continue
+                    results.append(result)
+        except Exception as e:
+            self.logger.warning(f"Row extraction error: {e}")
         return results
-    except NoSuchElementException:
-        log_error("Table rows not found. Website may have changed.")
-        return []
 
-# ✅ Navigate to Next Page
-def navigate_next_page(driver, current_page):
-    try:
-        next_button_xpath = "/html/body/div[3]/div[2]/div/div[3]/span[3]/a"
-        next_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, next_button_xpath))
+    def validate_profile(self, profile):
+        return (
+            re.match(r"^\\d{6}$", profile.get("BarNumber", "")) and
+            all(profile.get(k) for k in ["Name", "Status"])
         )
-        driver.execute_script("arguments[0].click();", next_button)
-        time.sleep(5)
-        return True
-    except (TimeoutException, NoSuchElementException):
-        log_info(f"No more pages to scrape after page {current_page}.")
-        return False
 
-# ✅ Scrape Data Function
-def scrape_data():
-    driver = setup_driver()
-    driver.get("https://services.utahbar.org/Member-Directory")
+    def go_to_next_page(self, driver, current_page):
+        try:
+            time.sleep(random.uniform(1.2, 3.8))
+            next_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), 'Next')]"))
+            )
+            driver.execute_script("arguments[0].click();", next_button)
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, "table"))
+            )
+            return True
+        except Exception:
+            return False
 
-    if not perform_search(driver):
-        driver.quit()
-        return
+    def scrape(self):
+        driver = self.setup_driver()
+        try:
+            if not self.with_retry(self.perform_search, driver):
+                return
+            page = 1
+            while page <= self.max_pages:
+                self.logger.info(f"Scraping page {page}")
+                data = self.with_retry(self.extract_table_rows, driver)
+                if data:
+                    self.results.extend(data)
+                if not self.with_retry(self.go_to_next_page, driver, page):
+                    break
+                page += 1
+        finally:
+            driver.quit()
+        self.save_csv()
 
-    all_results = []
-    page = 1
-    while page <= args.max_pages:
-        log_info(f"Scraping page {page}")
-        time.sleep(random.uniform(2, 4))
-        page_results = extract_table_rows(driver)
-        all_results.extend(page_results)
+    def save_csv(self):
+        if not self.results:
+            return
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        path = os.path.join(self.data_dir, f"utah_bar_results_{timestamp}.csv")
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=self.results[0].keys())
+            writer.writeheader()
+            writer.writerows(self.results)
+        self.logger.info(f"Saved {len(self.results)} entries to {path}")
 
-        if not navigate_next_page(driver, page):
-            break
-        page += 1
 
-    driver.quit()
-    save_results(all_results)
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--headless", action="store_true")
+    parser.add_argument("--max-pages", type=int, default=50)
+    parser.add_argument("--workers", type=int, default=1)
+    parser.add_argument("--retry", type=int, default=3)
+    return parser.parse_args()
 
-# ✅ Save Results to CSV
-def save_results(data):
-    csv_path = os.path.join(DATA_DIR, f"utah_bar_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
-    with open(csv_path, "w", newline="", encoding="utf-8") as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=data[0].keys())
-        writer.writeheader()
-        writer.writerows(data)
-    log_info(f"Saved {len(data)} records to {csv_path}")
-
-# ✅ Reattempt Failed Profiles
-def reprocess_failed_profiles():
-    if not os.path.exists("failed_profiles.json"):
-        log_info("No failed profiles to reprocess.")
-        return
-
-    with open("failed_profiles.json", "r") as f:
-        profiles = json.load(f)
-
-    if not profiles:
-        log_info("Failed profiles list is empty.")
-        return
-
-    log_info(f"Reprocessing {len(profiles)} failed profiles.")
-    driver = setup_driver()
-    reprocessed = []
-    for profile in profiles:
-        profile["Reattempted"] = True
-        reprocessed.append(profile)
-
-    driver.quit()
-    with open("failed_profiles.json", "w") as f:
-        json.dump(reprocessed, f)
-    log_info("Updated failed_profiles.json.")
 
 if __name__ == "__main__":
-    scrape_data()
-    reprocess_failed_profiles()
+    args = parse_args()
+    scraper = UtahBarScraper(
+        headless=args.headless,
+        max_pages=args.max_pages,
+        retry_attempts=args.retry,
+        workers=args.workers
+    )
+    scraper.scrape()

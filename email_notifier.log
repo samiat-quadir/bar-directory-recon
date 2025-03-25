@@ -3,3 +3,75 @@
 2025-03-22 18:21:07,701 - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-03-22 18:21:08,486 - INFO - \u2705 HTML Email sent successfully.
 2025-03-22 18:21:08,487 - ERROR - \u274c Unexpected error: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+2025-03-22 18:49:18,693 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-22 18:49:19,445 - INFO - \u2705 HTML Email sent successfully.
+2025-03-22 19:00:01,613 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-22 19:00:02,361 - INFO - ✅ Email sent successfully.
+2025-03-22 19:31:29,760 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-22 19:31:30,951 - INFO - ✅ HTML Email sent: 🧪 Test HTML Email from ASUS
+2025-03-22 20:19:30,354 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.142:5000
+2025-03-22 20:19:30,355 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-22 20:22:55,560 - INFO - 🔁 Git commit trigger received...
+2025-03-22 20:22:55,679 - INFO - 
+2025-03-22 20:22:55,683 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-22 20:22:56,908 - INFO - ✅ HTML Email sent: ✅ Git Commit Triggered from ChatGPT API
+2025-03-22 20:22:56,909 - INFO - 192.168.0.142 - - [22/Mar/2025 20:22:56] "GET /trigger_git_commit HTTP/1.1" 200 -
+2025-03-22 20:22:58,594 - INFO - 192.168.0.142 - - [22/Mar/2025 20:22:58] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-03-22 23:12:59,566 - INFO - 🔁 Git commit trigger received...
+2025-03-22 23:12:59,751 - INFO - 
+2025-03-22 23:12:59,769 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-22 23:13:00,906 - INFO - ✅ HTML Email sent: ✅ Git Commit Triggered from ChatGPT API
+2025-03-22 23:13:00,907 - INFO - 192.168.0.142 - - [22/Mar/2025 23:13:00] "GET /trigger_git_commit HTTP/1.1" 200 -
+2025-03-22 23:28:05,600 - INFO - 🔁 Git commit trigger received...
+2025-03-22 23:28:05,697 - INFO - 
+2025-03-22 23:28:05,699 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-22 23:28:06,869 - INFO - ✅ HTML Email sent: ✅ Git Commit Triggered from ChatGPT API
+2025-03-22 23:28:06,870 - INFO - 192.168.0.142 - - [22/Mar/2025 23:28:06] "GET /trigger_git_commit HTTP/1.1" 200 -
+2025-03-23 00:07:42,509 - INFO - 🔁 Git commit trigger received...
+2025-03-23 00:07:42,603 - INFO - 
+2025-03-23 00:07:42,608 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-23 00:07:43,869 - INFO - ✅ HTML Email sent: ✅ Git Commit Triggered from ChatGPT API
+2025-03-23 00:07:43,871 - INFO - 127.0.0.1 - - [23/Mar/2025 00:07:43] "GET /trigger_git_commit?attendee_emails=&created=2025-03-23T03:24:38.000Z&creator=&duration_hours=0.5&duration_minutes=30&duration_seconds=1800&end=&etag="3485400557960254"&eventType=default&guestsCanModify=true&htmlLink=https://www.google.com/calendar/event?eid%3DMjF0OWtiOGNjbGJqNWtwdTIya2ljcGswYmogc2FtLnF1YWRpckBt&iCalUID=21t9kb8cclbj5kpu22kicpk0bj@google.com&id=21t9kb8cclbj5kpu22kicpk0bj&kind=calendar%23event&organizer=&reminders=&sequence=0&start=&status=confirmed&summary=test&updated=2025-03-23T03:24:38.980Z HTTP/1.1" 200 -
+2025-03-23 00:24:17,436 - INFO - 127.0.0.1 - - [23/Mar/2025 00:24:17] "[33mGET / HTTP/1.1[0m" 404 -
+2025-03-23 00:24:17,755 - INFO - 127.0.0.1 - - [23/Mar/2025 00:24:17] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-03-23 21:18:10,877 — ERROR — ❌ Git commit failed: Traceback (most recent call last):
+  File "C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\auto_git_commit.py", line 8, in <module>
+    load_environment()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\env_loader.py", line 18, in load_environment
+    print(f"\u2705 Loaded environment from {env_file}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+
+2025-03-23 21:18:10,878 — ERROR — ❌ General email error: _path_exists: path should be string, bytes, os.PathLike or integer, not NoneType
+2025-03-23 21:18:10,878 — INFO — ✅ Notification email sent.
+2025-03-23 21:21:34,454 — INFO — 🚀 Starting Git commit and email notification sequence...
+2025-03-23 21:21:34,605 — ERROR — ❌ Git commit failed: Traceback (most recent call last):
+  File "C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\auto_git_commit.py", line 8, in <module>
+    load_environment()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\env_loader.py", line 18, in load_environment
+    print(f"\u2705 Loaded environment from {env_file}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+2025-03-23 21:21:34,605 — ERROR — ❌ General email error: _path_exists: path should be string, bytes, os.PathLike or integer, not NoneType
+2025-03-23 21:21:34,606 — INFO — 📨 Notification sent.
+2025-03-23 22:07:52,307 — ERROR — ❌ Missing one or more required Gmail configuration variables.
+2025-03-23 22:10:16,115 — ERROR — ❌ Missing one or more required Gmail configuration variables.
+2025-03-23 22:14:31,635 — ERROR — ❌ Missing one or more required Gmail configuration variables.
+2025-03-23 22:18:17,081 — ERROR — ❌ Missing one or more required Gmail configuration variables.
+2025-03-23 22:21:11,668 — ERROR — ❌ Missing one or more required Gmail configuration variables.
+2025-03-23 22:30:32,516 — ERROR — ❌ General email error: ❌ GMAIL_TOKEN_PATH is not set or file doesn't exist.
+2025-03-23 22:36:19,489 - ERROR - ❌ GMAIL_TOKEN_PATH is not set or file doesn't exist.
+2025-03-23 22:36:46,307 - ERROR - ❌ GMAIL_TOKEN_PATH is not set or file doesn't exist.
+2025-03-23 22:51:45,977 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-23 22:51:47,715 - INFO - ✅ Email notification sent successfully.
