@@ -79,3 +79,5 @@ UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 
 2025-03-25 17:10:03,636 - ERROR - ❌ General email error: invalid load key, '{'.
 2025-03-25 17:48:57,137 - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-03-25 17:48:57,794 - INFO - ✅ Email notification sent successfully.
+2025-03-26 14:47:45,185 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-26 14:47:45,914 - INFO - ✅ Email notification sent successfully.
