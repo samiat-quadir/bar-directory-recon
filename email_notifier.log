@@ -75,3 +75,7 @@ UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 
 2025-03-23 22:36:46,307 - ERROR - ❌ GMAIL_TOKEN_PATH is not set or file doesn't exist.
 2025-03-23 22:51:45,977 - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-03-23 22:51:47,715 - INFO - ✅ Email notification sent successfully.
+2025-03-25 17:10:03,634 - ERROR - ❌ Failed to load Gmail credentials: invalid load key, '{'.
+2025-03-25 17:10:03,636 - ERROR - ❌ General email error: invalid load key, '{'.
+2025-03-25 17:48:57,137 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-25 17:48:57,794 - INFO - ✅ Email notification sent successfully.
