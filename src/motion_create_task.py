@@ -1,16 +1,11 @@
-import sys
 import os
+import sys
 import logging
 import requests
 from datetime import datetime, timedelta
-
-# Add root folder to path so we can import env_loader
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(BASE_DIR)
-
 from env_loader import load_environment
 
-# Load environment (.env.asus or .env.work)
+# Load environment
 load_environment()
 
 # Setup logging
@@ -26,6 +21,7 @@ MOTION_API_KEY = os.getenv("MOTION_API_KEY")
 def create_motion_task(title, label="Auto", due_date=None, project_id=None):
     if not MOTION_API_KEY:
         logging.error("❌ MOTION_API_KEY is not set.")
+        print("❌ MOTION_API_KEY is not set.")
         return False
 
     headers = {
@@ -33,11 +29,14 @@ def create_motion_task(title, label="Auto", due_date=None, project_id=None):
         "Content-Type": "application/json"
     }
 
+    if not due_date:
+        due_date = (datetime.now().astimezone().replace(microsecond=0) + timedelta(days=1)).isoformat()
+
     task_data = {
         "name": title,
         "status": "Not Started",
         "priority": "high",
-        "dueDate": due_date or (datetime.utcnow() + timedelta(days=1)).isoformat() + "Z",
+        "dueDate": due_date,
         "labels": [label],
         "duration": 30,
         "autoScheduled": True,
@@ -56,19 +55,22 @@ def create_motion_task(title, label="Auto", due_date=None, project_id=None):
         response.raise_for_status()
         task_response = response.json()
         logging.info(f"✅ Task created: {title} | ID: {task_response.get('id')}")
+        print(f"✅ Motion task created: {task_response.get('id')}")
         return task_response
 
     except requests.exceptions.HTTPError as errh:
-        logging.error(f"❌ HTTP error occurred: {errh}")
+        logging.error(f"❌ HTTP Error: {errh}")
+        print(f"❌ HTTP Error: {response.status_code} - {response.text}")
     except Exception as e:
         logging.error(f"❌ Unexpected error: {str(e)}")
+        print(f"❌ Unexpected error: {e}")
 
     return None
 
-# Example usage
+# ✅ ACTUALLY RUN THE FUNCTION
 if __name__ == "__main__":
-    result = create_motion_task("📌 Review Latest Git Auto-Commit")
+    result = create_motion_task("🧠 Test Motion Task - Manual Trigger")
     if result:
-        print("✅ Motion task successfully created.")
+        print("✅ Task created successfully.")
     else:
-        print("❌ Failed to create Motion task.")
+        print("❌ Task creation failed.")
