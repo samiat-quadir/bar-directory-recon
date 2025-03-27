@@ -35,3 +35,10 @@
 2025-03-27 12:30:08,729 — ERROR — ❌ git_commit_and_notify failed: [WinError 2] The system cannot find the file specified
 2025-03-27 15:30:12,401 — ERROR — ❌ File not found error: [WinError 2] The system cannot find the file specified
 2025-03-27 15:30:12,401 — ERROR — ❌ git_commit_and_notify failed: [WinError 2] The system cannot find the file specified
+2025-03-27 17:17:34,841 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-03-27 17:17:34,984 — INFO — ✅ Commit created: Auto-commit: 2025-03-27 17:17:34
+2025-03-27 17:17:36,089 — INFO — ✅ Git push successful.
+2025-03-27 17:17:36,279 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-03-27 17:17:37,024 — INFO — ✅ Email notification sent successfully.
+2025-03-27 17:17:37,214 — ERROR — ❌ HTTP error occurred: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
+2025-03-27 17:17:37,214 — INFO — ✅ All steps completed successfully.
