@@ -4,10 +4,10 @@ import logging
 from datetime import datetime
 from env_loader import load_environment  # Smart loader for ASUS vs Work .env
 
-# Load environment based on current device
+# Load environment based on device
 load_environment()
 
-# Set up logging (UTF-8 encoded)
+# Set up UTF-8 logging
 log_file = "git_commit.log"
 logging.basicConfig(
     filename=log_file,
@@ -17,11 +17,10 @@ logging.basicConfig(
 )
 
 # Environment Variables
-LOCAL_GIT_REPO = os.getenv("LOCAL_GIT_REPO")
+LOCAL_GIT_REPO = os.path.normpath(os.getenv("LOCAL_GIT_REPO"))
 COMMIT_PREFIX = os.getenv("COMMIT_PREFIX", "Auto-commit:")
 
 def run_git_command(command_list, allow_fail=False):
-    """Helper to run subprocess commands and return output."""
     try:
         result = subprocess.run(
             command_list,
@@ -36,14 +35,28 @@ def run_git_command(command_list, allow_fail=False):
         if not allow_fail:
             raise
         return None
+    except FileNotFoundError as fnf_error:
+        logging.error(f"❌ File not found error: {fnf_error}")
+        raise
 
 def main():
-    os.chdir(LOCAL_GIT_REPO)
+    if not os.path.isdir(LOCAL_GIT_REPO):
+        raise FileNotFoundError(f"LOCAL_GIT_REPO not found or invalid: {LOCAL_GIT_REPO}")
     
-    # Check if there are any staged or unstaged changes
+    # Ensure Git is available
+    try:
+        git_version = run_git_command(["git", "--version"])
+        logging.info(f"✅ Git available: {git_version}")
+    except Exception as e:
+        raise EnvironmentError("❌ Git is not accessible from this environment.") from e
+
+    os.chdir(LOCAL_GIT_REPO)
+
+    # Step 1: Check changes
     changes = run_git_command(["git", "status", "--porcelain"], allow_fail=True)
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
+    # Step 2: Add & commit
     if not changes:
         logging.info("⚠️ No changes detected. Forcing an empty commit.")
         commit_msg = f"{COMMIT_PREFIX} No changes detected"
@@ -54,7 +67,7 @@ def main():
         run_git_command(["git", "commit", "-m", commit_msg])
         logging.info(f"✅ Commit created: {commit_msg}")
 
-    # Push the changes
+    # Step 3: Push
     run_git_command(["git", "push", "origin", "main"])
     logging.info("✅ Git push successful.")
 
