@@ -56,3 +56,6 @@
 2025-03-27 21:30:17,044 — INFO — ✅ Email notification sent successfully.
 2025-03-27 21:30:17,313 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
 2025-03-27 21:30:17,314 — INFO — ✅ All steps completed successfully.
+2025-03-28 00:00:01,792 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-03-28 00:00:02,487 — INFO — ✅ Commit created: Auto-commit: 2025-03-28 00:00:02
+2025-03-28 00:00:07,959 — INFO — ✅ Git push successful.
