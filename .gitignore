@@ -1,33 +1,64 @@
-# Logs and screenshots
+# =====================================================
+# Project Files and Folders to Ignore
+# =====================================================
+
+# Logs, screenshots, and data files generated during runtime
 logs/
 screenshots/
 data/
 
-# Sensitive information
-config.json
-*.env
-
-# ChromeDriver binaries
-chromedriver*.exe
-
-# Python artifacts
+# Ignore any automatically generated cache or temporary files
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.Python
+
+# Virtual environments (if you use .venv or env directories)
+.venv/
 env/
+
+# Build and distribution artifacts
 build/
 develop-eggs/
 dist/
-downloads/
 eggs/
 .eggs/
-lib/
-lib64/
-parts/
 sdist/
+parts/
 var/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# =====================================================
+# Sensitive and Configuration Files
+# =====================================================
+
+# Do not track sensitive configuration files (including environment files)
+config.json
+*.env
+
+# =====================================================
+# Third-Party Binaries
+# =====================================================
+
+# Ignore ChromeDriver binaries
+chromedriver*.exe
+
+# =====================================================
+# Custom Folders / Files
+# =====================================================
+
+# Ignore the universal_recon folder (or specific problematic file) if not meant for version control
+universal_recon/
+# Alternatively, to ignore only the problematic file, uncomment the following line:
+# universal_recon/ADA – Recon Intelligence Sync.txt
+
+# =====================================================
+# Recommendations:
+# =====================================================
+# 1. Ensure that any files containing API keys, tokens, or sensitive configuration data are excluded.
+# 2. If you need to share environment configuration between team members, use sample files (e.g., .env.example)
+#    and instruct users to rename and configure them locally.
+# 3. Review the list periodically to ensure that newly generated artifacts are either tracked or ignored
+#    as appropriate.
