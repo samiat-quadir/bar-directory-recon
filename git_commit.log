@@ -233,3 +233,11 @@ error: unable to index file 'universal_recon/ADA â€“ Recon Intelligence Syn
 fatal: adding files failed
 
 2025-04-02 09:39:04,475 — ERROR — ❌ git_commit_and_notify failed: Command '['git', 'add', '-A']' returned non-zero exit status 128.
+2025-04-02 11:12:41,136 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-04-02 11:12:55,865 — INFO — ✅ Commit created: Auto-commit: 2025-04-02 11:12:41
+2025-04-02 11:12:57,855 — INFO — ✅ Git push successful.
+2025-04-02 11:12:58,023 — ERROR — ❌ Token loading or refreshing error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+2025-04-02 11:12:58,031 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-02 11:12:58,478 — ERROR — ❌ General email error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+2025-04-02 11:12:58,681 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
+2025-04-02 11:12:58,682 — INFO — ✅ All steps completed successfully.
