@@ -297,3 +297,11 @@ fatal: adding files failed
 2025-04-02 15:32:04,463 — ERROR — ❌ General email error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
 2025-04-02 15:32:04,701 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
 2025-04-02 15:32:04,701 — INFO — ✅ All steps completed successfully.
+2025-04-02 15:38:28,818 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-04-02 15:38:29,052 — INFO — ✅ Commit created: Auto-commit: 2025-04-02 15:38:28
+2025-04-02 15:38:30,372 — INFO — ✅ Git push successful.
+2025-04-02 15:38:30,521 — ERROR — ❌ Token loading or refreshing error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+2025-04-02 15:38:30,526 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-02 15:38:30,868 — ERROR — ❌ General email error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+2025-04-02 15:38:31,054 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
+2025-04-02 15:38:31,055 — INFO — ✅ All steps completed successfully.
