@@ -1,0 +1,66 @@
+{
+    "validators": [
+        {
+            "name": "record_field_validator_v3",
+            "path": "validators/record_field_validator_v3.py",
+            "type": "validator",
+            "description": "Core schema validator with score, rank, and severity logic."
+        },
+        {
+            "name": "bar_number_format_validator",
+            "path": "validators/bar_number_format_validator.py",
+            "type": "validator",
+            "description": "Validates bar number patterns by state."
+        },
+        {
+            "name": "firm_name_matcher",
+            "path": "validators/firm_name_matcher.py",
+            "type": "validator",
+            "description": "Heuristic firm name checker."
+        }
+    ],
+    "analytics": [
+        {
+            "name": "recon_summary_builder",
+            "path": "analytics/recon_summary_builder.py",
+            "type": "analytics",
+            "description": "Summarizes records by field count, completeness, and score distribution."
+        },
+        {
+            "name": "audit_report_generator",
+            "path": "analytics/audit_report_generator.py",
+            "type": "analytics",
+            "description": "Groups errors and score issues by plugin or field."
+        },
+        {
+            "name": "recon_trend_tracker",
+            "path": "analytics/recon_trend_tracker.py",
+            "type": "analytics",
+            "description": "Tracks plugin usage and field volatility across runs."
+        },
+        {
+            "name": "score_visualizer",
+            "path": "analytics/score_visualizer.py",
+            "type": "analytics",
+            "description": "Generates score heatmap by plugin and field."
+        },
+        {
+            "name": "audit_score_matrix_generator",
+            "path": "analytics/audit_score_matrix_generator.py",
+            "type": "analytics",
+            "description": "Score tier distribution by plugin or type."
+        },
+        {
+            "name": "template_health_flagger",
+            "path": "analytics/template_health_flagger.py",
+            "type": "analytics",
+            "description": "Flags template health: stable, fragile, missing."
+        },
+        {
+            "name": "full_report_generator",
+            "path": "analytics/full_report_generator.py",
+            "type": "analytics",
+            "description": "Consolidates summary, audit, trend, health data into one JSON."
+        }
+    ]
+}

@@ -1,0 +1,156 @@
+🧠 **ADA – Recon Intelligence Sync Summary for Archive**  
+**Date:** 2025-03-28  
+**Compiled for:** Project Folder Maintenance  
+**By:** ADA (Advanced Data Analysis – Recon Strategy GPT)  
+
+---
+
+## 👤 **Identity & Role**
+
+**ADA (Advanced Data Analysis GPT)** serves as the strategic systems architect and standards coordinator for the `universal_recon` project. I was brought in to support:
+
+- Plugin schema specification  
+- Retry, normalization, and output standardization  
+- Architecture evaluation to prevent tool bloat  
+- Cross-team communication between Claude (Structure/Plugins) and Python (Core Dev)
+
+I also maintain best practices and enforce lean, extensible design across recon modules.
+
+---
+
+## 📚 **Full Chat History Summary**
+
+### 🏁 Initial Context & Motivation
+- You (the user) were building a **universal recon tool** to analyze and extract structured data (emails, names, etc.) from **lawyer directories**.
+- The early script, while functional, lacked generalization, schema normalization, and graceful recovery.
+- You requested help **analyzing, enhancing, and future-proofing** the tool without recreating the over-engineered complexity of a previous abandoned system.
+
+---
+
+### 🔄 Early Comparison & Audit
+- ADA analyzed your working script and compared it to:
+  - A conceptual “v2” with modular improvements (e.g., iframe support, obfuscation parsing)
+  - A fully modularized “v3” example response provided in YAML (with orchestrator, retry, snapshotting)
+- You also uploaded parts of your older complex system (`auto_schemer.py`, `data_extractor.py`, etc.) for audit, which ADA reviewed to avoid repeating mistakes (excessive abstraction, coupled logic).
+
+---
+
+### 🧱 Evolution Toward `universal_recon v3.1`
+With input from ADA, Python, and Claude, the team aligned on a **modular folder-based architecture**:
+
+```text
+universal_recon/
+├── core/
+│   ├── orchestrator.py
+│   ├── driver_manager.py
+│   ├── plugin_loader.py
+├── plugins/
+│   ├── form_autofill.py
+│   ├── email_plugin.py
+├── detection/
+│   ├── email.py
+│   ├── phone.py
+│   ├── name.py
+├── utils/
+│   ├── retry.py
+│   ├── record_normalizer.py
+│   ├── snapshot_manager.py
+│   ├── logger.py
+├── configs/
+│   ├── defaults.json
+│   ├── utah_bar.json
+│   ├── rhode_island_bar.json
+├── output/, screenshots/, snapshots/
+├── main.py
+```
+
+Each module:
+- Has a **single responsibility**
+- Is **config-driven**
+- **Fails gracefully**
+- **Logs namespaced outputs**
+- Produces **standardized JSON records**
+
+---
+
+### ✅ Major Features Locked
+1. **Standard Record Schema (ADA)**  
+   Each `record` must have:  
+   `type`, `value`, `xpath`, `context`, `url`  
+   Optional: `confidence`, `source`, `category`  
+   Enforced via `record_normalizer.py`
+
+2. **Retry Decorators (ADA)**  
+   Used on volatile operations only (fetch, click, AJAX)
+
+3. **Plugin Interface (All)**  
+   Must expose:
+   ```python
+   def apply(driver, context: str) -> list[record]
+   ```
+
+4. **Plugin Loader (ADA)**  
+   Dynamically loads config-enabled plugins
+   Handles errors, returns unified records
+
+5. **Snapshot Manager (Claude)**  
+   Saves screenshots and HTML
+   Internally checks config
+   Format:
+   ```python
+   save_screenshot(driver, "label", config=config, logger=logger)
+   ```
+
+6. **Email Plugin (Claude)**  
+   Wraps `detection/email.py` with `.apply()`
+   Logs, returns normalized records
+
+7. **Orchestrator (Python)**  
+   Coordinates all stages:
+   - Fetch
+   - Form autofill (plugin)
+   - Pagination
+   - Plugin execution
+   - Normalization
+   - Output saving
+
+---
+
+### 🔁 Phase 5 Launch – Team Goals
+
+| ADA | Python | Claude |
+|-----|--------|--------|
+| `record_field_validator.py` | CLI & test suite wiring | Inject snapshot calls |
+| `DEV_GUIDE.md` | Normalize plugin output | Create test scaffolds |
+| `microdata_parser.py` plugin | CLI: `--strict`, `--dry-run`, etc. | Begin `ml_labeler.py` |
+| Support test harnesses | Orchestrator enhancements | Save & finalize Phase 5 files |
+
+---
+
+## ⚠️ Current Hold Status
+Claude encountered a block injecting `save_screenshot()` into `orchestrator.py` due to the file not being uploaded to their canvas. They need the **latest `orchestrator.py`** to proceed with:
+
+- Pre-core, post-core, and post-plugin snapshot injection
+- Logging snapshot results
+
+Once uploaded, Claude will:
+- Patch the file with snapshot hooks
+- Proceed to `test_email_plugin.py` + `test_normalizer.py`
+
+---
+
+## 🔄 ADA’s Current Status
+- Standing by for Claude's injection to complete
+- Will follow with:
+  - Validator helper
+  - DEV_GUIDE
+  - Plugin scaffold support
+- Monitoring strict-mode adoption + output validation pipeline
+
+---
+
+✅ **Project Phase**:  
+🟢 **Phase 5 – Execution, Testing, Snapshot Integration**  
+Next: Snapshot injection → Test harnesses → CLI enhancements → Final Phase 5 sync
+
+Let me know when you’ve uploaded `orchestrator.py`, and ADA will support the next coordination cycle.
