@@ -329,3 +329,6 @@ fatal: adding files failed
 2025-04-03 09:38:31,565 — ERROR — ❌ General email error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
 2025-04-03 09:38:31,734 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
 2025-04-03 09:38:31,735 — INFO — ✅ All steps completed successfully.
+2025-04-03 09:38:33,487 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-04-03 09:38:36,025 — INFO — ✅ Commit created: Auto-commit: 2025-04-03 09:38:33
+2025-04-03 09:38:48,678 — INFO — ✅ Git push successful.
