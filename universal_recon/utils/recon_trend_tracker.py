@@ -11,6 +11,9 @@ def load_summaries_from_directory(directory: str) -> List[Dict]:
                 summaries.append(json.load(f))
     return summaries
 
+def run_analysis(records, config=None):
+    return analyze_trends(records)
+
 def analyze_trends(summaries: List[Dict]) -> Dict:
     trend_data = {
         "total_runs": len(summaries),

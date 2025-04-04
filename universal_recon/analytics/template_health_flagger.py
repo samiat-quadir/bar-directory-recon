@@ -12,3 +12,6 @@ def run_analysis(records: List[Dict] = None) -> Dict:
         "flagged": len(flagged),
         "total": len(records)
     }
+
+def run_analysis(records, config=None):
+    return flag_template_health(records)

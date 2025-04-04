@@ -1,20 +1,19 @@
-import sys
 import os
-
-# Add the project root (one level up) to sys.path
-PARENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if PARENT_DIR not in sys.path:
-    sys.path.append(PARENT_DIR)
-
+import sys
 import logging
 import requests
 from datetime import datetime, timedelta
-from env_loader import load_environment
 
-# Load environment
+# === ENV LOADING ===
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PARENT_DIR = os.path.dirname(BASE_DIR)
+if PARENT_DIR not in sys.path:
+    sys.path.append(PARENT_DIR)
+
+from env_loader import load_environment
 load_environment()
 
-# Setup logging
+# === LOGGING ===
 logging.basicConfig(
     filename="motion_task_creator.log",
     level=logging.INFO,
@@ -22,60 +21,72 @@ logging.basicConfig(
     encoding="utf-8"
 )
 
-MOTION_API_KEY = os.getenv("MOTION_API_KEY", "").strip()
+MOTION_API_KEY = os.getenv("MOTION_API_KEY")
+MOTION_PROJECT_ID = os.getenv("MOTION_PROJECT_ID")
 
-def create_motion_task(title, label="Auto", due_date=None, project_id=None):
+def create_motion_task(title, due_date=None, duration=15):
     if not MOTION_API_KEY:
-        logging.error("MOTION_API_KEY is not set.")
         print("MOTION_API_KEY is not set.")
-        return False
+        return
+
+    if not due_date:
+        due_date = (datetime.now().astimezone().replace(microsecond=0) + timedelta(days=1)).isoformat()
+
+    graphql_query = """
+    mutation CreateTask($input: CreateTaskInput!) {
+      createTask(input: $input) {
+        id
+        name
+        dueDate
+      }
+    }
+    """
+
+    variables = {
+        "input": {
+            "name": title,
+            "projectId": MOTION_PROJECT_ID,
+            "dueDate": due_date,
+            "duration": duration,
+            "status": "Not Started",
+            "priority": "MEDIUM",
+            "autoSchedule": True
+        }
+    }
 
     headers = {
         "Authorization": f"Bearer {MOTION_API_KEY}",
         "Content-Type": "application/json"
     }
 
-    if not due_date:
-        due_date = (datetime.now().astimezone().replace(microsecond=0) + timedelta(days=1)).isoformat()
-
-    task_data = {
-        "name": title,
-        "status": "Not Started",
-        "priority": "high",
-        "dueDate": due_date,
-        "labels": [label],
-        "duration": 30,
-        "autoScheduled": True,
-        "schedule": "Work hours"
-    }
-
-    if project_id:
-        task_data["projectId"] = project_id
-
     try:
         response = requests.post(
-            "https://api.usemotion.com/v1/tasks",
+            "https://api.usemotion.com/graphql",
             headers=headers,
-            json=task_data
+            json={"query": graphql_query, "variables": variables}
         )
         response.raise_for_status()
-        task_response = response.json()
-        logging.info(f"Task created: {title} | ID: {task_response.get('id')}")
-        print(f"Motion task created: {task_response.get('id')}")
-        return task_response
+        data = response.json()
+
+        if "errors" in data:
+            print(f"Motion API error: {data['errors']}")
+            logging.error(f"Motion API error: {data['errors']}")
+            return None
+
+        task_info = data['data']['createTask']
+        print(f"Motion task created: {task_info['id']} - {task_info['name']}")
+        logging.info(f"Task created: {task_info}")
+        return task_info
 
     except requests.exceptions.HTTPError as errh:
-        logging.error(f"HTTP Error: {errh} | Response: {response.status_code} - {response.text}")
         print(f"HTTP Error: {response.status_code} - {response.text}")
+        logging.error(f"HTTP Error: {response.status_code} - {response.text}")
     except Exception as e:
-        logging.error(f"Unexpected error: {str(e)}")
         print(f"Unexpected error: {e}")
+        logging.error(f"Unexpected error: {e}")
 
     return None
 
 if __name__ == "__main__":
-    result = create_motion_task("Test Motion Task - Manual Trigger")
-    if result:
-        print("Task created successfully.")
-    else:
-        print("Task creation failed.")
+    title = f"Git Auto-Commit: {datetime.now().strftime('%B %d, %Y')}"
+    create_motion_task(title)
