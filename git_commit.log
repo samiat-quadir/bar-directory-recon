@@ -409,3 +409,10 @@ fatal: could not parse HEAD
 2025-04-04 15:27:03,133 — INFO — ✅ Email notification sent successfully.
 2025-04-04 15:27:03,327 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
 2025-04-04 15:27:03,328 — INFO — ✅ All steps completed successfully.
+2025-04-04 15:32:48,677 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-04-04 15:32:48,814 — INFO — ✅ Commit created: Auto-commit: 2025-04-04 15:32:48
+2025-04-04 15:32:49,936 — INFO — ✅ Git push successful.
+2025-04-04 15:32:49,959 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-04 15:32:50,792 — INFO — ✅ Email notification sent successfully.
+2025-04-04 15:32:50,996 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
+2025-04-04 15:32:50,997 — INFO — ✅ All steps completed successfully.
