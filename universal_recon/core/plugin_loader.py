@@ -9,9 +9,14 @@ def load_plugins(registry_path="plugin_registry.json", plugin_type=None):
 
     with open(registry_path, "r", encoding="utf-8") as f:
         registry = json.load(f)
+        if isinstance(registry, dict) and "plugins" in registry:
+            registry = registry["plugins"]
 
     loaded_plugins = []
     for entry in registry:
+        if not isinstance(entry, dict):
+            print(f"⚠️ Skipping invalid plugin entry: {entry}")
+            continue
         if plugin_type and entry.get("type") != plugin_type:
             continue
         if not entry.get("enabled", False):

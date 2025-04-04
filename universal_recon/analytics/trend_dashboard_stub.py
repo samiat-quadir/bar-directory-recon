@@ -1,25 +1,14 @@
-# trend_dashboard_stub.py
-from typing import Dict
+# universal_recon/analytics/trend_dashboard_stub.py
 
+from typing import Dict, List
 
-def run_analysis(trend_data: Dict, config: Dict = None) -> Dict:
-    """
-    Reads trend.json and outputs dashboard-style summaries: field drifts, plugin score changes.
-    """
-    dashboard = {
-        "declining_fields": [],
-        "plugin_drops": [],
-        "notable_shifts": []
+def run_analysis(trend_data: List[Dict] = None) -> Dict:
+    if trend_data is None:
+        trend_data = [{"date": "2025-01-01", "count": 5}]
+
+    summary = {
+        "plugin": "trend_dashboard_stub",
+        "entries": len(trend_data),
+        "trend": [x["count"] for x in trend_data]
     }
-
-    trends = trend_data.get("trends", {})
-
-    for field, data in trends.items():
-        if data.get("change") < -0.1:
-            dashboard["declining_fields"].append({"field": field, **data})
-
-    for plugin, stats in trend_data.get("plugin_usage", {}).items():
-        if stats.get("change", 0) < -0.1:
-            dashboard["plugin_drops"].append({"plugin": plugin, **stats})
-
-    return {"trend_dashboard": dashboard}
+    return summary

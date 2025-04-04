@@ -1,22 +1,42 @@
-# validators/bar_number_format_validator.py
+# File: validators/bar_number_format_validator.py
 
 import re
-from typing import Dict
+from typing import Dict, Any
 
-BAR_PATTERN = r"^\d{5}-[A-Z]{2}$"
-
-def validate_bar_number(record: Dict) -> Dict:
-    value = record.get("value", "")
-    plugin = "bar_number_format_validator"
-    is_valid = bool(re.match(BAR_PATTERN, value))
-
-    return {
+def validate(data: Dict[str, Any]) -> Dict[str, Any]:
+    bar_number = data.get("bar_number", "")
+    pattern = r"^[0-9]{5}-[A-Z]{2}$"
+    is_valid = bool(re.match(pattern, bar_number))
+    
+    result = {
         "type": "bar_number",
-        "value": value,
+        "value": bar_number,
         "valid": is_valid,
-        "error": None if is_valid else "Invalid bar number format",
+        "error": None if is_valid else "Invalid format",
         "score": 5 if is_valid else 2,
         "rank": 1,
-        "plugin": plugin,
+        "plugin": "bar_number_format_validator",
         "severity": "none" if is_valid else "critical"
     }
+    return result
+# File: validators/bar_number_format_validator.py
+
+import re
+from typing import Dict, Any
+
+def validate(data: Dict[str, Any]) -> Dict[str, Any]:
+    bar_number = data.get("bar_number", "")
+    pattern = r"^[0-9]{5}-[A-Z]{2}$"
+    is_valid = bool(re.match(pattern, bar_number))
+    
+    result = {
+        "type": "bar_number",
+        "value": bar_number,
+        "valid": is_valid,
+        "error": None if is_valid else "Invalid format",
+        "score": 5 if is_valid else 2,
+        "rank": 1,
+        "plugin": "bar_number_format_validator",
+        "severity": "none" if is_valid else "critical"
+    }
+    return result

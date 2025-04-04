@@ -1,19 +1,17 @@
-# validators/firm_name_matcher.py
+# universal_recon/validators/firm_name_matcher.py
 
 from typing import Dict
 
-def validate_firm_name(record: Dict) -> Dict:
-    value = record.get("value", "").strip()
-    plugin = "firm_name_matcher"
-    is_valid = len(value) > 3 and not value.lower().startswith("unknown")
-
-    return {
+def validate(record: Dict) -> Dict:
+    firm_name = record.get("firm_name", "").lower()
+    result = {
         "type": "firm_name",
-        "value": value,
-        "valid": is_valid,
-        "error": None if is_valid else "Firm name too short or missing",
-        "score": 5 if is_valid else 3,
+        "value": firm_name,
+        "valid": bool(firm_name and len(firm_name) > 2),
+        "error": None if firm_name else "Missing or too short",
+        "score": 2 if firm_name else 0,
         "rank": 1,
-        "plugin": plugin,
-        "severity": "none" if is_valid else "warning"
+        "plugin": "firm_name_matcher",
+        "severity": "critical" if not firm_name else "none",
     }
+    return result
