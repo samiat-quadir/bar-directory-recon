@@ -1,17 +1,47 @@
-# universal_recon/analytics/template_health_flagger.py
+"""
+Analytics module: template_health_flagger.py
+Purpose: Tags each template or record cluster with a basic health classification.
+"""
 
-from typing import List, Dict
+def flag_template_health(records):
+    """
+    Classifies records or clusters by overall 'health' based on average score and error rate.
 
-def run_analysis(records: List[Dict] = None) -> Dict:
-    if records is None:
-        records = [{"template_id": 1, "health": "unknown"}]
+    Returns:
+        Dict with plugin name, flagged count, and summary.
+    """
+    if not records:
+        return {"plugin": "template_health_flagger", "flagged": 0, "total": 0, "summary": []}
 
-    flagged = [r for r in records if r.get("health") == "unknown"]
+    flagged = []
+    for record in records:
+        score = record.get("score", 0)
+        error = record.get("error")
+        severity = record.get("severity", "none")
+
+        if severity == "critical" or score <= 2:
+            health = "fragile"
+        elif severity == "warning" or score <= 4:
+            health = "unstable"
+        else:
+            health = "healthy"
+
+        flagged.append({
+            "type": record.get("type"),
+            "value": record.get("value"),
+            "plugin": record.get("plugin"),
+            "score": score,
+            "severity": severity,
+            "health": health
+        })
+
     return {
         "plugin": "template_health_flagger",
         "flagged": len(flagged),
-        "total": len(records)
+        "total": len(records),
+        "summary": flagged
     }
+
 
 def run_analysis(records, config=None):
     return flag_template_health(records)
