@@ -387,3 +387,11 @@ error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Fun
 fatal: could not parse HEAD
 
 2025-04-04 09:38:48,037 — ERROR — 🔥 Auto Git Commit failed: Command '['git', 'commit', '--allow-empty', '-m', 'Auto-commit: No changes detected']' returned non-zero exit status 128.
+2025-04-04 12:18:12,454 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-04-04 12:18:12,615 — INFO — ✅ Commit created: Auto-commit: 2025-04-04 12:18:12
+2025-04-04 12:18:14,137 — INFO — ✅ Git push successful.
+2025-04-04 12:18:14,277 — ERROR — ❌ Token loading or refreshing error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+2025-04-04 12:18:14,286 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-04 12:18:14,657 — ERROR — ❌ General email error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+2025-04-04 12:18:14,854 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
+2025-04-04 12:18:14,854 — INFO — ✅ All steps completed successfully.

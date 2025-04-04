@@ -8,3 +8,7 @@
 2025-03-25 15:27:12,729 - INFO - ✅ New token generated successfully.
 2025-03-25 15:50:23,219 - INFO - "GET /?state=JsDyd3yzu0G9Y0JJ1BMwVGsk0sUI5J&code=4/0AQSTgQGnW_E8wTlrDAOLpcLYSytW6mgkIUJHsayxVZCCZZVmShbQhIgcswoJHXSWUlNqMQ&scope=https://www.googleapis.com/auth/gmail.send HTTP/1.1" 200 65
 2025-03-25 15:50:23,390 - INFO - \u2705 New token generated successfully.
+2025-04-04 12:23:04,363 - ERROR - \u274c Authentication failed: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+2025-04-04 12:23:14,404 - INFO - \U0001f5d1\ufe0f Token revoked and deleted successfully.
+2025-04-04 12:23:27,906 - INFO - "GET /?state=c0YwXbSi6xpJOyCNRSoqYRbqYx8fYS&code=4/0Ab_5qlnlJ2di6c_Z1H_Sth_moE6iqS3OC7TIlkhAnnE3PIMZk6jgkIRfmGY7D1MzYUWN2g&scope=https://www.googleapis.com/auth/gmail.send HTTP/1.1" 200 65
+2025-04-04 12:23:28,032 - INFO - \u2705 New token generated successfully.
