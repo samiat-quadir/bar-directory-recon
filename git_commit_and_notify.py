@@ -26,30 +26,30 @@ logging.basicConfig(
 
 def git_commit_and_notify():
     try:
-        # Step 1: Run Git Commit Automation
+        # 1. Run Git Commit Automation
         git_auto_commit()  # runs full commit logic from auto_git_commit.py
 
-        # Step 2: Send Email Notification
+        # 2. Send Email Notification
         timestamp = datetime.now().strftime('%A, %B %d, %Y at %I:%M %p')
-        subject = "✅ Git Auto Commit Completed"
+        subject = "Git Auto Commit Completed"
         body = f"""
-        <h2>✅ Git Commit Completed</h2>
+        <h2>Git Commit Completed</h2>
         <p><b>Timestamp:</b> {timestamp}</p>
         <p><b>Status:</b> Git commit, push, and logs completed.</p>
         """
 
         send_html_notification(subject, body)
 
-        # Step 3: Create Motion Task
-        motion_title = f"🧠 Git Commit: {datetime.now().strftime('%b %d, %Y @ %H:%M')}"
+        # 3. Create Motion Task
+        motion_title = f"Git Commit: {datetime.now().strftime('%b %d, %Y @ %H:%M')}"
         create_motion_task(motion_title, label="Auto")
 
-        logging.info("✅ All steps completed successfully.")
-        print("✅ All tasks completed.")
+        logging.info("All steps completed successfully.")
+        print("All tasks completed.")
 
     except Exception as e:
-        logging.error(f"❌ git_commit_and_notify failed: {e}")
-        print(f"❌ Task failed: {e}")
+        logging.error(f"git_commit_and_notify failed: {e}")
+        print(f"Task failed: {e}")
 
 if __name__ == "__main__":
     git_commit_and_notify()

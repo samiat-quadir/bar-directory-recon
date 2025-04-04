@@ -85,3 +85,7 @@ UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 
 2025-03-26 14:47:48,871 - INFO - ✅ Email notification sent successfully.
 2025-03-27 09:30:51,796 - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-03-27 09:30:52,604 - INFO - ✅ Email notification sent successfully.
+2025-04-04 15:54:32,984 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-04-04 15:54:33,624 - INFO - Email notification sent successfully.
+2025-04-04 15:59:28,362 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-04-04 15:59:29,056 - INFO - Email notification sent successfully.

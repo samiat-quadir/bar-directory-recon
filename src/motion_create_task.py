@@ -1,5 +1,11 @@
 import sys
 import os
+
+# Add the project root (one level up) to sys.path
+PARENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PARENT_DIR not in sys.path:
+    sys.path.append(PARENT_DIR)
+
 import logging
 import requests
 from datetime import datetime, timedelta
