@@ -1,10 +1,11 @@
 [
   {
-    "name": "record_field_validator_v3",
-    "type": "validator",
-    "module": "validators.record_field_validator_v3",
-    "enabled": true
-  },
+  "name": "record_field_validator_v3",
+  "type": "validator",
+  "run_mode": "full",
+  "path": "validators.record_field_validator_v3",
+  "entrypoint": "run_analysis"
+},
   {
     "name": "bar_number_format_validator",
     "type": "validator",

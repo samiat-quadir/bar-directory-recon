@@ -1,17 +1,35 @@
-# universal_recon/validators/firm_name_matcher.py
+# validators/firm_name_matcher.py
 
-from typing import Dict
+from typing import List, Dict
 
-def validate(record: Dict) -> Dict:
-    firm_name = record.get("firm_name", "").lower()
-    result = {
-        "type": "firm_name",
-        "value": firm_name,
-        "valid": bool(firm_name and len(firm_name) > 2),
-        "error": None if firm_name else "Missing or too short",
-        "score": 2 if firm_name else 0,
-        "rank": 1,
-        "plugin": "firm_name_matcher",
-        "severity": "critical" if not firm_name else "none",
-    }
-    return result
+KNOWN_SUFFIXES = ["LLP", "LLC", "Inc.", "P.C.", "PLC", "Co."]
+
+def normalize_firm_name(name: str) -> str:
+    return name.replace(",", "").replace(".", "").lower()
+
+def run_analysis(records=None, config=None):
+    if records is None:
+        records = [{"type": "firm_name", "value": "Example LLP", "rank": 1, "plugin": "test"}]
+    return {"plugin": "firm_name_matcher", "results": validate_firm_names(records)}
+
+def validate_firm_names(fields: List[Dict]) -> List[Dict]:
+    results = []
+    for field in fields:
+        if field.get("type") != "firm_name":
+            continue
+
+        value = field.get("value", "")
+        norm = normalize_firm_name(value)
+        has_suffix = any(suffix.lower().replace(".", "") in norm for suffix in KNOWN_SUFFIXES)
+
+        results.append({
+            "type": "firm_name",
+            "value": value,
+            "valid": has_suffix,
+            "error": None if has_suffix else "Missing known suffix",
+            "score": 5 if has_suffix else 3,
+            "rank": field.get("rank", 0),
+            "plugin": "firm_name_matcher",
+            "severity": "none" if has_suffix else "warning"
+        })
+    return results
