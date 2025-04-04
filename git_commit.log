@@ -458,3 +458,12 @@ fatal: could not parse HEAD
 2025-04-04 16:09:24,197 — INFO — ✅ Email notification sent successfully.
 2025-04-04 16:09:24,424 — ERROR — HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks | Response: 401 - {"message":"Unauthorized","statusCode":401}
 2025-04-04 16:09:24,425 — INFO — All steps completed successfully.
+2025-04-04 16:10:08,487 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-04-04 16:10:08,582 — INFO — ✅ Commit created: Auto-commit: 2025-04-04 16:10:08
+2025-04-04 16:10:09,515 — INFO — ✅ Git push successful.
+2025-04-04 16:10:09,520 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-04 16:10:10,184 — INFO — ✅ Email notification sent successfully.
+2025-04-04 16:10:10,371 — ERROR — HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks | Response: 401 - {"message":"Unauthorized","statusCode":401}
+2025-04-04 16:10:10,372 — INFO — All steps completed successfully.
+2025-04-04 17:21:10,375 — ERROR — ❌ File not found error: [WinError 2] The system cannot find the file specified
+2025-04-04 17:21:10,376 — ERROR — Git commit and notify failed: [WinError 2] The system cannot find the file specified

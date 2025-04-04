@@ -6,6 +6,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def run_analysis(records, config=None):
+    summary = summarize_records(records)
+    return summary
+
 def summarize_records(records: List[Dict]) -> Dict:
     """
     Summarizes ranked, normalized, and grouped records.
