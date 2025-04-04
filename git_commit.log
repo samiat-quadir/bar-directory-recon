@@ -340,3 +340,50 @@ fatal: adding files failed
 2025-04-03 09:39:07,423 — ERROR — ❌ General email error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
 2025-04-03 09:39:07,702 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
 2025-04-03 09:39:07,702 — INFO — ✅ All steps completed successfully.
+2025-04-04 09:33:28,550 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-04-04 09:33:28,863 — ERROR — ❌ Git command failed: git status --porcelain
+error: unable to open loose object 9e89b39a4087caf48f55df2971c1d27e3bcc6fa8: Function not implemented
+error: unable to open loose object c651731f9107e6bb3026f63f64a618374ccf751e: Function not implemented
+error: unable to open loose object 27d2853e28348eaab81101e0e79d9e4470a8243a: Function not implemented
+error: unable to open loose object 25e1b1c676f8f65db77df25ccfa6e1e7349fd54b: Function not implemented
+error: unable to open loose object 50429d28e8c63bf6d4e1b9ed865978df87cc173f: Function not implemented
+error: unable to open loose object ca6dc12a0110016b49514bfcddbd35f104c02009: Function not implemented
+error: unable to open loose object f6599e00c92ac5079eb11a8f8585ae73058d0418: Function not implemented
+error: unable to open loose object 2417ed70cb44baceaae18983c1b28240778d07d1: Function not implemented
+error: unable to open loose object bb11ef8470fd36140488c0435a9086f7e5137249: Function not implemented
+error: unable to open loose object 88bfacdaf93e6ba0355dbe569853ad31315aceb2: Function not implemented
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+fatal: bad object HEAD
+
+2025-04-04 09:33:28,863 — INFO — ⚠️ No changes detected. Forcing an empty commit.
+2025-04-04 09:33:28,895 — ERROR — ❌ Git command failed: git commit --allow-empty -m Auto-commit: No changes detected
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+fatal: could not parse HEAD
+
+2025-04-04 09:33:28,895 — ERROR — ❌ git_commit_and_notify failed: Command '['git', 'commit', '--allow-empty', '-m', 'Auto-commit: No changes detected']' returned non-zero exit status 128.
+2025-04-04 09:38:47,818 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-04-04 09:38:48,022 — ERROR — ❌ Git command failed: git status --porcelain
+error: unable to open loose object c651731f9107e6bb3026f63f64a618374ccf751e: Function not implemented
+error: unable to open loose object 27d2853e28348eaab81101e0e79d9e4470a8243a: Function not implemented
+error: unable to open loose object 25e1b1c676f8f65db77df25ccfa6e1e7349fd54b: Function not implemented
+error: unable to open loose object 50429d28e8c63bf6d4e1b9ed865978df87cc173f: Function not implemented
+error: unable to open loose object ca6dc12a0110016b49514bfcddbd35f104c02009: Function not implemented
+error: unable to open loose object f6599e00c92ac5079eb11a8f8585ae73058d0418: Function not implemented
+error: unable to open loose object 2417ed70cb44baceaae18983c1b28240778d07d1: Function not implemented
+error: unable to open loose object bb11ef8470fd36140488c0435a9086f7e5137249: Function not implemented
+error: unable to open loose object 88bfacdaf93e6ba0355dbe569853ad31315aceb2: Function not implemented
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+fatal: bad object HEAD
+
+2025-04-04 09:38:48,022 — INFO — ⚠️ No changes detected. Forcing an empty commit.
+2025-04-04 09:38:48,037 — ERROR — ❌ Git command failed: git commit --allow-empty -m Auto-commit: No changes detected
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+error: unable to open loose object 09224a7ee603b448e5ac056c5a971a6b2d204859: Function not implemented
+fatal: could not parse HEAD
+
+2025-04-04 09:38:48,037 — ERROR — 🔥 Auto Git Commit failed: Command '['git', 'commit', '--allow-empty', '-m', 'Auto-commit: No changes detected']' returned non-zero exit status 128.

@@ -16,3 +16,7 @@ git commit -m $commitMsg
 
 # Optional: push to remote
 git push origin main
+
+Compress-Archive -Path "C:\...\universal_recon\*" -DestinationPath "C:\...\universal_recon\universal_recon_%($timestamp).zip"
+git add universal_recon_%($timestamp).zip
+git commit -m "Adding daily snapshot zip at $timestamp"
