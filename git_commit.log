@@ -395,3 +395,10 @@ fatal: could not parse HEAD
 2025-04-04 12:18:14,657 — ERROR — ❌ General email error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
 2025-04-04 12:18:14,854 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
 2025-04-04 12:18:14,854 — INFO — ✅ All steps completed successfully.
+2025-04-04 12:32:49,571 — INFO — ✅ Git available: git version 2.48.1.windows.1
+2025-04-04 12:32:49,810 — INFO — ✅ Commit created: Auto-commit: 2025-04-04 12:32:49
+2025-04-04 12:32:51,171 — INFO — ✅ Git push successful.
+2025-04-04 12:32:51,187 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-04 12:32:51,885 — INFO — ✅ Email notification sent successfully.
+2025-04-04 12:32:52,136 — ERROR — ❌ HTTP Error: 401 Client Error: Unauthorized for url: https://api.usemotion.com/v1/tasks
+2025-04-04 12:32:52,136 — INFO — ✅ All steps completed successfully.

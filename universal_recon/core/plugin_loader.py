@@ -1,30 +1,20 @@
-import importlib
 import json
+import importlib
 import os
 
-def load_plugins(registry_path="plugin_registry.json", plugin_type=None):
-    if not os.path.exists(registry_path):
-        print("❌ Plugin registry not found.")
-        return []
 
+def load_plugins_by_type(plugin_type: str, registry_path: str = "plugin_registry.json"):
     with open(registry_path, "r", encoding="utf-8") as f:
         registry = json.load(f)
-        if isinstance(registry, dict) and "plugins" in registry:
-            registry = registry["plugins"]
 
-    loaded_plugins = []
-    for entry in registry:
-        if not isinstance(entry, dict):
-            print(f"⚠️ Skipping invalid plugin entry: {entry}")
-            continue
-        if plugin_type and entry.get("type") != plugin_type:
-            continue
-        if not entry.get("enabled", False):
-            continue
-        try:
-            module_path = entry["module"]
-            mod = importlib.import_module(module_path)
-            loaded_plugins.append((entry["name"], mod))
-        except ImportError as e:
-            print(f"⚠️ Could not load plugin {entry['name']}: {e}")
-    return loaded_plugins
+    plugins = []
+    for plugin in registry:
+        if plugin.get("type") == plugin_type:
+            module_path = plugin.get("module")
+            try:
+                plugin_module = importlib.import_module(module_path)
+                plugins.append(plugin_module)
+            except Exception as e:
+                print(f"[WARN] Failed to load plugin: {module_path} → {e}")
+
+    return plugins
