@@ -1,12 +1,5 @@
 import sys
 import os
-
-# Add the parent folder (the project root) to the Python module search path
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PARENT_DIR = os.path.dirname(BASE_DIR)
-if PARENT_DIR not in sys.path:
-    sys.path.append(PARENT_DIR)
-
 import logging
 import requests
 from datetime import datetime, timedelta
@@ -23,12 +16,12 @@ logging.basicConfig(
     encoding="utf-8"
 )
 
-MOTION_API_KEY = os.getenv("MOTION_API_KEY")
+MOTION_API_KEY = os.getenv("MOTION_API_KEY", "").strip()
 
 def create_motion_task(title, label="Auto", due_date=None, project_id=None):
     if not MOTION_API_KEY:
-        logging.error("❌ MOTION_API_KEY is not set.")
-        print("❌ MOTION_API_KEY is not set.")
+        logging.error("MOTION_API_KEY is not set.")
+        print("MOTION_API_KEY is not set.")
         return False
 
     headers = {
@@ -61,23 +54,22 @@ def create_motion_task(title, label="Auto", due_date=None, project_id=None):
         )
         response.raise_for_status()
         task_response = response.json()
-        logging.info(f"✅ Task created: {title} | ID: {task_response.get('id')}")
-        print(f"✅ Motion task created: {task_response.get('id')}")
+        logging.info(f"Task created: {title} | ID: {task_response.get('id')}")
+        print(f"Motion task created: {task_response.get('id')}")
         return task_response
 
     except requests.exceptions.HTTPError as errh:
-        logging.error(f"❌ HTTP Error: {errh}")
-        print(f"❌ HTTP Error: {response.status_code} - {response.text}")
+        logging.error(f"HTTP Error: {errh} | Response: {response.status_code} - {response.text}")
+        print(f"HTTP Error: {response.status_code} - {response.text}")
     except Exception as e:
-        logging.error(f"❌ Unexpected error: {str(e)}")
-        print(f"❌ Unexpected error: {e}")
+        logging.error(f"Unexpected error: {str(e)}")
+        print(f"Unexpected error: {e}")
 
     return None
 
-# ✅ ACTUALLY RUN THE FUNCTION
 if __name__ == "__main__":
-    result = create_motion_task("🧠 Test Motion Task - Manual Trigger")
+    result = create_motion_task("Test Motion Task - Manual Trigger")
     if result:
-        print("✅ Task created successfully.")
+        print("Task created successfully.")
     else:
-        print("❌ Task creation failed.")
+        print("Task creation failed.")
