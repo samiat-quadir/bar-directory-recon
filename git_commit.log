@@ -467,3 +467,8 @@ fatal: could not parse HEAD
 2025-04-04 16:10:10,372 — INFO — All steps completed successfully.
 2025-04-04 17:21:10,375 — ERROR — ❌ File not found error: [WinError 2] The system cannot find the file specified
 2025-04-04 17:21:10,376 — ERROR — Git commit and notify failed: [WinError 2] The system cannot find the file specified
+2025-04-04 17:26:54,077 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-04 17:26:54,762 — INFO — ✅ Email notification sent successfully.
+2025-04-04 17:26:54,764 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-04 17:26:55,737 — INFO — Task email sent to Motion. ID: 19602b32366b2e14
+2025-04-04 17:26:55,737 — INFO — All actions completed successfully.
