@@ -42,4 +42,5 @@
     "module": "analytics.trend_dashboard_stub",
     "enabled": true
   }
+
 ]

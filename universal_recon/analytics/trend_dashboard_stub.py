@@ -2,13 +2,24 @@
 
 from typing import Dict, List
 
-def run_analysis(trend_data: List[Dict] = None) -> Dict:
-    if trend_data is None:
-        trend_data = [{"date": "2025-01-01", "count": 5}]
-
-    summary = {
+def run_analysis(records, config=None):
+    trend_data = {
         "plugin": "trend_dashboard_stub",
-        "entries": len(trend_data),
-        "trend": [x["count"] for x in trend_data]
+        "entries": 0,
+        "trend": []
     }
-    return summary
+
+    try:
+        if not records:
+            return trend_data
+
+        # Placeholder logic – you can adjust as needed
+        scores = [r.get("score", 0) for r in records]
+        trend_data["entries"] = len(records)
+        trend_data["trend"] = scores
+
+        return trend_data
+
+    except Exception as e:
+        trend_data["error"] = str(e)
+        return trend_data

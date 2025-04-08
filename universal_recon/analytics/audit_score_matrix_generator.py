@@ -2,7 +2,7 @@
 
 from typing import List, Dict
 
-def run_analysis(records: List[Dict] = None) -> Dict:
+def run_analysis(records, config=None):
     if records is None:
         # Dummy fallback for harness testing
         records = [{"field": "value"}, {"field": "value"}]
