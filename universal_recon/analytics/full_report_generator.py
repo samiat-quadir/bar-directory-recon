@@ -1,11 +1,14 @@
-# universal_recon/analytics/full_report_generator.py
+"""
+Analytics Plugin: full_report_generator.py
+Purpose: Merges all major analytics into one report (summary, audit, trend, health).
+"""
 
-from typing import Dict
-
-def run_analysis(site_name: str = "test_site", output_dir: str = "output/reports") -> Dict:
+def run_analysis(summary=None, audit=None, trend=None, health=None):
     return {
         "plugin": "full_report_generator",
-        "site": site_name,
-        "output_dir": output_dir,
-        "status": "complete"
+        "status": "complete",
+        "summary": summary,
+        "audit": audit,
+        "trend": trend,
+        "health": health,
     }
