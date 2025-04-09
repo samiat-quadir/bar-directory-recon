@@ -534,3 +534,8 @@ fatal: could not parse HEAD
 2025-04-09 09:38:44,320 — INFO — Task email sent to Motion. ID: 1961ac647779c4af
 2025-04-09 09:38:44,320 — INFO — All actions completed successfully.
 2025-04-09 09:42:48,244 — ERROR —  Auto Git Commit failed:  Git is not accessible from this environment.
+2025-04-09 09:42:55,124 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-09 09:42:55,801 — INFO — ✅ Email notification sent successfully.
+2025-04-09 09:42:55,803 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-09 09:42:56,811 — INFO — Task email sent to Motion. ID: 1961aca208e73478
+2025-04-09 09:42:56,812 — INFO — All actions completed successfully.
