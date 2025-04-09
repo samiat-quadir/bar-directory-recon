@@ -518,3 +518,8 @@ fatal: could not parse HEAD
 2025-04-08 18:38:39,179 — INFO — file_cache is only supported with oauth2client<4.0.0
 2025-04-08 18:38:40,155 — INFO — Task email sent to Motion. ID: 196178e3ca6c83d2
 2025-04-08 18:38:40,155 — INFO — All actions completed successfully.
+2025-04-08 21:32:55,102 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-08 21:32:55,764 — INFO — ✅ Email notification sent successfully.
+2025-04-08 21:32:55,766 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-08 21:32:56,724 — INFO — Task email sent to Motion. ID: 196182dcae53268d
+2025-04-08 21:32:56,724 — INFO — All actions completed successfully.
