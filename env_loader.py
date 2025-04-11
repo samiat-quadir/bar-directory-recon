@@ -1,22 +1,14 @@
 import os
+import sys
 from dotenv import load_dotenv
-import getpass
 
 def load_environment():
-    # Use os.environ["USERNAME"] if available, otherwise fallback to getpass.getuser()
-    current_user = os.environ.get("USERNAME", "").lower() or getpass.getuser().lower()
-    
-    if current_user == "samq":
-        env_file = ".env.work"
-    elif current_user == "samqu":
-        env_file = ".env.asus"
-    else:
-        raise EnvironmentError(f"Unknown user '{current_user}'. Cannot determine which .env file to load.")
-    
-    # Resolve the absolute path to the env file relative to this script (project root)
-    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), env_file)
-    load_dotenv(dotenv_path=env_path)
-    print(f"Loaded environment from {env_file}")
+    PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+    if PROJECT_ROOT not in sys.path:
+        sys.path.insert(0, PROJECT_ROOT)
 
-if __name__ == "__main__":
-    load_environment()
+    machine_type = os.getenv("MACHINE_TYPE", "").lower()
+    env_file = ".env.work" if machine_type == "work" else ".env.asus"
+
+    load_dotenv(env_file)
+    print(f"Loaded environment from {env_file}")

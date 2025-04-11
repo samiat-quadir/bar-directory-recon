@@ -4,16 +4,14 @@ import logging
 import requests
 from datetime import datetime, timedelta
 
-# === ENV LOADING ===
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PARENT_DIR = os.path.dirname(BASE_DIR)
-if PARENT_DIR not in sys.path:
-    sys.path.append(PARENT_DIR)
+# Load project path dynamically
+from project_path import set_root_path
+set_root_path()
 
 from env_loader import load_environment
 load_environment()
 
-# === LOGGING ===
+# Setup logging
 logging.basicConfig(
     filename="motion_task_creator.log",
     level=logging.INFO,
@@ -24,69 +22,75 @@ logging.basicConfig(
 MOTION_API_KEY = os.getenv("MOTION_API_KEY")
 MOTION_PROJECT_ID = os.getenv("MOTION_PROJECT_ID")
 
-def create_motion_task(title, due_date=None, duration=15):
+def create_motion_task(title, label="Auto", due_date=None, duration=15, priority="high"):
     if not MOTION_API_KEY:
+        logging.error("MOTION_API_KEY is not set.")
         print("MOTION_API_KEY is not set.")
-        return
+        return False
 
-    if not due_date:
-        due_date = (datetime.now().astimezone().replace(microsecond=0) + timedelta(days=1)).isoformat()
-
-    graphql_query = """
-    mutation CreateTask($input: CreateTaskInput!) {
-      createTask(input: $input) {
-        id
-        name
-        dueDate
-      }
-    }
-    """
-
-    variables = {
-        "input": {
-            "name": title,
-            "projectId": MOTION_PROJECT_ID,
-            "dueDate": due_date,
-            "duration": duration,
-            "status": "Not Started",
-            "priority": "MEDIUM",
-            "autoSchedule": True
-        }
-    }
-
+    endpoint = "https://api.usemotion.com/graphql"
     headers = {
         "Authorization": f"Bearer {MOTION_API_KEY}",
         "Content-Type": "application/json"
     }
 
-    try:
-        response = requests.post(
-            "https://api.usemotion.com/graphql",
-            headers=headers,
-            json={"query": graphql_query, "variables": variables}
-        )
-        response.raise_for_status()
-        data = response.json()
+    query = """
+    mutation CreateTask($input: TaskInput!) {
+        createTask(input: $input) {
+            task {
+                id
+                name
+            }
+        }
+    }
+    """
 
-        if "errors" in data:
-            print(f"Motion API error: {data['errors']}")
-            logging.error(f"Motion API error: {data['errors']}")
+    if not due_date:
+        due_date = (datetime.now().astimezone() + timedelta(days=1)).replace(microsecond=0).isoformat()
+
+    variables = {
+        "input": {
+            "workspaceId": os.getenv("MOTION_WORKSPACE_ID"),
+            "projectId": MOTION_PROJECT_ID,
+            "name": title,
+            "status": "Not Started",
+            "priority": priority,
+            "dueDate": due_date,
+            "labels": [label],
+            "duration": duration,
+            "autoScheduled": True,
+            "schedule": "Work hours"
+        }
+    }
+
+    try:
+        response = requests.post(endpoint, headers=headers, json={"query": query, "variables": variables})
+        response.raise_for_status()
+        task_response = response.json()
+
+        if "errors" in task_response:
+            logging.error(f"Motion API errors: {task_response['errors']}")
+            print(f"Motion API errors: {task_response['errors']}")
             return None
 
-        task_info = data['data']['createTask']
-        print(f"Motion task created: {task_info['id']} - {task_info['name']}")
-        logging.info(f"Task created: {task_info}")
-        return task_info
+        task_info = task_response.get("data", {}).get("createTask", {}).get("task")
+        if task_info:
+            logging.info(f"Task created successfully: {task_info['id']} - {task_info['name']}")
+            print(f"Task created successfully: {task_info['id']}")
+            return task_info
+        else:
+            logging.error("Task creation failed with unknown error.")
+            print("Task creation failed.")
+            return None
 
-    except requests.exceptions.HTTPError as errh:
-        print(f"HTTP Error: {response.status_code} - {response.text}")
-        logging.error(f"HTTP Error: {response.status_code} - {response.text}")
+    except requests.exceptions.HTTPError as err:
+        logging.error(f"HTTP Error: {err.response.status_code} - {err.response.text}")
+        print(f"HTTP Error: {err.response.status_code} - {err.response.text}")
     except Exception as e:
-        print(f"Unexpected error: {e}")
         logging.error(f"Unexpected error: {e}")
+        print(f"Unexpected error: {e}")
 
     return None
 
 if __name__ == "__main__":
-    title = f"Git Auto-Commit: {datetime.now().strftime('%B %d, %Y')}"
-    create_motion_task(title)
+    create_motion_task("Review Auto Git Commit")
