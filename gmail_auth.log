@@ -13,3 +13,5 @@
 2025-04-04 12:23:27,906 - INFO - "GET /?state=c0YwXbSi6xpJOyCNRSoqYRbqYx8fYS&code=4/0Ab_5qlnlJ2di6c_Z1H_Sth_moE6iqS3OC7TIlkhAnnE3PIMZk6jgkIRfmGY7D1MzYUWN2g&scope=https://www.googleapis.com/auth/gmail.send HTTP/1.1" 200 65
 2025-04-04 12:23:28,032 - INFO - \u2705 New token generated successfully.
 2025-04-04 15:28:23,453 - INFO - \U0001f504 Token refreshed successfully.
+2025-04-11 14:54:47,609 - INFO - "GET /?state=AfcdLChB2OgtTVdMeJswDDtPQSpTAV&code=4/0Ab_5qlm2JEN_bjYPZNQJC0CRNz51ICIgZegK0tFpd3J2o03rUFrEX27UIB61HcaGZHqmag&scope=https://www.googleapis.com/auth/gmail.send HTTP/1.1" 200 65
+2025-04-11 14:54:47,796 - INFO - ✅ New token generated successfully.

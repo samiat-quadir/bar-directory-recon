@@ -1,19 +1,33 @@
 import os
+import sys
 import json
 import logging
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from env_loader import load_environment
 
+# Ensure root project path is in sys.path
+try:
+    from project_path import set_root_path
+    set_root_path()
+except ImportError:
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from env_loader import load_environment
 load_environment()
 
+# Constants
 CLIENT_SECRET_FILE = os.getenv("GMAIL_CREDENTIALS_PATH")
 TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
-
 LOG_FILE = "gmail_auth.log"
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    encoding="utf-8"
+)
 
 def authenticate_gmail():
     creds = None
@@ -30,11 +44,11 @@ def authenticate_gmail():
                 creds = flow.run_local_server(port=0)
                 logging.info("✅ New token generated successfully.")
 
-            # Save credentials in JSON format
-            with open(TOKEN_PATH, "w") as token_file:
+            with open(TOKEN_PATH, "w", encoding="utf-8") as token_file:
                 token_file.write(creds.to_json())
 
         print("✅ Gmail authentication successful!")
+
     except Exception as e:
         logging.error(f"❌ Authentication failed: {e}")
         print(f"❌ Authentication failed: {e}")
