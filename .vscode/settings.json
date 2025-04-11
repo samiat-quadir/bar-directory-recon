@@ -3,27 +3,45 @@
   "terminal.integrated.defaultProfile.windows": "Command Prompt",
   "editor.formatOnSave": true,
   "files.autoSave": "onFocusChange",
+
+  // Chat & Copilot Enhancements
   "chat.agent.enabled": true,
   "chat.tools.autoApprove": true,
   "chat.mcp.discovery.enabled": true,
   "github.copilot.chat.agent.thinkingTool": true,
   "github.copilot.chat.completionContext.typescript.mode": "on",
   "chat.promptFilesLocations": {
-    "**": true
+    "**": true,
+    ".github": true,
+    ".vscode": true
   },
-  "editor.quickSuggestions": {
-    "other": true,
-    "comments": false,
-    "strings": false
-  },
+  "chat.experimental.unifiedView": true,
+  "chat.experimental.defaultMode": "agent",
+  "chat.setupFromDialog": true,
+  "chat.experimental.visionSupport": true,
+
+  // AI Suggestion Enhancements
   "editor.inlineSuggest.enabled": true,
+  "editor.inlineSuggest.syntaxHighlighting.enabled": true,
   "editor.suggest.preview": true,
   "editor.suggestSelection": "first",
   "editor.suggest.snippetsPreventQuickSuggestions": false,
   "editor.snippetSuggestions": "inline",
   "editor.tabCompletion": "on",
-  "debug.javascript.autoAttachFilter": "smart",
+
+  // Editor Enhancements
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": false
+  },
   "editor.codeLens": true,
   "editor.semanticHighlighting.enabled": true,
-  "editor.minimap.enabled": true
+  "editor.minimap.enabled": true,
+
+  // Debugger Improvements
+  "debug.javascript.autoAttachFilter": "smart",
+
+  // GitHub Copilot Enhancements
+  "github.copilot.remoteIndexing.enabled": true
 }
