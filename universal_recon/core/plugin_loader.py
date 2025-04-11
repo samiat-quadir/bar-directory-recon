@@ -53,3 +53,17 @@ def load_plugins_by_type(
             print(f"[WARN] Failed to load plugin: {module_path} → {e}")
 
     return plugins
+
+def get_plugin_metadata(registry_path: str = "plugin_registry.json") -> List[dict]:
+    """
+    Loads and returns the raw plugin metadata from the registry.
+
+    Returns:
+        List[dict]: Plugin entries including type, module, run_mode, cli_flags, etc.
+    """
+    try:
+        with open(registry_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"[ERROR] Could not read plugin registry: {e}")
+        return []

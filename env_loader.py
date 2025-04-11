@@ -1,14 +1,15 @@
 import os
-import sys
 from dotenv import load_dotenv
 
 def load_environment():
-    PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-    if PROJECT_ROOT not in sys.path:
-        sys.path.insert(0, PROJECT_ROOT)
+    machine_type = os.getenv('MACHINE_TYPE', 'work').lower()
+    env_file = f".env.{machine_type}"
 
-    machine_type = os.getenv("MACHINE_TYPE", "").lower()
-    env_file = ".env.work" if machine_type == "work" else ".env.asus"
+    if not os.path.exists(env_file):
+        raise FileNotFoundError(f"{env_file} not found.")
 
     load_dotenv(env_file)
     print(f"Loaded environment from {env_file}")
+
+if __name__ == "__main__":
+    load_environment()
