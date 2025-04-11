@@ -1,70 +1,63 @@
 import argparse
-import json
+import sys
 import os
+import json
 
-from utils.retry import retry
-from utils.output_manager import save_summary
-from core.plugin_loader import load_plugins_by_type
-from validators.record_field_validator_v3 import validate_records
-from analytics.plugin_aggregator import aggregate_and_print
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="Universal Recon Tool CLI")
-    parser.add_argument("--site", required=True, help="Target site slug (e.g., utah_bar)")
-    parser.add_argument("--strict-schema", action="store_true", help="Enable strict schema validation")
-    parser.add_argument("--verbose", action="store_true", help="Print detailed trace summaries")
-    parser.add_argument("--full-report", action="store_true", help="Generate merged full_report.json")
-    parser.add_argument("--recon-report", action="store_true", help="Enable recon_summary_builder output")
-    parser.add_argument("--audit-report", action="store_true", help="Enable audit reporting")
-    parser.add_argument("--trend-analysis", action="store_true", help="Run trend tracker")
-    parser.add_argument("--audit-heatmap", action="store_true", help="Include heatmap in analytics")
-    parser.add_argument("--heatmap-summary", action="store_true", help="Print heatmap trace summary")
-    parser.add_argument("--dry-run", action="store_true", help="Run without saving files")
-    return parser.parse_args()
-
-
-def load_normalized_records(site_name):
-    # For this demo, mock normalized records
-    input_path = f"output/normalized/{site_name}_normalized.json"
-    if os.path.exists(input_path):
-        with open(input_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    else:
-        # Mock fallback
-        return [
-            {"type": "email", "value": "jane@example.com", "plugin": "mock_plugin"},
-            {"type": "bar_number", "value": "12345", "plugin": "mock_plugin"},
-            {"type": "firm_name", "value": "Smith LLP", "plugin": "mock_plugin"}
-        ]
-
+from plugin_loader import load_plugins_by_type
+from plugin_aggregator import aggregate_and_print
+from analytics.site_schema_collector import run_site_schema_collection
+from validators.fieldmap_validator import validate_fieldmap
 
 def main():
-    args = parse_args()
+    parser = argparse.ArgumentParser(description="Universal Recon Tool")
+
+    parser.add_argument('--site', type=str, required=True, help='Site name for config and output routing')
+    parser.add_argument('--config', type=str, default="config/config.json", help='Path to config file')
+    parser.add_argument('--full-report', action='store_true', help='Generate full report with all modules')
+    parser.add_argument('--print-report', action='store_true', help='Print output summary to terminal')
+    parser.add_argument('--schema-collect', action='store_true', help='Run the site schema collector and export fieldmap')
+    parser.add_argument('--schema-lint', action='store_true', help='Run fieldmap validator on exported schema')
+    parser.add_argument('--verbose', action='store_true', help='Print additional diagnostic output')
+    parser.add_argument('--run-mode', type=str, default="full", choices=["lite", "full"], help='Plugin run mode (lite or full)')
+
+    args = parser.parse_args()
+
+    # Load config
+    if not os.path.exists(args.config):
+        print(f"❌ Config file not found: {args.config}")
+        sys.exit(1)
+
+    with open(args.config, "r", encoding="utf-8") as f:
+        config = json.load(f)
+
     site_name = args.site
-    cli_flags = vars(args)
+    cli_flags = sys.argv[1:]
 
-    # Load config (stub for now)
-    config = {"validation": {"strict": args.strict_schema}}
+    # ✅ Schema collection
+    if args.schema_collect:
+        print("🔍 Running Site Schema Collector...")
+        fieldmap = run_site_schema_collection(config=config)
+        if fieldmap:
+            print("✅ Site schema fieldmap written.")
+        else:
+            print("⚠️ Schema collector returned no data.")
+        if not args.full_report:
+            sys.exit(0)
 
-    # Step 1: Load normalized records
-    records = load_normalized_records(site_name)
+    # ✅ Optional schema linting
+    if args.schema_lint:
+        print("🧪 Running Fieldmap Validator...")
+        fieldmap_path = os.path.join("output", "fieldmap", f"{site_name}_fieldmap.json")
+        result = validate_fieldmap(fieldmap_path, verbose=args.verbose)
+        if result:
+            print(json.dumps(result, indent=2))
+        if not args.full_report:
+            sys.exit(0)
 
-    # Step 2: Run all validator plugins (from registry)
-    validator_plugins = load_plugins_by_type("validator")
-    validated_records = records
-    for plugin in validator_plugins:
-        if hasattr(plugin, "validate"):
-            validated_records = plugin.validate(validated_records, config=config, strict=args.strict_schema)
+    # Mocked example for validated records
+    validated_records = [{"name": "John Doe", "email": "john@example.com"}]
 
-    # Step 3: Pass to aggregator → run all analytics + print CLI summary
-    aggregate_and_print(
-        records=validated_records,
-        site_name=site_name,
-        config=config,
-        cli_flags=cli_flags
-    )
-
+    aggregate_and_print(validated_records, site_name, config, cli_flags)
 
 if __name__ == "__main__":
     main()

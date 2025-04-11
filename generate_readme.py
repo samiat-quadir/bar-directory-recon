@@ -1,11 +1,16 @@
-# Bar Directory Recon Project
+import os
+from env_loader import load_environment
+
+load_environment()
+
+readme = f"""# Bar Directory Recon Project
 
 ## Key Paths & Configuration
 
-- Git Repo Path: `C:/Users/samq/OneDrive - Digital Age Marketing Group/Desktop/Local Py/Work Projects/bar-directory-recon`
-- Gmail User: `sam.quadir@gmail.com`
+- Git Repo Path: `{os.getenv('LOCAL_GIT_REPO')}`
+- Gmail User: `{os.getenv('GMAIL_USER')}`
 - Motion Enabled: ✅
-- Log Path: `C:/Users/samq/OneDrive - Digital Age Marketing Group/Desktop/Local Py/Work Projects/bar-directory-recon/git_commit_notify.log`
+- Log Path: `{os.getenv('GIT_LOG_PATH')}`
 
 ## Scripts Summary
 - `git_commit_and_notify.py` – Git commit + email + Motion task
@@ -16,3 +21,9 @@
 ---
 
 ✅ Everything is auto-scheduled via Task Scheduler and environment-aware
+"""
+
+with open("README.md", "w", encoding="utf-8") as f:
+    f.write(readme)
+
+print("README.md generated successfully.")
