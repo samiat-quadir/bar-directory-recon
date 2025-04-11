@@ -1,0 +1,16 @@
+{
+  "tools": {
+    "projectPath": "${workspaceFolder}",
+    "envFile": "${workspaceFolder}/.env.work",
+    "logs": "${workspaceFolder}/logs/",
+    "python": "${env:VIRTUAL_ENV}/Scripts/python.exe"
+  },
+  "server": {
+    "type": "local",
+    "entry": "${workspaceFolder}/init_launcher.py"
+  },
+  "input": {
+    "API_KEY": "${env:MOTION_API_KEY}",
+    "WORKSPACE_ID": "${env:MOTION_WORKSPACE_ID}"
+  }
+}
