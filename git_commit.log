@@ -595,3 +595,10 @@ fatal: could not parse HEAD
 2025-04-11 12:31:42,716 — INFO — file_cache is only supported with oauth2client<4.0.0
 2025-04-11 12:31:43,095 — ERROR — ❌ General email error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
 2025-04-11 12:31:43,096 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-11 12:39:59,985 — INFO — Git available: git version 2.48.1.windows.1
+2025-04-11 12:40:00,081 — INFO — Commit created: Auto-commit: 2025-04-11 12:40:00
+2025-04-11 12:40:01,039 — INFO — Git push successful.
+2025-04-11 12:40:01,195 — ERROR — ❌ Token loading or refreshing error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+2025-04-11 12:40:01,199 — INFO — file_cache is only supported with oauth2client<4.0.0
+2025-04-11 12:40:01,521 — ERROR — ❌ General email error: ('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+2025-04-11 12:40:01,523 — INFO — file_cache is only supported with oauth2client<4.0.0
