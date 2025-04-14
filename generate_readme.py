@@ -1,6 +1,9 @@
 import os
+from project_path import set_root_path
 from env_loader import load_environment
 
+# Ensure environment is loaded properly
+set_root_path()
 load_environment()
 
 readme = f"""# Bar Directory Recon Project

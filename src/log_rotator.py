@@ -1,14 +1,24 @@
 import os
+import sys
+
+# Ensure project root is in the Python path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(BASE_DIR)
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+from project_path import set_root_path
+from env_loader import load_environment
 import shutil
 from datetime import datetime
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# Set root path and load environment
+set_root_path()
+load_environment()
 
 def rotate_logs(log_dir="logs", archive_dir="logs/archive"):
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-    if not os.path.exists(archive_dir):
-        os.makedirs(archive_dir)
+    os.makedirs(log_dir, exist_ok=True)
+    os.makedirs(archive_dir, exist_ok=True)
 
     logs_to_rotate = [f for f in os.listdir(log_dir) if f.endswith(".log")]
     date_suffix = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
