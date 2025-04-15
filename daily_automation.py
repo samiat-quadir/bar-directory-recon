@@ -38,7 +38,7 @@ scripts_to_run = [
     os.path.join("src", "motion_task_via_email.py"),
     os.path.join("src", "log_summary.py"),
     os.path.join("src", "backup_manager.py"),
-    "cleanup_old_files.py",
+    os.path.join("src", "cleanup_old_files.py"),
     os.path.join("src", "email_summary_report.py")  # <--- NEW LINE HERE
 ]
 

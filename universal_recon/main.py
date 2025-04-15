@@ -66,8 +66,24 @@ def main():
     # 5) Multi-site schema matrix
     if args.schema_matrix:
         from analytics.schema_matrix_collector import collect_schema_matrix, write_schema_matrix
-        matrix = collect_schema_matrix(output_dir="output/fieldmap")
-        write_schema_matrix(matrix, save_path="output/schema_matrix.json", verbose=args.verbose)
+        from datetime import datetime
+        import shutil
+    matrix_path = "output/schema_matrix.json"
+    archive_dir = "output/archive"
+    os.makedirs(archive_dir, exist_ok=True)
+
+    # Archive existing matrix if it exists
+    if os.path.exists(matrix_path):
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        archived_path = os.path.join(archive_dir, f"schema_matrix_{timestamp}.json")
+        shutil.copy(matrix_path, archived_path)
+        if args.verbose:
+            print(f"📦 Archived previous matrix to: {archived_path}")
+
+    # Collect new matrix and overwrite the original
+    matrix = collect_schema_matrix(output_dir="output/fieldmap")
+    write_schema_matrix(matrix, save_path=matrix_path, verbose=args.verbose)
+
 
     # 6) Full report aggregator
     if args.full_report:
