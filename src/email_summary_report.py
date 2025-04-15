@@ -40,13 +40,13 @@ def send_email_summary():
         message = MIMEText(body)
         message['To'] = TO_EMAILS[0]
         message['From'] = EMAIL_USER
-        message['Subject'] = f"✅ Daily Automation Summary — {datetime.now().strftime('%b %d %Y')}"
+        message['Subject'] = f" Daily Automation Summary — {datetime.now().strftime('%b %d %Y')}"
 
         raw_message = {'raw': urlsafe_b64encode(message.as_bytes()).decode('utf-8')}
         service.users().messages().send(userId="me", body=raw_message).execute()
-        print("✅ Summary email sent.")
+        print(" Summary email sent.")
     except Exception as e:
-        print(f"❌ Failed to send summary email: {e}")
+        print(f" Failed to send summary email: {e}")
 
 if __name__ == "__main__":
     send_email_summary()
