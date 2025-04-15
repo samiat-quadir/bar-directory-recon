@@ -1,87 +1,116 @@
-import argparse
-import json
-import os
+# main.py
+
 import sys
-
-from core.retry import retry
-from utils.output_manager import save_summary
-from core.plugin_loader import load_plugins_by_type
-from core.config_loader import ConfigManager
-from analytics.site_schema_collector import run_site_schema_collection
-from analytics.schema_score_linter import run_schema_score_lint
-from validators.fieldmap_validator import validate_fieldmap
-from plugin_aggregator import aggregate_and_print
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="Universal Recon Tool CLI")
-    parser.add_argument("--site", required=True, help="Target site slug (e.g., utah_bar)")
-    parser.add_argument("--strict-schema", action="store_true", help="Enable strict schema validation")
-    parser.add_argument("--verbose", action="store_true", help="Print detailed trace summaries")
-    parser.add_argument("--full-report", action="store_true", help="Generate merged full_report.json")
-    parser.add_argument("--recon-report", action="store_true", help="Enable recon_summary_builder output")
-    parser.add_argument("--audit-report", action="store_true", help="Enable audit reporting")
-    parser.add_argument("--trend-analysis", action="store_true", help="Run trend tracker")
-    parser.add_argument("--audit-heatmap", action="store_true", help="Include heatmap in analytics")
-    parser.add_argument("--heatmap-summary", action="store_true", help="Print heatmap trace summary")
-    parser.add_argument("--dry-run", action="store_true", help="Run without saving files")
-    parser.add_argument("--schema-collect", action="store_true", help="Run the site schema collector and export fieldmap")
-    parser.add_argument("--schema-lint", action="store_true", help="Run the fieldmap validator on the site fieldmap")
-    parser.add_argument("--schema-score", action="store_true", help="Run fieldmap scoring to detect coverage issues")
-    return parser.parse_args()
-
-def load_normalized_records(site_name):
-    input_path = os.path.abspath(f"output/normalized/{site_name}_normalized.json")
-    if os.path.exists(input_path):
-        with open(input_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    else:
-        return [
-            {"type": "email", "value": "jane@example.com", "plugin": "mock_plugin"},
-            {"type": "bar_number", "value": "12345", "plugin": "mock_plugin"},
-            {"type": "firm_name", "value": "Smith LLP", "plugin": "mock_plugin"}
-        ]
+import argparse
+import os
 
 def main():
-    args = parse_args()
-    site_name = args.site
-    cli_flags = vars(args)
-    config = ConfigManager().as_dict()
+    parser = argparse.ArgumentParser(description="Universal Recon CLI")
 
+    # Core flags
+    parser.add_argument("--site", help="Site name or config key.")
+    parser.add_argument("--schema-collect", action="store_true", help="Collect fieldmap data.")
+    parser.add_argument("--schema-lint", action="store_true", help="Validate fieldmap structure.")
+    parser.add_argument("--schema-score", action="store_true", help="Score fieldmap completeness.")
+    parser.add_argument("--domain-lint", action="store_true", help="Apply domain-based checks.")
+    parser.add_argument("--schema-matrix", action="store_true", help="Build multi-site schema matrix.")
+    parser.add_argument("--full-report", action="store_true", help="Aggregator merges full reports.")
+    parser.add_argument("--verbose", action="store_true", help="Print verbose logs.")
+
+    # Phase 20b analytics flags
+    parser.add_argument("--dashboard", action="store_true", help="Show schema trend dashboard.")
+    parser.add_argument("--drift-check", action="store_true", help="Track score drift across schema matrices.")
+    parser.add_argument("--plugin-overlay", action="store_true", help="Show plugin usage overlay.")
+    parser.add_argument("--export-csv", action="store_true", help="Export schema matrix to CSVs.")
+    parser.add_argument("--export-html", action="store_true", help="Generate HTML overlay dashboard from schema_matrix.json")
+    parser.add_argument("--heatmap-plugin", action="store_true", help="Render plugin usage heatmap.")
+    parser.add_argument("--heatmap-drift", action="store_true", help="Render field score drift heatmap.")
+
+    args = parser.parse_args()
+
+    # 1) Collect fieldmap
     if args.schema_collect:
-        print("🔍 Running Site Schema Collector...")
-        fieldmap = run_site_schema_collection(config={"site_name": site_name})
-        if fieldmap:
-            print("✅ Site schema fieldmap written.")
-        else:
-            print("⚠️ Schema collector returned no data.")
+        from analytics.site_schema_collector import collect_site_schema
+        site_name = args.site or "default_site"
+        fieldmap_path = collect_site_schema(site_name, verbose=args.verbose)
+        if args.verbose:
+            print(f"✅ Fieldmap collected at: {fieldmap_path}")
 
+    # 2) Lint fieldmap
     if args.schema_lint:
-        print("🧪 Validating fieldmap...")
+        from validators.fieldmap_validator import validate_fieldmap
+        site_name = args.site or "default_site"
         path = f"output/fieldmap/{site_name}_fieldmap.json"
-        validate_fieldmap(path, verbose=args.verbose)
+        result = validate_fieldmap(path, verbose=args.verbose)
+        if args.verbose:
+            print(f"✅ Lint result: {result}")
 
+    # 3) Score fieldmap
     if args.schema_score:
-        print("📏 Scoring fieldmap...")
+        from analytics.schema_score_linter import score_fieldmap
+        site_name = args.site or "default_site"
         path = f"output/fieldmap/{site_name}_fieldmap.json"
-        run_schema_score_lint(path, verbose=args.verbose)
+        result = score_fieldmap(path, verbose=args.verbose)
+        if args.verbose:
+            print(f"✅ Score result: {result}")
 
-    if not args.full_report:
-        return  # Skip the rest if full pipeline not requested
+    # 4) Domain-lint logic
+    if args.domain_lint:
+        from validators.fieldmap_domain_linter import domain_lint_fieldmap
+        site_name = args.site or "default_site"
+        path = f"output/fieldmap/{site_name}_fieldmap.json"
+        result = domain_lint_fieldmap(path, verbose=args.verbose)
+        if args.verbose:
+            print(f"✅ Domain-lint result: {result}")
 
-    records = load_normalized_records(site_name)
-    validator_plugins = load_plugins_by_type("validator")
-    validated_records = records
-    for plugin in validator_plugins:
-        if hasattr(plugin, "validate"):
-            validated_records = plugin.validate(validated_records, config=config, strict=args.strict_schema)
+    # 5) Multi-site schema matrix
+    if args.schema_matrix:
+        from analytics.schema_matrix_collector import collect_schema_matrix, write_schema_matrix
+        matrix = collect_schema_matrix(output_dir="output/fieldmap")
+        write_schema_matrix(matrix, save_path="output/schema_matrix.json", verbose=args.verbose)
 
-    aggregate_and_print(
-        records=validated_records,
-        site_name=site_name,
-        config=config,
-        cli_flags=cli_flags
-    )
+    # 6) Full report aggregator
+    if args.full_report:
+        from plugin_aggregator import aggregator_logic
+        site_name = args.site or "default_site"
+        aggregator_logic(site_name, verbose=args.verbose)
+
+    if args.export_html:
+        from analytics.overlay_visualizer import main as overlay_main
+        overlay_main()
+
+    # 7) Schema trend dashboard
+    if args.dashboard:
+        from analytics.schema_trend_dashboard import main as dash_main
+        dash_main()
+
+    # 8) Validator drift tracker
+    if args.drift_check:
+        from analytics.validator_drift_tracker import main as drift_main
+        drift_main()
+
+    # 9) Plugin score overlay
+    if args.plugin_overlay:
+        from analytics.plugin_score_overlay import main as plugin_overlay_main
+        plugin_overlay_main()
+
+    # 10) Export CSV summary
+    if args.export_csv:
+        from analytics.export_csv_summary import main as csv_export_main
+        csv_export_main()
+
+    # 12) Plugin heatmap
+    if args.heatmap_plugin:
+        from analytics.heatmap_plugin_usage import main as plugin_heatmap_main
+        plugin_heatmap_main()
+
+    # 13) Score drift heatmap
+    if args.heatmap_drift:
+        from analytics.heatmap_score_drift import main as drift_heatmap_main
+        drift_heatmap_main()
+
+    if args.verbose:
+        print("✅ CLI run completed successfully.")
 
 if __name__ == "__main__":
     main()
-    

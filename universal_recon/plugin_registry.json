@@ -55,5 +55,12 @@
     "module": "validators.fieldmap_validator",
     "enabled": true,
     "entrypoint": "run_analysis"
+  },
+  {
+    "name": "schema_matrix_collector",
+    "type": "analytics",
+    "module": "analytics.schema_matrix_collector",
+    "enabled": true,
+    "entrypoint": "run_analysis"
   }
 ]
