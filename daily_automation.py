@@ -37,7 +37,9 @@ scripts_to_run = [
     "generate_readme.py",
     os.path.join("src", "motion_task_via_email.py"),
     os.path.join("src", "log_summary.py"),
-    os.path.join("src", "backup_manager.py")
+    os.path.join("src", "backup_manager.py"),
+    "cleanup_old_files.py",
+    os.path.join("src", "email_summary_report.py")  # <--- NEW LINE HERE
 ]
 
 # === Main Execution ===
