@@ -327,3 +327,38 @@ MOTION_PROJECT_ID found
 GIT_EXECUTABLE_PATH found
 All required environment variables are present.
 [2025-04-15 11:24:27] Running: git_commit_and_notify.py
+[2025-04-15 11:24:30] Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+Motion task email sent successfully.
+[ERROR] Error during commit and notify: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+[2025-04-15 11:24:30] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\log_rotator.py
+[2025-04-15 11:24:30] Loaded environment from .env.work
+[2025-04-15 11:24:30] Running: generate_readme.py
+[2025-04-15 11:24:30] Loaded environment from .env.work
+README.md generated successfully.
+[2025-04-15 11:24:30] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py
+[2025-04-15 11:24:32] Loaded environment from .env.work
+Motion task email sent successfully.
+[2025-04-15 11:24:32] === DAILY AUTOMATION COMPLETE ===
+
+[2025-04-15 13:44:22] === DAILY AUTOMATION START ===
+[2025-04-15 13:44:22] Running: env_loader.py
+[2025-04-15 13:44:22] Loaded environment from .env.work
+
+[2025-04-15 13:44:22] Running: project_path.py
+[2025-04-15 13:44:22] PYTHONPATH updated: ['C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon', 'C:\\Python312\\python312.zip', 'C:\\Python312\\DLLs', 'C:\\Python312\\Lib', 'C:\\Python312', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32\\lib', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\Pythonwin', 'C:\\Python312\\Lib\\site-packages', 'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon\\src']
+
+[2025-04-15 13:44:22] Running: src\health_check.py
+[2025-04-15 13:44:22] Loaded environment from .env.work
+GMAIL_USER found
+TO_EMAILS found
+GMAIL_TOKEN_PATH found
+LOCAL_GIT_REPO found
+MOTION_API_KEY found
+NGROK_AUTH_TOKEN found
+MOTION_WORKSPACE_ID found
+MOTION_PROJECT_ID found
+GIT_EXECUTABLE_PATH found
+All required environment variables are present.
+

@@ -37,7 +37,9 @@ scripts_to_run = [
     "generate_readme.py",
     os.path.join("src", "motion_task_via_email.py"),
     os.path.join("src", "log_summary.py"),
-    os.path.join("src", "backup_manager.py")
+    os.path.join("src", "backup_manager.py"),
+    os.path.join("src", "cleanup_old_files.py"),
+    os.path.join("src", "auto_zip_archiver.py")  # ✅ Final step
 ]
 
 # === Main Execution ===
@@ -45,12 +47,4 @@ if __name__ == "__main__":
     log("=== DAILY AUTOMATION START ===")
     for script in scripts_to_run:
         run_script(script)
-
-    # Step 7: Cleanup old logs and backups
-    log("Running: cleanup_old_files.py")
-    try:
-        import src.cleanup_old_files
-    except Exception as e:
-        log(f"ERROR running cleanup_old_files.py: {e}")
-
     log("=== DAILY AUTOMATION COMPLETE ===\n")
