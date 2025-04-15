@@ -89,3 +89,7 @@ UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 
 2025-04-04 15:54:33,624 - INFO - Email notification sent successfully.
 2025-04-04 15:59:28,362 - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-04-04 15:59:29,056 - INFO - Email notification sent successfully.
+2025-04-15 10:37:17,868 - INFO - Git push successful.
+2025-04-15 10:37:18,016 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-04-15 10:37:18,670 - INFO - ✅ Email notification sent successfully.
+2025-04-15 10:37:18,671 - ERROR - ❌ General email error: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
