@@ -39,7 +39,7 @@ def scan_plugins():
     with open(SNAPSHOT_FILE, "w", encoding="utf-8") as f:
         json.dump(plugin_data, f, indent=2)
 
-    print(f"✅ Plugin snapshot saved to {SNAPSHOT_FILE}")
+    print(f" Plugin snapshot saved to {SNAPSHOT_FILE}")
 
 if __name__ == "__main__":
     scan_plugins()

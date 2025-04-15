@@ -25,4 +25,4 @@ if __name__ == "__main__":
         f.write(f"Log Summary — {datetime.now()}\n")
         f.write("=" * 40 + "\n")
         f.write(content + "\n")
-    print(f"✅ Log summary saved to {SUMMARY_FILE}")
+    print(f"Log summary saved to {SUMMARY_FILE}")
