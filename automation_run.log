@@ -16,3 +16,21 @@ MOTION_PROJECT_ID found
 GIT_EXECUTABLE_PATH found
 All required environment variables are present.
 [2025-04-14 10:37:16] Running: git_commit_and_notify.py
+[2025-04-14 10:37:19] Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+Error during commit and notify: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+[2025-04-14 10:37:19] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\log_rotator.py
+[2025-04-14 10:37:19] Loaded environment from .env.work
+[2025-04-14 10:37:19] Running: generate_readme.py
+[2025-04-14 10:37:19] Loaded environment from .env.work
+README.md generated successfully.
+[2025-04-14 10:37:19] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py
+[2025-04-14 10:37:20] 
+[2025-04-14 10:37:20] ERROR: Traceback (most recent call last):
+  File "C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py", line 7, in <module>
+    from project_path import set_root_path
+ModuleNotFoundError: No module named 'project_path'
+[2025-04-14 10:37:20] === DAILY AUTOMATION COMPLETE ===
+
