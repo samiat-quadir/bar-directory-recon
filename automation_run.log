@@ -34,3 +34,163 @@ README.md generated successfully.
 ModuleNotFoundError: No module named 'project_path'
 [2025-04-14 10:37:20] === DAILY AUTOMATION COMPLETE ===
 
+[2025-04-15 10:23:20] === DAILY AUTOMATION START ===
+[2025-04-15 10:23:20] Running: env_loader.py
+[2025-04-15 10:23:20] Loaded environment from .env.work
+[2025-04-15 10:23:20] Running: project_path.py
+[2025-04-15 10:23:20] PYTHONPATH updated: ['C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon', 'C:\\Python312\\python312.zip', 'C:\\Python312\\DLLs', 'C:\\Python312\\Lib', 'C:\\Python312', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32\\lib', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\Pythonwin', 'C:\\Python312\\Lib\\site-packages', 'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon\\src']
+[2025-04-15 10:23:20] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\health_check.py
+[2025-04-15 10:23:20] Loaded environment from .env.work
+GMAIL_USER found
+TO_EMAILS found
+GMAIL_TOKEN_PATH found
+LOCAL_GIT_REPO found
+MOTION_API_KEY found
+NGROK_AUTH_TOKEN found
+MOTION_WORKSPACE_ID found
+MOTION_PROJECT_ID found
+GIT_EXECUTABLE_PATH found
+All required environment variables are present.
+[2025-04-15 10:23:20] Running: git_commit_and_notify.py
+[2025-04-15 10:23:22] Loaded environment from .env.work
+Loaded environment from .env.work
+[2025-04-15 10:23:22] ERROR: Traceback (most recent call last):
+  File "C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\git_commit_and_notify.py", line 11, in <module>
+    from auto_git_commit import run_git_command
+ImportError: cannot import name 'run_git_command' from 'auto_git_commit' (C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\auto_git_commit.py)
+[2025-04-15 10:23:22] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\log_rotator.py
+[2025-04-15 10:23:22] Loaded environment from .env.work
+[2025-04-15 10:23:22] Running: generate_readme.py
+[2025-04-15 10:23:22] Loaded environment from .env.work
+README.md generated successfully.
+[2025-04-15 10:23:22] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py
+[2025-04-15 10:23:22] 
+[2025-04-15 10:23:22] ERROR: Traceback (most recent call last):
+  File "C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py", line 1, in <module>
+    from project_path import set_root_path
+ModuleNotFoundError: No module named 'project_path'
+[2025-04-15 10:23:22] === DAILY AUTOMATION COMPLETE ===
+
+[2025-04-15 10:29:52] === DAILY AUTOMATION START ===
+[2025-04-15 10:29:52] Running: env_loader.py
+[2025-04-15 10:29:52] Loaded environment from .env.work
+[2025-04-15 10:29:52] Running: project_path.py
+[2025-04-15 10:29:52] PYTHONPATH updated: ['C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon', 'C:\\Python312\\python312.zip', 'C:\\Python312\\DLLs', 'C:\\Python312\\Lib', 'C:\\Python312', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32\\lib', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\Pythonwin', 'C:\\Python312\\Lib\\site-packages', 'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon\\src']
+[2025-04-15 10:29:52] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\health_check.py
+[2025-04-15 10:29:52] Loaded environment from .env.work
+GMAIL_USER found
+TO_EMAILS found
+GMAIL_TOKEN_PATH found
+LOCAL_GIT_REPO found
+MOTION_API_KEY found
+NGROK_AUTH_TOKEN found
+MOTION_WORKSPACE_ID found
+MOTION_PROJECT_ID found
+GIT_EXECUTABLE_PATH found
+All required environment variables are present.
+[2025-04-15 10:29:52] Running: git_commit_and_notify.py
+[2025-04-15 10:29:53] Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+[ERROR] Error during commit and notify: main() takes 0 positional arguments but 1 was given
+[2025-04-15 10:29:53] ERROR: Traceback (most recent call last):
+  File "C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\git_commit_and_notify.py", line 31, in <module>
+    git_commit_and_notify()
+    ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'git_commit_and_notify' is not defined
+[2025-04-15 10:29:53] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\log_rotator.py
+[2025-04-15 10:29:53] Loaded environment from .env.work
+[2025-04-15 10:29:53] Running: generate_readme.py
+[2025-04-15 10:29:53] Loaded environment from .env.work
+README.md generated successfully.
+[2025-04-15 10:29:53] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py
+[2025-04-15 10:29:55] Loaded environment from .env.work
+Motion task email sent successfully.
+[2025-04-15 10:29:55] === DAILY AUTOMATION COMPLETE ===
+
+[2025-04-15 10:31:57] === DAILY AUTOMATION START ===
+[2025-04-15 10:31:57] Running: env_loader.py
+[2025-04-15 10:31:57] Loaded environment from .env.work
+[2025-04-15 10:31:57] Running: project_path.py
+[2025-04-15 10:31:57] PYTHONPATH updated: ['C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon', 'C:\\Python312\\python312.zip', 'C:\\Python312\\DLLs', 'C:\\Python312\\Lib', 'C:\\Python312', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32\\lib', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\Pythonwin', 'C:\\Python312\\Lib\\site-packages', 'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon\\src']
+[2025-04-15 10:31:57] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\health_check.py
+[2025-04-15 10:31:57] Loaded environment from .env.work
+GMAIL_USER found
+TO_EMAILS found
+GMAIL_TOKEN_PATH found
+LOCAL_GIT_REPO found
+MOTION_API_KEY found
+NGROK_AUTH_TOKEN found
+MOTION_WORKSPACE_ID found
+MOTION_PROJECT_ID found
+GIT_EXECUTABLE_PATH found
+All required environment variables are present.
+[2025-04-15 10:31:57] Running: git_commit_and_notify.py
+[2025-04-15 10:31:58] Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+[ERROR] Error during commit and notify: main() takes 0 positional arguments but 1 was given
+[2025-04-15 10:31:58] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\log_rotator.py
+[2025-04-15 10:31:58] Loaded environment from .env.work
+[2025-04-15 10:31:58] Running: generate_readme.py
+[2025-04-15 10:31:58] Loaded environment from .env.work
+README.md generated successfully.
+[2025-04-15 10:31:58] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py
+[2025-04-15 10:31:59] Loaded environment from .env.work
+Motion task email sent successfully.
+[2025-04-15 10:31:59] === DAILY AUTOMATION COMPLETE ===
+
+[2025-04-15 10:34:28] === DAILY AUTOMATION START ===
+[2025-04-15 10:34:28] Running: env_loader.py
+[2025-04-15 10:34:28] Loaded environment from .env.work
+[2025-04-15 10:34:28] Running: project_path.py
+[2025-04-15 10:34:28] PYTHONPATH updated: ['C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon', 'C:\\Python312\\python312.zip', 'C:\\Python312\\DLLs', 'C:\\Python312\\Lib', 'C:\\Python312', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32\\lib', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\Pythonwin', 'C:\\Python312\\Lib\\site-packages', 'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon\\src']
+[2025-04-15 10:34:28] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\health_check.py
+[2025-04-15 10:34:28] Loaded environment from .env.work
+GMAIL_USER found
+TO_EMAILS found
+GMAIL_TOKEN_PATH found
+LOCAL_GIT_REPO found
+MOTION_API_KEY found
+NGROK_AUTH_TOKEN found
+MOTION_WORKSPACE_ID found
+MOTION_PROJECT_ID found
+GIT_EXECUTABLE_PATH found
+All required environment variables are present.
+[2025-04-15 10:34:28] Running: git_commit_and_notify.py
+[2025-04-15 10:34:29] Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+Loaded environment from .env.work
+[ERROR] Error during commit and notify: name 'run_git_command' is not defined
+[2025-04-15 10:34:29] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\log_rotator.py
+[2025-04-15 10:34:29] Loaded environment from .env.work
+[2025-04-15 10:34:29] Running: generate_readme.py
+[2025-04-15 10:34:29] Loaded environment from .env.work
+README.md generated successfully.
+[2025-04-15 10:34:29] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py
+[2025-04-15 10:34:31] Loaded environment from .env.work
+Motion task email sent successfully.
+[2025-04-15 10:34:31] === DAILY AUTOMATION COMPLETE ===
+
+[2025-04-15 10:37:15] === DAILY AUTOMATION START ===
+[2025-04-15 10:37:15] Running: env_loader.py
+[2025-04-15 10:37:15] Loaded environment from .env.work
+[2025-04-15 10:37:15] Running: project_path.py
+[2025-04-15 10:37:15] PYTHONPATH updated: ['C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon', 'C:\\Python312\\python312.zip', 'C:\\Python312\\DLLs', 'C:\\Python312\\Lib', 'C:\\Python312', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\win32\\lib', 'C:\\Users\\samq\\AppData\\Roaming\\Python\\Python312\\site-packages\\Pythonwin', 'C:\\Python312\\Lib\\site-packages', 'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon\\src']
+[2025-04-15 10:37:15] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\health_check.py
+[2025-04-15 10:37:15] Loaded environment from .env.work
+GMAIL_USER found
+TO_EMAILS found
+GMAIL_TOKEN_PATH found
+LOCAL_GIT_REPO found
+MOTION_API_KEY found
+NGROK_AUTH_TOKEN found
+MOTION_WORKSPACE_ID found
+MOTION_PROJECT_ID found
+GIT_EXECUTABLE_PATH found
+All required environment variables are present.
+[2025-04-15 10:37:15] Running: git_commit_and_notify.py
