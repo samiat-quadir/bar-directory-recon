@@ -18,7 +18,7 @@ def create_timestamped_archive():
     os.makedirs(ARCHIVE_DIR, exist_ok=True)
 
     shutil.make_archive(archive_path.replace(".zip", ""), 'zip', SOURCE_DIR)
-    print(f"✅ Archive created at: {archive_path}")
+    print(f"Archive created at: {archive_path}")
 
 if __name__ == "__main__":
     create_timestamped_archive()
