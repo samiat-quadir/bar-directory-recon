@@ -1,6 +1,5 @@
 {
   "python.pythonPath": ".venv/Scripts/python.exe",
-  "terminal.integrated.defaultProfile.windows": "Command Prompt",
   "editor.formatOnSave": true,
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 1000,
@@ -54,5 +53,17 @@
   "terminal.integrated.showStatus": true,
   "git.showBranchInStatusBar": true,
   "tasks.showOutput": "always",
-  "editor.formatOnPaste": true
+  "editor.formatOnPaste": true,
+  "python-envs.pythonProjects": [],
+  "terminal.integrated.profiles.windows": {
+    "PowerShell (.venv311)": {
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "& 'C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon\\.venv311\\Scripts\\Activate.ps1'"
+      ]
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell (.venv311)"
 }
