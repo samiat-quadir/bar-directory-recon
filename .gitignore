@@ -49,18 +49,6 @@ chromedriver*.exe
 # Custom Folders / Files
 # =====================================================
 
-# Ignore the universal_recon folder (or specific problematic file) if not meant for version control
-# Alternatively, to ignore only the problematic file, uncomment the following line:
-# universal_recon/ADA – Recon Intelligence Sync.txt
-
-# =====================================================
-# Recommendations:
-# =====================================================
-# 1. Ensure that any files containing API keys, tokens, or sensitive configuration data are excluded.
-# 2. If you need to share environment configuration between team members, use sample files (e.g., .env.example)
-#    and instruct users to rename and configure them locally.
-# 3. Review the list periodically to ensure that newly generated artifacts are either tracked or ignored
-#    as appropriate.
 
 output/
 run_logs/
