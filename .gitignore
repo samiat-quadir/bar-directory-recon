@@ -50,7 +50,6 @@ chromedriver*.exe
 # =====================================================
 
 # Ignore the universal_recon folder (or specific problematic file) if not meant for version control
-universal_recon/
 # Alternatively, to ignore only the problematic file, uncomment the following line:
 # universal_recon/ADA – Recon Intelligence Sync.txt
 
@@ -62,3 +61,6 @@ universal_recon/
 #    and instruct users to rename and configure them locally.
 # 3. Review the list periodically to ensure that newly generated artifacts are either tracked or ignored
 #    as appropriate.
+
+output/
+run_logs/
