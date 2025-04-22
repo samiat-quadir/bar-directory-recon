@@ -252,6 +252,7 @@ recommended_tools:
       benefits:
         - "Enhanced webhook reliability and visibility"
         - "Simplifies debugging and webhook-driven automations"
+
 additional_insights_and_recommendations:
   seo_marketing:
     - Use Coupler.io for real-time SEO data synchronization into Google Sheets.
@@ -291,9 +292,9 @@ automation_setup:
     last_update: 2025-04-20
     notes: Enhanced script in use (auto_git_commit.py) with monitoring integrations.
   productivity_hub:
-    notion:
-      status: ✅ Active, structured page created (2025-04-20)
-      url: "https://www.notion.so/Automation-HQ-1dcf32d35f398005a309c8eeb2862418"
+
+    notion_url: "Automation HQ – https://www.notion.so/Automation-HQ-1dcf32d35f398005a309c8eeb2862418"
+
     todoist:
       status: ✅ Installed on ASUS, online account configured (2025-04-20)
 
@@ -329,4 +330,18 @@ project_layout:
     main_script: universal_recon/main.py
     test_scripts:
       - run_phase_21b_analysis.py
+
+
+current_phase:
+  label: "Phase 23 – Prefect Integration + Plugin Diff"
+  status: in progress
+  next_actions:
+    - Register Prefect flows for plugin_diff and validator_report scripts
+    - Add motion task sync to all phase-critical flows
+    - Set up Prefect dashboard logging and flow state checks
+  dependencies:
+    - Sentry (already active)
+    - Healthchecks.io (already active)
+    - GitHub Copilot Agent in VS Code (for future auto-correction tasks)
+  goal: "Fully automate analytics sweeps and plugin difference reporting across target sites"
 
