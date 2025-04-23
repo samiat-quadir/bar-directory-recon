@@ -97,3 +97,10 @@ To github.com:samiat-quadir/bar-directory-recon.git
  ! [remote rejected] main -> main (protected branch hook declined)
 error: failed to push some refs to 'github.com:samiat-quadir/bar-directory-recon.git'
 
+2025-04-22 20:30:51,648 — ERROR — [Git Error] remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+To github.com:samiat-quadir/bar-directory-recon.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:samiat-quadir/bar-directory-recon.git'
+

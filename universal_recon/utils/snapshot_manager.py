@@ -1,26 +1,18 @@
-# snapshot_manager.py
+# === utils/snapshot_manager.py ===
+
+from pathlib import Path
 import os
-from datetime import datetime
 
-def save_screenshot(driver, label, config=None, logger=None):
-    if not config or not config.get("general", {}).get("enable_screenshots", False):
-        return
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_dir = config["general"].get("screenshot_dir", "screenshots")
-    os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, f"{label}_{timestamp}.png")
-    driver.save_screenshot(path)
-    if logger:
-        logger(f"[SnapshotManager] Screenshot saved: {path}")
+def fallback_latest_matrix_path(archive_dir="output/archive"):
+    """
+    Finds the most recent schema_matrix_*.json in the archive directory.
+    """
+    archive_path = Path(archive_dir)
+    if not archive_path.exists():
+        return None
 
-def save_html(driver, label, config=None, logger=None):
-    if not config or not config.get("general", {}).get("enable_html_snapshots", False):
-        return
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_dir = config["general"].get("snapshot_dir", "snapshots")
-    os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, f"{label}_{timestamp}.html")
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(driver.page_source)
-    if logger:
-        logger(f"[SnapshotManager] HTML snapshot saved: {path}")
+    matrix_files = sorted(
+        [f for f in archive_path.glob("schema_matrix_*.json")],
+        reverse=True
+    )
+    return str(matrix_files[0]) if matrix_files else None

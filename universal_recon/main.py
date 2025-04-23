@@ -3,7 +3,7 @@
 import argparse
 import os
 from datetime import datetime
-from analytics.schema_matrix_collector import collect_schema_matrix, save_schema_matrix
+from analytics.schema_matrix_collector import collect_schema_matrix, write_schema_matrix
 from core.config_loader import ConfigManager
 from plugin_loader import load_normalized_records
 from plugin_aggregator import aggregate_and_print
@@ -18,7 +18,11 @@ def main():
     parser.add_argument("--schema-matrix", action="store_true")
     parser.add_argument("--full-report", action="store_true")
     parser.add_argument("--score-drift", action="store_true")
-    parser.add_argument("--plugin-diff", action="store_true")
+    parser.add_argument("--dashboard", action="store_true", help="Run the schema trend dashboard overlay.")
+    parser.add_argument("--drift-overlay", action="store_true", help="Run the drift matrix overlay.")
+    parser.add_argument("--plugin-decay", action="store_true", help="Run plugin decay analysis.")
+    parser.add_argument("--plugin-diff", action="store_true", help="Run plugin usage diff analysis.")
+    parser.add_argument("--validator-overlay", action="store_true", help="Run validator drift overlay.")
     parser.add_argument("--verbose", action="store_true")
 
     args = parser.parse_args()
@@ -49,9 +53,9 @@ def main():
             fieldmap_dir="output/fieldmap",
             plugin_dir="output/plugins"
         )
-        save_schema_matrix(matrix, path="output/schema_matrix.json")
-        if args.verbose:
-            print("✅ Schema matrix collected and saved.")
+        save_path = "output/schema_matrix.json"
+        write_schema_matrix(matrix, save_path, verbose=args.verbose)
+
 
     if args.full_report:
         records = load_normalized_records(site_name)
@@ -63,9 +67,25 @@ def main():
         from analytics.score_drift_export import generate_drift_csv
         generate_drift_csv(site=args.site)
 
+    if args.dashboard:
+        from analytics.trend_overlay_dashboard import run_trend_overlay_dashboard
+        run_trend_overlay_dashboard()
+
+    if args.drift_overlay:
+        from analytics.drift_matrix_overlay import run_drift_overlay
+        run_drift_overlay()
+
+    if args.plugin_decay:
+        from analytics.plugin_decay_overlay import run_plugin_decay_overlay
+        run_plugin_decay_overlay()
+
     if args.plugin_diff:
-        from analytics.plugin_usage_diff import run_plugin_diff
-        run_plugin_diff(site=args.site)
+        from analytics.plugin_usage_diff import run_plugin_usage_diff
+        run_plugin_usage_diff()
+
+    if args.validator_overlay:
+        from analytics.validator_drift_overlay import run_validator_drift_overlay
+        run_validator_drift_overlay()
 
 if __name__ == "__main__":
     main()

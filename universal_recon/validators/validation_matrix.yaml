@@ -1,16 +1,22 @@
-# === validation_matrix.yaml ===
+email_validator:
+  description: "Validates contact email field."
+  severity: warning
+  linked_plugin: email_plugin
+  plugin_required: true
+  on_plugin_removed: warning
 
 bar_number_check:
-  description: "Ensures bar number is present and properly formatted."
+  description: "Checks bar number formatting and presence."
   severity: critical
-  required_if_domain: ["bar", "legal"]
-  linked_plugin: "bar_number_extractor"
+  linked_plugin: bar_number_annotator
+  plugin_required: true
+  on_plugin_removed: critical
 
-email_validator:
-  description: "Validates presence of a contact email field."
+firm_name_validator:
+  description: "Validates law firm presence and name matching."
   severity: warning
-  required_if_domain: ["legal"]
-  linked_plugin: "email_extractor"
+  linked_plugin: firm_parser
+  plugin_required: false
 
 address_validator:
   description: "Checks for physical mailing address."

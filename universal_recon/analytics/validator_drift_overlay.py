@@ -1,73 +1,92 @@
 # === analytics/validator_drift_overlay.py ===
 
 import json
-import argparse
+import sys
 from pathlib import Path
 
-HTML_TEMPLATE = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Validator Drift Overlay</title>
-  <style>
-    body {{ font-family: Arial, sans-serif; padding: 20px; }}
-    table {{ border-collapse: collapse; width: 100%; }}
-    th, td {{ border: 1px solid #ccc; padding: 8px; text-align: left; }}
-    th {{ background-color: #f2f2f2; }}
-    .critical {{ background-color: #f8d7da; color: #721c24; }}
-    .warning {{ background-color: #fff3cd; color: #856404; }}
-    .info {{ background-color: #d1ecf1; color: #0c5460; }}
-  </style>
-</head>
-<body>
-  <h1>🚨 Validator Drift Overlay</h1>
-  <p>Snapshot: {snapshot}</p>
-  <table>
-    <thead>
-      <tr><th>Site</th><th>Validator</th><th>Severity</th><th>Reason</th></tr>
-    </thead>
-    <tbody>
-      {rows}
-    </tbody>
-  </table>
-</body>
-</html>
-"""
+# ✅ Always fix: Ensure `utils/` is importable from universal_recon root
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-def load_schema_matrix(matrix_path):
-    with open(matrix_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+from utils.validator_drift_badges import VALIDATOR_DRIFT_BADGES
+from utils.snapshot_manager import fallback_latest_matrix_path
+from utils.validation_loader import load_validation_matrix
 
-def generate_overlay_html(matrix, snapshot):
+DEFAULT_MATRIX_PATH = "output/schema_matrix.json"
+OUTPUT_PATH = "output/validator_drift_overlay.html"
+
+
+def load_matrix(path):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"❌ Matrix file not found at {path}")
+        return None
+
+
+def build_html_overlay(matrix, validator_map):
+    if not matrix or "sites" not in matrix:
+        return "<p>No valid schema matrix found.</p>"
+
     rows = []
-    for site, data in matrix.get("sites", {}).items():
-        for flag in data.get("validator_risk_flags", []):
-            severity = flag.get("severity", "info").lower()
-            validator = flag.get("validator")
-            reason = flag.get("reason", "No reason provided.")
-            row = f"<tr class='{severity}'><td>{site}</td><td>{validator}</td><td>{severity.upper()}</td><td>{reason}</td></tr>"
-            rows.append(row)
-    return HTML_TEMPLATE.format(snapshot=snapshot, rows="\n".join(rows))
+    for site, site_data in matrix["sites"].items():
+        plugins = site_data.get("plugins_used", [])
+        risk_rows = []
+
+        for validator, info in validator_map.items():
+            plugin = info.get("linked_plugin")
+            required = info.get("plugin_required", False)
+            severity = info.get("on_plugin_removed", "info")
+
+            if plugin and required and plugin not in plugins:
+                badge = VALIDATOR_DRIFT_BADGES.get(severity, VALIDATOR_DRIFT_BADGES["info"])
+                risk_rows.append(
+                    f"<tr><td>{validator}</td><td>{plugin}</td>"
+                    f"<td class='{badge['css_class']}' title='{badge['tooltip']}'>{badge['icon']} {severity}</td></tr>"
+                )
+
+        table = (
+            f"<h3>{site}</h3>"
+            f"<table><tr><th>Validator</th><th>Missing Plugin</th><th>Severity</th></tr>"
+            + "\n".join(risk_rows)
+            + "</table><hr>"
+            if risk_rows else f"<h3>{site}</h3><p>✅ No validator-linked plugin drift.</p><hr>"
+        )
+        rows.append(table)
+
+    return f"""
+    <html><head><style>
+    table {{ border-collapse: collapse; width: 100%; margin-bottom: 1em; }}
+    th, td {{ border: 1px solid #ccc; padding: 8px; text-align: left; }}
+    .validator-critical {{ background: #f8d7da; color: #721c24; }}
+    .validator-warning  {{ background: #fff3cd; color: #856404; }}
+    .validator-info     {{ background: #d1ecf1; color: #0c5460; }}
+    </style></head><body>
+    <h2>🧩 Validator Drift Overlay</h2>
+    {''.join(rows)}
+    </body></html>
+    """
+
 
 def main():
-    parser = argparse.ArgumentParser(description="Validator Drift Overlay Generator")
-    parser.add_argument("--matrix-path", default="output/schema_matrix.json", help="Path to schema_matrix.json")
-    parser.add_argument("--output-html", default="output/validator_drift_overlay.html", help="Where to write the HTML file")
-    args = parser.parse_args()
-
-    matrix_path = Path(args.matrix_path)
+    matrix_path = Path(DEFAULT_MATRIX_PATH)
     if not matrix_path.exists():
-        print(f"❌ Matrix not found: {matrix_path}")
-        return
+        fallback = fallback_latest_matrix_path()
+        if fallback:
+            print(f"⚠️  Falling back to: {fallback}")
+            matrix_path = Path(fallback)
+        else:
+            print("❌ No schema matrix available.")
+            return
 
-    matrix = load_schema_matrix(matrix_path)
-    snapshot_name = matrix_path.stem
-    html = generate_overlay_html(matrix, snapshot=snapshot_name)
+    matrix = load_matrix(matrix_path)
+    validator_map = load_validation_matrix()
+    html = build_html_overlay(matrix, validator_map)
 
-    output_path = Path(args.output_html)
-    output_path.write_text(html, encoding="utf-8")
-    print(f"[✓] Validator drift overlay written to: {output_path.resolve()}")
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"[✓] Validator drift overlay written to: {OUTPUT_PATH}")
+
 
 if __name__ == "__main__":
     main()

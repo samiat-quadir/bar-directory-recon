@@ -1,61 +1,54 @@
 import os
+import subprocess
 import logging
 from datetime import datetime
 from env_loader import load_environment
-import subprocess
 
-# Load env vars early
+# === Setup logging ===
 load_environment()
-
-# Setup logging
 logging.basicConfig(
     filename="git_commit_notify.log",
     level=logging.INFO,
-    format="%(asctime)s — %(levelname)s — %(message)s",
+    format="%(asctime)s - %(levelname)s - %(message)s",
     encoding="utf-8"
 )
 
-# Pull config from env
-LOCAL_GIT_REPO = os.getenv("LOCAL_GIT_REPO")
-COMMIT_PREFIX = os.getenv("COMMIT_PREFIX", "Auto-commit:")
+# === Safety check ===
+def run_pre_commit_validator():
+    result = subprocess.run(
+        ["python", "pre_commit_validator.py"],
+        capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        logging.error("❌ Pre-commit validation failed.")
+        logging.error(result.stdout + result.stderr)
+        return False
+    return True
 
-def run_git_command(command_list, allow_fail=False):
-    """Executes git command with optional error handling"""
-    try:
-        result = subprocess.run(
-            command_list,
-            cwd=LOCAL_GIT_REPO,
-            check=True,
-            capture_output=True,
-            text=True
-        )
-        return result.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        logging.error(f"[Git Error] {e.stderr}")
-        if not allow_fail:
-            raise
-        return None
+# === Git Commands ===
+def run_git_command(cmd):
+    return subprocess.run(cmd, capture_output=True, text=True, check=True)
 
-def main(commit_message=None):
-    if not commit_message:
-        commit_message = f"{COMMIT_PREFIX} {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+def git_commit_only():
+    if not run_pre_commit_validator():
+        print("❌ Aborting: pre-commit validation failed.")
+        return
 
-    os.chdir(LOCAL_GIT_REPO)
+    # Stage + commit
+    run_git_command(["git", "add", "."])
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        capture_output=True, text=True
+    ).stdout
+    if not status.strip():
+        logging.info("ℹ️ No changes to commit.")
+        return
 
-    changes = run_git_command(["git", "status", "--porcelain"], allow_fail=True)
+    commit_msg = f"Auto-commit: {datetime.now().isoformat(sep=' ', timespec='seconds')}"
+    run_git_command(["git", "commit", "-m", commit_msg])
+    logging.info("✅ Local git commit created.")
+    print("✅ Changes committed locally.")
 
-    if not changes:
-        logging.info("No changes found, performing empty commit.")
-        run_git_command(["git", "commit", "--allow-empty", "-m", commit_message])
-    else:
-        run_git_command(["git", "add", "-A"])
-        run_git_command(["git", "commit", "-m", commit_message])
-
-    run_git_command(["git", "push", "origin", "main"])
-    logging.info("Git push successful.")
-
-    return f"Commit message: {commit_message}\nChanges: {changes or 'No tracked file changes.'}"
-
-# For standalone testing (optional)
+# === Main ===
 if __name__ == "__main__":
-    main()
+    git_commit_only()
