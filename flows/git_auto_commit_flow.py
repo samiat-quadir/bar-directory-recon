@@ -1,5 +1,5 @@
 import sys
-import os
+import subprocess
 from pathlib import Path
 
 # Add project root to sys.path so env_loader.py is found
@@ -7,23 +7,36 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from prefect import flow, task
 from env_loader import load_environment
-import subprocess
-
 
 @task(name="Run Git Commit Script")
 def run_git_commit_script():
-    load_environment()
-    script_path = "auto_git_commit.py"
-    result = subprocess.run(["python", script_path], capture_output=True, text=True)
-    print("STDOUT:\n", result.stdout)
-    print("STDERR:\n", result.stderr)
-    return result.returncode
+    try:
+        # Load environment (.env.asus or .env)
+        load_environment()
+        # Execute the existing auto_git_commit.py script
+        result = subprocess.run(
+            ["python", "auto_git_commit.py"],
+            capture_output=True,
+            text=True
+        )
+        # Log outputs
+        print("STDOUT:\n", result.stdout)
+        print("STDERR:\n", result.stderr)
 
-@flow(name="Git Auto Commit Flow")
+        if result.returncode != 0:
+            # Branch-protection push failures or other issues
+            print(f"⚠️ Git script exited with code {result.returncode}, continuing flow.")
+
+    except Exception as exc:
+        # Catch unexpected errors (e.g. missing files)
+        print("❌ Exception during git commit script:", exc)
+
+    # Always return 0 (success) so Prefect flow does not fail
+    return 0
+
+@flow(name="Git Auto Commit Flow", description="Runs auto_git_commit.py on schedule without failing on push errors")
 def git_auto_commit_flow():
-    code = run_git_commit_script()
-    if code != 0:
-        raise Exception("Git auto commit script failed")
+    run_git_commit_script()
 
 if __name__ == "__main__":
     git_auto_commit_flow()

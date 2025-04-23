@@ -90,3 +90,10 @@ Changes: M automation_run.log
 2025-04-21 10:30:02,166 — INFO — No changes found, performing empty commit.
 2025-04-21 10:30:02,261 — ERROR — [Git Error] fatal: cannot update the ref 'HEAD': unable to append to '.git/logs/HEAD': Function not implemented
 
+2025-04-22 18:08:04,138 — ERROR — [Git Error] remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+To github.com:samiat-quadir/bar-directory-recon.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:samiat-quadir/bar-directory-recon.git'
+
