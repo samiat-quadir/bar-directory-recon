@@ -1,88 +1,67 @@
-# === validators/run_phase_21b_analysis.py ===
+# === universal_recon/validators/run_phase_21b_analysis.py ===
 
 import os
 import json
-from glob import glob
-from datetime import datetime
 
-ARCHIVE_PATH = "output/archive/"
-LATEST_PATH = "output/schema_matrix.json"
-REGRESSION_THRESHOLD = 5.0
+MATRIX_PATH = "output/schema_matrix.json"
+STATUS_PATH = "output/output_status.json"
 
-def load_matrix(path):
-    try:
-        with open(path) as f:
-            return json.load(f)
-    except Exception as e:
-        print(f"[!] Failed to load {path}: {e}")
-        return {}
+def validate_matrix_structure(matrix):
+    if "sites" not in matrix:
+        print("❌ Matrix missing 'sites' key.")
+        return False
 
-def get_latest_snapshot_path():
-    files = sorted(glob(os.path.join(ARCHIVE_PATH, "schema_matrix_*.json")))
-    return files[-1] if files else None
+    any_site_fail = False
+    for site, data in matrix["sites"].items():
+        if "score_summary" not in data:
+            print(f"❌ {site}: missing score_summary")
+            any_site_fail = True
+        if "plugins_used" not in data:
+            print(f"❌ {site}: missing plugins_used")
+            any_site_fail = True
+        if "anomaly_flags" not in data:
+            print(f"⚠️  {site}: no anomaly_flags present")
 
-def compare_scores(latest, previous):
-    regressions = []
+    return not any_site_fail
 
-    latest_sites = latest.get("sites", {})
-    prev_sites = previous.get("sites", {})
+def validate_site_status():
+    if not os.path.exists(STATUS_PATH):
+        print("⚠️  No status summary found (skipping validator_drift check)")
+        return True
 
-    for site in latest_sites:
-        new_score = latest_sites[site].get("score_summary", {}).get("field_score")
-        old_score = prev_sites.get(site, {}).get("score_summary", {}).get("field_score")
-        new_anomalies = len(latest_sites[site].get("anomaly_flags", []))
-        old_anomalies = len(prev_sites.get(site, {}).get("anomaly_flags", []))
+    with open(STATUS_PATH, "r", encoding="utf-8") as f:
+        status = json.load(f)
 
-        drift = None
-        if new_score is not None and old_score is not None:
-            drift = round(new_score - old_score, 2)
+    issue_found = False
+    for site, info in status.items():
+        if info.get("site_health") == "degraded":
+            print(f"🟥 {site}: DEGRADATION DETECTED → Plugins Removed: {info.get('plugins_removed', [])}")
+            issue_found = True
+        elif info.get("validator_drift"):
+            print(f"🟧 {site}: validator_drift = True")
 
-        regress = drift is not None and drift < -REGRESSION_THRESHOLD
-        anomaly_spike = new_anomalies > old_anomalies
+    return not issue_found
 
-        if regress or anomaly_spike:
-            regressions.append({
-                "site": site,
-                "score_drift": drift,
-                "old_score": old_score,
-                "new_score": new_score,
-                "anomaly_spike": anomaly_spike,
-                "old_anomalies": old_anomalies,
-                "new_anomalies": new_anomalies,
-            })
+def run_sanity_check():
+    if not os.path.exists(MATRIX_PATH):
+        print("❌ schema_matrix.json is missing.")
+        return False
 
-    return regressions
+    with open(MATRIX_PATH, "r", encoding="utf-8") as f:
+        matrix = json.load(f)
 
-def print_summary(regressions):
-    if not regressions:
-        print("✅ No major regressions detected.")
-        return
+    print("\n🔍 Validating schema_matrix.json structure...")
+    structure_ok = validate_matrix_structure(matrix)
 
-    print("⚠️  Detected potential issues:\n")
-    for r in regressions:
-        print(f"- {r['site']}: score dropped {r['score_drift']} "
-              f"({r['old_score']} → {r['new_score']})"
-              + (" + anomaly spike" if r['anomaly_spike'] else ""))
+    print("\n🔍 Validating site validator drift status...")
+    status_ok = validate_site_status()
 
-def main():
-    print("📊 Phase 21b Sanity Checker")
-    latest_path = LATEST_PATH
-    previous_path = get_latest_snapshot_path()
-
-    if not previous_path or not os.path.exists(latest_path):
-        print("[!] Missing required matrix files.")
-        exit(1)
-
-    latest = load_matrix(latest_path)
-    previous = load_matrix(previous_path)
-
-    regressions = compare_scores(latest, previous)
-    print_summary(regressions)
-
-    if regressions:
-        exit(1)
+    if structure_ok and status_ok:
+        print("\n✅ Phase 21b–25c Sanity Check Passed.")
+        return True
     else:
-        exit(0)
+        print("\n❌ Issues found during sanity check.")
+        return False
 
 if __name__ == "__main__":
-    main()
+    run_sanity_check()

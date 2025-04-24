@@ -39,4 +39,10 @@ def git_auto_commit_flow():
     run_git_commit_script()
 
 if __name__ == "__main__":
-    git_auto_commit_flow()
+    # Register or update the deployment on your Prefect server
+    git_auto_commit_flow.deploy(
+        name="daily-git-auto-commit",
+        work_pool_name="default",
+        cron="0 9 * * *",
+        timezone="America/New_York"
+    )

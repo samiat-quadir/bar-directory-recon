@@ -1,0 +1,10 @@
+version: 1
+name: daily-git-auto-commit
+flow_name: Git Auto Commit Flow
+entrance: flows/git_auto_commit_flow.py:git_auto_commit_flow
+schedule:
+  type: cron
+  cron: "0 9 * * *"
+  timezone: "America/New_York"
+work_pool: default
+work_queue: default
