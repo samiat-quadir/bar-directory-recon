@@ -1,16 +1,14 @@
 email_validator:
-  description: "Validates contact email field."
-  severity: warning
-  linked_plugin: email_plugin
-  plugin_required: true
+  plugin: email_plugin
   on_plugin_removed: warning
+  drift_penalty: 0.05
+  tooltip: "Checks for presence of a valid contact email."
 
 bar_number_check:
-  description: "Checks bar number formatting and presence."
-  severity: critical
-  linked_plugin: bar_number_annotator
-  plugin_required: true
+  plugin: bar_number_annotator
   on_plugin_removed: critical
+  drift_penalty: 0.10
+  tooltip: "Ensures bar number field exists. Loss degrades legal domain completeness."
 
 firm_name_validator:
   description: "Validates law firm presence and name matching."
@@ -22,3 +20,9 @@ address_validator:
   description: "Checks for physical mailing address."
   severity: warning
   required_if_domain: ["legal"]
+
+form_completeness_check:
+  plugin: form_autofill
+  on_plugin_removed: warning
+  drift_penalty: 0.05
+  tooltip: "Detects whether directory includes autofill-ready contact forms."

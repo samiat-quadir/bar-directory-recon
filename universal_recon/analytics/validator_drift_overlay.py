@@ -1,92 +1,70 @@
-# === analytics/validator_drift_overlay.py ===
+# === universal_recon/analytics/validator_drift_overlay.py ===
 
 import json
-import sys
-from pathlib import Path
+import os
 
-# ✅ Always fix: Ensure `utils/` is importable from universal_recon root
-sys.path.append(str(Path(__file__).resolve().parent.parent))
+BADGE_COLORS = {
+    "critical": "#e74c3c",  # red
+    "warning": "#f39c12",   # orange
+    "info": "#3498db",      # blue
+}
 
-from utils.validator_drift_badges import VALIDATOR_DRIFT_BADGES
-from utils.snapshot_manager import fallback_latest_matrix_path
-from utils.validation_loader import load_validation_matrix
-
-DEFAULT_MATRIX_PATH = "output/schema_matrix.json"
-OUTPUT_PATH = "output/validator_drift_overlay.html"
-
-
-def load_matrix(path):
-    try:
+def load_status(path="output/output_status.json"):
+    if os.path.exists(path):
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
-    except FileNotFoundError:
-        print(f"❌ Matrix file not found at {path}")
-        return None
+    return {}
 
+def export_html(status, path="output/validator_drift_overlay.html"):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    html = ["<html><head><title>Validator Drift Overlay</title></head><body>"]
+    html.append("<h1>🔍 Validator Plugin Drift Summary</h1>")
 
-def build_html_overlay(matrix, validator_map):
-    if not matrix or "sites" not in matrix:
-        return "<p>No valid schema matrix found.</p>"
+    for site, details in status.items():
+        drift = details.get("validator_drift", False)
+        health = details.get("site_health", "ok")
+        plugins = details.get("plugins_removed", [])
+        suppress = details.get("score_suppressed_by", 0)
 
-    rows = []
-    for site, site_data in matrix["sites"].items():
-        plugins = site_data.get("plugins_used", [])
-        risk_rows = []
+        color = "#2ecc71" if not drift else BADGE_COLORS.get("critical" if suppress >= 10 else "warning")
+        html.append(f"<div style='border:1px solid #ccc;margin:10px;padding:10px;'>")
+        html.append(f"<h2>{site} - <span style='color:{color}'>{health.upper()}</span></h2>")
+        if not drift:
+            html.append("<p>✅ All validator plugins present.</p>")
+        else:
+            html.append("<ul>")
+            for plugin in plugins:
+                tooltip = f"Suppressed {suppress}% due to missing plugin: {plugin}"
+                html.append(f"<li><span title='{tooltip}' style='color:{color}'>{plugin}</span></li>")
+            html.append("</ul>")
+            html.append(f"<p><b>Score Suppression:</b> {suppress}%</p>")
+        html.append("</div>")
 
-        for validator, info in validator_map.items():
-            plugin = info.get("linked_plugin")
-            required = info.get("plugin_required", False)
-            severity = info.get("on_plugin_removed", "info")
+    html.append("</body></html>")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(html))
+    print(f"[✓] Validator drift overlay written to: {path}")
 
-            if plugin and required and plugin not in plugins:
-                badge = VALIDATOR_DRIFT_BADGES.get(severity, VALIDATOR_DRIFT_BADGES["info"])
-                risk_rows.append(
-                    f"<tr><td>{validator}</td><td>{plugin}</td>"
-                    f"<td class='{badge['css_class']}' title='{badge['tooltip']}'>{badge['icon']} {severity}</td></tr>"
-                )
-
-        table = (
-            f"<h3>{site}</h3>"
-            f"<table><tr><th>Validator</th><th>Missing Plugin</th><th>Severity</th></tr>"
-            + "\n".join(risk_rows)
-            + "</table><hr>"
-            if risk_rows else f"<h3>{site}</h3><p>✅ No validator-linked plugin drift.</p><hr>"
-        )
-        rows.append(table)
-
-    return f"""
-    <html><head><style>
-    table {{ border-collapse: collapse; width: 100%; margin-bottom: 1em; }}
-    th, td {{ border: 1px solid #ccc; padding: 8px; text-align: left; }}
-    .validator-critical {{ background: #f8d7da; color: #721c24; }}
-    .validator-warning  {{ background: #fff3cd; color: #856404; }}
-    .validator-info     {{ background: #d1ecf1; color: #0c5460; }}
-    </style></head><body>
-    <h2>🧩 Validator Drift Overlay</h2>
-    {''.join(rows)}
-    </body></html>
-    """
-
+def export_json(status, path="output/validator_drift_overlay.json"):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(status, f, indent=2)
+    print(f"[✓] Validator drift overlay JSON written to: {path}")
 
 def main():
-    matrix_path = Path(DEFAULT_MATRIX_PATH)
-    if not matrix_path.exists():
-        fallback = fallback_latest_matrix_path()
-        if fallback:
-            print(f"⚠️  Falling back to: {fallback}")
-            matrix_path = Path(fallback)
-        else:
-            print("❌ No schema matrix available.")
-            return
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--status-json", default="output/output_status.json")
+    parser.add_argument("--output-html", default="output/validator_drift_overlay.html")
+    parser.add_argument("--output-json", default="output/validator_drift_overlay.json")
+    args = parser.parse_args()
 
-    matrix = load_matrix(matrix_path)
-    validator_map = load_validation_matrix()
-    html = build_html_overlay(matrix, validator_map)
-
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        f.write(html)
-    print(f"[✓] Validator drift overlay written to: {OUTPUT_PATH}")
-
+    status = load_status(args.status_json)
+    if not status:
+        print("❌ No status summary found.")
+        return
+    export_html(status, args.output_html)
+    export_json(status, args.output_json)
 
 if __name__ == "__main__":
     main()

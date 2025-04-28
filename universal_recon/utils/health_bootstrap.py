@@ -1,7 +1,12 @@
 # universal_recon/utils/health_bootstrap.py
 
-import os
 import sys
+import os
+# Ensure the project root (parent of universal_recon) is on sys.path
+PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.join(__file__, "../..")))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
 import importlib.util
 from pathlib import Path
 
@@ -35,11 +40,25 @@ def try_import(name):
     except Exception as e:
         print(f"❌ {name} → Failed: {e}")
 
+def check_overlay_status(module_name, html_path):
+    print(f"\n--- Overlay Check: {module_name} ---")
+    try:
+        spec = importlib.util.find_spec(module_name)
+        if spec is None:
+            print(f"❌ {module_name} → Module NOT found. [BADGE: MISSING]")
+            return
+        print(f"✅ {module_name} → Importable.")
+        if os.path.exists(html_path):
+            print(f"[BADGE: OK] {html_path} exists.")
+        else:
+            print(f"[BADGE: NEEDS REGENERATION] {html_path} missing.")
+    except Exception as e:
+        print(f"❌ {module_name} → Failed: {e} [BADGE: MISSING]")
+
 def run_all_checks():
     check_sys_path()
     insert_root_to_syspath()
     banner("MODULE IMPORT CHECKS")
-
     modules = [
         "universal_recon.plugin_loader",
         "universal_recon.plugin_aggregator",
@@ -50,9 +69,11 @@ def run_all_checks():
         "universal_recon.validators.validation_matrix",
         "universal_recon.core.report_printer",
     ]
-
     for mod in modules:
         try_import(mod)
+    # Overlay awareness
+    check_overlay_status("universal_recon.analytics.plugin_decay_overlay", "output/plugin_decay_overlay.html")
+    check_overlay_status("universal_recon.analytics.validator_drift_overlay", "output/validator_drift_overlay.html")
 
 if __name__ == "__main__":
     run_all_checks()

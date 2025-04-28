@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from prefect import flow, task
+from prefect.server.schemas.schedules import CronSchedule
 from env_loader import load_environment
 
 @task(name="Run Git Commit Script")
@@ -39,10 +40,9 @@ def git_auto_commit_flow():
     run_git_commit_script()
 
 if __name__ == "__main__":
-    # Register or update the deployment on your Prefect server
     git_auto_commit_flow.deploy(
         name="daily-git-auto-commit",
         work_pool_name="default",
         cron="0 9 * * *",
-        timezone="America/New_York"
+        schedule=CronSchedule(cron="0 9 * * *", timezone="America/New_York"),
     )

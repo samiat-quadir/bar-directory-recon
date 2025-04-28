@@ -1,108 +1,94 @@
-# === analytics/plugin_decay_overlay.py ===
+# universal_recon/analytics/plugin_decay_overlay.py
 
-import json
-import os
-import argparse
-from pathlib import Path
-from typing import Dict, List
-import yaml
+import json, os, argparse, yaml
 
-from utils.validator_drift_badges import VALIDATOR_DRIFT_BADGES
+STATUS_PATH = "output/output_status.json"
+MATRIX_PATH = "output/schema_matrix.json"
+YAML_PATH = "universal_recon/validators/validation_matrix.yaml"
+EXPORT_HTML = "output/plugin_decay_overlay.html"
+EXPORT_JSON = "output/plugin_decay_overlay.json"
 
-def load_yaml(path: str) -> Dict:
-    with open(path, 'r', encoding='utf-8') as f:
-        return yaml.safe_load(f)
+BADGE_COLORS = {
+    "critical": "#e74c3c",
+    "warning": "#f1c40f",
+    "info": "#3498db",
+}
 
-def load_matrix(path: str) -> Dict:
-    with open(path, 'r', encoding='utf-8') as f:
+def load_json(path):
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-def get_validator_plugin_map(validation_matrix: Dict) -> Dict[str, Dict]:
-    mapping = {}
-    for validator, meta in validation_matrix.items():
-        if "plugin" in meta:
-            mapping[meta["plugin"]] = {
-                "validator": validator,
-                "required": meta.get("plugin_required", False),
-                "severity": meta.get("on_plugin_removed", "info")
-            }
-    return mapping
+def load_yaml(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
 
-def analyze_plugin_decay(archive_dir: str, matrix_path: str, yaml_path: str) -> Dict:
-    archive_files = sorted(
-        [f for f in os.listdir(archive_dir) if f.endswith(".json")]
-    )
-    if len(archive_files) < 2:
-        raise RuntimeError("Need at least two archived matrix snapshots for decay detection.")
+def generate_overlay():
+    if not os.path.exists(MATRIX_PATH):
+        print("❌ Matrix missing.")
+        return
 
-    oldest_path = os.path.join(archive_dir, archive_files[0])
-    latest = load_matrix(matrix_path)
-    oldest = load_matrix(oldest_path)
-    validation_matrix = load_yaml(yaml_path)
-    plugin_map = get_validator_plugin_map(validation_matrix)
+    matrix = load_json(MATRIX_PATH)
+    status = load_json(STATUS_PATH) if os.path.exists(STATUS_PATH) else {}
+    valmap = load_yaml(YAML_PATH)
 
-    result = {
-        "plugin_decay": [],
-        "site_summary": {}
-    }
+    output = {}
+    for site, data in matrix.get("sites", {}).items():
+        used_plugins = set(data.get("plugins_used", []))
+        plugin_risks = []
 
-    for site, latest_info in latest.get("sites", {}).items():
-        old_info = oldest.get("sites", {}).get(site, {})
-        latest_plugins = set(latest_info.get("plugins_used", []))
-        old_plugins = set(old_info.get("plugins_used", []))
-        removed_plugins = list(old_plugins - latest_plugins)
-
-        decay_data = []
-        validator_score = 0
-        for plugin in removed_plugins:
-            impact = plugin_map.get(plugin)
-            badge = None
-            if impact:
-                severity = impact.get("severity", "info")
-                badge = VALIDATOR_DRIFT_BADGES.get(severity, VALIDATOR_DRIFT_BADGES["info"])
-                if severity == "critical":
-                    validator_score += 2
-                elif severity == "warning":
-                    validator_score += 1
-            decay_data.append({
+        for validator, vconf in valmap.items():
+            plugin = vconf.get("plugin")
+            if not plugin or plugin in used_plugins:
+                continue
+            plugin_risks.append({
                 "plugin": plugin,
-                "linked_validator": impact["validator"] if impact else None,
-                "severity": impact["severity"] if impact else "info",
-                "icon": badge["icon"] if badge else "",
-                "tooltip": badge["tooltip"] if badge else ""
+                "validator": validator,
+                "severity": vconf.get("on_plugin_removed", "info"),
+                "penalty": vconf.get("drift_penalty", 0.0),
+                "tooltip": vconf.get("tooltip", ""),
             })
 
-        result["plugin_decay"].append({
-            "site": site,
-            "removed_plugins": decay_data,
-            "validator_impact_score": validator_score
-        })
-        result["site_summary"][site] = {
-            "removed_plugin_count": len(removed_plugins),
-            "validator_impact_score": validator_score
+        site_status = status.get(site, {})
+        output[site] = {
+            "site_health": site_status.get("site_health", "ok"),
+            "score_suppressed_by": site_status.get("score_suppressed_by", 0),
+            "plugins_removed": site_status.get("plugins_removed", []),
+            "validator_risk": plugin_risks,
         }
 
-    return result
+    with open(EXPORT_JSON, "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=2)
+        print(f"[✓] Exported plugin decay risk JSON → {EXPORT_JSON}")
 
-def save_overlay(data: Dict, path: str):
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
-    print(f"[✓] Plugin decay overlay exported to: {path}")
+    # Build HTML
+    html = ["<html><head><title>Plugin Decay Overlay</title></head><body><h1>Plugin Risk Overlay</h1>"]
+    for site, meta in output.items():
+        html.append(f"<h2>{site} – Health: {meta['site_health'].upper()}</h2><ul>")
+        for risk in meta["validator_risk"]:
+            color = BADGE_COLORS.get(risk["severity"], "#ccc")
+            html.append(
+                f"<li><span style='background:{color};padding:2px;border-radius:3px;color:white;'>"
+                f"{risk['severity'].upper()}</span> "
+                f"Missing <b>{risk['plugin']}</b> (used by validator <i>{risk['validator']}</i>) "
+                f"→ Penalty: {risk['penalty'] * 100:.0f}% "
+                f"<small>🛈 {risk['tooltip']}</small></li>"
+            )
+        html.append("</ul>")
+        if meta["score_suppressed_by"]:
+            html.append(f"<p><b>⚠️ Score suppressed: −{meta['score_suppressed_by']}%</b></p>")
+    html.append("</body></html>")
+
+    with open(EXPORT_HTML, "w", encoding="utf-8") as f:
+        f.write("\n".join(html))
+        print(f"[✓] Exported plugin decay overlay HTML → {EXPORT_HTML}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Plugin Decay Overlay Generator with Validator Mapping")
-    parser.add_argument("--archive-dir", default="output/archive/", help="Path to matrix archive folder")
-    parser.add_argument("--matrix-path", default="output/schema_matrix.json", help="Current schema_matrix path")
-    parser.add_argument("--validation-yaml", default="validators/validation_matrix.yaml", help="Path to validator mapping YAML")
-    parser.add_argument("--export-json", default="output/plugin_decay_overlay.json", help="Export output JSON path")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--matrix", default=MATRIX_PATH)
+    parser.add_argument("--status", default=STATUS_PATH)
+    parser.add_argument("--yaml", default=YAML_PATH)
     args = parser.parse_args()
-
-    data = analyze_plugin_decay(
-        archive_dir=args.archive_dir,
-        matrix_path=args.matrix_path,
-        yaml_path=args.validation_yaml
-    )
-    save_overlay(data, args.export_json)
+    generate_overlay()
 
 if __name__ == "__main__":
     main()

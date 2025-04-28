@@ -1,29 +1,34 @@
-# === analytics/schema_score_linter.py ===
+# universal_recon/analytics/schema_score_linter.py
 
+import os
 import json
-from pathlib import Path
 
-def score_fieldmap(fieldmap_path: str, verbose: bool = False) -> dict:
-    """
-    Computes a schema completeness score from a fieldmap JSON file.
-    """
-    path = Path(fieldmap_path)
-    if not path.exists():
-        raise FileNotFoundError(f"Fieldmap not found: {fieldmap_path}")
+def run_schema_score_lint(site_name, verbose=False):
+    fieldmap_path = os.path.join("output", "fieldmap", f"{site_name}_fieldmap.json")
+    if not os.path.exists(fieldmap_path):
+        print(f"[!] Fieldmap not found: {fieldmap_path}")
+        return None
 
-    with path.open("r", encoding="utf-8") as f:
+    with open(fieldmap_path, "r", encoding="utf-8") as f:
         fieldmap = json.load(f)
 
-    required_fields = ["name", "email", "phone", "bar_number"]
-    found_fields = fieldmap.get("fields", [])
-    score = (len(set(found_fields) & set(required_fields)) / len(required_fields)) * 100
+    # Simple mock scoring logic
+    fields = fieldmap.get("fields", [])
+    score = 100
+    deductions = []
 
-    fieldmap["score_summary"] = {"field_score": round(score, 2)}
+    for field in fields:
+        if not field.get("example"):
+            score -= 10
+            deductions.append(f"Missing example: {field['name']}")
 
-    with path.open("w", encoding="utf-8") as f:
-        json.dump(fieldmap, f, indent=2)
+    result = {
+        "site": site_name,
+        "final_score": max(0, score),
+        "deductions": deductions
+    }
 
     if verbose:
-        print(f"[✓] Fieldmap scored: {fieldmap_path} → {score:.2f}")
+        print(f"[✓] Schema score lint complete: {result}")
 
-    return fieldmap["score_summary"]
+    return result

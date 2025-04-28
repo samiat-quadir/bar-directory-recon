@@ -60,14 +60,25 @@ def emit_status_summary(schema_matrix_path, validation_matrix_path, output_path)
 
     print(f"Status summary written to {output_path}")
 
-if __name__ == "__main__":
-    # File paths
-    schema_matrix_path = "universal_recon/output/schema_matrix.json"
+def emit_status(matrix_path, export_path, verbose=False):
+    """
+    Emits a status summary using the provided matrix and export paths.
+    Loads output/schema_matrix.json and validators/validation_matrix.yaml,
+    writes output/output_status.json, and supports verbose output.
+    """
     validation_matrix_path = "universal_recon/validators/validation_matrix.yaml"
-    output_path = "output/output_status.json"
-
     try:
-        # Emit status summary
-        emit_status_summary(schema_matrix_path, validation_matrix_path, output_path)
-    except FileNotFoundError as e:
-        print(f"Error: {e}")
+        emit_status_summary(matrix_path, validation_matrix_path, export_path)
+        if verbose:
+            print(f"emit_status: Status summary generated at {export_path}")
+    except Exception as e:
+        print(f"emit_status: Error - {e}")
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Emit status summary for Universal Recon.")
+    parser.add_argument('--matrix_path', type=str, default="output/schema_matrix.json", help="Path to schema_matrix.json")
+    parser.add_argument('--export_path', type=str, default="output/output_status.json", help="Path to output status JSON")
+    parser.add_argument('--verbose', action='store_true', help="Enable verbose output")
+    args = parser.parse_args()
+    emit_status(args.matrix_path, args.export_path, args.verbose)
