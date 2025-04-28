@@ -1,22 +1,23 @@
-# Use official Python 3.13 slim image
+# Use Python 3.13 slim image for improved security and efficiency
 FROM python:3.13-slim
 
-# Prevent Python from writing .pyc files and buffer issues
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Create and switch to app user
-RUN adduser --disabled-password --gecos "" appuser
+# Create and set the working directory
+WORKDIR /app
+
+# Add a non-root user for security
+RUN adduser --disabled-password appuser
 USER appuser
 
-# Set working directory (owned by appuser)
-WORKDIR /home/appuser/app
-
-# Copy and install dependencies
-COPY --chown=appuser:appuser requirements.txt .
+# Install dependencies with no-cache for security
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of your code
-COPY --chown=appuser:appuser . .
+# Copy the application code
+COPY . .
 
-# (No default CMD—tasks run via Prefect’s Docker agent)
+# Replace CMD with Prefect task execution
+CMD ["prefect", "run", "-p", "src/universal_recon.py"]
