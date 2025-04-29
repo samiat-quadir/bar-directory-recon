@@ -41,3 +41,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     flag_anomalies(args.matrix_path, args.export_json, args.verbose)
+
+
+# --- Phase-26 hot-fix alias -------------------------------------------
+def run_domain_linter(*args, **kwargs):
+    """Backward-compat wrapper expected by main.py"""
+    from argparse import Namespace
+    if args or kwargs:                         # called programmatically
+        return main(Namespace(**kwargs))
+    else:                                      # called by universal_recon.main CLI
+        main()                                 # main() is already defined above
+
