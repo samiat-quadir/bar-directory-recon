@@ -44,6 +44,6 @@ def validate_records(records: List[Dict], strict: bool = False, verbose: bool = 
         logger.info(f"✅ Validation Complete: {len(passed)} passed, {len(failed)} failed")
         if verbose and failed:
             for f in failed:
-                logger.warning(f⚠️  Failed Record: {f.get('error')}")
+                logger.warning(f"[!] Warning: Failed Record: {f.get('error')}")
 
     return passed

@@ -1,74 +1,51 @@
-# analytics/score_drift_export.py
+# === analytics/score_drift_export.py ===
 
-import os
-import csv
 import json
-import argparse
+import csv
 from pathlib import Path
-from typing import Dict
+import argparse
 
-def load_snapshot(matrix_path: Path) -> Dict:
-    try:
-        with matrix_path.open("r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        print(f"[!] Failed to load matrix: {matrix_path.name} ({e})")
-        return {}
+def generate_drift_csv(site: str, baseline_snapshot: str = None, output_dir: str = "output"):
+    archive = Path(output_dir) / "archive"
+    after_path = Path(output_dir) / "schema_matrix.json"
 
-def find_snapshot_by_suffix(archive_dir: Path, suffix: str) -> Path:
-    for file in archive_dir.glob(f"schema_matrix_{suffix}.json"):
-        return file
-    return None
+    if not archive.exists():
+        raise FileNotFoundError("Archive directory not found.")
 
-def get_sorted_snapshots(archive_dir: Path):
-    return sorted([f for f in archive_dir.glob("schema_matrix_*.json")])
+    snapshots = sorted(archive.glob("schema_matrix_*.json"))
+    if not snapshots:
+        raise FileNotFoundError("No snapshots found in archive.")
 
-def generate_drift_csv(site: str, output_dir: Path, baseline_suffix: str = None):
-    archive_dir = Path("output/archive")
-    latest_path = Path("output/schema_matrix.json")
-
-    if baseline_suffix:
-        baseline_file = find_snapshot_by_suffix(archive_dir, baseline_suffix)
+    before_path = None
+    if baseline_snapshot:
+        before_path = archive / f"schema_matrix_{baseline_snapshot}.json"
     else:
-        snapshots = get_sorted_snapshots(archive_dir)
-        baseline_file = snapshots[0] if snapshots else None
+        before_path = snapshots[0]
 
-    if not baseline_file:
-        print("❌ No baseline snapshot found.")
-        return
+    if not before_path.exists() or not after_path.exists():
+        raise FileNotFoundError("One or more matrix files not found.")
 
-    baseline = load_snapshot(baseline_file)
-    latest = load_snapshot(latest_path)
+    def extract_score(path):
+        with open(path, "r", encoding="utf-8") as f:
+            matrix = json.load(f)
+        return matrix.get("sites", {}).get(site, {}).get("score_summary", {}).get("field_score")
 
-    old_site = baseline.get("sites", {}).get(site, {})
-    new_site = latest.get("sites", {}).get(site, {})
+    old = extract_score(before_path) or 0
+    new = extract_score(after_path) or 0
+    delta = round(new - old, 2)
 
-    old_score = old_site.get("score_summary", {}).get("field_score")
-    new_score = new_site.get("score_summary", {}).get("field_score")
-
-    if not isinstance(old_score, (int, float)):
-        old_score = 0
-    if not isinstance(new_score, (int, float)):
-        new_score = 0
-
-    delta = round(new_score - old_score, 2)
-
-    csv_path = output_dir / f"{site}_score_drift.csv"
-    with csv_path.open("w", newline="", encoding="utf-8") as f:
+    csv_path = Path(output_dir) / f"{site}_score_drift.csv"
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["Site", "Old Score", "New Score", "Delta"])
-        writer.writerow([site, old_score, new_score, delta])
+        writer.writerow(["site", "before", "after", "delta"])
+        writer.writerow([site, old, new, delta])
 
-    print(f"[✓] Score drift exported to {csv_path}")
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--site", required=True)
-    parser.add_argument("--baseline-snapshot", help="Filename suffix of baseline snapshot")
-    parser.add_argument("--output-dir", default="output")
-    args = parser.parse_args()
-
-    generate_drift_csv(site=args.site, baseline_suffix=args.baseline_snapshot, output_dir=Path(args.output_dir))
+    print(f"[✓] Score drift exported to: {csv_path}")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--site", required=True)
+    parser.add_argument("--baseline-snapshot", default=None)
+    parser.add_argument("--output-dir", default="output")
+    args = parser.parse_args()
+    generate_drift_csv(site=args.site, baseline_snapshot=args.baseline_snapshot, output_dir=args.output_dir)
