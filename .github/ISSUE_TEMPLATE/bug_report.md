@@ -1,19 +1,26 @@
 ---
 name: Bug report
-about: Report an issue with the scraper
-title: '[BUG] '
+about: Create a report to help us improve
+title: "[BUG] "
 labels: bug
+assignees: samiat-quadir, jasmin954vic
 ---
 
-## Description
-A clear description of the bug
+**Describe the bug**
+A clear and concise description of what the bug is.
 
-## Reproduction Steps
-1. 
-2. 
-3. 
+**To Reproduce**
+Steps to reproduce the behavior:
 
-## Error Logs
-```log
-Paste relevant logs here
+1. Go to '...'
+2. Execute '...'
+3. See error
 
+**Expected behavior**
+What you expected to happen.
+
+**Screenshots**
+If applicable, add screenshots.
+
+**Additional context**
+Any other context about the problem here.

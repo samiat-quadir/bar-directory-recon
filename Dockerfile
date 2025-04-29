@@ -1,23 +1,30 @@
-# For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3-slim
+# -----------------------------
+# Dockerfile for Bar Directory Recon
+# Maintainer: [Your Name/Team]
+# Description: Builds a secure, minimal Python 3.13 environment for running Prefect-based automation.
+# -----------------------------
 
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE=1
+# 1. Use official Python slim image for security and efficiency
+FROM python:3.13-slim
 
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED=1
+# 2. Set environment variables for Python best practices
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Install pip requirements
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
-
+# 3. Set working directory
 WORKDIR /app
-COPY . /app
 
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+# 4. Add a non-root user for improved security
+RUN adduser --disabled-password appuser
 USER appuser
 
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["python", "src\universal_recon.py"]
+# 5. Install Python dependencies
+# Copy only requirements first for better build caching
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 6. Copy the rest of the application code
+COPY . .
+
+# 7. Default command: Run Prefect task
+CMD ["prefect", "run", "-p", "src/universal_recon.py"]

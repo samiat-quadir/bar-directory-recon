@@ -1,61 +1,67 @@
 import os
+import subprocess
 import logging
 from datetime import datetime
 from env_loader import load_environment
-import subprocess
 
-# Load env vars early
+# === Setup ===
 load_environment()
-
-# Setup logging
 logging.basicConfig(
     filename="git_commit_notify.log",
     level=logging.INFO,
-    format="%(asctime)s — %(levelname)s — %(message)s",
+    format="%(asctime)s - %(levelname)s - %(message)s",
     encoding="utf-8"
 )
 
-# Pull config from env
-LOCAL_GIT_REPO = os.getenv("LOCAL_GIT_REPO")
-COMMIT_PREFIX = os.getenv("COMMIT_PREFIX", "Auto-commit:")
+# === Pre-commit safety check ===
+def run_pre_commit_validator():
+    result = subprocess.run(
+        ["python", "pre_commit_validator.py"],
+        capture_output=True,
+        text=True
+    )
+    if result.returncode != 0:
+        logging.error("Pre-commit validation failed.")
+        logging.error(result.stdout + result.stderr)
+        print("ERROR: Pre-commit validation failed.")
+        return False
+    return True
 
-def run_git_command(command_list, allow_fail=False):
-    """Executes git command with optional error handling"""
+# === Git Commit Logic ===
+def run_git_command(cmd):
+    return subprocess.run(cmd, capture_output=True, text=True, check=True)
+
+def git_commit_only():
+    if not run_pre_commit_validator():
+        print("Aborting: pre-commit validation failed.")
+        return
+
     try:
-        result = subprocess.run(
-            command_list,
-            cwd=LOCAL_GIT_REPO,
-            check=True,
+        # Stage all changes
+        run_git_command(["git", "add", "."])
+
+        # Check if anything to commit
+        status = subprocess.run(
+            ["git", "status", "--porcelain"],
             capture_output=True,
             text=True
-        )
-        return result.stdout.strip()
+        ).stdout
+        if not status.strip():
+            logging.info("No changes to commit.")
+            print("No changes to commit.")
+            return
+
+        # Commit with timestamp
+        commit_msg = f"Auto-commit: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        run_git_command(["git", "commit", "-m", commit_msg])
+        logging.info("Local git commit created.")
+        print("Changes committed locally.")
+
     except subprocess.CalledProcessError as e:
-        logging.error(f"[Git Error] {e.stderr}")
-        if not allow_fail:
-            raise
-        return None
+        logging.error("Git command failed: " + e.stderr)
+        print("ERROR: Git command failed:")
+        print(e.stderr)
 
-def main(commit_message=None):
-    if not commit_message:
-        commit_message = f"{COMMIT_PREFIX} {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-
-    os.chdir(LOCAL_GIT_REPO)
-
-    changes = run_git_command(["git", "status", "--porcelain"], allow_fail=True)
-
-    if not changes:
-        logging.info("No changes found, performing empty commit.")
-        run_git_command(["git", "commit", "--allow-empty", "-m", commit_message])
-    else:
-        run_git_command(["git", "add", "-A"])
-        run_git_command(["git", "commit", "-m", commit_message])
-
-    run_git_command(["git", "push", "origin", "main"])
-    logging.info("Git push successful.")
-
-    return f"Commit message: {commit_message}\nChanges: {changes or 'No tracked file changes.'}"
-
-# For standalone testing (optional)
+# === Main ===
 if __name__ == "__main__":
-    main()
+    git_commit_only()

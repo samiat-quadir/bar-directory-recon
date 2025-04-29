@@ -2,8 +2,8 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "docker-build",
 			"label": "docker-build",
+			"type": "docker-build",
 			"platform": "python",
 			"dockerBuild": {
 				"tag": "bardirectoryrecon:latest",
@@ -13,14 +13,71 @@
 			}
 		},
 		{
-			"type": "docker-run",
 			"label": "docker-run: debug",
+			"type": "docker-run",
 			"dependsOn": [
 				"docker-build"
 			],
 			"python": {
 				"file": "src\\universal_recon.py"
 			}
+		},
+		{
+			"label": "Security Check",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"-m",
+				"bandit",
+				"-r",
+				"src/",
+				"universal_recon/",
+				"-ll"
+			],
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Dependency Check",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"-m",
+				"safety",
+				"check"
+			],
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Tests",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"-m",
+				"pytest",
+				"-v",
+				"--cov=src",
+				"--cov=universal_recon",
+				"--cov-report=html"
+			],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
 		}
 	]
 }

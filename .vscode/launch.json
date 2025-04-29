@@ -1,21 +1,54 @@
 {
+    "version": "0.2.0",
     "configurations": [
-        
-        {"name":"Python Debugger: Current File","type":"debugpy","request":"launch","program":"${file}","console":"integratedTerminal"},
         {
-            "name": "Docker: Python - General",
-            "type": "docker",
+            "name": "Python: Current File",
+            "type": "python",
             "request": "launch",
-            "preLaunchTask": "docker-run: debug",
-            "python": {
-                "pathMappings": [
-                    {
-                        "localRoot": "${workspaceFolder}",
-                        "remoteRoot": "/app"
-                    }
-                ],
-                "projectType": "general"
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
             }
+        },
+        {
+            "name": "Python: Debug Tests",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "-v",
+                "--no-cov"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Python: Universal Recon",
+            "type": "python",
+            "request": "launch",
+            "program": "src/universal_recon.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Docker: Debug",
+            "type": "python",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "/app"
+                }
+            ]
         }
     ]
 }
