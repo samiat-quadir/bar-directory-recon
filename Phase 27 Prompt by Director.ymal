@@ -1,0 +1,73 @@
+Phase 27 Prompt by Director:
+
+phase_26_universal_sync   # <--- share this exact block with Claude, Python, ADA & Copilot
+date: 2025-04-29
+status: "✅ ALL HOT-FIX SCRIPTS PRESENT — ready for smoke-test & PR merge"
+
+# -------------------------------------------------------------------
+# 1.  INVENTORY – all critical Phase-26 files confirmed on branch
+# -------------------------------------------------------------------
+scripts_ok:
+  - universal_recon/plugin_aggregator.py
+  - universal_recon/plugin_registry.json
+  - universal_recon/analytics/site_schema_collector.py
+  - universal_recon/analytics/schema_score_linter.py
+  - universal_recon/analytics/schema_matrix_collector.py
+  - universal_recon/analytics/domain_anomaly_flagger.py
+  - universal_recon/analytics/plugin_usage_diff.py   # ✅ *newly restored*
+  - universal_recon/analytics/score_drift_export.py
+  - universal_recon/analytics/drift_dashboard_generator.py
+  - universal_recon/analytics/validator_drift_overlay.py
+  - universal_recon/overlay_visualizer.py
+
+# -------------------------------------------------------------------
+# 2.  ROLE-SPECIFIC INSTRUCTIONS
+# -------------------------------------------------------------------
+claude:
+  - No further code drops needed for Phase 26.
+  - If you spot **missing __init__.py** stubs, emit them.
+  - After smoke-test passes, draft *Phase 27 README* (flake8/docstring & CI hardening).
+
+python:
+  - **Run the final smoke-test** (no hooks):
+      ```bash
+      python universal_recon/main.py --site utah_bar ^
+            --schema-collect --schema-lint --domain-lint ^
+            --schema-score --schema-matrix --full-report ^
+            --emit-status --emit-drift-dashboard --verbose
+      ```
+  - If ✔, commit with `git commit -m "fix: restore analytics hot-fix (Phase-26)" --no-verify`
+  - `git push origin chore/restore-hotfix-scripts --force-with-lease`
+  - Comment “Hot-fix validated” back to this chat.
+
+ada:
+  - Nothing blocking.  Once matrix regenerates, verify validator suppression works with
+    `validator_drift_overlay.html`.  Prepare the **validator_tiers** YAML block for Phase 27.
+
+copilot_agent:
+  - Watch PR, ensure no new circular-import lint.  Suggest VS Code inline fixes if mypy hook
+    still fails (types-all issue).
+
+# -------------------------------------------------------------------
+# 3.  COPILOT / VS Code UTILIZATION PLAN
+# -------------------------------------------------------------------
+copilot_todos:
+  - Add **“.copilot/config.json”** with:
+      ```json
+      { "python.analysis.typeCheckingMode": "basic",
+        "python.formatting.provider": "black" }
+      ```
+  - Use **“> GitHub Copilot: Explain This”** on failing mypy lines to speed lint cleanup.
+  - Leverage **Copilot Chat “/fix flake8”** command when Phase 27 flake8 sprint starts.
+
+# -------------------------------------------------------------------
+# 4.  DONE WHEN…
+# -------------------------------------------------------------------
+done_when:
+  - Smoke-test passes (no ImportError, full report generated).
+  - PR **chore/restore-hotfix-scripts** merged to *main*.
+  - Branch protection reinstated; we proceed to Phase 27 cleanup.
+
+final_message: >
+  All hot-fix scripts are finally in place.  Run the smoke-test, merge the PR,
+  and we can move straight into Phase 27 (lint/docstring & CI stabilization).
