@@ -2,7 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
 # Path to the ChromeDriver executable
-CHROMEDRIVER_PATH = r"C:/Users/samqu/OneDrive - Digital Age Marketing Group/Desktop/Local Py/chromedriver.exe"
+CHROMEDRIVER_PATH = (
+    r"C:/Users/samqu/OneDrive - Digital Age Marketing Group/Desktop/Local Py/chromedriver.exe"
+)
 
 # Set Chrome options for the test
 options = webdriver.ChromeOptions()

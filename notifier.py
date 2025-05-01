@@ -1,11 +1,13 @@
-import os
-import json
 import base64
+import json
 import logging
+import os
 from email.mime.text import MIMEText
-from googleapiclient.discovery import build
-from google.oauth2.credentials import Credentials
+
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+
 from env_loader import load_environment
 
 # Load environment from correct file
@@ -13,7 +15,12 @@ load_environment()
 
 # Setup logging
 LOG_PATH = os.getenv("LOG_EMAIL_NOTIFIER", "email_notifier.log")
-logging.basicConfig(filename=LOG_PATH, level=logging.INFO, encoding='utf-8', format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    filename=LOG_PATH,
+    level=logging.INFO,
+    encoding="utf-8",
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
 # Environment variables
 GMAIL_TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")
@@ -28,7 +35,9 @@ def load_gmail_credentials():
 
     if token_path and os.path.exists(token_path):
         try:
-            creds = Credentials.from_authorized_user_file(token_path, ["https://www.googleapis.com/auth/gmail.send"])
+            creds = Credentials.from_authorized_user_file(
+                token_path, ["https://www.googleapis.com/auth/gmail.send"]
+            )
             if creds.expired and creds.refresh_token:
                 creds.refresh(Request())
         except Exception as e:
@@ -71,4 +80,6 @@ def send_html_notification(subject, body):
 if __name__ == "__main__":
     print("✅ Loaded environment from .env.work")
     print(f"📄 GMAIL_TOKEN_PATH = {GMAIL_TOKEN_PATH}")
-    send_html_notification("Work Notification Test", "<b>This is a test email from Work Desktop script</b>")
+    send_html_notification(
+        "Work Notification Test", "<b>This is a test email from Work Desktop script</b>"
+    )

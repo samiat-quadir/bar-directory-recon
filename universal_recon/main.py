@@ -1,9 +1,11 @@
 # universal_recon/main.py
 
 import argparse
+
 from universal_recon.core.config_loader import ConfigManager
 from universal_recon.core.snapshot_manager import SnapshotArchiver
-from universal_recon.plugin_loader import load_plugins_by_type, load_normalized_records
+from universal_recon.plugin_loader import load_normalized_records, load_plugins_by_type
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -18,34 +20,40 @@ def main():
     parser.add_argument("--plugin-decay", action="store_true")
     parser.add_argument("--full-report", action="store_true")
     parser.add_argument("--verbose", action="store_true")
-    parser.add_argument("--emit-status", action="store_true", help="Emit site health and validator drift status")
+    parser.add_argument(
+        "--emit-status", action="store_true", help="Emit site health and validator drift status"
+    )
     args = parser.parse_args()
 
     site_name = args.site
 
     if args.schema_collect:
         from universal_recon.analytics.site_schema_collector import collect_fieldmap
+
         collect_fieldmap(site_name=site_name, verbose=args.verbose)
 
     if args.schema_lint:
         from universal_recon.analytics.schema_score_linter import run_schema_score_lint
+
         run_schema_score_lint(site_name)
 
     if args.domain_lint:
         from universal_recon.analytics.domain_anomaly_flagger import run_domain_linter
+
         run_domain_linter(site_name)
 
     if args.schema_score:
         from universal_recon.analytics.schema_score_linter import run_schema_score_lint
+
         run_schema_score_lint(site_name)
 
     if args.schema_matrix:
         from universal_recon.analytics.schema_matrix_collector import (
-            collect_schema_matrix, save_schema_matrix
+            collect_schema_matrix,
+            save_schema_matrix,
         )
-        matrix = collect_schema_matrix(
-            fieldmap_dir="output/fieldmap", plugin_dir="output/plugins"
-        )
+
+        matrix = collect_schema_matrix(fieldmap_dir="output/fieldmap", plugin_dir="output/plugins")
         save_schema_matrix(matrix)
         if args.verbose:
             print("✅ Schema matrix collected and saved.")
@@ -54,6 +62,7 @@ def main():
 
     if args.full_report:
         from universal_recon.plugin_aggregator import aggregate_and_print
+
         config = ConfigManager().as_dict()
         records = load_normalized_records(site_name)
         cli_flags = vars(args)
@@ -61,19 +70,24 @@ def main():
 
     if args.plugin_diff:
         from universal_recon.analytics.plugin_usage_diff import smart_plugin_diff_runner
+
         smart_plugin_diff_runner(site=site_name)
 
     if args.score_drift:
         from universal_recon.analytics.score_drift_export import generate_drift_csv
+
         generate_drift_csv(site=site_name)
 
     if args.plugin_decay:
         from universal_recon.analytics.plugin_decay_overlay import run_plugin_decay_overlay
+
         run_plugin_decay_overlay(site=site_name)
-    
+
     if args.emit_status:
         from universal_recon.utils.status_summary_emitter import emit_status
+
         emit_status(verbose=args.verbose)
+
 
 if __name__ == "__main__":
     main()

@@ -2,8 +2,8 @@
 
 import json
 import os
-from typing import Dict, Any
 from pathlib import Path
+from typing import Any, Dict
 
 
 def extract_plugins_used(site_data: Dict[str, Any]) -> list[str]:
@@ -60,9 +60,14 @@ def write_schema_matrix(matrix: Dict, save_path: str, verbose: bool = False):
 
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description="Schema Matrix Collector")
-    parser.add_argument("--output-dir", default="output/fieldmap", help="Directory with *_fieldmap.json")
-    parser.add_argument("--save-path", default="output/schema_matrix.json", help="Where to save matrix")
+    parser.add_argument(
+        "--output-dir", default="output/fieldmap", help="Directory with *_fieldmap.json"
+    )
+    parser.add_argument(
+        "--save-path", default="output/schema_matrix.json", help="Where to save matrix"
+    )
     parser.add_argument("--verbose", action="store_true", help="Verbose print")
     args = parser.parse_args()
 

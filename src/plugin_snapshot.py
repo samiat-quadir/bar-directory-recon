@@ -1,6 +1,6 @@
-import sys
-import os
 import json
+import os
+import sys
 from datetime import datetime
 
 # Fix path for importing modules from project root
@@ -18,6 +18,7 @@ load_environment()
 PLUGIN_FOLDER = os.path.join(os.getcwd(), "src", "plugins")
 SNAPSHOT_FILE = os.path.join(PLUGIN_FOLDER, "plugin_snapshot.json")
 
+
 def scan_plugins():
     if not os.path.exists(PLUGIN_FOLDER):
         print(f"❌ Plugin folder not found: {PLUGIN_FOLDER}")
@@ -33,13 +34,14 @@ def scan_plugins():
             plugin_data[file] = {
                 "last_modified": datetime.fromtimestamp(os.path.getmtime(path)).isoformat(),
                 "register_function_present": "def register" in content,
-                "size_kb": round(os.path.getsize(path) / 1024, 2)
+                "size_kb": round(os.path.getsize(path) / 1024, 2),
             }
 
     with open(SNAPSHOT_FILE, "w", encoding="utf-8") as f:
         json.dump(plugin_data, f, indent=2)
 
     print(f" Plugin snapshot saved to {SNAPSHOT_FILE}")
+
 
 if __name__ == "__main__":
     scan_plugins()

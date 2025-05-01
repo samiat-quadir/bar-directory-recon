@@ -3,8 +3,11 @@
 try:
     import yaml
 except ImportError as e:
-    raise ImportError("The 'yaml' module is required but not installed. Install it using 'pip install pyyaml'.") from e
+    raise ImportError(
+        "The 'yaml' module is required but not installed. Install it using 'pip install pyyaml'."
+    ) from e
 from pathlib import Path
+
 
 def load_validation_matrix(yaml_path="validators/validation_matrix.yaml"):
     """

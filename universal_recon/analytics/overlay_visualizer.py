@@ -1,9 +1,9 @@
 # === analytics/overlay_visualizer.py ===
 
-import json
 import argparse
-from pathlib import Path
+import json
 from datetime import datetime
+from pathlib import Path
 
 TEMPLATE = """
 <html>
@@ -20,6 +20,7 @@ TEMPLATE = """
 </html>
 """
 
+
 def render_row(site, entry):
     score = entry.get("score_summary", {}).get("field_score", "–")
     drift = entry.get("validator_drift", False)
@@ -29,7 +30,10 @@ def render_row(site, entry):
     anomalies = ", ".join(entry.get("anomaly_flags", [])) or "–"
     return f"<tr><td>{site}</td><td>{score}</td><td>{drift_symbol}</td><td>{plugins}</td><td>{tags}</td><td>{anomalies}</td></tr>"
 
-def generate_overlay(matrix_path="output/schema_matrix.json", output_path="output/dashboard_overlay.html"):
+
+def generate_overlay(
+    matrix_path="output/schema_matrix.json", output_path="output/dashboard_overlay.html"
+):
     with open(matrix_path, "r", encoding="utf-8") as f:
         matrix = json.load(f)
     rows = [render_row(site, data) for site, data in matrix.get("sites", {}).items()]
@@ -38,6 +42,7 @@ def generate_overlay(matrix_path="output/schema_matrix.json", output_path="outpu
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"[✓] HTML overlay dashboard saved to {output_path}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

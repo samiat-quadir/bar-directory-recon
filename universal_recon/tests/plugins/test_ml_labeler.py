@@ -1,6 +1,8 @@
 import unittest
+
 from plugins import ml_labeler
 from utils.record_normalizer import normalize
+
 
 # Mock WebDriver and context
 def mock_driver_with_html(html):
@@ -8,7 +10,9 @@ def mock_driver_with_html(html):
         def __init__(self, html):
             self.page_source = html
             self.current_url = "http://example.com/test"
+
     return MockDriver(html)
+
 
 class TestMLLabelerPlugin(unittest.TestCase):
 
@@ -35,6 +39,7 @@ class TestMLLabelerPlugin(unittest.TestCase):
             normalized = normalize(records, strict=True)
         except Exception as e:
             self.fail(f"Strict normalization failed: {e}")
+
 
 if __name__ == "__main__":
     unittest.main()

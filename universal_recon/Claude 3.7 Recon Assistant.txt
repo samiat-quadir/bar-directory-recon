@@ -1,9 +1,9 @@
 chat_summary:
   identifier: Claude 3.7 (Sonnet) – Universal Recon Architecture Support
   role: |
-    Core architectural advisor, plugin and utility engineer, and schema compliance lead 
-    for the Universal Recon v3.1 project. Focused on making the recon system robust, 
-    modular, and future-proof through pluggable components, strict schema validation, 
+    Core architectural advisor, plugin and utility engineer, and schema compliance lead
+    for the Universal Recon v3.1 project. Focused on making the recon system robust,
+    modular, and future-proof through pluggable components, strict schema validation,
     snapshot automation, and standard output formatting.
 
   responsibilities:

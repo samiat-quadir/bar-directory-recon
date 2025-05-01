@@ -27,7 +27,7 @@ Error during commit and notify: 'charmap' codec can't encode character '\u274c' 
 [2025-04-14 10:37:19] Loaded environment from .env.work
 README.md generated successfully.
 [2025-04-14 10:37:19] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py
-[2025-04-14 10:37:20] 
+[2025-04-14 10:37:20]
 [2025-04-14 10:37:20] ERROR: Traceback (most recent call last):
   File "C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py", line 7, in <module>
     from project_path import set_root_path
@@ -64,7 +64,7 @@ ImportError: cannot import name 'run_git_command' from 'auto_git_commit' (C:\Use
 [2025-04-15 10:23:22] Loaded environment from .env.work
 README.md generated successfully.
 [2025-04-15 10:23:22] Running: C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py
-[2025-04-15 10:23:22] 
+[2025-04-15 10:23:22]
 [2025-04-15 10:23:22] ERROR: Traceback (most recent call last):
   File "C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\Work Projects\bar-directory-recon\src\motion_task_via_email.py", line 1, in <module>
     from project_path import set_root_path
@@ -669,4 +669,3 @@ MOTION_WORKSPACE_ID found
 MOTION_PROJECT_ID found
 GIT_EXECUTABLE_PATH found
 All required environment variables are present.
-

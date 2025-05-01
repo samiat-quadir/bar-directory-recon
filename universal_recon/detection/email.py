@@ -1,8 +1,10 @@
 # universal_recon/detection/email.py
 
 import re
-from lxml import etree
+
 from bs4 import BeautifulSoup
+from lxml import etree
+
 
 def decode_obfuscated_email(text, entity_map):
     """Replace known obfuscation HTML entities with characters."""
@@ -12,6 +14,7 @@ def decode_obfuscated_email(text, entity_map):
         elif "46" in entity:
             text = text.replace(entity, ".")
     return text
+
 
 def detect_emails(html_source, entity_map=None, context="root"):
     """Detects email addresses (plaintext or obfuscated) in HTML."""
@@ -30,11 +33,6 @@ def detect_emails(html_source, entity_map=None, context="root"):
         decoded = decode_obfuscated_email(raw, entity_map)
         if email_regex.search(decoded):
             xpath = dom.getpath(el.parent) if dom is not None else None
-            results.append({
-                "type": "email",
-                "value": decoded,
-                "xpath": xpath,
-                "context": context
-            })
+            results.append({"type": "email", "value": decoded, "xpath": xpath, "context": context})
 
     return results

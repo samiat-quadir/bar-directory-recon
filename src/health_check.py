@@ -1,8 +1,10 @@
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from env_loader import load_environment
+
 load_environment()
 
 REQUIRED_VARS = [
@@ -17,6 +19,7 @@ REQUIRED_VARS = [
     "GIT_EXECUTABLE_PATH",
 ]
 
+
 def perform_health_check():
     missing_vars = []
     for var in REQUIRED_VARS:
@@ -30,6 +33,7 @@ def perform_health_check():
         print("All required environment variables are present.")
     else:
         print(f"Missing variables: {missing_vars}")
+
 
 if __name__ == "__main__":
     perform_health_check()

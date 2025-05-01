@@ -1,7 +1,8 @@
 # plugins/ai_template_indexer.py
 
-from typing import List, Dict
 from collections import defaultdict
+from typing import Dict, List
+
 
 def apply(records: List[Dict], context: str = "ai_template_indexer") -> List[Dict]:
     """
@@ -28,9 +29,9 @@ def apply(records: List[Dict], context: str = "ai_template_indexer") -> List[Dic
         template["template_type"] = template_type
         template["template_score"] = len(field_types) / 8.0  # rough completeness signal
         template["template_confidence"] = (
-            "high" if template["template_score"] > 0.75 else
-            "medium" if template["template_score"] > 0.5 else
-            "low"
+            "high"
+            if template["template_score"] > 0.75
+            else "medium" if template["template_score"] > 0.5 else "low"
         )
 
         templates.append(template)

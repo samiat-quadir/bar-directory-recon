@@ -13,6 +13,7 @@ REQUIRED_FIELDS = ["type", "value", "xpath", "context", "url"]
 OPTIONAL_FIELDS = ["confidence", "source", "category"]
 VALID_TYPES = {"email", "phone", "possible_name", "labeled_field"}
 
+
 def validate(record, strict=False, logger=None):
     """
     Validate a single record against the ADA schema.
@@ -33,7 +34,8 @@ def validate(record, strict=False, logger=None):
             msg = f"[Validator] Missing required field: {key}"
             if strict:
                 raise ValueError(msg)
-            if logger: logger(msg, level="WARN")
+            if logger:
+                logger(msg, level="WARN")
             record[key] = ""  # fallback
             valid = False
 
@@ -43,7 +45,8 @@ def validate(record, strict=False, logger=None):
         msg = f"[Validator] Invalid type: {rtype}"
         if strict:
             raise ValueError(msg)
-        if logger: logger(msg, level="WARN")
+        if logger:
+            logger(msg, level="WARN")
         record["type"] = "unknown"
         valid = False
 

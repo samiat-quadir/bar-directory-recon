@@ -1,10 +1,11 @@
 # === universal_recon/validators/run_phase_21b_analysis.py ===
 
-import os
 import json
+import os
 
 MATRIX_PATH = "output/schema_matrix.json"
 STATUS_PATH = "output/output_status.json"
+
 
 def validate_matrix_structure(matrix):
     if "sites" not in matrix:
@@ -24,6 +25,7 @@ def validate_matrix_structure(matrix):
 
     return not any_site_fail
 
+
 def validate_site_status():
     if not os.path.exists(STATUS_PATH):
         print("⚠️  No status summary found (skipping validator_drift check)")
@@ -35,12 +37,15 @@ def validate_site_status():
     issue_found = False
     for site, info in status.items():
         if info.get("site_health") == "degraded":
-            print(f"🟥 {site}: DEGRADATION DETECTED → Plugins Removed: {info.get('plugins_removed', [])}")
+            print(
+                f"🟥 {site}: DEGRADATION DETECTED → Plugins Removed: {info.get('plugins_removed', [])}"
+            )
             issue_found = True
         elif info.get("validator_drift"):
             print(f"🟧 {site}: validator_drift = True")
 
     return not issue_found
+
 
 def run_sanity_check():
     if not os.path.exists(MATRIX_PATH):
@@ -62,6 +67,7 @@ def run_sanity_check():
     else:
         print("\n❌ Issues found during sanity check.")
         return False
+
 
 if __name__ == "__main__":
     run_sanity_check()

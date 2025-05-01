@@ -1,7 +1,8 @@
 # universal_recon/analytics/site_schema_collector.py
 
-import os
 import json
+import os
+
 
 def collect_fieldmap(site_name, verbose=False):
     plugin_dir = os.path.join("output", "plugins")
@@ -16,7 +17,7 @@ def collect_fieldmap(site_name, verbose=False):
             {"name": "bar_number", "example": "12345"},
             {"name": "email", "example": "example@bar.org"},
         ],
-        "plugin": "fieldmap_validator"
+        "plugin": "fieldmap_validator",
     }
 
     output_path = os.path.join(fieldmap_dir, f"{site_name}_fieldmap.json")

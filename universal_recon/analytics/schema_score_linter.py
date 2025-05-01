@@ -1,7 +1,8 @@
 # universal_recon/analytics/schema_score_linter.py
 
-import os
 import json
+import os
+
 
 def run_schema_score_lint(site_name, verbose=False):
     fieldmap_path = os.path.join("output", "fieldmap", f"{site_name}_fieldmap.json")
@@ -22,11 +23,7 @@ def run_schema_score_lint(site_name, verbose=False):
             score -= 10
             deductions.append(f"Missing example: {field['name']}")
 
-    result = {
-        "site": site_name,
-        "final_score": max(0, score),
-        "deductions": deductions
-    }
+    result = {"site": site_name, "final_score": max(0, score), "deductions": deductions}
 
     if verbose:
         print(f"[✓] Schema score lint complete: {result}")

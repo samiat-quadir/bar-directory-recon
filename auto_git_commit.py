@@ -1,7 +1,8 @@
+import logging
 import os
 import subprocess
-import logging
 from datetime import datetime
+
 from env_loader import load_environment
 
 # === Setup ===
@@ -10,16 +11,13 @@ logging.basicConfig(
     filename="git_commit_notify.log",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    encoding="utf-8"
+    encoding="utf-8",
 )
+
 
 # === Pre-commit safety check ===
 def run_pre_commit_validator():
-    result = subprocess.run(
-        ["python", "pre_commit_validator.py"],
-        capture_output=True,
-        text=True
-    )
+    result = subprocess.run(["python", "pre_commit_validator.py"], capture_output=True, text=True)
     if result.returncode != 0:
         logging.error("Pre-commit validation failed.")
         logging.error(result.stdout + result.stderr)
@@ -27,9 +25,11 @@ def run_pre_commit_validator():
         return False
     return True
 
+
 # === Git Commit Logic ===
 def run_git_command(cmd):
     return subprocess.run(cmd, capture_output=True, text=True, check=True)
+
 
 def git_commit_only():
     if not run_pre_commit_validator():
@@ -42,9 +42,7 @@ def git_commit_only():
 
         # Check if anything to commit
         status = subprocess.run(
-            ["git", "status", "--porcelain"],
-            capture_output=True,
-            text=True
+            ["git", "status", "--porcelain"], capture_output=True, text=True
         ).stdout
         if not status.strip():
             logging.info("No changes to commit.")
@@ -61,6 +59,7 @@ def git_commit_only():
         logging.error("Git command failed: " + e.stderr)
         print("ERROR: Git command failed:")
         print(e.stderr)
+
 
 # === Main ===
 if __name__ == "__main__":

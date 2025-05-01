@@ -1,8 +1,9 @@
-import os
-import gspread
 import logging
-from google.oauth2.service_account import Credentials
+import os
+
+import gspread
 from dotenv import load_dotenv
+from google.oauth2.service_account import Credentials
 
 # Load environment variables
 env_path = r"C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
@@ -14,7 +15,9 @@ SHEET_ID = os.getenv("SHEET_ID")  # Using Sheet ID instead of Sheet Name
 
 # Configure logging
 LOG_FILE = "google_sheets_updater.log"
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 # Authenticate Google Sheets API
 SCOPES = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -25,6 +28,7 @@ try:
 except Exception as e:
     logging.error(f"❌ Failed to authenticate Google Sheets: {e}")
     raise
+
 
 def append_to_google_sheet(data):
     """Append data to Google Sheets with error handling and logging."""
@@ -39,6 +43,7 @@ def append_to_google_sheet(data):
     except Exception as e:
         logging.error(f"❌ Unexpected Error: {e}")
         print(f"❌ Unexpected Error: {e}")
+
 
 # Example Usage (Test)
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
-import yaml
 import os
 from typing import Any, Dict, Optional
+
+import yaml
+
 
 def load_validation_matrix(yaml_path: Optional[str] = None) -> Dict[str, Any]:
     """
@@ -13,10 +15,7 @@ def load_validation_matrix(yaml_path: Optional[str] = None) -> Dict[str, Any]:
         dict: Parsed validation matrix or empty dict if file missing.
     """
     if yaml_path is None:
-        yaml_path = os.path.join(
-            os.path.dirname(__file__),
-            "validation_matrix.yaml"
-        )
+        yaml_path = os.path.join(os.path.dirname(__file__), "validation_matrix.yaml")
     if not os.path.exists(yaml_path):
         print(f"[load_validation_matrix] Validation matrix not found: {yaml_path}")
         return {}

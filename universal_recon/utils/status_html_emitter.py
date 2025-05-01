@@ -7,12 +7,10 @@ from pathlib import Path
 HTML_PATH = Path("output/status_summary.html")
 STATUS_JSON = Path("output/output_status.json")
 
+
 def site_health_color(health):
-    return {
-        "ok": "🟩",
-        "warning": "🟧",
-        "degraded": "🟥"
-    }.get(health, "❔")
+    return {"ok": "🟩", "warning": "🟧", "degraded": "🟥"}.get(health, "❔")
+
 
 def emit_status_html():
     if not STATUS_JSON.exists():
@@ -68,6 +66,7 @@ def emit_status_html():
     HTML_PATH.parent.mkdir(parents=True, exist_ok=True)
     HTML_PATH.write_text(html, encoding="utf-8")
     print(f"✅ Status HTML written to: {HTML_PATH}")
+
 
 if __name__ == "__main__":
     emit_status_html()

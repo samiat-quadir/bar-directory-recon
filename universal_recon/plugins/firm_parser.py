@@ -1,5 +1,6 @@
 # Plugin: firm_parser | Shared | Opt-in | v1.0
 
+
 def apply(driver, context="root"):
     from bs4 import BeautifulSoup
     from lxml import etree
@@ -9,7 +10,15 @@ def apply(driver, context="root"):
     soup = BeautifulSoup(page_source, "html.parser")
     dom = etree.HTML(str(soup))
 
-    firm_indicators = ["law firm", "attorneys at law", "LLP", "LLC", "P.C.", "& Associates", "Group"]
+    firm_indicators = [
+        "law firm",
+        "attorneys at law",
+        "LLP",
+        "LLC",
+        "P.C.",
+        "& Associates",
+        "Group",
+    ]
 
     records = []
     for element in soup.find_all(text=True):
@@ -23,15 +32,17 @@ def apply(driver, context="root"):
                 xpath = dom.getpath(element.parent)
             except:
                 xpath = None
-            records.append({
-                "type": "firm_name",
-                "value": text_val,
-                "xpath": xpath,
-                "context": context,
-                "url": current_url,
-                "confidence": 1.0,
-                "source": "plugin",
-                "category": "organization"
-            })
+            records.append(
+                {
+                    "type": "firm_name",
+                    "value": text_val,
+                    "xpath": xpath,
+                    "context": context,
+                    "url": current_url,
+                    "confidence": 1.0,
+                    "source": "plugin",
+                    "category": "organization",
+                }
+            )
 
     return records

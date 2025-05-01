@@ -15,23 +15,23 @@
  * Running on http://192.168.0.142:5000
 2025-03-22 20:19:30,355 - INFO - [33mPress CTRL+C to quit[0m
 2025-03-22 20:22:55,560 - INFO - 🔁 Git commit trigger received...
-2025-03-22 20:22:55,679 - INFO - 
+2025-03-22 20:22:55,679 - INFO -
 2025-03-22 20:22:55,683 - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-03-22 20:22:56,908 - INFO - ✅ HTML Email sent: ✅ Git Commit Triggered from ChatGPT API
 2025-03-22 20:22:56,909 - INFO - 192.168.0.142 - - [22/Mar/2025 20:22:56] "GET /trigger_git_commit HTTP/1.1" 200 -
 2025-03-22 20:22:58,594 - INFO - 192.168.0.142 - - [22/Mar/2025 20:22:58] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
 2025-03-22 23:12:59,566 - INFO - 🔁 Git commit trigger received...
-2025-03-22 23:12:59,751 - INFO - 
+2025-03-22 23:12:59,751 - INFO -
 2025-03-22 23:12:59,769 - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-03-22 23:13:00,906 - INFO - ✅ HTML Email sent: ✅ Git Commit Triggered from ChatGPT API
 2025-03-22 23:13:00,907 - INFO - 192.168.0.142 - - [22/Mar/2025 23:13:00] "GET /trigger_git_commit HTTP/1.1" 200 -
 2025-03-22 23:28:05,600 - INFO - 🔁 Git commit trigger received...
-2025-03-22 23:28:05,697 - INFO - 
+2025-03-22 23:28:05,697 - INFO -
 2025-03-22 23:28:05,699 - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-03-22 23:28:06,869 - INFO - ✅ HTML Email sent: ✅ Git Commit Triggered from ChatGPT API
 2025-03-22 23:28:06,870 - INFO - 192.168.0.142 - - [22/Mar/2025 23:28:06] "GET /trigger_git_commit HTTP/1.1" 200 -
 2025-03-23 00:07:42,509 - INFO - 🔁 Git commit trigger received...
-2025-03-23 00:07:42,603 - INFO - 
+2025-03-23 00:07:42,603 - INFO -
 2025-03-23 00:07:42,608 - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-03-23 00:07:43,869 - INFO - ✅ HTML Email sent: ✅ Git Commit Triggered from ChatGPT API
 2025-03-23 00:07:43,871 - INFO - 127.0.0.1 - - [23/Mar/2025 00:07:43] "GET /trigger_git_commit?attendee_emails=&created=2025-03-23T03:24:38.000Z&creator=&duration_hours=0.5&duration_minutes=30&duration_seconds=1800&end=&etag="3485400557960254"&eventType=default&guestsCanModify=true&htmlLink=https://www.google.com/calendar/event?eid%3DMjF0OWtiOGNjbGJqNWtwdTIya2ljcGswYmogc2FtLnF1YWRpckBt&iCalUID=21t9kb8cclbj5kpu22kicpk0bj@google.com&id=21t9kb8cclbj5kpu22kicpk0bj&kind=calendar%23event&organizer=&reminders=&sequence=0&start=&status=confirmed&summary=test&updated=2025-03-23T03:24:38.980Z HTTP/1.1" 200 -

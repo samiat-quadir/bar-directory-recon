@@ -3,6 +3,7 @@ Analytics Plugin: full_report_generator.py
 Purpose: Merges all major analytics into one report (summary, audit, trend, health).
 """
 
+
 def run_analysis(summary=None, audit=None, trend=None, health=None):
     return {
         "plugin": "full_report_generator",

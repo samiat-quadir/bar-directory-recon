@@ -6,7 +6,7 @@ scripts = [
     "git_commit_and_notify.py",
     "src/motion_task_via_email.py",
     "src/health_check.py",
-    "src/log_rotator.py"
+    "src/log_rotator.py",
 ]
 
 for script in scripts:

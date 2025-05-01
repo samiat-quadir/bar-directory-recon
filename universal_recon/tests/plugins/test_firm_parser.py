@@ -1,15 +1,19 @@
 import unittest
+
 from plugins import firm_parser
 from utils.record_normalizer import normalize
 
 # Mock WebDriver and context
+
 
 def mock_driver_with_html(html):
     class MockDriver:
         def __init__(self, html):
             self.page_source = html
             self.current_url = "http://example.com/test"
+
     return MockDriver(html)
+
 
 class TestFirmParserPlugin(unittest.TestCase):
 
@@ -36,6 +40,7 @@ class TestFirmParserPlugin(unittest.TestCase):
             normalized = normalize(records, strict=True)
         except Exception as e:
             self.fail(f"Strict normalization failed: {e}")
+
 
 if __name__ == "__main__":
     unittest.main()

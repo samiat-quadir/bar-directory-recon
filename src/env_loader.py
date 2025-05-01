@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
+
 
 def load_environment():
     """
@@ -11,12 +13,12 @@ def load_environment():
     project_root = Path(__file__).resolve().parent
 
     # Clean up MACHINE_TYPE: strip any quotes, default to 'work'
-    raw = os.getenv('MACHINE_TYPE', 'work')
+    raw = os.getenv("MACHINE_TYPE", "work")
     machine_type = raw.strip('"').strip("'").lower()
 
     # Determine file paths
     env_specific = project_root / f".env.{machine_type}"
-    env_default  = project_root / ".env"
+    env_default = project_root / ".env"
 
     # Choose the file
     if env_specific.exists():
@@ -35,6 +37,7 @@ def load_environment():
     # Load and report
     load_dotenv(env_file)
     print(f"Loaded environment from {env_file.name}")
+
 
 if __name__ == "__main__":
     load_environment()

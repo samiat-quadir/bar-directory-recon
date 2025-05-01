@@ -1,7 +1,9 @@
 # Quick Validator Drift Detection Test
 # Runs validator_drift_overlay.main() and checks output files
 import os
+
 from universal_recon.analytics import validator_drift_overlay
+
 
 def main():
     validator_drift_overlay.main()
@@ -22,6 +24,7 @@ def main():
     if success:
         with open(json_path, "r", encoding="utf-8") as f:
             import json
+
             data = json.load(f)
             if data.get("drift_warnings"):
                 print("Drift warnings detected:")
@@ -29,6 +32,7 @@ def main():
                     print(f"- {w}")
             else:
                 print("No drift warnings detected.")
+
 
 if __name__ == "__main__":
     main()

@@ -1,11 +1,13 @@
 """Manage cleanup of log files and temporary data."""
+
 import os
 import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
-from src.utils.logging import setup_logger
+
 from src.env_loader import load_environment
 from src.project_path import set_root_path
+from src.utils.logging import setup_logger
 
 set_root_path()
 load_environment()
@@ -16,26 +18,29 @@ TARGET_DIRS = {
     "logs": ["*.log", "*.log.*"],
     "output": ["*.tmp", "*.png", "recon_*.json"],
     "src/backups": ["backup_archive_*.zip"],
-    ".": ["*.log", "*.tmp"]
+    ".": ["*.log", "*.tmp"],
 }
 
 logger = setup_logger(__name__)
+
 
 def should_delete_file(file_path: Path, patterns: list) -> bool:
     """Determine if a file should be deleted based on age and pattern."""
     return (
         any(file_path.match(pattern) for pattern in patterns)
-        and file_path.stat().st_mtime < (datetime.now() - timedelta(days=RETENTION_DAYS)).timestamp()
+        and file_path.stat().st_mtime
+        < (datetime.now() - timedelta(days=RETENTION_DAYS)).timestamp()
     )
+
 
 def cleanup_old_files() -> int:
     """Clean up old files based on configured patterns and retention period.
-    
+
     Returns:
         int: Number of files removed
     """
     removed = 0
-    
+
     for directory, patterns in TARGET_DIRS.items():
         dir_path = Path(directory)
         if not dir_path.exists():
@@ -54,27 +59,28 @@ def cleanup_old_files() -> int:
     logger.info(f"✅ Cleanup complete. Removed {removed} old files.")
     return removed
 
+
 def archive_logs(archive_dir: str = "logs/archive") -> None:
     """Archive logs that shouldn't be deleted yet.
-    
+
     Args:
         archive_dir: Directory to store archived logs
     """
     archive_path = Path(archive_dir)
     archive_path.mkdir(parents=True, exist_ok=True)
-    
+
     date_suffix = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     log_dir = Path("logs")
-    
+
     if not log_dir.exists():
         logger.warning("Log directory does not exist, nothing to archive")
         return
-        
+
     archived = 0
     for log_file in log_dir.glob("*.log"):
         if log_file.name == "cleanup_report.log":
             continue
-        
+
         archive_name = f"{log_file.stem}_{date_suffix}{log_file.suffix}"
         try:
             shutil.move(str(log_file), str(archive_path / archive_name))
@@ -82,8 +88,9 @@ def archive_logs(archive_dir: str = "logs/archive") -> None:
             logger.info(f"Archived: {log_file.name} -> {archive_name}")
         except Exception as e:
             logger.error(f"Failed to archive {log_file}: {e}")
-    
+
     logger.info(f"✅ Archive complete. Moved {archived} files to {archive_dir}")
+
 
 if __name__ == "__main__":
     logger.info("Starting cleanup process...")

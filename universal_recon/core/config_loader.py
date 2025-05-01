@@ -3,6 +3,7 @@
 import json
 import os
 
+
 class ConfigManager:
     def __init__(self, config_path="universal_recon/multisite_config.json"):
         self.config = {}

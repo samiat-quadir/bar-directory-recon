@@ -1,6 +1,7 @@
 import os
-from project_path import set_root_path
+
 from env_loader import load_environment
+from project_path import set_root_path
 
 # Ensure environment is loaded properly
 set_root_path()

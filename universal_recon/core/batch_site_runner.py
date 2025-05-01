@@ -1,9 +1,11 @@
-import os
-from typing import List, Dict
-from utils.recon_summary_builder import summarize_records, print_summary
-from utils.output_manager import save_summary
-from utils.recon_trend_tracker import analyze_trends
 import json
+import os
+from typing import Dict, List
+
+from utils.output_manager import save_summary
+from utils.recon_summary_builder import print_summary, summarize_records
+from utils.recon_trend_tracker import analyze_trends
+
 
 def run_batch_sites(site_names: List[str], output_dir: str = "output/reports") -> Dict[str, Dict]:
     aggregate = {}

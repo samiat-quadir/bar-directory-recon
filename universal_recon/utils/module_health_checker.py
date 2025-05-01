@@ -1,10 +1,10 @@
 # universal_recon/utils/module_health_checker.py
 
-import os
-import sys
 import importlib
 import importlib.util
 import json
+import os
+import sys
 import time
 from datetime import datetime, timedelta
 
@@ -29,10 +29,11 @@ MODULES_TO_CHECK = {
 FILES_TO_CHECK = [
     "output/schema_matrix.json",
     "universal_recon/validators/validation_matrix.yaml",
-    "output/fieldmap/utah_bar_fieldmap.json"  # Add a sample fieldmap for staleness check
+    "output/fieldmap/utah_bar_fieldmap.json",  # Add a sample fieldmap for staleness check
 ]
 
 STALE_THRESHOLD_HOURS = 24
+
 
 def check_import_and_functions(module_path, functions):
     try:
@@ -44,6 +45,7 @@ def check_import_and_functions(module_path, functions):
     except Exception:
         return (False, [])
 
+
 def check_staleness(path):
     if not os.path.exists(path):
         return None
@@ -51,21 +53,28 @@ def check_staleness(path):
     age_hours = (time.time() - mtime) / 3600
     return age_hours
 
+
 def build_html_report(results, file_results, staleness_warnings, missing_matrix, html_path):
     rows = []
     for mod, (status, missing_funcs) in results.items():
         emoji = "✅" if status and not missing_funcs else "❌"
         color = "#2ecc71" if status and not missing_funcs else "#e74c3c"
         fn_text = "All OK" if not missing_funcs else f"Missing: {', '.join(missing_funcs)}"
-        rows.append(f"<tr><td>{mod}</td><td style='color:{color}'>{emoji}</td><td>{fn_text}</td></tr>")
+        rows.append(
+            f"<tr><td>{mod}</td><td style='color:{color}'>{emoji}</td><td>{fn_text}</td></tr>"
+        )
     for path, exists in file_results.items():
         emoji = "✅" if exists else "❌"
         color = "#2ecc71" if exists else "#e67e22"
-        rows.append(f"<tr><td>{path}</td><td style='color:{color}'>{emoji}</td><td>{'Exists' if exists else 'Missing'}</td></tr>")
+        rows.append(
+            f"<tr><td>{path}</td><td style='color:{color}'>{emoji}</td><td>{'Exists' if exists else 'Missing'}</td></tr>"
+        )
     for warning in staleness_warnings:
         rows.append(f"<tr><td colspan='3' style='color:#f39c12'><b>⚠️ {warning}</b></td></tr>")
     if missing_matrix:
-        rows.append(f"<tr><td colspan='3' style='color:#e74c3c'><b>❌ schema_matrix.json missing. Suggest re-running main.py</b></td></tr>")
+        rows.append(
+            f"<tr><td colspan='3' style='color:#e74c3c'><b>❌ schema_matrix.json missing. Suggest re-running main.py</b></td></tr>"
+        )
     html = f"""
     <html>
     <head>
@@ -91,6 +100,7 @@ def build_html_report(results, file_results, staleness_warnings, missing_matrix,
         f.write(html)
     print(f"[✓] HTML report written to {html_path}")
 
+
 def main():
     print("Running diagnostics for Universal Recon module...\n")
     results = {}
@@ -98,7 +108,9 @@ def main():
         status, missing_funcs = check_import_and_functions(mod, funcs)
         results[mod] = (status, missing_funcs)
         emoji = "✅" if status and not missing_funcs else "❌"
-        print(f"{emoji} {mod}" + (f" — Missing: {', '.join(missing_funcs)}" if missing_funcs else ""))
+        print(
+            f"{emoji} {mod}" + (f" — Missing: {', '.join(missing_funcs)}" if missing_funcs else "")
+        )
     file_results = {}
     staleness_warnings = []
     missing_matrix = False
@@ -118,6 +130,7 @@ def main():
                 missing_matrix = True
     build_html_report(results, file_results, staleness_warnings, missing_matrix, HTML_PATH)
     print("\n✅ Diagnostics complete.")
+
 
 if __name__ == "__main__":
     main()

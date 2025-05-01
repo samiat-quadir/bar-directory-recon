@@ -3,6 +3,7 @@ Analytics module: template_health_flagger.py
 Purpose: Tags each template or record cluster with a basic health classification.
 """
 
+
 def flag_template_health(records):
     """
     Classifies records or clusters by overall 'health' based on average score and error rate.
@@ -26,20 +27,22 @@ def flag_template_health(records):
         else:
             health = "healthy"
 
-        flagged.append({
-            "type": record.get("type"),
-            "value": record.get("value"),
-            "plugin": record.get("plugin"),
-            "score": score,
-            "severity": severity,
-            "health": health
-        })
+        flagged.append(
+            {
+                "type": record.get("type"),
+                "value": record.get("value"),
+                "plugin": record.get("plugin"),
+                "score": score,
+                "severity": severity,
+                "health": health,
+            }
+        )
 
     return {
         "plugin": "template_health_flagger",
         "flagged": len(flagged),
         "total": len(records),
-        "summary": flagged
+        "summary": flagged,
     }
 
 

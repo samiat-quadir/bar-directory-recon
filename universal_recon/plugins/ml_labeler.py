@@ -4,6 +4,7 @@ Purpose: Label structured text fields (e.g. names, firms, bar numbers)
 """
 
 import re
+
 from bs4 import BeautifulSoup
 from lxml import etree
 
@@ -14,6 +15,7 @@ FIELD_HINTS = {
     "title": ["position", "title", "role"],
     "jurisdiction": ["court", "jurisdiction", "state admitted"],
 }
+
 
 def apply(driver, context="root"):
     html = driver.page_source
@@ -33,16 +35,18 @@ def apply(driver, context="root"):
             for hint in hints:
                 if hint in context_txt:
                     xpath = dom.getpath(parent) if dom is not None else None
-                    results.append({
-                        "type": "labeled_field",
-                        "value": txt,
-                        "xpath": xpath,
-                        "context": context,
-                        "url": url,
-                        "label": label,
-                        "source": "ml_labeler",
-                        "confidence": 0.8,
-                        "category": "field"
-                    })
+                    results.append(
+                        {
+                            "type": "labeled_field",
+                            "value": txt,
+                            "xpath": xpath,
+                            "context": context,
+                            "url": url,
+                            "label": label,
+                            "source": "ml_labeler",
+                            "confidence": 0.8,
+                            "category": "field",
+                        }
+                    )
                     break
     return results

@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List
 
+
 def load_plugins_by_type(plugin_type: str):
     plugins = []
     root = Path(__file__).resolve().parent
@@ -29,6 +30,7 @@ def load_plugins_by_type(plugin_type: str):
 
     return plugins
 
+
 def load_normalized_records(site_name: str) -> List[Dict[str, Any]]:
     path = os.path.join("output", "fieldmap", f"{site_name}_fieldmap.json")
     with open(path, "r", encoding="utf-8") as f:
@@ -46,8 +48,6 @@ def load_normalized_records(site_name: str) -> List[Dict[str, Any]]:
             return [data]
         else:
             # Fallback: try to unpack dict of dicts
-            return [
-                {"plugin": key, **val} for key, val in data.items() if isinstance(val, dict)
-            ]
+            return [{"plugin": key, **val} for key, val in data.items() if isinstance(val, dict)]
     else:
         raise ValueError(f"Unsupported fieldmap structure in {path}")

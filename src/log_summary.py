@@ -1,14 +1,17 @@
-import sys
 import os
+import sys
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from env_loader import load_environment
 from datetime import datetime
+
+from env_loader import load_environment
 
 load_environment()
 
 LOG_DIR = "src/logs"
 SUMMARY_FILE = os.path.join(LOG_DIR, "log_summary.txt")
+
 
 def summarize_logs():
     summary = []
@@ -18,6 +21,7 @@ def summarize_logs():
             size_kb = os.path.getsize(path) / 1024
             summary.append(f"{filename}: {size_kb:.2f} KB")
     return "\n".join(summary)
+
 
 if __name__ == "__main__":
     content = summarize_logs()
