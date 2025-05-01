@@ -1,8 +1,10 @@
 # universal_recon/plugins/form_autofill.py
 
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-import time
+
 
 def smart_fill_and_submit_forms(driver, config, logger, dry_run=False):
     forms = driver.find_elements(By.TAG_NAME, "form")

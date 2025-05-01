@@ -19,6 +19,7 @@ class ValidatorDriftDetector:
         # Logic to generate JSON report
         pass
 
+
 # New dashboard generation logic
 class DriftDashboard:
     def __init__(self):

@@ -1,9 +1,10 @@
-import subprocess
 import os
+import subprocess
 from datetime import datetime
 
 # === Logging ===
 LOG_FILE = "automation_run.log"
+
 
 def log(message):
     timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
@@ -11,6 +12,7 @@ def log(message):
     print(full_message.strip())
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(full_message)
+
 
 def run_script(script_path):
     try:
@@ -20,6 +22,7 @@ def run_script(script_path):
         log(f"Error running {script_path}: {e}")
     except Exception as e:
         log(f"Unexpected error running {script_path}: {e}")
+
 
 # === Define script paths ===
 scripts_to_run = [
@@ -32,7 +35,7 @@ scripts_to_run = [
     os.path.join("src", "motion_task_via_email.py"),
     os.path.join("src", "log_summary.py"),
     os.path.join("src", "backup_manager.py"),
-    os.path.join("src", "email_summary_report.py")
+    os.path.join("src", "email_summary_report.py"),
 ]
 
 # === Main Execution ===

@@ -1,7 +1,9 @@
 # universal_recon/validators/record_field_validator_v3.py
 
 import re
+
 from validators.validation_matrix import load_validation_matrix
+
 
 def run_field_validators(fieldmap, verbose=False):
     matrix = load_validation_matrix()
@@ -28,12 +30,14 @@ def run_field_validators(fieldmap, verbose=False):
                 example = field.get("example", "")
                 passed = re.match(r"[^@]+@[^@]+\.[^@]+", example) is not None
 
-            results.append({
-                "field": field_name,
-                "validator": validator_id,
-                "passed": passed,
-                "severity": validator_def.get("severity", "info"),
-                "description": validator_def.get("description", "")
-            })
+            results.append(
+                {
+                    "field": field_name,
+                    "validator": validator_id,
+                    "passed": passed,
+                    "severity": validator_def.get("severity", "info"),
+                    "description": validator_def.get("description", ""),
+                }
+            )
 
     return results

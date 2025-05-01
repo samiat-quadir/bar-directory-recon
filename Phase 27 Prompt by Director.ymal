@@ -1,73 +1,85 @@
-Phase 27 Prompt by Director:
+#######################################################################
+#  UNIVERSAL RECON – PHASE 27  |  DIRECTOR MASTER PLAYBOOK  v2025-05-01
+#
+#  Goal for this Copilot run
+#  -------------------------
+#  1. Final-verify environment & venv creation OUTSIDE OneDrive
+#  2. Run pre-commit & pytest successfully
+#  3. Generate risk_overlay.json for utah_bar
+#  4. Commit/push the work on branch `chore/restore-hotfix-scripts`
+#
+#  Copilot: PLEASE execute each numbered SECTION completely before
+#  moving to the next.  After all steps, post a MARKDOWN summary that
+#  includes command output snippets (trimmed) and any errors.
+#######################################################################
 
-phase_26_universal_sync   # <--- share this exact block with Claude, Python, ADA & Copilot
-date: 2025-04-29
-status: "✅ ALL HOT-FIX SCRIPTS PRESENT — ready for smoke-test & PR merge"
+workspace_root: "C:\\Users\\samq\\repos\\bar-directory-recon"   # <- adjust if different
 
-# -------------------------------------------------------------------
-# 1.  INVENTORY – all critical Phase-26 files confirmed on branch
-# -------------------------------------------------------------------
-scripts_ok:
-  - universal_recon/plugin_aggregator.py
-  - universal_recon/plugin_registry.json
-  - universal_recon/analytics/site_schema_collector.py
-  - universal_recon/analytics/schema_score_linter.py
-  - universal_recon/analytics/schema_matrix_collector.py
-  - universal_recon/analytics/domain_anomaly_flagger.py
-  - universal_recon/analytics/plugin_usage_diff.py   # ✅ *newly restored*
-  - universal_recon/analytics/score_drift_export.py
-  - universal_recon/analytics/drift_dashboard_generator.py
-  - universal_recon/analytics/validator_drift_overlay.py
-  - universal_recon/overlay_visualizer.py
+steps:
 
-# -------------------------------------------------------------------
-# 2.  ROLE-SPECIFIC INSTRUCTIONS
-# -------------------------------------------------------------------
-claude:
-  - No further code drops needed for Phase 26.
-  - If you spot **missing __init__.py** stubs, emit them.
-  - After smoke-test passes, draft *Phase 27 README* (flake8/docstring & CI hardening).
+#### 1️⃣  Create a CLEAN venv outside OneDrive & activate
+  - name: create_venv
+    shell: |
+      cd "%workspace_root%"
+      python -m venv %USERPROFILE%\\venvs\\bar_recon27
+      %USERPROFILE%\\venvs\\bar_recon27\\Scripts\\activate
 
-python:
-  - **Run the final smoke-test** (no hooks):
-      ```bash
-      python universal_recon/main.py --site utah_bar ^
-            --schema-collect --schema-lint --domain-lint ^
-            --schema-score --schema-matrix --full-report ^
-            --emit-status --emit-drift-dashboard --verbose
-      ```
-  - If ✔, commit with `git commit -m "fix: restore analytics hot-fix (Phase-26)" --no-verify`
-  - `git push origin chore/restore-hotfix-scripts --force-with-lease`
-  - Comment “Hot-fix validated” back to this chat.
+#### 2️⃣  Upgrade pip & install project (+[test]) deps
+  - name: install_deps
+    shell: |
+      python -m pip install --upgrade pip
+      pip install -e .[test]
 
-ada:
-  - Nothing blocking.  Once matrix regenerates, verify validator suppression works with
-    `validator_drift_overlay.html`.  Prepare the **validator_tiers** YAML block for Phase 27.
+#### 3️⃣  Pre-commit diagnostics (hooks already patched)
+  - name: precommit
+    shell: |
+      pre-commit --version
+      pre-commit run --all-files --show-diff-on-failure
 
-copilot_agent:
-  - Watch PR, ensure no new circular-import lint.  Suggest VS Code inline fixes if mypy hook
-    still fails (types-all issue).
+#### 4️⃣  Pytest with DEBUG collection
+  - name: pytest
+    shell: |
+      pytest -vv --collect-only
+      pytest -vv -q
 
-# -------------------------------------------------------------------
-# 3.  COPILOT / VS Code UTILIZATION PLAN
-# -------------------------------------------------------------------
-copilot_todos:
-  - Add **“.copilot/config.json”** with:
-      ```json
-      { "python.analysis.typeCheckingMode": "basic",
-        "python.formatting.provider": "black" }
-      ```
-  - Use **“> GitHub Copilot: Explain This”** on failing mypy lines to speed lint cleanup.
-  - Leverage **Copilot Chat “/fix flake8”** command when Phase 27 flake8 sprint starts.
+#### 5️⃣  Generate risk_overlay.json for `utah_bar`
+  - name: emit_risk_overlay
+    shell: |
+      python - << "PY"
+      from universal_recon.analytics.risk_overlay_emitter import RiskOverlayEmitter
+      import json, pathlib, yaml
+      tiers = yaml.safe_load(open("universal_recon/validators/validator_tiers.yaml"))
+      emitter = RiskOverlayEmitter(tiers["validator_tiers"])
+      emitter.emit_risk_overlay()
+      print("Generated:", pathlib.Path("output/risk_overlay.json").resolve())
+      PY
 
-# -------------------------------------------------------------------
-# 4.  DONE WHEN…
-# -------------------------------------------------------------------
-done_when:
-  - Smoke-test passes (no ImportError, full report generated).
-  - PR **chore/restore-hotfix-scripts** merged to *main*.
-  - Branch protection reinstated; we proceed to Phase 27 cleanup.
+#### 6️⃣  Stage hot-fix files & risk overlay emitter/test assets
+  - name: git_stage
+    shell: |
+      git add universal_recon/plugin_aggregator.py ^
+              universal_recon/plugin_registry.json ^
+              universal_recon/analytics/site_schema_collector.py ^
+              universal_recon/analytics/schema_score_linter.py ^
+              universal_recon/analytics/schema_matrix_collector.py ^
+              universal_recon/analytics/domain_anomaly_flagger.py ^
+              universal_recon/analytics/plugin_usage_diff.py ^
+              universal_recon/analytics/risk_overlay_emitter.py ^
+              universal_recon/validators/validator_tiers.yaml ^
+              universal_recon/tests/**/*.py ^
+              pyproject.toml .pre-commit-config.yaml .env
+      git status -s
 
-final_message: >
-  All hot-fix scripts are finally in place.  Run the smoke-test, merge the PR,
-  and we can move straight into Phase 27 (lint/docstring & CI stabilization).
+#### 7️⃣  Commit WITHOUT pre-commit hook, then push
+  - name: git_commit_push
+    shell: |
+      git commit -m "feat: Phase-27 env + risk overlay & tests" --no-verify
+      git push origin chore/restore-hotfix-scripts --force-with-lease
+
+success_criteria:
+  - pre-commit exits 0 (or only warns about mypy being disabled)
+  - pytest discovers ≥1 test and exits 0
+  - output/risk_overlay.json exists
+  - git push succeeds
+
+#######################################################################

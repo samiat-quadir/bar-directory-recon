@@ -2,11 +2,7 @@ import os
 import sys
 
 # Critical folders to check
-required_dirs = [
-    "universal_recon/analytics",
-    "universal_recon/core",
-    "universal_recon/validators"
-]
+required_dirs = ["universal_recon/analytics", "universal_recon/core", "universal_recon/validators"]
 
 missing = [d for d in required_dirs if not os.path.isdir(d)]
 

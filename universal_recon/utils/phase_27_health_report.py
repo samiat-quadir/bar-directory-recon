@@ -1,7 +1,7 @@
 # universal_recon/utils/phase_27_health_report.py
 
-import os
 import json
+import os
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -18,6 +18,7 @@ STALE_THRESHOLD_HOURS = 24
 def check_file(path):
     return os.path.exists(path)
 
+
 def check_staleness(path):
     if not os.path.exists(path):
         return None
@@ -25,11 +26,13 @@ def check_staleness(path):
     age_hours = (time.time() - mtime) / 3600
     return age_hours
 
+
 def load_json(path):
     if not os.path.exists(path):
         return {}
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
 
 def emit_html(status, stale_warnings, missing):
     rows = []
@@ -45,9 +48,11 @@ def emit_html(status, stale_warnings, missing):
             f"<td>{drift_badge}</td><td>{plugins}</td><td>{penalty}%</td></tr>"
         )
 
-    html = ["<html><head><title>Phase 27 Health Report</title></head><body>",
-            "<h2>📊 Universal Recon – Phase 27 Health Summary</h2>",
-            "<table border='1' cellpadding='5'><tr><th>Site</th><th>Health</th><th>Validator Drift</th><th>Plugins Removed</th><th>Penalty</th></tr>"]
+    html = [
+        "<html><head><title>Phase 27 Health Report</title></head><body>",
+        "<h2>📊 Universal Recon – Phase 27 Health Summary</h2>",
+        "<table border='1' cellpadding='5'><tr><th>Site</th><th>Health</th><th>Validator Drift</th><th>Plugins Removed</th><th>Penalty</th></tr>",
+    ]
     html += rows
     html.append("</table><br><h3>🟠 Warnings</h3><ul>")
     for w in stale_warnings:
@@ -60,6 +65,7 @@ def emit_html(status, stale_warnings, missing):
     with open(HEALTH_HTML, "w", encoding="utf-8") as f:
         f.write("\n".join(html))
     print(f"[✓] Phase 27 health report written to: {HEALTH_HTML}")
+
 
 def main():
     status = load_json(STATUS_JSON)
@@ -75,6 +81,7 @@ def main():
                 stale_warnings.append(f"{path} is stale ({age:.1f}h old)")
 
     emit_html(status, stale_warnings, missing)
+
 
 if __name__ == "__main__":
     main()

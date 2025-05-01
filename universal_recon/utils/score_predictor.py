@@ -1,6 +1,7 @@
 # utils/score_predictor.py
 
-from typing import List, Dict
+from typing import Dict, List
+
 
 def predict_scores(records: List[Dict]) -> List[Dict]:
     """

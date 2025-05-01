@@ -1,14 +1,16 @@
 # universal_recon/utils/recon_summary_builder.py
 
-from typing import List, Dict
-from collections import defaultdict
 import logging
+from collections import defaultdict
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
+
 
 def run_analysis(records, config=None):
     summary = summarize_records(records)
     return summary
+
 
 def summarize_records(records: List[Dict]) -> Dict:
     """
@@ -21,7 +23,7 @@ def summarize_records(records: List[Dict]) -> Dict:
         "plugin_counts": defaultdict(int),
         "strongest_fields": defaultdict(int),
         "score_distribution": [],
-        "incomplete_records": 0
+        "incomplete_records": 0,
     }
 
     for record in records:

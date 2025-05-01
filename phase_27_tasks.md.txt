@@ -1,0 +1,66 @@
+# 🚀 Phase-27 “CLI polish & CI hardening” – task list for copilot_agent
+#
+# Context:
+#   – main branch HEAD = 84a680a
+#   – working branch   = chore/restore-hotfix-scripts       (push target)
+#   – validator_tiers.yaml & risk_overlay_emitter.py exist
+#   – pre-commit mypy hook fails due to types-all
+#
+# Please execute the following **in order** and commit with --no-verify:
+
+1. 🗃 **Ensure package init guards**
+   * If missing, create empty `__init__.py` in:
+       universal_recon/analytics
+       universal_recon/analytics/assets
+   * Do *not* touch other folders.
+
+2. 🛠 **Parameterise `plugin_usage_diff.py`**
+   * Add `--before` and `--after` args (paths to two schema_matrix*.json).
+   * Keep fallback: if absent, compare *latest two* snapshots in output/archive/.
+   * Output JSON → `output/plugin_diff.json`.
+   * Update `help` text and `__main__` guard.
+
+3. 🧪 **Unit tests**
+   * Add `tests/analytics/test_plugin_usage_diff.py` that:
+       – generates two tiny dummy matrices in tmp_path
+       – runs `plugin_usage_diff.main()` via subprocess
+       – asserts JSON has correct “added” / “removed”.
+
+4. 🔧 **pre-commit overhaul**
+   * In `.pre-commit-config.yaml`
+       – comment out the mypy mirror that pulls `types-all`
+       – add Ruff formatter & Black:
+         ```yaml
+         -   repo: https://github.com/charliermarsh/ruff-pre-commit
+             rev: v0.4.3
+             hooks: [{ id: ruff, args: [--fix] }]
+         -   repo: https://github.com/psf/black
+             rev: 24.4.2
+             hooks: [{ id: black }]
+         ```
+   * Run `pre-commit autoupdate` and reinstall hooks.
+
+5. 🧹 **Format & lint**
+   * Run `pre-commit run --all-files` – ensure **no failures**.
+
+6. 📝 **Update docs**
+   * Append a “Phase 27 changelog” section to `README_phase_27.md`
+     summarising the new CLI flags and risk overlay.
+
+7. 💾 **Commit & push**
+   * `git add` the modified files + new tests + README.
+   * `git commit -m "feat: Phase-27 CLI diff flags & lint cleanup" --no-verify`
+   * `git push -u origin chore/restore-hotfix-scripts`
+
+8. 🪄 **Open a PR**
+   * Use GitHub CLI: `gh pr create --fill --base main --head chore/restore-hotfix-scripts`
+   * Title: “Phase 27 – plugin diff flags & CI lint clean”
+   * Body: include bullet list of tasks above.
+
+9. 📣 **Post-run summary**
+   * Reply in this chat with:
+       – ✅ pre-commit status
+       – ✅ pytest summary
+       – PR URL.
+
+# End of task list

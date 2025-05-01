@@ -1,7 +1,7 @@
 # universal_recon/utils/record_field_validator_v3.py
 
-from typing import List, Dict
 import logging
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +9,10 @@ REQUIRED_FIELDS = ["type", "value", "xpath", "context", "url"]
 MIN_SCORE_THRESHOLD = 0.6
 MIN_TEMPLATE_CONFIDENCE = 0.5
 
-def validate_records(records: List[Dict], strict: bool = False, verbose: bool = False) -> List[Dict]:
+
+def validate_records(
+    records: List[Dict], strict: bool = False, verbose: bool = False
+) -> List[Dict]:
     """
     Validates records using field completeness, score, and predicted score.
     Returns cleaned list (or raises) and logs summary stats.

@@ -1,6 +1,8 @@
 # Plugin: email_plugin | Shared | Opt-in | v1.0
 from detection.email import detect_emails
+
 from utils.snapshot_manager import save_screenshot
+
 
 def apply(driver, context="post_core", config=None, logger=None):
     try:

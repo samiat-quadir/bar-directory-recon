@@ -40,6 +40,7 @@
     "./src",
     "./universal_recon"
   ],
+  "python.envFile": "${workspaceFolder}/.env",
   "files.exclude": {
     "**/__pycache__": true,
     "**/.DS_Store": true,

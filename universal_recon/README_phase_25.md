@@ -1,9 +1,9 @@
 Here’s your all-in-one `README_phase_25.md` markdown file, including:
 
-- 🎯 Goals and scope for Phase 25  
-- 🧩 New file additions you’ll need (CLI emitter + score suppression logic)  
-- 🛠️ Suggested CLI exports (`output_status.json`)  
-- 🧪 Integration points for Copilot Agent, ADA, and Python  
+- 🎯 Goals and scope for Phase 25
+- 🧩 New file additions you’ll need (CLI emitter + score suppression logic)
+- 🛠️ Suggested CLI exports (`output_status.json`)
+- 🧪 Integration points for Copilot Agent, ADA, and Python
 - 💾 Git-friendly path confirmations for current status
 
 You can **copy and paste the entire block below** into a new file named:
@@ -19,8 +19,8 @@ universal_recon/README_phase_25.md
 
 ## 🧠 Phase 25 — Validator Drift Severity & Score Suppression
 
-**Status**: 🔛 ACTIVE  
-**Branch**: `fix-line-endings` (up to date with origin)  
+**Status**: 🔛 ACTIVE
+**Branch**: `fix-line-endings` (up to date with origin)
 **Lead Modules**: validator_drift_overlay.py, schema_matrix_collector.py, plugin_decay_overlay.py
 
 ---

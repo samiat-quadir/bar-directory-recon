@@ -1,9 +1,10 @@
 # === analytics/score_drift_export.py ===
 
-import json
-import csv
-from pathlib import Path
 import argparse
+import csv
+import json
+from pathlib import Path
+
 
 def generate_drift_csv(site: str, baseline_snapshot: str = None, output_dir: str = "output"):
     archive = Path(output_dir) / "archive"
@@ -42,10 +43,13 @@ def generate_drift_csv(site: str, baseline_snapshot: str = None, output_dir: str
 
     print(f"[✓] Score drift exported to: {csv_path}")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--site", required=True)
     parser.add_argument("--baseline-snapshot", default=None)
     parser.add_argument("--output-dir", default="output")
     args = parser.parse_args()
-    generate_drift_csv(site=args.site, baseline_snapshot=args.baseline_snapshot, output_dir=args.output_dir)
+    generate_drift_csv(
+        site=args.site, baseline_snapshot=args.baseline_snapshot, output_dir=args.output_dir
+    )

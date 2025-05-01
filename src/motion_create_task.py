@@ -1,14 +1,17 @@
+import logging
 import os
 import sys
-import logging
-import requests
 from datetime import datetime, timedelta
+
+import requests
 
 # Load project path dynamically
 from project_path import set_root_path
+
 set_root_path()
 
 from env_loader import load_environment
+
 load_environment()
 
 # Setup logging
@@ -16,11 +19,12 @@ logging.basicConfig(
     filename="motion_task_creator.log",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    encoding="utf-8"
+    encoding="utf-8",
 )
 
 MOTION_API_KEY = os.getenv("MOTION_API_KEY")
 MOTION_PROJECT_ID = os.getenv("MOTION_PROJECT_ID")
+
 
 def create_motion_task(title, label="Auto", due_date=None, duration=15, priority="high"):
     if not MOTION_API_KEY:
@@ -29,10 +33,7 @@ def create_motion_task(title, label="Auto", due_date=None, duration=15, priority
         return False
 
     endpoint = "https://api.usemotion.com/graphql"
-    headers = {
-        "Authorization": f"Bearer {MOTION_API_KEY}",
-        "Content-Type": "application/json"
-    }
+    headers = {"Authorization": f"Bearer {MOTION_API_KEY}", "Content-Type": "application/json"}
 
     query = """
     mutation CreateTask($input: TaskInput!) {
@@ -46,7 +47,9 @@ def create_motion_task(title, label="Auto", due_date=None, duration=15, priority
     """
 
     if not due_date:
-        due_date = (datetime.now().astimezone() + timedelta(days=1)).replace(microsecond=0).isoformat()
+        due_date = (
+            (datetime.now().astimezone() + timedelta(days=1)).replace(microsecond=0).isoformat()
+        )
 
     variables = {
         "input": {
@@ -59,12 +62,14 @@ def create_motion_task(title, label="Auto", due_date=None, duration=15, priority
             "labels": [label],
             "duration": duration,
             "autoScheduled": True,
-            "schedule": "Work hours"
+            "schedule": "Work hours",
         }
     }
 
     try:
-        response = requests.post(endpoint, headers=headers, json={"query": query, "variables": variables})
+        response = requests.post(
+            endpoint, headers=headers, json={"query": query, "variables": variables}
+        )
         response.raise_for_status()
         task_response = response.json()
 
@@ -91,6 +96,7 @@ def create_motion_task(title, label="Auto", due_date=None, duration=15, priority
         print(f"Unexpected error: {e}")
 
     return None
+
 
 if __name__ == "__main__":
     create_motion_task("Review Auto Git Commit")

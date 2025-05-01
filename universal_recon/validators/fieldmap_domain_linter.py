@@ -3,12 +3,14 @@
 import json
 import os
 from pathlib import Path
+
 import yaml
 
 # Load validation matrix
 VALIDATION_MATRIX_PATH = Path(__file__).parent.parent / "validation_matrix.yaml"
 with open(VALIDATION_MATRIX_PATH, "r", encoding="utf-8") as f:
     VALIDATION_MATRIX = yaml.safe_load(f)
+
 
 def domain_lint_fieldmap(fieldmap_path, verbose=False):
     with open(fieldmap_path, encoding="utf-8") as f:
@@ -26,12 +28,14 @@ def domain_lint_fieldmap(fieldmap_path, verbose=False):
         if any(tag in required_domains for tag in domain_tags):
             if validator not in fields:
                 anomalies.append(f"missing_field:{validator}")
-                flagged_validators.append({
-                    "validator": validator,
-                    "description": props.get("description", ""),
-                    "severity": props.get("severity", "warning"),
-                    "linked_plugin": props.get("linked_plugin", None)
-                })
+                flagged_validators.append(
+                    {
+                        "validator": validator,
+                        "description": props.get("description", ""),
+                        "severity": props.get("severity", "warning"),
+                        "linked_plugin": props.get("linked_plugin", None),
+                    }
+                )
 
     if verbose:
         print(f"\n[DOMAIN LINT] Site: {site_name}")
@@ -47,9 +51,11 @@ def domain_lint_fieldmap(fieldmap_path, verbose=False):
     # Optionally write back (or caller can handle this)
     return data
 
+
 # CLI runner
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description="Run domain-lint check on a fieldmap")
     parser.add_argument("--path", required=True, help="Path to *_fieldmap.json")
     parser.add_argument("--export", help="Path to save updated fieldmap (optional)")

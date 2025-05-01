@@ -1,7 +1,8 @@
 # universal_recon/utils/template_clusterer.py
 
 from collections import defaultdict
-from typing import List, Dict
+from typing import Dict, List
+
 
 def generate_template(records: List[Dict]) -> List[Dict]:
     """
@@ -33,8 +34,8 @@ def generate_template(records: List[Dict]) -> List[Dict]:
         profile = {
             "fields": group,
             "completeness": "unknown",  # updated later by completeness checker
-            "rank_summary": {},         # optionally filled by ranker
-            "source_plugins": list(set(r.get("source") for r in group if r.get("source")))
+            "rank_summary": {},  # optionally filled by ranker
+            "source_plugins": list(set(r.get("source") for r in group if r.get("source"))),
         }
         clusters.append(profile)
 

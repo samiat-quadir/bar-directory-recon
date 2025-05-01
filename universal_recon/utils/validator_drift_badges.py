@@ -4,16 +4,12 @@ VALIDATOR_DRIFT_BADGES = {
     "critical": {
         "icon": "❌",
         "css_class": "validator-critical",
-        "tooltip": "Critical validator drift – plugin removed"
+        "tooltip": "Critical validator drift – plugin removed",
     },
     "warning": {
         "icon": "⚠️",
         "css_class": "validator-warning",
-        "tooltip": "Warning – non-critical plugin drift"
+        "tooltip": "Warning – non-critical plugin drift",
     },
-    "info": {
-        "icon": "ℹ️",
-        "css_class": "validator-info",
-        "tooltip": "Informational drift only"
-    }
+    "info": {"icon": "ℹ️", "css_class": "validator-info", "tooltip": "Informational drift only"},
 }

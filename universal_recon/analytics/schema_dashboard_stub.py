@@ -1,7 +1,7 @@
 # === analytics/schema_dashboard_stub.py ===
 
-import json
 import argparse
+import json
 from pathlib import Path
 
 
@@ -10,13 +10,15 @@ def summarize_sites(matrix_path: str, export_path: str = None, verbose: bool = F
     summary = []
 
     for site, data in matrix.get("sites", {}).items():
-        summary.append({
-            "site": site,
-            "field_score": data.get("score_summary", {}).get("field_score", 0),
-            "plugin_count": len(data.get("plugins_used", [])),
-            "domain_tags": data.get("domain_tags", []),
-            "validation_status": data.get("validation_status", "unknown")
-        })
+        summary.append(
+            {
+                "site": site,
+                "field_score": data.get("score_summary", {}).get("field_score", 0),
+                "plugin_count": len(data.get("plugins_used", [])),
+                "domain_tags": data.get("domain_tags", []),
+                "validation_status": data.get("validation_status", "unknown"),
+            }
+        )
 
     if verbose:
         print("\n📊 Schema Dashboard Summary:")

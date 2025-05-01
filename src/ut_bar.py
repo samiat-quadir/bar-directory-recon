@@ -4,24 +4,24 @@ Includes iframe handling, dynamic retries, concurrency, and profile detail scrap
 Improved with robust selectors, exception handling, pagination stability, and anti-block headers.
 """
 
-import os
-import time
-import csv
-import re
-import random
-import logging
 import argparse
-from datetime import datetime
-from typing import List, Dict, Optional, Callable
+import csv
+import logging
+import os
+import random
+import re
+import time
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+from typing import Callable, Dict, List, Optional
 
 from dotenv import load_dotenv
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class UtahBarScraper:
@@ -56,7 +56,7 @@ class UtahBarScraper:
         logger.setLevel(logging.INFO)
         if logger.hasHandlers():
             logger.handlers.clear()
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         fh = logging.FileHandler(os.path.join(self.log_dir, f"scraper_{timestamp}.log"))
         ch = logging.StreamHandler()
         formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
@@ -78,10 +78,10 @@ class UtahBarScraper:
         driver = webdriver.Chrome(service=Service(self.chromedriver_path), options=options)
         try:
             driver.execute_cdp_cmd("Network.enable", {})
-            driver.execute_cdp_cmd("Network.setExtraHTTPHeaders", {
-                "Referer": "https://www.utahbar.org/",
-                "X-Requested-With": "XMLHttpRequest"
-            })
+            driver.execute_cdp_cmd(
+                "Network.setExtraHTTPHeaders",
+                {"Referer": "https://www.utahbar.org/", "X-Requested-With": "XMLHttpRequest"},
+            )
         except Exception as e:
             self.logger.warning(f"Failed to set custom headers: {e}")
         return driver
@@ -97,7 +97,9 @@ class UtahBarScraper:
 
     def switch_to_iframe(self, driver):
         try:
-            iframe = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "iframe")))
+            iframe = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, "iframe"))
+            )
             driver.switch_to.frame(iframe)
             return True
         except Exception as e:
@@ -112,9 +114,7 @@ class UtahBarScraper:
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "button[id^='search-btn']"))
             )
             driver.execute_script("arguments[0].click();", search_btn)
-            WebDriverWait(driver, 15).until(
-                EC.presence_of_element_located((By.TAG_NAME, "table"))
-            )
+            WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.TAG_NAME, "table")))
             return True
         except Exception as e:
             self.logger.error(f"Search failed: {e}")
@@ -128,14 +128,18 @@ class UtahBarScraper:
                 cells = row.find_elements(By.TAG_NAME, "td")
                 if len(cells) < 5:
                     continue
-                profile_link = cells[1].find_element(By.TAG_NAME, "a").get_attribute("href") if cells[1].find_elements(By.TAG_NAME, "a") else "N/A"
+                profile_link = (
+                    cells[1].find_element(By.TAG_NAME, "a").get_attribute("href")
+                    if cells[1].find_elements(By.TAG_NAME, "a")
+                    else "N/A"
+                )
                 result = {
                     "BarNumber": cells[0].text.strip(),
                     "Name": cells[1].text.strip(),
                     "Organization": cells[2].text.strip(),
                     "Type": cells[3].text.strip(),
                     "Status": cells[4].text.strip(),
-                    "ProfileLink": profile_link
+                    "ProfileLink": profile_link,
                 }
                 if self.validate_profile(result):
                     if "Inactive" in result["Status"]:
@@ -147,9 +151,8 @@ class UtahBarScraper:
         return results
 
     def validate_profile(self, profile):
-        return (
-            re.match(r"^\\d{6}$", profile.get("BarNumber", "")) and
-            all(profile.get(k) for k in ["Name", "Status"])
+        return re.match(r"^\\d{6}$", profile.get("BarNumber", "")) and all(
+            profile.get(k) for k in ["Name", "Status"]
         )
 
     def go_to_next_page(self, driver, current_page):
@@ -159,9 +162,7 @@ class UtahBarScraper:
                 EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), 'Next')]"))
             )
             driver.execute_script("arguments[0].click();", next_button)
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.TAG_NAME, "table"))
-            )
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "table")))
             return True
         except Exception:
             return False
@@ -183,9 +184,14 @@ class UtahBarScraper:
         return results
 
     def scrape_with_concurrency(self):
-        self.logger.info(f"Starting parallel scrape across {self.max_pages} pages with {self.workers} workers.")
+        self.logger.info(
+            f"Starting parallel scrape across {self.max_pages} pages with {self.workers} workers."
+        )
         with ThreadPoolExecutor(max_workers=self.workers) as executor:
-            futures = {executor.submit(self.scrape_page, page): page for page in range(1, self.max_pages + 1)}
+            futures = {
+                executor.submit(self.scrape_page, page): page
+                for page in range(1, self.max_pages + 1)
+            }
             for future in futures:
                 page = futures[future]
                 try:
@@ -243,6 +249,6 @@ if __name__ == "__main__":
         headless=args.headless,
         max_pages=args.max_pages,
         retry_attempts=args.retry,
-        workers=args.workers
+        workers=args.workers,
     )
     scraper.scrape()

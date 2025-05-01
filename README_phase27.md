@@ -68,4 +68,3 @@ Phase 27 formally begins after:
 - CI linting roadmap confirmed by Copilot
 
 Stay tuned for overlay badge updates and CI scoring controls in this next phase.
-

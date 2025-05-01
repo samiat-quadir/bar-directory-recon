@@ -1,9 +1,9 @@
 # === analytics/plugin_registry_dashboard.py ===
 
-import json
 import argparse
-from pathlib import Path
+import json
 from collections import Counter
+from pathlib import Path
 
 
 def analyze_plugins(matrix_path: str, export_path: str = None, verbose: bool = False):
@@ -23,7 +23,7 @@ def analyze_plugins(matrix_path: str, export_path: str = None, verbose: bool = F
         output_data = {
             "plugin_summary": dict(plugin_counter),
             "site_count": len(matrix.get("sites", {})),
-            "source": matrix_path
+            "source": matrix_path,
         }
         Path(export_path).write_text(json.dumps(output_data, indent=2))
         if verbose:
