@@ -4,9 +4,16 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
-from universal_recon.plugin_loader import load_plugins_by_type
-from universal_recon.core.report_printer import print_summary, print_audit, print_trend, print_health
+
 from universal_recon.core.config_loader import ConfigManager
+from universal_recon.core.report_printer import (
+    print_audit,
+    print_health,
+    print_summary,
+    print_trend,
+)
+from universal_recon.plugin_loader import load_plugins_by_type
+
 
 def archive_previous_matrix():
     src = Path("output/schema_matrix.json")
@@ -17,6 +24,7 @@ def archive_previous_matrix():
         dst = archive_dir / f"schema_matrix_{timestamp}.json"
         src.rename(dst)
         print(f"[archiver] Moved previous matrix to: {dst}")
+
 
 def aggregate_and_print(records, site_name, config, cli_flags):
     output_dir = os.path.join("output", "reports")
@@ -47,7 +55,7 @@ def aggregate_and_print(records, site_name, config, cli_flags):
         "trend": trend,
         "schema_score": schema_score_result,
         "risk_profile": {},
-        "plugins_used": sorted(list(plugins_used))
+        "plugins_used": sorted(list(plugins_used)),
     }
 
     full_path = os.path.join(output_dir, f"{site_name}_full_report.json")

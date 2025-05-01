@@ -1,67 +1,13 @@
-[build-system]
-requires = ["setuptools>=45", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "bar-directory-recon"
-version = "1.0.0"
-description = "Bar directory reconnaissance and automation project"
-readme = "README.md"
-requires-python = ">=3.12"
-license = { text = "MIT" }
-authors = [
-    { name = "Samiat Quadir", email = "sam.quadir@gmail.com" }
-]
-
 [tool.black]
 line-length = 100
-target-version = ["py312", "py313"]
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | build
-  | dist
-)/
-'''
+target-version = ["py312"]
 
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-line_length = 100
-
-[tool.mypy]
-python_version = "3.12"
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_return_any = true
-warn_unreachable = true
-show_error_codes = true
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I001"]
+ignore = ["E501"]  # handled by Black
 
 [tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "-ra -q --cov=src"
-testpaths = [
-    "src/tests",
-    "universal_recon/tests"
-]
-
-[tool.coverage.run]
-source = ["src", "universal_recon"]
-omit = [
-    "src/tests/*",
-    "universal_recon/tests/*",
-]
+testpaths = ["universal_recon/tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=universal_recon --cov-report=html"

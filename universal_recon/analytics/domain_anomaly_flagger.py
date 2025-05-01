@@ -1,7 +1,7 @@
 # === analytics/domain_anomaly_flagger.py ===
 
-import json
 import argparse
+import json
 from pathlib import Path
 
 

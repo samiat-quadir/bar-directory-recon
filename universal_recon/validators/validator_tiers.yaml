@@ -1,0 +1,15 @@
+# universal_recon/validators/validator_tiers.yaml
+
+validator_tiers:
+  critical:
+    suppression_factor: 0.80
+    badge: "🟥"
+    description: "Critical validator loss — severe schema impact"
+  warning:
+    suppression_factor: 0.90
+    badge: "🟧"
+    description: "Moderate validator loss — affects quality but not structure"
+  info:
+    suppression_factor: 1.00
+    badge: "🟩"
+    description: "Minor advisory — no impact to score"

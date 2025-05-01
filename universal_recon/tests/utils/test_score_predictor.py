@@ -1,7 +1,9 @@
 # tests/utils/test_score_predictor.py
 
 import unittest
+
 from utils import score_predictor
+
 
 class TestScorePredictor(unittest.TestCase):
 
@@ -33,6 +35,7 @@ class TestScorePredictor(unittest.TestCase):
         for r in results:
             self.assertGreaterEqual(r["predicted_score"], 0.0)
             self.assertLessEqual(r["predicted_score"], 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()
