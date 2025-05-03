@@ -68,6 +68,7 @@ def extract_lawyers(driver, url):
 
 
 def main():
+"""TODO: Add docstring."""
     url = input("Enter the URL to analyze: ")
     driver = init_driver()
 

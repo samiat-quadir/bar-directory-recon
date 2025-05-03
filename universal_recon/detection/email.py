@@ -1,4 +1,4 @@
-# universal_recon/detection/email.py
+"""TODO: Add docstring."""
 
 import re
 
@@ -20,12 +20,9 @@ def detect_emails(html_source, entity_map=None, context="root"):
     """Detects email addresses (plaintext or obfuscated) in HTML."""
     results = []
     entity_map = entity_map or ["&#x40;", "&#64;", "&#46;"]
-
     soup = BeautifulSoup(html_source, "html.parser")
     dom = etree.HTML(str(soup))
-
-    email_regex = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+")
-
+    email_regex = re.compile("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]+")
     for el in soup.find_all(text=True):
         raw = el.strip()
         if not raw:
@@ -34,5 +31,4 @@ def detect_emails(html_source, entity_map=None, context="root"):
         if email_regex.search(decoded):
             xpath = dom.getpath(el.parent) if dom is not None else None
             results.append({"type": "email", "value": decoded, "xpath": xpath, "context": context})
-
     return results

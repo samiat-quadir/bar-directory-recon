@@ -1,5 +1,5 @@
-import sys
 import subprocess
+import sys
 from pathlib import Path
 
 # Add project root to sys.path so env_loader.py is found
@@ -7,7 +7,9 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from prefect import flow, task
 from prefect.server.schemas.schedules import CronSchedule
+
 from env_loader import load_environment
+
 
 @task(name="Run Git Commit Script")
 def run_git_commit_script():
@@ -15,11 +17,7 @@ def run_git_commit_script():
         # Load environment (.env.asus or .env)
         load_environment()
         # Execute the existing auto_git_commit.py script
-        result = subprocess.run(
-            ["python", "auto_git_commit.py"],
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(["python", "auto_git_commit.py"], capture_output=True, text=True)
         # Log outputs
         print("STDOUT:\n", result.stdout)
         print("STDERR:\n", result.stderr)
@@ -35,9 +33,14 @@ def run_git_commit_script():
     # Always return 0 (success) so Prefect flow does not fail
     return 0
 
-@flow(name="Git Auto Commit Flow", description="Runs auto_git_commit.py on schedule without failing on push errors")
+
+@flow(
+    name="Git Auto Commit Flow",
+    description="Runs auto_git_commit.py on schedule without failing on push errors",
+)
 def git_auto_commit_flow():
     run_git_commit_script()
+
 
 if __name__ == "__main__":
     git_auto_commit_flow.deploy(

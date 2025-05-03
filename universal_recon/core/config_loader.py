@@ -1,3 +1,4 @@
+
 import json
 import os
 from copy import deepcopy
@@ -45,17 +46,8 @@ DEFAULT_CONFIG = {
 }
 
 
-class ConfigManager:
-    def __init__(self, config_path=None, cli_overrides=None):
-        self.config = deepcopy(DEFAULT_CONFIG)
-        if config_path and os.path.exists(config_path):
-            with open(config_path, encoding="utf-8") as f:
-                file_config = json.load(f)
-                self._deep_merge(self.config, file_config)
-        if cli_overrides:
-            self._deep_merge(self.config, cli_overrides)
 
-    def get(self, path, default=None):
+class ConfigManager:
         keys = path.split(".")
         val = self.config
         for key in keys:
@@ -71,4 +63,5 @@ class ConfigManager:
         return base
 
     def as_dict(self):
+    """TODO: Add docstring."""
         return self.config

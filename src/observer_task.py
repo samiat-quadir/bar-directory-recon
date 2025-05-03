@@ -8,6 +8,7 @@ load_environment()
 
 
 def summarize_automation_run():
+"""TODO: Add docstring."""
     log_file = "automation_run.log"
     if not os.path.exists(log_file):
         print("No automation_run.log found.")

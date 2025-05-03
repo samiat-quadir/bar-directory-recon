@@ -1,7 +1,6 @@
 # === analytics/schema_score_linter.py ===
 
 import json
-from pathlib import Path
 
 
 def score_fieldmap(fieldmap_path: str, verbose: bool = False) -> dict:
@@ -21,8 +20,6 @@ def score_fieldmap(fieldmap_path: str, verbose: bool = False) -> dict:
 
     fieldmap["score_summary"] = {"field_score": round(score, 2)}
 
-    with path.open("w", encoding="utf-8") as f:
-        json.dump(fieldmap, f, indent=2)
 
     if verbose:
         print(f"[✓] Fieldmap scored: {fieldmap_path} → {score:.2f}")

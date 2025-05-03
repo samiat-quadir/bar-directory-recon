@@ -20,6 +20,7 @@ SNAPSHOT_FILE = os.path.join(PLUGIN_FOLDER, "plugin_snapshot.json")
 
 
 def scan_plugins():
+"""TODO: Add docstring."""
     if not os.path.exists(PLUGIN_FOLDER):
         print(f"❌ Plugin folder not found: {PLUGIN_FOLDER}")
         return

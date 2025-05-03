@@ -29,10 +29,6 @@ LOG_DIR = os.path.join(os.getenv("LOCAL_GIT_REPO"), "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 log_file_path = os.path.join(LOG_DIR, "scraper.log")
 logging.basicConfig(
-    filename=log_file_path,
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
-    encoding="utf-8",
 )
 logger = logging.getLogger("lawyer_scraper")
 
@@ -56,6 +52,7 @@ driver = webdriver.Chrome(service=Service(CHROME_DRIVER_PATH), options=options)
 
 # ==== Helper Functions ====
 def safe_click(xpath, timeout=WAIT_TIME):
+"""TODO: Add docstring."""
     try:
         element = WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH, xpath)))
         element.click()
@@ -67,6 +64,7 @@ def safe_click(xpath, timeout=WAIT_TIME):
 
 
 def get_element_text(xpath, default="N/A", timeout=WAIT_TIME):
+"""TODO: Add docstring."""
     try:
         element = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, xpath)))
         return element.text.strip()
@@ -76,6 +74,7 @@ def get_element_text(xpath, default="N/A", timeout=WAIT_TIME):
 
 
 def get_element_attribute(xpath, attribute, default="N/A", timeout=WAIT_TIME):
+"""TODO: Add docstring."""
     try:
         element = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, xpath)))
         return element.get_attribute(attribute).strip()
@@ -85,6 +84,7 @@ def get_element_attribute(xpath, attribute, default="N/A", timeout=WAIT_TIME):
 
 
 def get_total_lawyers():
+"""TODO: Add docstring."""
     try:
         count_text = get_element_text("/html/body/div[2]/div[1]/div/div/div[5]/div[3]")
         numbers = re.findall(r"\d+", count_text)
@@ -95,6 +95,7 @@ def get_total_lawyers():
 
 
 def scrape_lawyer_profile():
+"""TODO: Add docstring."""
     try:
         profile_data = {
             "Name": get_element_text("/html/body/div[2]/div[2]/div/div[1]"),
@@ -115,6 +116,7 @@ def scrape_lawyer_profile():
 
 
 def scrape_state_lawyers(practice_area, state_name):
+"""TODO: Add docstring."""
     all_profiles = []
     total_lawyers = get_total_lawyers()
     logger.info(f"Total lawyers in {state_name}: {total_lawyers}")
@@ -156,6 +158,7 @@ def scrape_state_lawyers(practice_area, state_name):
 
 
 def scrape_practice_area(practice_xpath, practice_name):
+"""TODO: Add docstring."""
     if not safe_click(practice_xpath):
         logger.warning(f"Failed to click practice area: {practice_name}")
         return
@@ -189,6 +192,7 @@ def scrape_practice_area(practice_xpath, practice_name):
 
 
 def save_to_excel(data, practice_area):
+"""TODO: Add docstring."""
     if not data:
         return
     file_path = os.path.join(OUTPUT_FOLDER, "lawyers_data.xlsx")
@@ -216,6 +220,7 @@ def save_to_excel(data, practice_area):
 
 
 def main():
+"""TODO: Add docstring."""
     try:
         logger.info("Starting scraping process")
         driver.get(BASE_URL)
@@ -224,18 +229,10 @@ def main():
         elements = driver.find_elements(By.XPATH, "/html/body/div[2]/div[2]/div/div[15]/ul/li/a")
         for idx, element in enumerate(elements, 1):
             practice_areas.append(
-                {
-                    "name": element.text.strip(),
-                    "xpath": f"/html/body/div[2]/div[2]/div/div[15]/ul/li[{idx}]/a",
-                }
             )
         elements = driver.find_elements(By.XPATH, "/html/body/div[2]/div[2]/div/div[16]/ul/li/a")
         for idx, element in enumerate(elements, 1):
             practice_areas.append(
-                {
-                    "name": element.text.strip(),
-                    "xpath": f"/html/body/div[2]/div[2]/div/div[16]/ul/li[{idx}]/a",
-                }
             )
         for practice in practice_areas[:3]:
             logger.info(f"Starting practice area: {practice['name']}")

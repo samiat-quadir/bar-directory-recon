@@ -3,12 +3,6 @@
 import json
 
 
-def domain_lint_fieldmap(path: str, verbose=False):
-    try:
-        with open(path) as f:
-            data = json.load(f)
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
 
     domain_tags = data.get("domain_tags", [])
     fields = data.get("fields", [])
@@ -16,8 +10,6 @@ def domain_lint_fieldmap(path: str, verbose=False):
 
     anomalies = []
 
-    if "bar" in domain_tags and "bar_number" not in field_names:
-        anomalies.append("missing_bar_number")
 
     if "legal" in domain_tags and "email" not in field_names:
         anomalies.append("missing_email_field")
@@ -32,4 +24,3 @@ def domain_lint_fieldmap(path: str, verbose=False):
         if verbose:
             print("[✓] No domain lint issues found.")
 
-    return {"status": "complete", "flags": anomalies}

@@ -10,10 +10,6 @@ from notifier import send_html_notification
 # Logging setup
 LOG_FILE = "git_commit_api.log"
 logging.basicConfig(
-    filename=LOG_FILE,
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    encoding="utf-8",
 )
 
 app = Flask(__name__)
@@ -21,6 +17,7 @@ app = Flask(__name__)
 
 @app.route("/trigger_git_commit", methods=["GET"])
 def trigger_git_commit():
+"""TODO: Add docstring."""
     try:
         logging.info("🔁 Git commit trigger received...")
 

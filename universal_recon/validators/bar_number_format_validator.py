@@ -5,6 +5,7 @@ from typing import Dict, List
 
 
 def run_analysis(records=None, config=None):
+"""TODO: Add docstring."""
     if records is None:
         records = [{"type": "bar_number", "value": "CA123456", "rank": 1, "plugin": "test"}]
     return {

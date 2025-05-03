@@ -1,30 +1,35 @@
 # universal_recon/analytics/validator_drift_overlay.py
 
 import json
-import yaml
 import os
+
+import yaml
 from utils.validator_drift_badges import VALIDATOR_DRIFT_BADGES
 
 BADGE_COLORS = {
     "critical": "#e74c3c",
     "warning": "#f39c12",
     "info": "#3498db",
-    "ok": "#2ecc71"
+    "ok": "#2ecc71",
 }
+
 
 def load_matrix(matrix_path):
     with open(matrix_path) as f:
         return json.load(f)
 
+
 def load_validation_yaml(yaml_path="validation_matrix.yaml"):
     with open(yaml_path) as f:
         return yaml.safe_load(f)
+
 
 def load_status_json(status_path="output/output_status.json"):
     if os.path.exists(status_path):
         with open(status_path) as f:
             return json.load(f)
     return {}
+
 
 def analyze_validator_drift(matrix, validator_map, site_status):
     results = {}
@@ -39,12 +44,14 @@ def analyze_validator_drift(matrix, validator_map, site_status):
 
             if required and required_plugin and severity:
                 if required_plugin not in plugins_present:
-                    validator_alerts.append({
-                        "validator": validator,
-                        "missing_plugin": required_plugin,
-                        "severity": severity,
-                        "description": vconf.get("tooltip", "")
-                    })
+                    validator_alerts.append(
+                        {
+                            "validator": validator,
+                            "missing_plugin": required_plugin,
+                            "severity": severity,
+                            "description": vconf.get("tooltip", ""),
+                        }
+                    )
 
         drift_meta = site_status.get(site, {})
         drift_flag = drift_meta.get("validator_drift", False)
@@ -55,9 +62,10 @@ def analyze_validator_drift(matrix, validator_map, site_status):
             "alerts": validator_alerts,
             "drift": drift_flag,
             "health": site_health,
-            "suppression_reason": suppression
+            "suppression_reason": suppression,
         }
     return results
+
 
 def export_html(results, path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -88,14 +96,17 @@ def export_html(results, path):
         f.write("\n".join(html))
     print(f"[✓] Drift overlay exported to HTML → {path}")
 
+
 def export_json(results, path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         json.dump(results, f, indent=2)
     print(f"[✓] Drift overlay exported to JSON → {path}")
 
+
 def main():
     import argparse
+
     parser = argparse.ArgumentParser(description="Analyze validator-plugin drift with suppression logic")
     parser.add_argument("--matrix-path", default="output/schema_matrix.json")
     parser.add_argument("--yaml-path", default="validation_matrix.yaml")
@@ -110,6 +121,7 @@ def main():
     results = analyze_validator_drift(matrix, validator_map, status)
     export_json(results, args.output_json)
     export_html(results, args.output_html)
+
 
 if __name__ == "__main__":
     main()

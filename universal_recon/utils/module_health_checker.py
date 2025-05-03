@@ -1,12 +1,10 @@
 # universal_recon/utils/module_health_checker.py
 
-import os
-import sys
 import importlib
 import importlib.util
-import json
+import os
+import sys
 import time
-from datetime import datetime, timedelta
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if PROJECT_ROOT not in sys.path:
@@ -14,7 +12,6 @@ if PROJECT_ROOT not in sys.path:
 
 HTML_PATH = "output/module_health_report.html"
 
-from pathlib import Path
 
 MODULES_TO_CHECK = {
     "universal_recon.plugin_loader": None,
@@ -29,10 +26,11 @@ MODULES_TO_CHECK = {
 FILES_TO_CHECK = [
     "output/schema_matrix.json",
     "universal_recon/validators/validation_matrix.yaml",
-    "output/fieldmap/utah_bar_fieldmap.json"  # Add a sample fieldmap for staleness check
+    "output/fieldmap/utah_bar_fieldmap.json",  # Add a sample fieldmap for staleness check
 ]
 
 STALE_THRESHOLD_HOURS = 24
+
 
 def check_import_and_functions(module_path, functions):
     try:
@@ -44,12 +42,14 @@ def check_import_and_functions(module_path, functions):
     except Exception:
         return (False, [])
 
+
 def check_staleness(path):
     if not os.path.exists(path):
         return None
     mtime = os.path.getmtime(path)
     age_hours = (time.time() - mtime) / 3600
     return age_hours
+
 
 def build_html_report(results, file_results, staleness_warnings, missing_matrix, html_path):
     rows = []
@@ -61,11 +61,15 @@ def build_html_report(results, file_results, staleness_warnings, missing_matrix,
     for path, exists in file_results.items():
         emoji = "✅" if exists else "❌"
         color = "#2ecc71" if exists else "#e67e22"
-        rows.append(f"<tr><td>{path}</td><td style='color:{color}'>{emoji}</td><td>{'Exists' if exists else 'Missing'}</td></tr>")
+        rows.append(
+            f"<tr><td>{path}</td><td style='color:{color}'>{emoji}</td><td>{'Exists' if exists else 'Missing'}</td></tr>"
+        )
     for warning in staleness_warnings:
         rows.append(f"<tr><td colspan='3' style='color:#f39c12'><b>⚠️ {warning}</b></td></tr>")
     if missing_matrix:
-        rows.append(f"<tr><td colspan='3' style='color:#e74c3c'><b>❌ schema_matrix.json missing. Suggest re-running main.py</b></td></tr>")
+        rows.append(
+            f"<tr><td colspan='3' style='color:#e74c3c'><b>❌ schema_matrix.json missing. Suggest re-running main.py</b></td></tr>"
+        )
     html = f"""
     <html>
     <head>
@@ -90,6 +94,7 @@ def build_html_report(results, file_results, staleness_warnings, missing_matrix,
     with open(html_path, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"[✓] HTML report written to {html_path}")
+
 
 def main():
     print("Running diagnostics for Universal Recon module...\n")
@@ -118,6 +123,7 @@ def main():
                 missing_matrix = True
     build_html_report(results, file_results, staleness_warnings, missing_matrix, HTML_PATH)
     print("\n✅ Diagnostics complete.")
+
 
 if __name__ == "__main__":
     main()

@@ -1,9 +1,4 @@
 import os
-import shutil
-import sys
-from datetime import datetime
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from env_loader import load_environment
 
 load_environment()
@@ -13,6 +8,7 @@ ARCHIVE_DIR = os.path.join(SOURCE_DIR, "archives")
 
 
 def create_timestamped_archive():
+"""TODO: Add docstring."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     archive_name = f"backup_archive_{timestamp}.zip"
     archive_path = os.path.join(ARCHIVE_DIR, archive_name)

@@ -14,6 +14,7 @@ SUMMARY_FILE = os.path.join(LOG_DIR, "log_summary.txt")
 
 
 def summarize_logs():
+"""TODO: Add docstring."""
     summary = []
     for filename in os.listdir(LOG_DIR):
         if filename.endswith(".log"):

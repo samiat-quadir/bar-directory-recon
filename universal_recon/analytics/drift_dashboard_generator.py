@@ -1,13 +1,14 @@
 # universal_recon/analytics/drift_dashboard_generator.py
 
-import os
 import json
+import os
 
 BADGE_COLORS = {
-    "ok": "#2ecc71",       # Green
-    "degraded": "#f1c40f", # Yellow/Orange
-    "critical": "#e74c3c"  # Red
+    "ok": "#2ecc71",  # Green
+    "degraded": "#f1c40f",  # Yellow/Orange
+    "critical": "#e74c3c",  # Red
 }
+
 
 def load_status(status_path="output/output_status.json"):
     if not os.path.exists(status_path):
@@ -15,6 +16,7 @@ def load_status(status_path="output/output_status.json"):
         return {}
     with open(status_path, "r", encoding="utf-8") as f:
         return json.load(f)
+
 
 def generate_html(status_data, output_path="output/drift_dashboard.html"):
     rows = []
@@ -24,14 +26,16 @@ def generate_html(status_data, output_path="output/drift_dashboard.html"):
         plugins = ", ".join(details.get("plugins_removed", [])) if details.get("plugins_removed") else "None"
         color = BADGE_COLORS.get(health, "#bdc3c7")  # default: gray
 
-        rows.append(f"""
+        rows.append(
+            f"""
             <tr>
                 <td>{site}</td>
                 <td><span style="background:{color};padding:4px 8px;border-radius:6px;color:white;">{health.upper()}</span></td>
                 <td>{drift}</td>
                 <td>{plugins}</td>
             </tr>
-        """)
+        """
+        )
 
     html = f"""
     <html>
@@ -69,11 +73,21 @@ def generate_html(status_data, output_path="output/drift_dashboard.html"):
         f.write(html)
     print(f"[✓] Drift Dashboard generated at {output_path}")
 
+
 def main():
     import argparse
+
     parser = argparse.ArgumentParser(description="Generate the Drift Dashboard from site status data")
-    parser.add_argument("--status-path", default="output/output_status.json", help="Path to status JSON file")
-    parser.add_argument("--output-path", default="output/drift_dashboard.html", help="Path to save the drift dashboard HTML")
+    parser.add_argument(
+        "--status-path",
+        default="output/output_status.json",
+        help="Path to status JSON file",
+    )
+    parser.add_argument(
+        "--output-path",
+        default="output/drift_dashboard.html",
+        help="Path to save the drift dashboard HTML",
+    )
     args = parser.parse_args()
 
     status_data = load_status(args.status_path)
@@ -81,6 +95,7 @@ def main():
         print("❌ No data to build dashboard.")
         return
     generate_html(status_data, args.output_path)
+
 
 if __name__ == "__main__":
     main()

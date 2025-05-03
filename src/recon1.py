@@ -15,14 +15,12 @@ OUTPUT_DIR = "output"
 LOG_FILE = f"recon_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 logging.basicConfig(
-    filename=os.path.join(OUTPUT_DIR, LOG_FILE),
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
 
 # ==== CORE FUNCTIONS ====
 def init_driver(headless=True):
+"""TODO: Add docstring."""
     options = webdriver.ChromeOptions()
     if headless:
         options.add_argument("--headless=new")
@@ -33,6 +31,7 @@ def init_driver(headless=True):
 
 
 def wait_for_ajax(driver, timeout=10):
+"""TODO: Add docstring."""
     try:
         WebDriverWait(driver, timeout).until(lambda d: d.execute_script("return document.readyState") == "complete")
         time.sleep(2)  # Allow further dynamic loads
@@ -41,6 +40,7 @@ def wait_for_ajax(driver, timeout=10):
 
 
 def submit_blank_form(driver):
+"""TODO: Add docstring."""
     try:
         buttons = driver.find_elements(By.TAG_NAME, "button")
         for b in buttons:
@@ -56,6 +56,7 @@ def submit_blank_form(driver):
 
 
 def extract_emails(driver):
+"""TODO: Add docstring."""
     emails = set()
     try:
         links = driver.find_elements(By.CSS_SELECTOR, "a[href^='mailto']")
@@ -69,6 +70,7 @@ def extract_emails(driver):
 
 
 def detect_profiles(driver):
+"""TODO: Add docstring."""
     profiles = []
     try:
         containers = driver.find_elements(By.XPATH, "//div[contains(@class,'profile') or contains(@class,'result')]")
@@ -80,11 +82,10 @@ def detect_profiles(driver):
 
 
 def handle_pagination(driver):
+"""TODO: Add docstring."""
     try:
         while True:
             next_buttons = driver.find_elements(
-                By.XPATH,
-                "//*[contains(text(), 'Next') or contains(text(), 'Load More')]",
             )
             if not next_buttons:
                 break
@@ -97,6 +98,7 @@ def handle_pagination(driver):
 
 # ==== MAIN ====
 def analyze_directory(url):
+"""TODO: Add docstring."""
     driver = init_driver()
     result = {
         "url": url,

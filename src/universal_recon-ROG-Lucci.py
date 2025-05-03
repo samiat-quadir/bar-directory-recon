@@ -12,7 +12,6 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -49,29 +48,26 @@ logging.basicConfig(
 
 # Utility functions
 def timestamp():
+"""TODO: Add docstring."""
     return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 
 def save_json(data, name):
+"""TODO: Add docstring."""
     with open(os.path.join(OUTPUT_DIR, f"{name}.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 
 def save_screenshot(driver, name):
+"""TODO: Add docstring."""
     driver.save_screenshot(os.path.join(SCREENSHOTS_DIR, f"{name}.png"))
 
 
 def recon_page(driver, depth=0, path="root"):
+"""TODO: Add docstring."""
     if depth > MAX_IFRAME_DEPTH:
         return []
     logging.info(f"Recon at depth {depth}, path: {path}")
-    frame_data = {
-        "path": path,
-        "forms": [],
-        "buttons": [],
-        "pagination": [],
-        "profile_containers": [],
-    }
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
     for form in driver.find_elements(By.TAG_NAME, "form"):
@@ -88,11 +84,6 @@ def recon_page(driver, depth=0, path="root"):
 
     for button in driver.find_elements(By.XPATH, "//button | //input[@type='submit']"):
         frame_data["buttons"].append(
-            {
-                "text": button.text,
-                "classes": button.get_attribute("class"),
-                "id": button.get_attribute("id"),
-            }
         )
 
     pagination_candidates = driver.find_elements(
@@ -121,6 +112,7 @@ def recon_page(driver, depth=0, path="root"):
 
 
 def universal_recon(target_url):
+"""TODO: Add docstring."""
     report = {"url": target_url, "recon": []}
     options = webdriver.ChromeOptions()
     options.add_argument("--start-maximized")

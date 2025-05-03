@@ -1,7 +1,9 @@
 # Quick Fieldmap Validation Test
 # Runs collect_fieldmap for a mock site and checks output
 import os
+
 from universal_recon.analytics.site_schema_collector import collect_fieldmap
+
 
 def main():
     print("[DEBUG] Starting fieldmap validation test...")
@@ -14,6 +16,7 @@ def main():
         print(f"SUCCESS: {output_path} created.")
     else:
         print(f"FAILURE: {output_path} not found.")
+
 
 if __name__ == "__main__":
     main()

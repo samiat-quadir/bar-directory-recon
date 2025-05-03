@@ -15,6 +15,7 @@ BAR_PATTERNS = [
 
 
 def apply(driver, context="root"):
+"""TODO: Add docstring."""
     records = []
     try:
         html = driver.page_source
