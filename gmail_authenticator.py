@@ -6,6 +6,10 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
+# Import directly, without sys.path modification
+from env_loader import load_environment
+
+# Initialize environment
 load_environment()
 
 # Constants
