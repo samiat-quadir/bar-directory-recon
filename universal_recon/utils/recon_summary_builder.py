@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def run_analysis(records, config=None):
+"""TODO: Add docstring."""
     summary = summarize_records(records)
     return summary
 

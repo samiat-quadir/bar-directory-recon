@@ -27,6 +27,7 @@ from motion_task_via_email import send_task_email
 
 
 def git_commit_and_notify():
+"""TODO: Add docstring."""
     try:
         result = run_git_commit()
         logging.info("✅ Git commit successful.")

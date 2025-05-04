@@ -4,6 +4,7 @@ from utils.snapshot_manager import save_screenshot
 
 
 def apply(driver, context="post_core", config=None, logger=None):
+"""TODO: Add docstring."""
     try:
         html = driver.page_source
         records = detect_emails(html, context=context)

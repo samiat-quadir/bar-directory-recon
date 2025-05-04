@@ -6,10 +6,6 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-# Import directly, without sys.path modification
-from env_loader import load_environment
-
-# Initialize environment
 load_environment()
 
 # Constants
@@ -19,14 +15,11 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 LOG_FILE = "gmail_auth.log"
 
 logging.basicConfig(
-    filename=LOG_FILE,
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    encoding="utf-8",
 )
 
 
 def authenticate_gmail():
+"""TODO: Add docstring."""
     creds = None
     try:
         if os.path.exists(TOKEN_PATH):
@@ -52,6 +45,7 @@ def authenticate_gmail():
 
 
 def revoke_token():
+"""TODO: Add docstring."""
     try:
         if os.path.exists(TOKEN_PATH):
             os.remove(TOKEN_PATH)

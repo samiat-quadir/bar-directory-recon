@@ -6,6 +6,7 @@ OPTIONAL_DEFAULTS = {"confidence": 1.0, "source": "unknown", "category": None}
 
 
 def normalize(records, strict=False, logger=None):
+"""TODO: Add docstring."""
     normalized = []
     for i, record in enumerate(records):
         rec = copy.deepcopy(record)

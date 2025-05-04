@@ -1,4 +1,4 @@
-# plugins/ai_template_indexer.py
+"""TODO: Add docstring."""
 
 from typing import Dict, List
 
@@ -8,14 +8,10 @@ def apply(records: List[Dict], context: str = "ai_template_indexer") -> List[Dic
     Classifies grouped records (template blocks) into profile templates:
     e.g., individual, firm, hybrid, or unknown based on field composition.
     """
-
     templates = []
-
     for group in records:
         template = group.copy()
         field_types = {r["type"] for r in group.get("fields", []) if "type" in r}
-
-        # Simple classification rules
         if {"name", "email", "bar_number"}.issubset(field_types):
             template_type = "individual"
         elif {"firm_name", "phone"}.issubset(field_types):
@@ -24,13 +20,12 @@ def apply(records: List[Dict], context: str = "ai_template_indexer") -> List[Dic
             template_type = "hybrid"
         else:
             template_type = "unknown"
-
         template["template_type"] = template_type
-        template["template_score"] = len(field_types) / 8.0  # rough completeness signal
+        template["template_score"] = len(field_types) / 8.0
         template["template_confidence"] = (
-            "high" if template["template_score"] > 0.75 else "medium" if template["template_score"] > 0.5 else "low"
+            "high"
+            if template["template_score"] > 0.75
+            else "medium" if template["template_score"] > 0.5 else "low"
         )
-
         templates.append(template)
-
     return templates

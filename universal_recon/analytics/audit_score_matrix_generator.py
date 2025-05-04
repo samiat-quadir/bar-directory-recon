@@ -2,6 +2,7 @@
 
 
 def run_analysis(records, config=None):
+"""TODO: Add docstring."""
     if records is None:
         # Dummy fallback for harness testing
         records = [{"field": "value"}, {"field": "value"}]

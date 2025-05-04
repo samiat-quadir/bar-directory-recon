@@ -26,16 +26,13 @@ MOTION_PROJECT_ID = os.getenv("MOTION_PROJECT_ID")
 
 
 def create_motion_task(title, label="Auto", due_date=None, duration=15, priority="high"):
+"""TODO: Add docstring."""
     if not MOTION_API_KEY:
         logging.error("MOTION_API_KEY is not set.")
         print("MOTION_API_KEY is not set.")
         return False
 
     endpoint = "https://api.usemotion.com/graphql"
-    headers = {
-        "Authorization": f"Bearer {MOTION_API_KEY}",
-        "Content-Type": "application/json",
-    }
 
     query = """
     mutation CreateTask($input: TaskInput!) {
@@ -67,7 +64,7 @@ def create_motion_task(title, label="Auto", due_date=None, duration=15, priority
     }
 
     try:
-        response = requests.post(endpoint, headers=headers, json={"query": query, "variables": variables})
+        response = requests.post(endpoint, headers=headers, json={"query": query, "variables": variables}, timeout=10)
         response.raise_for_status()
         task_response = response.json()
 

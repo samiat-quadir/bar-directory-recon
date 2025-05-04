@@ -16,10 +16,6 @@ load_environment()
 # Setup logging
 LOG_PATH = os.getenv("LOG_EMAIL_NOTIFIER", "email_notifier.log")
 logging.basicConfig(
-    filename=LOG_PATH,
-    level=logging.INFO,
-    encoding="utf-8",
-    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
 # Environment variables
@@ -30,6 +26,7 @@ TO_EMAILS = os.getenv("TO_EMAILS", "").split(",")
 
 
 def load_gmail_credentials():
+"""TODO: Add docstring."""
     creds = None
     token_path = os.getenv("GMAIL_TOKEN_PATH")
 

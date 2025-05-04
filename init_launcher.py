@@ -1,4 +1,5 @@
-# init_launcher.py
+"""TODO: Add docstring."""
+
 import subprocess
 
 scripts = [
@@ -8,7 +9,6 @@ scripts = [
     "src/health_check.py",
     "src/log_rotator.py",
 ]
-
 for script in scripts:
     try:
         print(f"Running: {script}")

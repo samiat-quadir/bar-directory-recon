@@ -4,13 +4,16 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 class DriverManager:
+"""TODO: Add docstring."""
     def __init__(self, config, logger):
+    """TODO: Add docstring."""
         self.config = config
         self.logger = logger
         self.driver = None
         self._init_driver()
 
     def _init_driver(self):
+    """TODO: Add docstring."""
         headless = self.config.get("general.headless", True)
         options = webdriver.ChromeOptions()
         if headless:
@@ -23,6 +26,7 @@ class DriverManager:
         self.logger.log("WebDriver initialized.")
 
     def fetch_page(self, url, retries=3):
+    """TODO: Add docstring."""
         for attempt in range(1, retries + 1):
             try:
                 self.logger.log(f"Fetching page: {url} (Attempt {attempt})")
@@ -33,6 +37,7 @@ class DriverManager:
         return False
 
     def close_driver(self):
+    """TODO: Add docstring."""
         if self.driver:
             try:
                 self.driver.quit()

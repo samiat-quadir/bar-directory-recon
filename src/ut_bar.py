@@ -13,7 +13,6 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import Callable
 
 from dotenv import load_dotenv
 from selenium import webdriver
@@ -25,7 +24,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class UtahBarScraper:
+"""TODO: Add docstring."""
     def __init__(self, headless=True, max_pages=50, retry_attempts=3, user_agent=None, workers=1):
+    """TODO: Add docstring."""
         self.headless = headless
         self.max_pages = max_pages
         self.retry_attempts = retry_attempts
@@ -39,12 +40,14 @@ class UtahBarScraper:
         self.logger = self._setup_logger()
 
     def _load_env(self):
+    """TODO: Add docstring."""
         load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
         self.chromedriver_path = os.getenv("CHROMEDRIVER_PATH")
         if not os.path.exists(self.chromedriver_path):
             raise ValueError("Invalid CHROMEDRIVER_PATH")
 
     def _setup_dirs(self):
+    """TODO: Add docstring."""
         self.base_dir = os.path.dirname(__file__)
         self.data_dir = os.path.join(self.base_dir, "data")
         self.log_dir = os.path.join(self.base_dir, "logs")
@@ -52,6 +55,7 @@ class UtahBarScraper:
         os.makedirs(self.log_dir, exist_ok=True)
 
     def _setup_logger(self):
+    """TODO: Add docstring."""
         logger = logging.getLogger("UtahBarScraper")
         logger.setLevel(logging.INFO)
         if logger.hasHandlers():
@@ -67,6 +71,7 @@ class UtahBarScraper:
         return logger
 
     def setup_driver(self):
+    """TODO: Add docstring."""
         options = webdriver.ChromeOptions()
         if self.headless:
             options.add_argument("--headless=new")
@@ -80,16 +85,13 @@ class UtahBarScraper:
             driver.execute_cdp_cmd("Network.enable", {})
             driver.execute_cdp_cmd(
                 "Network.setExtraHTTPHeaders",
-                {
-                    "Referer": "https://www.utahbar.org/",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
             )
         except Exception as e:
             self.logger.warning(f"Failed to set custom headers: {e}")
         return driver
 
     def with_retry(self, func: Callable, *args, **kwargs):
+    """TODO: Add docstring."""
         for attempt in range(self.retry_attempts):
             try:
                 return func(*args, **kwargs)
@@ -99,6 +101,7 @@ class UtahBarScraper:
         return None
 
     def switch_to_iframe(self, driver):
+    """TODO: Add docstring."""
         try:
             iframe = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "iframe")))
             driver.switch_to.frame(iframe)
@@ -108,6 +111,7 @@ class UtahBarScraper:
             return False
 
     def perform_search(self, driver):
+    """TODO: Add docstring."""
         driver.get(self.base_url)
         self.switch_to_iframe(driver)
         try:
@@ -122,6 +126,7 @@ class UtahBarScraper:
             return False
 
     def extract_table_rows(self, driver):
+    """TODO: Add docstring."""
         results = []
         try:
             rows = driver.find_elements(By.XPATH, "//table/tbody/tr")
@@ -155,6 +160,7 @@ class UtahBarScraper:
         return re.match(r"^\\d{6}$", profile.get("BarNumber", "")) and all(profile.get(k) for k in ["Name", "Status"])
 
     def go_to_next_page(self, driver, current_page):
+    """TODO: Add docstring."""
         try:
             time.sleep(random.uniform(1.2, 3.8))
             next_button = WebDriverWait(driver, 10).until(
@@ -167,6 +173,7 @@ class UtahBarScraper:
             return False
 
     def scrape_page(self, page_num):
+    """TODO: Add docstring."""
         driver = self.setup_driver()
         results = []
         try:
@@ -183,6 +190,7 @@ class UtahBarScraper:
         return results
 
     def scrape_with_concurrency(self):
+    """TODO: Add docstring."""
         self.logger.info(f"Starting parallel scrape across {self.max_pages} pages with {self.workers} workers.")
         with ThreadPoolExecutor(max_workers=self.workers) as executor:
             futures = {executor.submit(self.scrape_page, page): page for page in range(1, self.max_pages + 1)}
@@ -197,6 +205,7 @@ class UtahBarScraper:
         self.save_csv()
 
     def scrape(self):
+    """TODO: Add docstring."""
         if self.workers > 1:
             return self.scrape_with_concurrency()
         driver = self.setup_driver()
@@ -217,6 +226,7 @@ class UtahBarScraper:
         self.save_csv()
 
     def save_csv(self):
+    """TODO: Add docstring."""
         if not self.results:
             return
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -229,6 +239,7 @@ class UtahBarScraper:
 
 
 def parse_args():
+"""TODO: Add docstring."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--headless", action="store_true")
     parser.add_argument("--max-pages", type=int, default=50)
@@ -240,9 +251,5 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     scraper = UtahBarScraper(
-        headless=args.headless,
-        max_pages=args.max_pages,
-        retry_attempts=args.retry,
-        workers=args.workers,
     )
     scraper.scrape()

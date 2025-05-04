@@ -1,17 +1,14 @@
 # validators/record_field_validator_v3.py
 
-import json
-import re
-from pathlib import Path
-from typing import Dict, List
 
-import yaml
+def run_field_validators(fieldmap, verbose=False):
+    matrix = load_validation_matrix()
+    results = []
+    for field in fieldmap.get("fields", []):
+        field_name = field.get("name")
+        if not field_name:
+            continue
 
-SCHEMA_PATH = Path(__file__).parent.parent / "schema"
-with open(SCHEMA_PATH / "field_schema.json", "r", encoding="utf-8") as f:
-    FIELD_SCHEMA = json.load(f)
-with open(SCHEMA_PATH / "validation_matrix.yaml", "r", encoding="utf-8") as f:
-    VALIDATION_MATRIX = yaml.safe_load(f)
 
 
 def run_analysis(records=None, config=None):

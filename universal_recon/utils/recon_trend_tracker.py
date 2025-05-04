@@ -13,6 +13,7 @@ def load_summaries_from_directory(directory: str) -> List[Dict]:
 
 
 def run_analysis(records, config=None):
+"""TODO: Add docstring."""
     return analyze_trends(records)
 
 
@@ -72,6 +73,7 @@ def analyze_trends(site_name: str, summaries: List[Dict]) -> Dict:
 
 
 def save_trend_report(site_name: str, trend_summary: Dict):
+"""TODO: Add docstring."""
     os.makedirs("output/reports", exist_ok=True)
     path = f"output/reports/{site_name}_trend.json"
     with open(path, "w", encoding="utf-8") as f:

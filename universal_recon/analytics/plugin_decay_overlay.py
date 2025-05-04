@@ -1,6 +1,10 @@
 # universal_recon/analytics/plugin_decay_overlay.py
 
-import json, os, argparse, yaml
+import argparse
+import json
+import os
+
+import yaml
 
 STATUS_PATH = "output/output_status.json"
 MATRIX_PATH = "output/schema_matrix.json"
@@ -14,13 +18,16 @@ BADGE_COLORS = {
     "info": "#3498db",
 }
 
+
 def load_json(path):
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
+
 def load_yaml(path):
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
+
 
 def generate_overlay():
     if not os.path.exists(MATRIX_PATH):
@@ -40,13 +47,15 @@ def generate_overlay():
             plugin = vconf.get("plugin")
             if not plugin or plugin in used_plugins:
                 continue
-            plugin_risks.append({
-                "plugin": plugin,
-                "validator": validator,
-                "severity": vconf.get("on_plugin_removed", "info"),
-                "penalty": vconf.get("drift_penalty", 0.0),
-                "tooltip": vconf.get("tooltip", ""),
-            })
+            plugin_risks.append(
+                {
+                    "plugin": plugin,
+                    "validator": validator,
+                    "severity": vconf.get("on_plugin_removed", "info"),
+                    "penalty": vconf.get("drift_penalty", 0.0),
+                    "tooltip": vconf.get("tooltip", ""),
+                }
+            )
 
         site_status = status.get(site, {})
         output[site] = {
@@ -61,7 +70,9 @@ def generate_overlay():
         print(f"[✓] Exported plugin decay risk JSON → {EXPORT_JSON}")
 
     # Build HTML
-    html = ["<html><head><title>Plugin Decay Overlay</title></head><body><h1>Plugin Risk Overlay</h1>"]
+    html = [
+        "<html><head><title>Plugin Decay Overlay</title></head><body><h1>Plugin Risk Overlay</h1>"
+    ]
     for site, meta in output.items():
         html.append(f"<h2>{site} – Health: {meta['site_health'].upper()}</h2><ul>")
         for risk in meta["validator_risk"]:
@@ -82,13 +93,15 @@ def generate_overlay():
         f.write("\n".join(html))
         print(f"[✓] Exported plugin decay overlay HTML → {EXPORT_HTML}")
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--matrix", default=MATRIX_PATH)
     parser.add_argument("--status", default=STATUS_PATH)
     parser.add_argument("--yaml", default=YAML_PATH)
-    args = parser.parse_args()
+    parser.parse_args()
     generate_overlay()
+
 
 if __name__ == "__main__":
     main()

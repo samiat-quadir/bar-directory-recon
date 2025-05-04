@@ -2,6 +2,7 @@ import json
 
 
 def check_template_completeness(grouped_profiles, required_fields=None):
+"""TODO: Add docstring."""
     if required_fields is None:
         required_fields = ["name", "email", "firm", "phone"]
 
@@ -26,6 +27,7 @@ def check_template_completeness(grouped_profiles, required_fields=None):
 
 
 def save_checked_template(site_name, annotated_profiles, path="output/templates"):
+"""TODO: Add docstring."""
     out_file = f"{path}/{site_name}_template_checked.json"
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(annotated_profiles, f, indent=2, ensure_ascii=False)

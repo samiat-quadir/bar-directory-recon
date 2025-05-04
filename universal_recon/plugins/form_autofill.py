@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import Select
 
 
 def smart_fill_and_submit_forms(driver, config, logger, dry_run=False):
+"""TODO: Add docstring."""
     forms = driver.find_elements(By.TAG_NAME, "form")
     logger(f"[FormHandler] Found {len(forms)} form(s)")
 

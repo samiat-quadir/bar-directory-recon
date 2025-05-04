@@ -1,9 +1,9 @@
 """Centralized logging configuration for the project."""
-import os
+
 import logging
 import logging.handlers
+import os
 from datetime import datetime
-from pathlib import Path
 from typing import Optional
 
 # Constants
@@ -13,6 +13,7 @@ DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 MAX_BYTES = 10 * 1024 * 1024  # 10MB
 BACKUP_COUNT = 5
 
+
 def setup_logger(
     name: str,
     log_file: Optional[str] = None,
@@ -21,14 +22,14 @@ def setup_logger(
     backup_count: int = BACKUP_COUNT,
 ) -> logging.Logger:
     """Configure a logger with consistent formatting and rotation.
-    
+
     Args:
         name: Logger name (typically __name__)
         log_file: Optional specific log file path
         level: Logging level
         max_bytes: Max size before rotation
         backup_count: Number of backup files to keep
-        
+
     Returns:
         Configured logger instance
     """
@@ -48,10 +49,7 @@ def setup_logger(
 
     # File handler with rotation
     file_handler = logging.handlers.RotatingFileHandler(
-        log_file,
-        maxBytes=max_bytes,
-        backupCount=backup_count,
-        encoding='utf-8'
+        log_file, maxBytes=max_bytes, backupCount=backup_count, encoding="utf-8"
     )
     file_handler.setLevel(level)
 
@@ -70,29 +68,27 @@ def setup_logger(
 
     return logger
 
+
 def setup_health_logger() -> logging.Logger:
     """Configure specialized logger for health checks."""
     return setup_logger(
-        "health_check",
-        os.path.join(DEFAULT_LOG_DIR, "health.log"),
-        level=logging.INFO
+        "health_check", os.path.join(DEFAULT_LOG_DIR, "health.log"), level=logging.INFO
     )
+
 
 def setup_audit_logger() -> logging.Logger:
     """Configure specialized logger for audit events."""
-    return setup_logger(
-        "audit",
-        os.path.join(DEFAULT_LOG_DIR, "audit.log"),
-        level=logging.INFO
-    )
+    return setup_logger("audit", os.path.join(DEFAULT_LOG_DIR, "audit.log"), level=logging.INFO)
+
 
 def get_timestamp() -> str:
     """Get current timestamp in standard format.
-    
+
     Returns:
         Formatted timestamp string
     """
     return datetime.now().strftime(DEFAULT_DATE_FORMAT)
+
 
 # Default logger for general use
 default_logger = setup_logger("bar_directory_recon")

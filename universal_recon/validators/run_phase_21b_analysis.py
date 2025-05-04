@@ -2,7 +2,6 @@
 
 import json
 import os
-from glob import glob
 
 ARCHIVE_PATH = "output/archive/"
 LATEST_PATH = "output/schema_matrix.json"
@@ -18,9 +17,6 @@ def load_matrix(path):
         return {}
 
 
-def get_latest_snapshot_path():
-    files = sorted(glob(os.path.join(ARCHIVE_PATH, "schema_matrix_*.json")))
-    return files[-1] if files else None
 
 
 def compare_scores(latest, previous):
@@ -29,11 +25,6 @@ def compare_scores(latest, previous):
     latest_sites = latest.get("sites", {})
     prev_sites = previous.get("sites", {})
 
-    for site in latest_sites:
-        new_score = latest_sites[site].get("score_summary", {}).get("field_score")
-        old_score = prev_sites.get(site, {}).get("score_summary", {}).get("field_score")
-        new_anomalies = len(latest_sites[site].get("anomaly_flags", []))
-        old_anomalies = len(prev_sites.get(site, {}).get("anomaly_flags", []))
 
         drift = None
         if new_score is not None and old_score is not None:
@@ -90,6 +81,7 @@ def main():
         exit(1)
     else:
         exit(0)
+
 
 
 if __name__ == "__main__":

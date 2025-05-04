@@ -52,4 +52,5 @@ def flag_template_health(records):
 
 
 def run_analysis(records, config=None):
+"""TODO: Add docstring."""
     return flag_template_health(records)

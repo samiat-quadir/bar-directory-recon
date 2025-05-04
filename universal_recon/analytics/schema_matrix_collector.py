@@ -2,7 +2,6 @@
 
 import json
 from pathlib import Path
-from typing import Dict
 
 
 def collect_schema_matrix(output_dir: str = "output/fieldmap") -> Dict:
@@ -32,4 +31,3 @@ def write_schema_matrix(matrix: Dict, save_path: str = "output/schema_matrix.jso
     with path.open("w", encoding="utf-8") as f:
         json.dump(matrix, f, indent=2)
     if verbose:
-        print(f"[✓] Schema matrix written to: {save_path}")

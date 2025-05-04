@@ -3,13 +3,16 @@ from datetime import datetime
 
 
 class Logger:
+"""TODO: Add docstring."""
     def __init__(self, log_path):
+    """TODO: Add docstring."""
         self.log_path = log_path
         os.makedirs(os.path.dirname(log_path), exist_ok=True)
         self.handle = open(log_path, "a", encoding="utf-8")
         self.log("Logger initialized.")
 
     def log(self, message, level="INFO"):
+    """TODO: Add docstring."""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         line = f"[{level}] {timestamp} - {message}\n"
         print(line, end="")
@@ -18,6 +21,7 @@ class Logger:
             self.handle.flush()
 
     def close(self):
+    """TODO: Add docstring."""
         if self.handle:
             self.handle.close()
             self.handle = None

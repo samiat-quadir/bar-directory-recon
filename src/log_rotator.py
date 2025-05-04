@@ -19,6 +19,7 @@ load_environment()
 
 
 def rotate_logs(log_dir="logs", archive_dir="logs/archive"):
+"""TODO: Add docstring."""
     os.makedirs(log_dir, exist_ok=True)
     os.makedirs(archive_dir, exist_ok=True)
 
