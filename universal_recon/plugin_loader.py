@@ -1,10 +1,11 @@
-# universal_recon/plugin_loader.py
+# === plugin_loader.py ===
 
 import importlib
 import json
 import os
 from pathlib import Path
 from typing import Any, Dict, List
+
 
 def load_plugins_by_type(plugin_type: str):
     plugins = []
@@ -15,8 +16,12 @@ def load_plugins_by_type(plugin_type: str):
         print(f"❌ Plugin registry not found: {registry_path}")
         return []
 
-    with open(registry_path, "r", encoding="utf-8") as f:
-        registry = json.load(f)
+    try:
+        with open(registry_path, "r", encoding="utf-8") as f:
+            registry = json.load(f)
+    except Exception as e:
+        print(f"❌ Failed to load plugin registry: {e}")
+        return []
 
     for entry in registry:
         if entry.get("type") == plugin_type:
@@ -28,6 +33,7 @@ def load_plugins_by_type(plugin_type: str):
                 print(f"[WARN] Failed to load plugin: {module_path} → {e}")
 
     return plugins
+
 
 def load_normalized_records(site_name: str) -> List[Dict[str, Any]]:
     path = os.path.join("output", "fieldmap", f"{site_name}_fieldmap.json")
@@ -41,13 +47,7 @@ def load_normalized_records(site_name: str) -> List[Dict[str, Any]]:
             return data["records"]
         elif "fields" in data and "score_summary" in data:
             return [{"plugin": "aggregated_fieldmap", **data}]
-        elif "fields" in data:
-            # Handle single fieldmap record (no score_summary)
-            return [data]
         else:
-            # Fallback: try to unpack dict of dicts
-            return [
-                {"plugin": key, **val} for key, val in data.items() if isinstance(val, dict)
-            ]
+            return [{"plugin": key, **val} for key, val in data.items()]
     else:
         raise ValueError(f"Unsupported fieldmap structure in {path}")

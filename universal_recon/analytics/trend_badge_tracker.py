@@ -1,9 +1,10 @@
 # === analytics/trend_badge_tracker.py ===
 
+import argparse
 import json
 from pathlib import Path
 from typing import Dict
-import argparse
+
 
 def regenerate_site_score_trend(site: str, archive_dir="output/archive", output_dir="output/reports") -> str:
     archive = Path(archive_dir)
@@ -25,6 +26,7 @@ def regenerate_site_score_trend(site: str, archive_dir="output/archive", output_
         json.dump({"trend_scores": trend_scores}, f, indent=2)
     return str(save_path)
 
+
 def run_analysis(config: Dict = None) -> Dict:
     site = config.get("site_name", "unknown")
     output_dir = config.get("output_dir", "output/reports")
@@ -37,7 +39,7 @@ def run_analysis(config: Dict = None) -> Dict:
         "plugin": "trend_badge_tracker",
         "site": site,
         "regressions": [],
-        "status": "ok"
+        "status": "ok",
     }
 
     try:
@@ -56,12 +58,14 @@ def run_analysis(config: Dict = None) -> Dict:
             critical_now = badge_counts.get("critical", 0)
             if len(trend_scores) >= 2:
                 if trend_scores[-1] < trend_scores[-2] and critical_now > 0:
-                    result["regressions"].append({
-                        "plugin": plugin,
-                        "old_score": trend_scores[-2],
-                        "new_score": trend_scores[-1],
-                        "critical_now": critical_now
-                    })
+                    result["regressions"].append(
+                        {
+                            "plugin": plugin,
+                            "old_score": trend_scores[-2],
+                            "new_score": trend_scores[-1],
+                            "critical_now": critical_now,
+                        }
+                    )
 
     except FileNotFoundError as e:
         result["status"] = "error"
@@ -75,6 +79,7 @@ def run_analysis(config: Dict = None) -> Dict:
 
     return result
 
+
 def print_summary(results: Dict):
     print(f"\n📉 Badge Regression Report – {results.get('site')}")
     if results.get("status") != "ok":
@@ -85,8 +90,11 @@ def print_summary(results: Dict):
         print("  ✅ No regressions detected. Trend scores are stable.")
     else:
         for entry in regressions:
-            print(f"  🔻 {entry['plugin']} dropped from {entry['old_score']} → {entry['new_score']} with 🔴 {entry['critical_now']} badge(s)")
+            print(
+                f"  🔻 {entry['plugin']} dropped from {entry['old_score']} → {entry['new_score']} with 🔴 {entry['critical_now']} badge(s)"
+            )
     print()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

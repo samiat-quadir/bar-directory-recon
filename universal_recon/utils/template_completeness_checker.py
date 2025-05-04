@@ -1,5 +1,6 @@
 import json
 
+
 def check_template_completeness(grouped_profiles, required_fields=None):
     if required_fields is None:
         required_fields = ["name", "email", "firm", "phone"]
@@ -19,12 +20,10 @@ def check_template_completeness(grouped_profiles, required_fields=None):
             completeness = "minimal"
 
         summary[completeness] += 1
-        annotated.append({
-            "completeness": completeness,
-            "records": profile
-        })
+        annotated.append({"completeness": completeness, "records": profile})
 
     return annotated, summary
+
 
 def save_checked_template(site_name, annotated_profiles, path="output/templates"):
     out_file = f"{path}/{site_name}_template_checked.json"

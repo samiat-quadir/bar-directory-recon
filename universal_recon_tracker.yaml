@@ -13,7 +13,6 @@ scripts_status:
     location: core/
     status: updated
     last_checked: 2025-04-03
-  ...
 
 file_structure_verified: true
 __init__:

@@ -1,0 +1,5 @@
+{
+  "src/test_chromedriver.py": true,
+  "universal_recon/bar-recon-clean/src/tests/test_cleanup_manager.py": true,
+  "universal_recon/tests/analytics/test_risk_overlay_emitter.py": true
+}

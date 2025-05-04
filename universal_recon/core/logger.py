@@ -1,11 +1,12 @@
 import os
 from datetime import datetime
 
+
 class Logger:
     def __init__(self, log_path):
         self.log_path = log_path
         os.makedirs(os.path.dirname(log_path), exist_ok=True)
-        self.handle = open(log_path, 'a', encoding='utf-8')
+        self.handle = open(log_path, "a", encoding="utf-8")
         self.log("Logger initialized.")
 
     def log(self, message, level="INFO"):

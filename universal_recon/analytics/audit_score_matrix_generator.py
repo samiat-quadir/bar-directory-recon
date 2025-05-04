@@ -1,6 +1,5 @@
 # universal_recon/analytics/audit_score_matrix_generator.py
 
-from typing import List, Dict
 
 def run_analysis(records, config=None):
     if records is None:
@@ -12,5 +11,5 @@ def run_analysis(records, config=None):
         "plugin": "audit_score_matrix_generator",
         "score": score,
         "records_analyzed": len(records),
-        "status": "ok" if score > 0 else "empty"
+        "status": "ok" if score > 0 else "empty",
     }

@@ -1,7 +1,7 @@
 summary:
   assistant_name: Python Chat (Recon Dev)
   role: Core Python engineering + modular orchestration
-  focus: 
+  focus:
     - Building a resilient, CLI-aware scraping framework for legal directories
     - Converting monolithic recon logic into maintainable modules
     - Driving integration of plugins, snapshots, normalization, and test support

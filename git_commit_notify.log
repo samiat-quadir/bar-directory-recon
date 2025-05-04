@@ -89,29 +89,3 @@ Changes: M automation_run.log
 2025-04-15 15:42:32,290 — INFO — ✅ Motion task email sent successfully.
 2025-04-21 10:30:02,166 — INFO — No changes found, performing empty commit.
 2025-04-21 10:30:02,261 — ERROR — [Git Error] fatal: cannot update the ref 'HEAD': unable to append to '.git/logs/HEAD': Function not implemented
-
-2025-04-22 18:08:04,138 — ERROR — [Git Error] remote: error: GH006: Protected branch update failed for refs/heads/main.        
-remote: 
-remote: - Changes must be made through a pull request.        
-To github.com:samiat-quadir/bar-directory-recon.git
- ! [remote rejected] main -> main (protected branch hook declined)
-error: failed to push some refs to 'github.com:samiat-quadir/bar-directory-recon.git'
-
-2025-04-22 20:30:51,648 — ERROR — [Git Error] remote: error: GH006: Protected branch update failed for refs/heads/main.        
-remote: 
-remote: - Changes must be made through a pull request.        
-To github.com:samiat-quadir/bar-directory-recon.git
- ! [remote rejected] main -> main (protected branch hook declined)
-error: failed to push some refs to 'github.com:samiat-quadir/bar-directory-recon.git'
-
-2025-04-22 23:00:26,608 - INFO - ✅ Local git commit created.
-2025-04-22 23:00:34,938 - INFO - ✅ Local git commit created.
-2025-04-22 23:02:16,440 - INFO - Local git commit created.
-2025-04-22 23:02:43,451 - INFO - Local git commit created.
-2025-04-28 09:39:11,358 - ERROR - Git command failed: warning: unable to access '.gitattributes': Function not implemented
-error: unable to open loose object 7614dfee7ae012c057119618665b21d362ffaa36: Function not implemented
-error: open(".gitattributes"): Function not implemented
-error: unable to index file '.gitattributes'
-fatal: updating files failed
-
-2025-04-28 10:30:02,652 - INFO - No changes to commit.
