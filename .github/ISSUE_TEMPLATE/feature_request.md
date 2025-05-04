@@ -1,15 +1,16 @@
 ---
 name: Feature request
-about: Suggest an enhancement
-title: '[FEATURE] '
+about: Suggest an idea for this project
+title: "[FEATURE] "
 labels: enhancement
+assignees: samiat-quadir, jasmin954vic
 ---
 
-## Description
-A clear description of the feature
+**Is your feature request related to a problem? Please describe.**
 
-## Motivation
-Why is this feature needed?
+**Describe the solution you'd like**
 
-## Implementation Ideas
-Any ideas on how to implement this?
+**Describe alternatives you've considered**
+
+**Additional context**
+Any other context or screenshots about the request.
