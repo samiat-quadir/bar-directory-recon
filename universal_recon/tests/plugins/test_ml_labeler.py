@@ -1,8 +1,9 @@
 import unittest
 
+from universal_recon.plugins import ml_labeler
+
 # Import from proper package path
 from universal_recon.utils.record_normalizer import normalize
-from universal_recon.plugins import ml_labeler
 
 
 # Mock WebDriver and context
