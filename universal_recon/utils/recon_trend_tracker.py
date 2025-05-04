@@ -1,5 +1,9 @@
 import json
 import os
+<<<<<<< HEAD
+=======
+from collections import defaultdict
+>>>>>>> bf5b0be (🧽 Fix all Flake8 + formatting issues across universal_recon/)
 from typing import Dict, List
 
 
@@ -17,6 +21,7 @@ def run_analysis(records, config=None):
     return analyze_trends(records)
 
 
+<<<<<<< HEAD
 def analyze_trends(site_name: str, summaries: List[Dict]) -> Dict:
     """
     Analyze trends across multiple summary reports.
@@ -70,6 +75,51 @@ def analyze_trends(site_name: str, summaries: List[Dict]) -> Dict:
         "plugin_activity_drift": plugin_activity_drift,
         "field_absence_trends": field_absence_trends,
     }
+
+=======
+def analyze_trends(summaries: List[Dict]) -> Dict:
+    trend_data = {
+        "total_runs": len(summaries),
+        "field_presence": defaultdict(int),
+        "plugin_usage": defaultdict(int),
+        "score_volatility": defaultdict(list),
+        "missing_field_flags": defaultdict(int),
+    }
+
+    for summary in summaries:
+        for field in summary.get("top_fields", []):
+            trend_data["field_presence"][field] += 1
+
+        for plugin in summary.get("plugin_stats", {}):
+            trend_data["plugin_usage"][plugin] += 1
+
+        for record in summary.get("records", []):
+            field_type = record.get("type")
+            score = record.get("score") or record.get("predicted_score")
+            if field_type and score is not None:
+                trend_data["score_volatility"][field_type].append(score)
+                if score < 3:
+                    trend_data["missing_field_flags"][field_type] += 1
+
+    # Calculate average scores and volatility
+    trend_summary = {
+        "total_runs": trend_data["total_runs"],
+        "field_trend": {},
+        "plugin_trend": dict(trend_data["plugin_usage"]),
+    }
+
+    for field, scores in trend_data["score_volatility"].items():
+        avg_score = round(sum(scores) / len(scores), 2) if scores else 0
+        volatility = round(max(scores) - min(scores), 2) if len(scores) > 1 else 0
+        trend_summary["field_trend"][field] = {
+            "appearances": trend_data["field_presence"].get(field, 0),
+            "avg_score": avg_score,
+            "volatility": volatility,
+            "low_score_flags": trend_data["missing_field_flags"].get(field, 0),
+        }
+
+    return trend_summary
+>>>>>>> bf5b0be (🧽 Fix all Flake8 + formatting issues across universal_recon/)
 
 
 def save_trend_report(site_name: str, trend_summary: Dict):

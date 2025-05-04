@@ -3,6 +3,7 @@ Score Visualizer module for creating visual representations of record scores.
 This module provides functionality to generate and save heatmap data
 representing the scores of records across different plugins and record types.
 """
+
 import json
 import os
 from collections import defaultdict

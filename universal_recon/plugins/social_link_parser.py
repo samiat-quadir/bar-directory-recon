@@ -26,7 +26,11 @@ def apply(driver, context="root"):
             if pattern.search(href):
                 results.append(
                     {
+<<<<<<< HEAD
                         "type": "social",  # Changed from "social_link" to match test expectations
+=======
+                        "type": "social_link",
+>>>>>>> bf5b0be (🧽 Fix all Flake8 + formatting issues across universal_recon/)
                         "value": href,
                         "category": platform,
                         "url": current_url,

@@ -1,9 +1,15 @@
 import unittest
 
+<<<<<<< HEAD
 # Import from proper package path
 from universal_recon.utils import audit_report_generator
 
 
+=======
+from utils import audit_report_generator
+
+
+>>>>>>> bf5b0be (🧽 Fix all Flake8 + formatting issues across universal_recon/)
 class TestAuditReportGenerator(unittest.TestCase):
     def setUp(self):
         self.sample_records = [

@@ -58,7 +58,8 @@ def print_summary(regressions):
     for r in regressions:
         print(
             f"- {r['site']}: score dropped {r['score_drift']} "
-            f"({r['old_score']} → {r['new_score']})" + (" + anomaly spike" if r["anomaly_spike"] else "")
+            f"({r['old_score']} → {r['new_score']})"
+            + (" + anomaly spike" if r["anomaly_spike"] else "")
         )
 
 
