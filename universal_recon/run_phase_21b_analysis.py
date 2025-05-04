@@ -1,10 +1,11 @@
 # === run_phase_21b_analysis.py ===
 
-import os
 import json
+import os
 
 LATEST_MATRIX = "output/schema_matrix.json"
 ARCHIVE_DIR = "output/archive"
+
 
 def check_file_exists(path):
     if not os.path.exists(path):
@@ -13,10 +14,12 @@ def check_file_exists(path):
     print(f"[✓] Found: {path}")
     return True
 
+
 def get_sites_from_matrix(path):
     with open(path) as f:
         matrix = json.load(f)
     return list(matrix.get("sites", {}).keys())
+
 
 def main():
     print("📊 Phase 21b Analysis Orchestrator Started\n")
@@ -37,6 +40,7 @@ def main():
     else:
         print("[✗] One or more required files missing.")
         exit(1)
+
 
 if __name__ == "__main__":
     main()

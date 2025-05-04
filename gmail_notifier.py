@@ -1,11 +1,12 @@
-import os
-import json
 import base64
+import json
+import os
+from email.mime.text import MIMEText
+
+from dotenv import load_dotenv
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from email.mime.text import MIMEText
-from dotenv import load_dotenv
 
 # Load environment variables
 env_path = r"C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
@@ -15,6 +16,7 @@ GMAIL_TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")  # Ensure this path is correct
 SENDER_EMAIL = "sam.quadir@gmail.com"  # Authenticated sender
 RECIPIENT_EMAIL = "samq@damg.com"  # Primary recipient
 CC_EMAILS = ["jasmin@damg.com", "sam.quadir@gmail.com"]  # CC list
+
 
 def load_gmail_credentials():
     """Load Gmail credentials from the JSON token file."""
@@ -29,6 +31,7 @@ def load_gmail_credentials():
         raise ValueError("⚠️ Invalid credentials. Re-run the authentication script.")
 
     return creds
+
 
 def send_email_notification(subject, body, recipient=RECIPIENT_EMAIL, cc_list=CC_EMAILS):
     """Send an email with dynamic subject & body, including CC recipients."""
@@ -49,6 +52,7 @@ def send_email_notification(subject, body, recipient=RECIPIENT_EMAIL, cc_list=CC
         print(f"✅ Email sent successfully to {recipient} with CC: {', '.join(cc_list)}")
     except Exception as e:
         print(f"❌ Error sending email: {str(e)}")
+
 
 # Test
 if __name__ == "__main__":

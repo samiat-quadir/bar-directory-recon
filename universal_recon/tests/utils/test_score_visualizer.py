@@ -1,5 +1,7 @@
 import unittest
-from utils import score_visualizer
+
+# Import from proper package path
+from universal_recon.utils import score_visualizer
 
 MOCK_RECORDS = [
     {"plugin": "email_plugin", "type": "email", "score": 1},
@@ -12,7 +14,6 @@ MOCK_RECORDS = [
 
 
 class TestScoreVisualizer(unittest.TestCase):
-
     def test_generate_heatmap_data_structure(self):
         heatmap = score_visualizer.generate_heatmap_data(MOCK_RECORDS)
 

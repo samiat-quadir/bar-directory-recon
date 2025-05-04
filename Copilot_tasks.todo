@@ -1,0 +1,99 @@
+task: "♻️  Restore & Finalize Phase‑27 Polish (bar-directory-recon)"
+
+context:
+  machine:
+    os: "Windows 11 Home (23H2)"
+    terminal: "(.venv) PS C:/Users/samqu/.../bar-directory-recon"
+    python: "3.12.6 (venv active)"
+    ide: "VS Code Insiders (Copilot Agent mode)"
+  git:
+    repo: "bar-directory-recon"
+    feature_branch: "feature/phase-27-ci-test-restoration"
+    push_changes: true
+  files_expected:
+    tools:
+      - tools/smart_project_audit.py
+      - tools/scaffold_docstrings.py
+      - tools/smart_prune_files.py
+    plugins:
+      - universal_recon/plugins/firm_parser.py
+      - universal_recon/plugins/ml_labeler.py
+      - universal_recon/plugins/social_link_parser.py
+    analytics:
+      - universal_recon/analytics/plugin_usage_diff.py
+      - universal_recon/analytics/recon_trend_tracker.py
+      - universal_recon/analytics/risk_overlay_emitter.py
+    tests:
+      - universal_recon/tests/plugins/test_firm_parser.py
+      - universal_recon/tests/plugins/test_ml_labeler.py
+      - universal_recon/tests/plugins/test_social_link_parser.py
+      - universal_recon/tests/analytics/test_plugin_usage_diff.py
+      - universal_recon/tests/utils/test_recon_trend_tracker.py
+      - universal_recon/tests/utils/test_score_visualizer.py
+    outputs:
+      - prune_report.json
+      - prune_files.log
+      - smart_audit_results.json
+      - archive/test_outputs/.coverage
+      - archive/test_outputs/project_audit_report.json
+    configs:
+      - pyproject.toml
+      - pytest.ini
+      - .pre-commit-config.yaml
+      - .gitignore
+      - .gitattributes
+
+steps:
+  # 1. Create a safety tag in case we need to recover later
+  - name: "Create backup Git tag"
+    run: git tag backup-before-final-27 || true
+
+  # 2. Ensure all Phase 27 files exist, otherwise recreate
+  - name: "Verify required Phase‑27 files exist"
+    run: |
+      for f in {{files_expected.tools + files_expected.plugins + files_expected.analytics + files_expected.tests}}:
+        if not os.path.isfile(f):
+          print(f"MISSING → {f}")
+
+  # 3. Reinstall editable + dev dependencies
+  - name: "Reinstall dependencies"
+    run: pip install -e ".[test]" --upgrade
+
+  # 4. Run pre-commit hooks across all files
+  - name: "Run pre-commit hooks"
+    run: pre-commit run --all-files --show-diff-on-failure
+
+  # 5. Run test suite in local .venv
+  - name: "Run local tests"
+    run: pytest -v
+
+  # 6. Run Docker-based test suite (optional if Docker is set up)
+  - name: "Run tests in Docker"
+    run: |
+      docker build -t bardirectoryrecon:latest .
+      docker run --rm -v "${PWD}:/workspace" bardirectoryrecon pytest -v
+
+  # 7. Generate sanity overlay output
+  - name: "Emit risk overlay for utah_bar"
+    run: |
+      from universal_recon.analytics.risk_overlay_emitter import emit_site_risk_json
+      print("utah_bar →", emit_site_risk_json("utah_bar"))
+
+  # 8. Move test output files to archive/test_outputs/
+  - name: "Organize test outputs"
+    run: |
+      mkdir -p archive/test_outputs
+      if os.path.isfile(".coverage"): os.rename(".coverage", "archive/test_outputs/.coverage")
+
+  # 9. Stage and commit final polish changes
+  - name: "Stage & commit"
+    run: |
+      git add .
+      git commit -m "🧽 Restore & finalize Phase 27 polish (docstrings, pruning, test org, BS4 fixes)" --no-verify
+
+  # 10. Push to remote
+  - name: "Push to remote"
+    run: git push -u origin feature/phase-27-ci-test-restoration
+
+after_success:
+  - echo "🎉 Phase 27 complete: tests green, overlay clean, docstrings scaffolded, pushed!"

@@ -2,6 +2,7 @@
 from detection.email import detect_emails
 from utils.snapshot_manager import save_screenshot
 
+
 def apply(driver, context="post_core", config=None, logger=None):
     try:
         html = driver.page_source

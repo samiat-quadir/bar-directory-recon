@@ -49,6 +49,9 @@ chromedriver*.exe
 # Custom Folders / Files
 # =====================================================
 
-
 output/
 run_logs/
+
+# Ignore all virtualenv folders
+.venv/
+.venv_old/
