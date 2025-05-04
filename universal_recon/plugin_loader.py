@@ -3,8 +3,8 @@
 import importlib
 import json
 import os
-from typing import List, Dict, Any
 from pathlib import Path
+from typing import Any, Dict, List
 
 
 def load_plugins_by_type(plugin_type: str):

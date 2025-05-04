@@ -1,6 +1,6 @@
 # universal_recon/utils/record_field_validator_v2.py
 
-from typing import List, Dict
+from typing import Dict, List
 
 REQUIRED_FIELDS = ["type", "value", "xpath", "context", "url"]
 OPTIONAL_FIELDS = ["confidence", "source", "category", "score", "rank", "strongest"]
@@ -12,6 +12,7 @@ FIELD_RULES = {
     "bar_number": {"min_len": 3},
     # etc.
 }
+
 
 def validate_records(records: List[Dict], strict: bool = False) -> List[Dict]:
     """

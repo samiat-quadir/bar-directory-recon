@@ -1,8 +1,8 @@
 # === analytics/validator_drift_overlay.py ===
 
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 TEMPLATE = """
 <html><head>
@@ -17,6 +17,7 @@ TEMPLATE = """
 </body></html>
 """
 
+
 def render_row(site, data):
     score = data.get("score_summary", {}).get("field_score", "–")
     tags = ", ".join(data.get("domain_tags", [])) or "–"
@@ -25,7 +26,11 @@ def render_row(site, data):
     style = " style='background:#fdd'" if state in ("regressed", "critical") else ""
     return f"<tr{style}><td>{site}</td><td>{score}</td><td>{icon} {state}</td><td>{tags}</td></tr>"
 
-def run_overlay(matrix_path="output/schema_matrix.json", output_html="output/validator_drift_overlay.html"):
+
+def run_overlay(
+    matrix_path="output/schema_matrix.json",
+    output_html="output/validator_drift_overlay.html",
+):
     with open(matrix_path, "r", encoding="utf-8") as f:
         matrix = json.load(f)
     rows = [render_row(site, data) for site, data in matrix.get("sites", {}).items()]
@@ -34,6 +39,7 @@ def run_overlay(matrix_path="output/schema_matrix.json", output_html="output/val
     with open(output_html, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"[✓] Drift overlay written to: {output_html}")
+
 
 if __name__ == "__main__":
     run_overlay()

@@ -1,9 +1,10 @@
-import subprocess
 import os
+import subprocess
 from datetime import datetime
 
 # === Logging ===
 LOG_FILE = "automation_run.log"
+
 
 def log(message):
     timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
@@ -11,14 +12,10 @@ def log(message):
         f.write(f"{timestamp} {message}\n")
     print(f"{timestamp} {message}")
 
+
 def run_script(script_path):
     try:
-        result = subprocess.run(
-            ["python", script_path],
-            capture_output=True,
-            text=True,
-            check=True
-        )
+        result = subprocess.run(["python", script_path], capture_output=True, text=True, check=True)
         log(f"Running: {script_path}")
         log(result.stdout)
         if result.stderr:
@@ -26,6 +23,7 @@ def run_script(script_path):
     except subprocess.CalledProcessError as e:
         log(f"FAILED: {script_path}")
         log(e.stderr)
+
 
 # === Define script paths ===
 scripts_to_run = [
@@ -39,7 +37,7 @@ scripts_to_run = [
     os.path.join("src", "log_summary.py"),
     os.path.join("src", "backup_manager.py"),
     os.path.join("src", "cleanup_old_files.py"),
-    os.path.join("src", "email_summary_report.py")  # <--- NEW LINE HERE
+    os.path.join("src", "email_summary_report.py"),  # <--- NEW LINE HERE
 ]
 
 # === Main Execution ===

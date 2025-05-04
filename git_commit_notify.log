@@ -89,4 +89,3 @@ Changes: M automation_run.log
 2025-04-15 15:42:32,290 — INFO — ✅ Motion task email sent successfully.
 2025-04-21 10:30:02,166 — INFO — No changes found, performing empty commit.
 2025-04-21 10:30:02,261 — ERROR — [Git Error] fatal: cannot update the ref 'HEAD': unable to append to '.git/logs/HEAD': Function not implemented
-

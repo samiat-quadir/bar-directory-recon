@@ -1,6 +1,7 @@
-import os
 import logging
+import os
 from datetime import datetime, timedelta
+
 from env_loader import load_environment
 from project_path import set_root_path
 
@@ -10,6 +11,7 @@ load_environment()
 LOG_DIRS = ["logs", "."]
 EXTENSIONS = [".log", ".tmp"]
 DAYS_THRESHOLD = 7
+
 
 def cleanup_old_files():
     threshold_date = datetime.now() - timedelta(days=DAYS_THRESHOLD)
@@ -27,8 +29,9 @@ def cleanup_old_files():
                         os.remove(file_path)
                         removed += 1
                         logging.info(f"Removed old file: {file_path}")
-    
+
     print(f"✅ Cleanup complete. Removed {removed} old files.")
+
 
 if __name__ == "__main__":
     cleanup_old_files()

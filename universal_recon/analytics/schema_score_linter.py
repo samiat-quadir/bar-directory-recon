@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+
 def score_fieldmap(fieldmap_path: str, verbose: bool = False) -> dict:
     """
     Computes a schema completeness score from a fieldmap JSON file.

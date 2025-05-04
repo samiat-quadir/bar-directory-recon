@@ -1,13 +1,14 @@
 # universal_recon/utils/record_field_validator_v3.py
 
-from typing import List, Dict
 import logging
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
 REQUIRED_FIELDS = ["type", "value", "xpath", "context", "url"]
 MIN_SCORE_THRESHOLD = 0.6
 MIN_TEMPLATE_CONFIDENCE = 0.5
+
 
 def validate_records(records: List[Dict], strict: bool = False, verbose: bool = False) -> List[Dict]:
     """
@@ -19,7 +20,7 @@ def validate_records(records: List[Dict], strict: bool = False, verbose: bool = 
     for rec in records:
         missing = [f for f in REQUIRED_FIELDS if not rec.get(f)]
         score = rec.get("score") or rec.get("predicted_score") or 0
-        confidence = rec.get("template_confidence") or "medium"
+        rec.get("template_confidence") or "medium"
 
         if missing:
             rec["valid"] = False
@@ -44,6 +45,6 @@ def validate_records(records: List[Dict], strict: bool = False, verbose: bool = 
         logger.info(f"✅ Validation Complete: {len(passed)} passed, {len(failed)} failed")
         if verbose and failed:
             for f in failed:
-                logger.warning(f⚠️  Failed Record: {f.get('error')}")
+                logger.warning(f"⚠️  Failed Record: {f.get('error')}")
 
     return passed

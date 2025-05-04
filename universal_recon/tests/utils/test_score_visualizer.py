@@ -1,4 +1,5 @@
 import unittest
+
 from utils import score_visualizer
 
 MOCK_RECORDS = [
@@ -12,7 +13,6 @@ MOCK_RECORDS = [
 
 
 class TestScoreVisualizer(unittest.TestCase):
-
     def test_generate_heatmap_data_structure(self):
         heatmap = score_visualizer.generate_heatmap_data(MOCK_RECORDS)
 

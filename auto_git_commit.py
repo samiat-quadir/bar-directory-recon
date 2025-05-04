@@ -1,8 +1,9 @@
-import os
 import logging
-from datetime import datetime
-from env_loader import load_environment
+import os
 import subprocess
+from datetime import datetime
+
+from env_loader import load_environment
 
 # Load env vars early
 load_environment()
@@ -12,29 +13,25 @@ logging.basicConfig(
     filename="git_commit_notify.log",
     level=logging.INFO,
     format="%(asctime)s — %(levelname)s — %(message)s",
-    encoding="utf-8"
+    encoding="utf-8",
 )
 
 # Pull config from env
 LOCAL_GIT_REPO = os.getenv("LOCAL_GIT_REPO")
 COMMIT_PREFIX = os.getenv("COMMIT_PREFIX", "Auto-commit:")
 
+
 def run_git_command(command_list, allow_fail=False):
     """Executes git command with optional error handling"""
     try:
-        result = subprocess.run(
-            command_list,
-            cwd=LOCAL_GIT_REPO,
-            check=True,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(command_list, cwd=LOCAL_GIT_REPO, check=True, capture_output=True, text=True)
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         logging.error(f"[Git Error] {e.stderr}")
         if not allow_fail:
             raise
         return None
+
 
 def main(commit_message=None):
     if not commit_message:
@@ -55,6 +52,7 @@ def main(commit_message=None):
     logging.info("Git push successful.")
 
     return f"Commit message: {commit_message}\nChanges: {changes or 'No tracked file changes.'}"
+
 
 # For standalone testing (optional)
 if __name__ == "__main__":

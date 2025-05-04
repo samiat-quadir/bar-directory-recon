@@ -1,8 +1,10 @@
 # universal_recon/plugins/form_autofill.py
 
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-import time
+
 
 def smart_fill_and_submit_forms(driver, config, logger, dry_run=False):
     forms = driver.find_elements(By.TAG_NAME, "form")
@@ -37,16 +39,19 @@ def smart_fill_and_submit_forms(driver, config, logger, dry_run=False):
                     try:
                         inp.clear()
                         inp.send_keys(fill_value)
-                    except:
-                        logger(f"[FormHandler] Could not type into input: {in_name}", "WARN")
+                    except Exception as e:
+                        logger(
+                            f"[FormHandler] Could not type into input: {in_name} - {str(e)}",
+                            "WARN",
+                        )
 
             for sel in selects:
                 try:
                     select_obj = Select(sel)
                     if len(select_obj.options) > 1 and not dry_run:
                         select_obj.select_by_index(1)
-                except:
-                    logger(f"[FormHandler] Could not select dropdown option", "WARN")
+                except Exception as e:
+                    logger(f"[FormHandler] Could not select dropdown option: {str(e)}", "WARN")
 
             if not dry_run:
                 form.submit()

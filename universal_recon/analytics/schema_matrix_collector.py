@@ -1,9 +1,9 @@
 # === analytics/schema_matrix_collector.py ===
 
 import json
-import os
 from pathlib import Path
 from typing import Dict
+
 
 def collect_schema_matrix(output_dir: str = "output/fieldmap") -> Dict:
     matrix = {"sites": {}}
@@ -18,12 +18,13 @@ def collect_schema_matrix(output_dir: str = "output/fieldmap") -> Dict:
                 "score_summary": fieldmap.get("score_summary", {}),
                 "plugins_used": fieldmap.get("plugins_used", []),
                 "domain_tags": fieldmap.get("domain_tags", []),
-                "anomaly_flags": fieldmap.get("anomaly_flags", [])
+                "anomaly_flags": fieldmap.get("anomaly_flags", []),
             }
         except Exception as e:
             matrix["sites"][site] = {"error": str(e)}
 
     return matrix
+
 
 def write_schema_matrix(matrix: Dict, save_path: str = "output/schema_matrix.json", verbose: bool = False):
     path = Path(save_path)

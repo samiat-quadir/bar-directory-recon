@@ -2,6 +2,7 @@
 
 import json
 
+
 def domain_lint_fieldmap(path: str, verbose=False):
     try:
         with open(path) as f:

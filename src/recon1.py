@@ -1,36 +1,44 @@
-import os, json, time, logging
+import json
+import logging
+import os
+import time
 from datetime import datetime
+
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 # ==== SETUP ====
 OUTPUT_DIR = "output"
 LOG_FILE = f"recon_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-logging.basicConfig(filename=os.path.join(OUTPUT_DIR, LOG_FILE),
-                    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    filename=os.path.join(OUTPUT_DIR, LOG_FILE),
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
 
 # ==== CORE FUNCTIONS ====
 def init_driver(headless=True):
     options = webdriver.ChromeOptions()
-    if headless: options.add_argument("--headless=new")
+    if headless:
+        options.add_argument("--headless=new")
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
+
 def wait_for_ajax(driver, timeout=10):
     try:
-        WebDriverWait(driver, timeout).until(
-            lambda d: d.execute_script("return document.readyState") == "complete"
-        )
+        WebDriverWait(driver, timeout).until(lambda d: d.execute_script("return document.readyState") == "complete")
         time.sleep(2)  # Allow further dynamic loads
     except Exception as e:
         logging.warning(f"AJAX wait failed: {e}")
+
 
 def submit_blank_form(driver):
     try:
@@ -46,16 +54,19 @@ def submit_blank_form(driver):
         logging.error(f"Form submission failed: {e}")
     return False
 
+
 def extract_emails(driver):
     emails = set()
     try:
         links = driver.find_elements(By.CSS_SELECTOR, "a[href^='mailto']")
         for link in links:
             href = link.get_attribute("href")
-            if href: emails.add(href.replace("mailto:", "").strip())
+            if href:
+                emails.add(href.replace("mailto:", "").strip())
     except Exception as e:
         logging.warning(f"Email extraction failed: {e}")
     return list(emails)
+
 
 def detect_profiles(driver):
     profiles = []
@@ -67,21 +78,32 @@ def detect_profiles(driver):
         logging.error(f"Profile detection failed: {e}")
     return profiles
 
+
 def handle_pagination(driver):
     try:
         while True:
-            next_buttons = driver.find_elements(By.XPATH, "//*[contains(text(), 'Next') or contains(text(), 'Load More')]")
-            if not next_buttons: break
+            next_buttons = driver.find_elements(
+                By.XPATH,
+                "//*[contains(text(), 'Next') or contains(text(), 'Load More')]",
+            )
+            if not next_buttons:
+                break
             next_buttons[0].click()
             wait_for_ajax(driver)
             logging.info("Navigated to next page.")
     except Exception as e:
         logging.error(f"Pagination failed: {e}")
 
+
 # ==== MAIN ====
 def analyze_directory(url):
     driver = init_driver()
-    result = {"url": url, "emails": [], "profiles": [], "timestamp": datetime.now().isoformat()}
+    result = {
+        "url": url,
+        "emails": [],
+        "profiles": [],
+        "timestamp": datetime.now().isoformat(),
+    }
     try:
         driver.get(url)
         wait_for_ajax(driver)
@@ -103,6 +125,7 @@ def analyze_directory(url):
             json.dump(result, f, indent=2)
         driver.quit()
     return result
+
 
 # ==== RUN ====
 if __name__ == "__main__":

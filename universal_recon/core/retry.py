@@ -1,5 +1,6 @@
-import time
 import functools
+import time
+
 
 def retry(max_tries=3, delay=1, backoff=2, exceptions=(Exception,)):
     def decorator(func):
@@ -15,5 +16,7 @@ def retry(max_tries=3, delay=1, backoff=2, exceptions=(Exception,)):
                     wait *= backoff
                     tries += 1
             raise RuntimeError(f"Function {func.__name__} failed after {max_tries} retries")
+
         return wrapper
+
     return decorator

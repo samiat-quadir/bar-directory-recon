@@ -1,7 +1,7 @@
 # === analytics/schema_dashboard_stub.py ===
 
 import json
-from pathlib import Path
+
 
 def print_schema_summary(matrix_path="output/schema_matrix.json"):
     with open(matrix_path, "r", encoding="utf-8") as f:

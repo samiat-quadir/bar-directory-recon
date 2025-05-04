@@ -1,13 +1,13 @@
 # === validators/run_phase_21b_analysis.py ===
 
-import os
 import json
+import os
 from glob import glob
-from datetime import datetime
 
 ARCHIVE_PATH = "output/archive/"
 LATEST_PATH = "output/schema_matrix.json"
 REGRESSION_THRESHOLD = 5.0
+
 
 def load_matrix(path):
     try:
@@ -17,9 +17,11 @@ def load_matrix(path):
         print(f"[!] Failed to load {path}: {e}")
         return {}
 
+
 def get_latest_snapshot_path():
     files = sorted(glob(os.path.join(ARCHIVE_PATH, "schema_matrix_*.json")))
     return files[-1] if files else None
+
 
 def compare_scores(latest, previous):
     regressions = []
@@ -41,17 +43,20 @@ def compare_scores(latest, previous):
         anomaly_spike = new_anomalies > old_anomalies
 
         if regress or anomaly_spike:
-            regressions.append({
-                "site": site,
-                "score_drift": drift,
-                "old_score": old_score,
-                "new_score": new_score,
-                "anomaly_spike": anomaly_spike,
-                "old_anomalies": old_anomalies,
-                "new_anomalies": new_anomalies,
-            })
+            regressions.append(
+                {
+                    "site": site,
+                    "score_drift": drift,
+                    "old_score": old_score,
+                    "new_score": new_score,
+                    "anomaly_spike": anomaly_spike,
+                    "old_anomalies": old_anomalies,
+                    "new_anomalies": new_anomalies,
+                }
+            )
 
     return regressions
+
 
 def print_summary(regressions):
     if not regressions:
@@ -60,9 +65,11 @@ def print_summary(regressions):
 
     print("⚠️  Detected potential issues:\n")
     for r in regressions:
-        print(f"- {r['site']}: score dropped {r['score_drift']} "
-              f"({r['old_score']} → {r['new_score']})"
-              + (" + anomaly spike" if r['anomaly_spike'] else ""))
+        print(
+            f"- {r['site']}: score dropped {r['score_drift']} "
+            f"({r['old_score']} → {r['new_score']})" + (" + anomaly spike" if r["anomaly_spike"] else "")
+        )
+
 
 def main():
     print("📊 Phase 21b Sanity Checker")
@@ -83,6 +90,7 @@ def main():
         exit(1)
     else:
         exit(0)
+
 
 if __name__ == "__main__":
     main()

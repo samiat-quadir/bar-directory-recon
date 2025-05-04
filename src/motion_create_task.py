@@ -1,14 +1,16 @@
-import os
-import sys
 import logging
-import requests
+import os
 from datetime import datetime, timedelta
+
+import requests
 
 # Load project path dynamically
 from project_path import set_root_path
+
 set_root_path()
 
 from env_loader import load_environment
+
 load_environment()
 
 # Setup logging
@@ -16,11 +18,12 @@ logging.basicConfig(
     filename="motion_task_creator.log",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    encoding="utf-8"
+    encoding="utf-8",
 )
 
 MOTION_API_KEY = os.getenv("MOTION_API_KEY")
 MOTION_PROJECT_ID = os.getenv("MOTION_PROJECT_ID")
+
 
 def create_motion_task(title, label="Auto", due_date=None, duration=15, priority="high"):
     if not MOTION_API_KEY:
@@ -31,7 +34,7 @@ def create_motion_task(title, label="Auto", due_date=None, duration=15, priority
     endpoint = "https://api.usemotion.com/graphql"
     headers = {
         "Authorization": f"Bearer {MOTION_API_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
 
     query = """
@@ -59,7 +62,7 @@ def create_motion_task(title, label="Auto", due_date=None, duration=15, priority
             "labels": [label],
             "duration": duration,
             "autoScheduled": True,
-            "schedule": "Work hours"
+            "schedule": "Work hours",
         }
     }
 
@@ -91,6 +94,7 @@ def create_motion_task(title, label="Auto", due_date=None, duration=15, priority
         print(f"Unexpected error: {e}")
 
     return None
+
 
 if __name__ == "__main__":
     create_motion_task("Review Auto Git Commit")

@@ -1,7 +1,7 @@
 # === analytics/plugin_registry_dashboard.py ===
 
 import json
-from pathlib import Path
+
 
 def summarize_plugin_coverage(matrix_path="output/schema_matrix.json"):
     with open(matrix_path, "r", encoding="utf-8") as f:
@@ -14,4 +14,3 @@ def summarize_plugin_coverage(matrix_path="output/schema_matrix.json"):
     print("\n🔌 Plugin Usage Summary")
     for plugin, sites in plugins_by_site.items():
         print(f" - {plugin}: used in {len(sites)} site(s)")
-

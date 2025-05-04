@@ -1,10 +1,11 @@
 # validators/record_field_validator_v3.py
 
-import re
-from typing import List, Dict
 import json
-import yaml
+import re
 from pathlib import Path
+from typing import Dict, List
+
+import yaml
 
 SCHEMA_PATH = Path(__file__).parent.parent / "schema"
 with open(SCHEMA_PATH / "field_schema.json", "r", encoding="utf-8") as f:
@@ -12,10 +13,12 @@ with open(SCHEMA_PATH / "field_schema.json", "r", encoding="utf-8") as f:
 with open(SCHEMA_PATH / "validation_matrix.yaml", "r", encoding="utf-8") as f:
     VALIDATION_MATRIX = yaml.safe_load(f)
 
+
 def run_analysis(records=None, config=None):
     if records is None:
         records = [{"type": "email", "value": "test@example.com", "rank": 1, "plugin": "test"}]
     return {"plugin": "record_field_validator_v3", "results": validate_records(records)}
+
 
 def validate_field(field: Dict, strict: bool = False) -> Dict:
     ftype = field.get("type")
@@ -30,11 +33,18 @@ def validate_field(field: Dict, strict: bool = False) -> Dict:
         "error": None,
         "score": 5,
         "rank": field.get("rank", 0),
-        "severity": "none"
+        "severity": "none",
     }
 
     if not ftype or ftype not in FIELD_SCHEMA:
-        result.update({"valid": False, "error": "Unknown field type", "score": 0, "severity": "critical"})
+        result.update(
+            {
+                "valid": False,
+                "error": "Unknown field type",
+                "score": 0,
+                "severity": "critical",
+            }
+        )
         return result
 
     pattern = FIELD_SCHEMA[ftype].get("pattern")
@@ -45,6 +55,7 @@ def validate_field(field: Dict, strict: bool = False) -> Dict:
         result["severity"] = VALIDATION_MATRIX.get(ftype, {}).get("pattern_fail", "warning")
 
     return result
+
 
 def validate_records(fields: List[Dict], strict: bool = False, verbose: bool = False) -> List[Dict]:
     return [validate_field(f, strict=strict) for f in fields]

@@ -47,4 +47,3 @@ Setup Instructions v1
 - Only maintain one unified version of each core script.
 - Keep `.env` files in the root of the project folder — not nested or renamed.
 - Log everything — success and failure — for traceability.
-

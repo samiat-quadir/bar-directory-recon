@@ -1,5 +1,5 @@
-import os
 import json
+import os
 from copy import deepcopy
 
 DEFAULT_CONFIG = {
@@ -14,42 +14,36 @@ DEFAULT_CONFIG = {
         "retry_limit": 3,
         "log_file": "logs/recon.log",
         "result_file_prefix": "recon",
-        "environment_file": ".env"
+        "environment_file": ".env",
     },
-    "ajax_handling": {
-        "use_jquery_check": True,
-        "wait_timeout": 15,
-        "poll_interval": 1
-    },
+    "ajax_handling": {"use_jquery_check": True, "wait_timeout": 15, "poll_interval": 1},
     "pagination_support": {
         "max_pages": 20,
         "next_button_selectors": ["a.next", "button.load-more"],
         "numeric_link_pattern": "page",
         "stop_condition": "content_repeat",
-        "track_page_hashes": True
+        "track_page_hashes": True,
     },
     "email_extraction": {
         "detect_mailto": True,
         "detect_obfuscated_entities": True,
-        "entity_map": ["&#x40;", "&#64;", "&#46;"]
+        "entity_map": ["&#x40;", "&#64;", "&#46;"],
     },
     "form_submission": {
         "multi_step": True,
         "capture_fields": ["input", "hidden", "select", "textarea"],
         "dynamic_fill": True,
-        "form_wait_timeout": 15
+        "form_wait_timeout": 15,
     },
-    "iframe_detection": {
-        "recursive_depth": 5,
-        "traversal_logging": True
-    },
+    "iframe_detection": {"recursive_depth": 5, "traversal_logging": True},
     "domain_specific": {},
     "integrations": {
         "email_notifications": False,
         "git_autocommit": False,
-        "google_sheets_tracking": False
-    }
+        "google_sheets_tracking": False,
+    },
 }
+
 
 class ConfigManager:
     def __init__(self, config_path=None, cli_overrides=None):

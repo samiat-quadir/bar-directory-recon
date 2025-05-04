@@ -1,4 +1,5 @@
 import unittest
+
 from utils.recon_trend_tracker import analyze_trends
 
 mock_summary_past = {
@@ -8,7 +9,7 @@ mock_summary_past = {
     "invalid_count": 2,
     "top_fields": {"email": 5, "firm_name": 4, "phone": 3},
     "rank_distribution": {"1": 2, "2": 2, "3": 3, "4": 2, "5": 1},
-    "plugin_usage": {"email_plugin": 6, "firm_parser": 4}
+    "plugin_usage": {"email_plugin": 6, "firm_parser": 4},
 }
 
 mock_summary_current = {
@@ -18,11 +19,11 @@ mock_summary_current = {
     "invalid_count": 3,
     "top_fields": {"email": 3, "firm_name": 2, "phone": 1},
     "rank_distribution": {"1": 3, "2": 1, "3": 2, "4": 2, "5": 1},
-    "plugin_usage": {"email_plugin": 3, "firm_parser": 2}
+    "plugin_usage": {"email_plugin": 3, "firm_parser": 2},
 }
 
-class TestReconTrendTracker(unittest.TestCase):
 
+class TestReconTrendTracker(unittest.TestCase):
     def test_analyze_trends_output_shape(self):
         result = analyze_trends("test_site", [mock_summary_past, mock_summary_current])
         self.assertIn("field_score_drift", result)
@@ -42,6 +43,7 @@ class TestReconTrendTracker(unittest.TestCase):
     def test_field_absence_trend_detected(self):
         result = analyze_trends("test_site", [mock_summary_past, mock_summary_current])
         self.assertIn("phone", result["field_absence_trends"])
+
 
 if __name__ == "__main__":
     unittest.main()

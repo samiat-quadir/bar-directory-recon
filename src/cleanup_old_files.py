@@ -4,11 +4,9 @@ from datetime import datetime
 
 # === CONFIGURATION ===
 RETENTION_DAYS = 7
-TARGET_FOLDERS = [
-    "src/logs",
-    "src/backups"
-]
+TARGET_FOLDERS = ["src/logs", "src/backups"]
 LOG_FILE = "cleanup_report.log"
+
 
 def log(message):
     timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
@@ -16,6 +14,7 @@ def log(message):
     print(full_message.strip())
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(full_message)
+
 
 def cleanup_old_files():
     now = time.time()
@@ -40,6 +39,7 @@ def cleanup_old_files():
 
         if deleted_count == 0:
             log(f"[CLEAN] No files deleted in: {full_folder}")
+
 
 if __name__ == "__main__":
     log("=== CLEANUP START ===")

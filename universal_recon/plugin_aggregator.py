@@ -1,15 +1,17 @@
 # === universal_recon/plugin_aggregator.py ===
 
-import os
 import json
-from pathlib import Path
+import os
 from datetime import datetime
-from plugin_loader import load_plugins_by_type
-from report_printer import print_summary, print_audit, print_trend, print_health, print_schema_score
-from analytics.score_heatmap_overlay import run_analysis as run_heatmap_overlay
-from analytics.schema_score_linter import run_schema_score_lint
-from analytics.trend_badge_tracker import run_analysis as run_trend_tracker
+from pathlib import Path
+
 from analytics.risk_analysis import run_analysis as run_risk_analysis
+from analytics.schema_score_linter import run_schema_score_lint
+from analytics.score_heatmap_overlay import run_analysis as run_heatmap_overlay
+from analytics.trend_badge_tracker import run_analysis as run_trend_tracker
+from plugin_loader import load_plugins_by_type
+from report_printer import print_audit, print_health, print_schema_score, print_summary, print_trend
+
 
 def archive_previous_matrix():
     src = Path("output/schema_matrix.json")
@@ -21,12 +23,16 @@ def archive_previous_matrix():
         src.rename(dst)
         print(f"[archiver] Moved previous matrix to: {dst}")
 
+
 def aggregate_and_print(records, site_name, config, cli_flags):
     output_dir = os.path.join("output", "reports")
     os.makedirs(output_dir, exist_ok=True)
 
     summary = {"total_records": len(records)}
-    audit_results = {"plugin": "audit_score_matrix_generator", "total_records": len(records)}
+    audit_results = {
+        "plugin": "audit_score_matrix_generator",
+        "total_records": len(records),
+    }
     trend = {"plugin": "trend_dashboard_stub", "site": site_name}
     health = {"plugin": "template_health_flagger", "site": site_name}
 
