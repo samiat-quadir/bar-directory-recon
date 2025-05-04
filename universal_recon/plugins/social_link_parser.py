@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 
 def apply(driver, context="root"):
+"""TODO: Add docstring."""
     html = driver.page_source
     current_url = getattr(driver, "current_url", "http://unknown")
     soup = BeautifulSoup(html, "html.parser")

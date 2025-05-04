@@ -5,7 +5,7 @@ import sys
 required_dirs = [
     "universal_recon/analytics",
     "universal_recon/core",
-    "universal_recon/validators"
+    "universal_recon/validators",
 ]
 
 missing = [d for d in required_dirs if not os.path.isdir(d)]

@@ -1,10 +1,5 @@
 import os
 import sys
-
-from env_loader import load_environment
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 load_environment()
 
 REQUIRED_VARS = [
@@ -21,6 +16,7 @@ REQUIRED_VARS = [
 
 
 def perform_health_check():
+"""TODO: Add docstring."""
     missing_vars = []
     for var in REQUIRED_VARS:
         if not os.getenv(var):

@@ -10,6 +10,7 @@ def normalize_firm_name(name: str) -> str:
 
 
 def run_analysis(records=None, config=None):
+"""TODO: Add docstring."""
     if records is None:
         records = [{"type": "firm_name", "value": "Example LLP", "rank": 1, "plugin": "test"}]
     return {"plugin": "firm_name_matcher", "results": validate_firm_names(records)}

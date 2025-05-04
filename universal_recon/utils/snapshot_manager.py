@@ -14,8 +14,6 @@ def save_screenshot(driver, label, config=None, logger=None):
     if logger:
         logger(f"[SnapshotManager] Screenshot saved: {path}")
 
-
-def save_html(driver, label, config=None, logger=None):
     if not config or not config.get("general", {}).get("enable_html_snapshots", False):
         return
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

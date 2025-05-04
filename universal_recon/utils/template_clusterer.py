@@ -14,6 +14,7 @@ def generate_template(records: List[Dict]) -> List[Dict]:
     identity_keys = ["email", "name", "firm_name"]
 
     def extract_key(record):
+    """TODO: Add docstring."""
         for key in identity_keys:
             if record.get("type") == key and record.get("value"):
                 return (key, record["value"].lower())

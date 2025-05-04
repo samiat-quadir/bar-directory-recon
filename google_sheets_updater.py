@@ -5,23 +5,16 @@ import gspread
 from dotenv import load_dotenv
 from google.oauth2.service_account import Credentials
 
-# Load environment variables
-env_path = r"C:\Users\samq\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
+env_path = "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\.env"
 load_dotenv(env_path)
-
-# Environment Variables
 SERVICE_ACCOUNT_KEY_PATH = os.getenv("SERVICE_ACCOUNT_KEY_PATH")
-SHEET_ID = os.getenv("SHEET_ID")  # Using Sheet ID instead of Sheet Name
-
-# Configure logging
+SHEET_ID = os.getenv("SHEET_ID")
 LOG_FILE = "google_sheets_updater.log"
 logging.basicConfig(
     filename=LOG_FILE,
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
-
-# Authenticate Google Sheets API
 SCOPES = [
     "https://spreadsheets.google.com/feeds",
     "https://www.googleapis.com/auth/drive",
@@ -38,7 +31,7 @@ except Exception as e:
 def append_to_google_sheet(data):
     """Append data to Google Sheets with error handling and logging."""
     try:
-        sheet = client.open_by_key(SHEET_ID).sheet1  # Open by Sheet ID
+        sheet = client.open_by_key(SHEET_ID).sheet1
         sheet.append_row(data)
         logging.info(f"✅ Data successfully added: {data}")
         print("✅ Data successfully added to Google Sheets!")
@@ -50,7 +43,6 @@ def append_to_google_sheet(data):
         print(f"❌ Unexpected Error: {e}")
 
 
-# Example Usage (Test)
 if __name__ == "__main__":
     sample_data = [
         "Test Lawyer",

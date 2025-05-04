@@ -5,12 +5,15 @@ from .logger import Logger
 
 
 class ReconOrchestrator:
+"""TODO: Add docstring."""
     def __init__(self, config_path=None, cli_overrides=None):
+    """TODO: Add docstring."""
         self.config_mgr = ConfigManager(config_path=config_path, cli_overrides=cli_overrides)
         self.logger = Logger(self.config_mgr.get("general.log_file"))
         self.driver_mgr = DriverManager(self.config_mgr, self.logger)
 
     def run_recon(self, site_name, url):
+    """TODO: Add docstring."""
         self.logger.log(f"Starting recon for {site_name}: {url}")
         success = self.driver_mgr.fetch_page(url)
         if not success:
@@ -20,6 +23,7 @@ class ReconOrchestrator:
         # Future: data detection, pagination, plugins...
 
     def shutdown(self):
+    """TODO: Add docstring."""
         self.logger.log("Shutting down orchestrator.")
         self.driver_mgr.close_driver()
         self.logger.close()

@@ -17,6 +17,7 @@ FIELD_HINTS = {
 
 
 def apply(driver, context="root"):
+"""TODO: Add docstring."""
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
     dom = etree.HTML(str(soup))

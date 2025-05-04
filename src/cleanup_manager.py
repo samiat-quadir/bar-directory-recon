@@ -1,9 +1,5 @@
-import logging
 import os
 from datetime import datetime, timedelta
-
-from env_loader import load_environment
-from project_path import set_root_path
 
 set_root_path()
 load_environment()
@@ -31,6 +27,7 @@ def cleanup_old_files():
                         logging.info(f"Removed old file: {file_path}")
 
     print(f"✅ Cleanup complete. Removed {removed} old files.")
+
 
 
 if __name__ == "__main__":

@@ -3,12 +3,13 @@
 import json
 import os
 
+
 def suppress_scores(
     matrix_path="output/schema_matrix.json",
     status_path="output/output_status.json",
     export_path="output/schema_matrix_suppressed.json",
     suppress_factor=0.9,
-    verbose=False
+    verbose=False,
 ):
     if not os.path.exists(matrix_path) or not os.path.exists(status_path):
         print("❌ Required input files not found.")
@@ -39,8 +40,10 @@ def suppress_scores(
     print(f"[✓] Score-suppressed matrix written to: {export_path}")
     print(f"[•] {modified_sites} site(s) suppressed.")
 
+
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description="Suppress schema scores based on drift risk")
     parser.add_argument("--matrix-path", default="output/schema_matrix.json")
     parser.add_argument("--status-path", default="output/output_status.json")
@@ -54,5 +57,5 @@ if __name__ == "__main__":
         status_path=args.status_path,
         export_path=args.export_path,
         suppress_factor=args.suppress_factor,
-        verbose=args.verbose
+        verbose=args.verbose,
     )

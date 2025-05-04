@@ -1,6 +1,5 @@
 # === analytics/schema_dashboard_stub.py ===
 
-import json
 
 
 def print_schema_summary(matrix_path="output/schema_matrix.json"):
@@ -8,6 +7,3 @@ def print_schema_summary(matrix_path="output/schema_matrix.json"):
         matrix = json.load(f)
     print("\n📊 Schema Dashboard")
     for site, data in matrix.get("sites", {}).items():
-        score = data.get("score_summary", {}).get("field_score", "–")
-        tags = ", ".join(data.get("domain_tags", []))
-        print(f" - {site}: {score} points [{tags}]")

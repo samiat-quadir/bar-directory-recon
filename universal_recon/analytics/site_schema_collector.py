@@ -1,7 +1,6 @@
 # === analytics/site_schema_collector.py ===
 
 import json
-from pathlib import Path
 
 
 def collect_site_schema(site_name: str, output_dir: str = "output/fieldmap", verbose: bool = False) -> str:
@@ -12,10 +11,6 @@ def collect_site_schema(site_name: str, output_dir: str = "output/fieldmap", ver
     # Mocked fieldmap data
     fieldmap = {
         "site": site_name,
-        "fields": ["name", "email", "phone", "bar_number"],
-        "schema_version": "1.0",
-        "score_summary": {"field_score": 78.5},
-        "domain_tags": ["bar", "legal"],
     }
 
     output_path = Path(output_dir)

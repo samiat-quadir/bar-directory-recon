@@ -13,8 +13,10 @@ def retry(max_tries=3, delay=1, backoff=2, exceptions=(Exception,)):
     """
 
     def decorator(func):
+    """TODO: Add docstring."""
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+        """TODO: Add docstring."""
             tries = 0
             wait = delay
             while tries < max_tries:

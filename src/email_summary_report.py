@@ -16,6 +16,7 @@ TO_EMAILS = os.getenv("TO_EMAILS", "").split(",")
 
 
 def extract_summary():
+"""TODO: Add docstring."""
     with open(LOG_FILE, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
@@ -29,6 +30,7 @@ def extract_summary():
 
 
 def send_email_summary():
+"""TODO: Add docstring."""
     try:
         from base64 import urlsafe_b64encode
 

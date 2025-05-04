@@ -15,15 +15,12 @@ REPORT_PATH = "system_report.log"
 
 
 def get_disk_usage(path="/"):
+"""TODO: Add docstring."""
     total, used, free = shutil.disk_usage(path)
-    return {
-        "Total": f"{total // (2**30)} GB",
-        "Used": f"{used // (2**30)} GB",
-        "Free": f"{free // (2**30)} GB",
-    }
 
 
 def get_git_status():
+"""TODO: Add docstring."""
     try:
         output = subprocess.check_output(["git", "status"], stderr=subprocess.DEVNULL)
         return output.decode("utf-8")
@@ -32,6 +29,7 @@ def get_git_status():
 
 
 def check_env_vars(required_vars):
+"""TODO: Add docstring."""
     status = {}
     for var in required_vars:
         value = os.getenv(var)
@@ -40,6 +38,7 @@ def check_env_vars(required_vars):
 
 
 def collect_system_info():
+"""TODO: Add docstring."""
     return {
         "DateTime": datetime.now().isoformat(),
         "Computer Name": socket.gethostname(),
@@ -67,6 +66,7 @@ def collect_system_info():
 
 
 def write_report(info, path=REPORT_PATH):
+"""TODO: Add docstring."""
     with open(path, "w", encoding="utf-8") as f:
         for key, value in info.items():
             f.write(f"\n[{key}]\n")

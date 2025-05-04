@@ -48,6 +48,5 @@ def load_normalized_records(site_name: str) -> List[Dict[str, Any]]:
         elif "fields" in data and "score_summary" in data:
             return [{"plugin": "aggregated_fieldmap", **data}]
         else:
-            return [{"plugin": key, **val} for key, val in data.items()]
     else:
         raise ValueError(f"Unsupported fieldmap structure in {path}")
