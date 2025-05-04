@@ -34,4 +34,6 @@ def cleanup_old_files():
 
 
 if __name__ == "__main__":
+    logger.info("Starting cleanup process...")
     cleanup_old_files()
+    archive_logs()

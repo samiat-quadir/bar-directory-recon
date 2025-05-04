@@ -1,0 +1,115 @@
+AI_Integration_Project_Setup:
+
+  Last_Updated: "2025-03-15"
+
+  User_Profile:
+    Name: "Samiat Quadir"
+    Primary_Devices:
+      - "Work Desktop (Windows)"
+      - "ASUS Laptop"
+      - "Google Pixel"
+    Time_Zone: "Eastern Standard Time (EST)"
+
+  Verified_Devices_Config:
+    Work_Desktop:
+      Python_Version: "3.12.6"
+      Python_Path: "C:\\Python312\\python.exe"
+      Libraries_Installed:
+        - selenium
+        - python-dotenv
+        - pandas
+        - requests
+        - google-api-python-client
+        - oauth2client
+        - matplotlib
+        - openpyxl
+        - beautifulsoup4
+        - webdriver-manager
+
+      Project_Directories:
+        SERVICE_ACCOUNT_KEY_PATH: "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Files\\Python\\GoogleAPIs\\service_account_key.json"
+        GMAIL_CREDENTIALS_PATH: "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Files\\Python\\GoogleAPIs\\gmail_api_credentials.json"
+        GMAIL_TOKEN_PATH: "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Files\\Python\\GoogleAPIs\\token.pickle"
+        CHROMEDRIVER_PATH: "C:\\Python312\\Lib\\site-packages\\chromedriver_autoinstaller\\134\\chromedriver.exe"
+        LOCAL_GIT_REPO: "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon"
+        PROJECT_SCRIPT_FOLDER: "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py"
+
+    ASUS_Laptop_Config:
+      Python_Version: "3.13.2"
+      LIBRARIES_INSTALLED:
+        - selenium
+        - python-dotenv
+        - pandas
+        - requests
+        - google-api-python-client
+        - oauth2client
+        - matplotlib
+        - openpyxl
+        - beautifulsoup4
+        - webdriver-manager
+
+      Project_Directories:
+        SERVICE_ACCOUNT_KEY_PATH: "C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group\\Desktop\\Files\\Python\\GoogleAPIs\\service_account_key.json"
+        GMAIL_CREDENTIALS_PATH: "C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group\\Desktop\\Files\\Python\\GoogleAPIs\\gmail_api_credentials.json"
+        GMAIL_TOKEN_PATH: "C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group\\Desktop\\Files\\Python\\GoogleAPIs\\token.pickle"
+        CHROMEDRIVER_PATH: "C:\\Python312\\Lib\\site-packages\\chromedriver_autoinstaller\\134\\chromedriver.exe"
+        LOCAL_GIT_REPO: "C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon"
+
+  GitHub:
+    Username: "samiat-quadir"
+    Emails:
+      - "sam.quadir@gmail.com"
+      - "samq@damg.com"
+    Repository: "bar-directory-recon"
+    Branch: "main"
+    Latest_Commit: "55c6e83 - Updated scripts, setup info, and resolved latest changes"
+    Git_Status: "Up to date with remote repository"
+
+  Motion_AI_App:
+    Account_Status: Paid ($20/month)
+    Primary_Account: "sam.quadir@gmail.com"
+    Devices_Synced:
+      - ASUS Laptop
+      - Work Desktop
+      - Google Pixel
+    Gmail_Label_Created: "Motion Tasks" (Both Gmail accounts)
+    Zapier_Integration:
+      - Zap Created: Google Calendar (samq@damg.com) → Motion Task
+      - Zapier Status: Tested successfully
+
+  Google_Calendar:
+    Connected_Accounts:
+      - Personal: "sam.quadir@gmail.com"
+      - Work: "samq@damg.com"
+
+  Google_Cloud_Setup:
+    Project_ID: "peak-lattice-453701-e9"
+    Account_Status: Active
+    Sheets_Service_Account: "sheetsdriveserviceaccount@peak-lattice-453701-e9.iam.gserviceaccount.com"
+    Cloud_Functions: Enabled
+
+  Visual_Studio_Code:
+    Version: "1.98"
+    Integrations:
+      - GitHub Copilot
+      - OneDrive (Verified)
+
+  Scheduled_Tasks:
+    Task_Name: "Automated Python Task"
+    Last_Run: "3/14/2025 10:00:01 AM"
+    Status: "Successful"
+    Script_Path: "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\scheduled_task_script.py"
+
+  High_Priority_Next_Steps:
+    - Finalize Gmail and Zapier integration testing.
+    - Optimize Motion Auto-Scheduler for daily task prioritization.
+    - Configure Gmail API Automation (Python scripts for email notifications).
+    - Integrate and automate Google Sheets for data scraping and reporting outputs.
+    - Ensure cloud functions automate script executions seamlessly.
+
+  Overall_Project_Goals:
+    - Establish a robust AI-driven productivity and automation ecosystem.
+    - Achieve seamless synchronization across all devices and cloud services.
+    - Balance structured productivity with flexibility using AI scheduling (Motion).
+    - Implement reliable Gmail-based automation and notification systems.
+    - Create comprehensive documentation for scalability and efficient AI integrations."

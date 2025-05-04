@@ -2,7 +2,21 @@ version: '3.4'
 
 services:
   bardirectoryrecon:
+    # Main service for bar directory reconnaissance
     image: bardirectoryrecon
     build:
       context: .
       dockerfile: ./Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Uncomment and set these in production:
+      #- GMAIL_USER=${GMAIL_USER}
+      #- GMAIL_TOKEN_PATH=${GMAIL_TOKEN_PATH}
+      #- MOTION_API_KEY=${MOTION_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    # Uncomment to expose ports if needed:
+    #ports:
+    #  - "8080:8080"
+    restart: unless-stopped
