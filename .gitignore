@@ -55,3 +55,14 @@ run_logs/
 # Ignore all virtualenv folders
 .venv/
 .venv_old/
+
+# Additional project-specific exclusions
+mega_memory.yaml
+repo_tree.txt
+*.log
+*.bak
+*.txt
+archives/
+auto_pruned/
+archive/
+env_loader.py
