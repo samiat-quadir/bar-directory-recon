@@ -49,7 +49,9 @@ def summarize_records(records: List[Dict]) -> Dict:
         sum(summary["score_distribution"]) / max(1, len(summary["score_distribution"])),
         2,
     )
-    summary["completeness_rate"] = round((len(records) - summary["incomplete_records"]) / max(1, len(records)), 2)
+    summary["completeness_rate"] = round(
+        (len(records) - summary["incomplete_records"]) / max(1, len(records)), 2
+    )
 
     return summary
 

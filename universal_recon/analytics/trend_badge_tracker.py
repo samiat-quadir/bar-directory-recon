@@ -6,7 +6,9 @@ from pathlib import Path
 from typing import Dict
 
 
-def regenerate_site_score_trend(site: str, archive_dir="output/archive", output_dir="output/reports") -> str:
+def regenerate_site_score_trend(
+    site: str, archive_dir="output/archive", output_dir="output/reports"
+) -> str:
     archive = Path(archive_dir)
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)

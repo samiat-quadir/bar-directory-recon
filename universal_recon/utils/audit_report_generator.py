@@ -3,6 +3,7 @@ Audit Report Generator module for analyzing record data quality.
 This module provides functionality to generate audit reports that summarize
 record quality, score distributions, and validation errors by plugin.
 """
+
 from collections import defaultdict
 
 
@@ -37,7 +38,12 @@ def generate_audit_report(records):
             # Add to validator errors if empty or low score
             if value == "" or score == 0:
                 report["validator_errors_by_plugin"][plugin].append(
-                    {"type": record_type, "value": value, "score": score, "issue": "Missing or invalid value"}
+                    {
+                        "type": record_type,
+                        "value": value,
+                        "score": score,
+                        "issue": "Missing or invalid value",
+                    }
                 )
 
         elif score <= 3:
@@ -45,7 +51,12 @@ def generate_audit_report(records):
 
             # Add to validator errors if warning level
             report["validator_errors_by_plugin"][plugin].append(
-                {"type": record_type, "value": value, "score": score, "issue": "Potential data quality issue"}
+                {
+                    "type": record_type,
+                    "value": value,
+                    "score": score,
+                    "issue": "Potential data quality issue",
+                }
             )
 
         else:

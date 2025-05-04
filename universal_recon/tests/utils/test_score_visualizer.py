@@ -1,7 +1,11 @@
 import unittest
 
+<<<<<<< HEAD
 # Import from proper package path
 from universal_recon.utils import score_visualizer
+=======
+from utils import score_visualizer
+>>>>>>> bf5b0be (🧽 Fix all Flake8 + formatting issues across universal_recon/)
 
 MOCK_RECORDS = [
     {"plugin": "email_plugin", "type": "email", "score": 1},

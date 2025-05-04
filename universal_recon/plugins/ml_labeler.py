@@ -3,7 +3,6 @@ Plugin: ml_labeler | Shared | Opt-in | v1.0
 Purpose: Label structured text fields (e.g. names, firms, bar numbers)
 """
 
-
 from bs4 import BeautifulSoup
 from lxml import etree
 

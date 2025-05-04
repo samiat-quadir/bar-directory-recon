@@ -1,12 +1,23 @@
 import unittest
 
+<<<<<<< HEAD
 from universal_recon.plugins import firm_parser
 
 # Import from proper package path
 from universal_recon.utils.record_normalizer import normalize
 
+=======
+from utils.record_normalizer import normalize
+>>>>>>> bf5b0be (🧽 Fix all Flake8 + formatting issues across universal_recon/)
+
+from plugins import firm_parser
 
 # Mock WebDriver and context
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> bf5b0be (🧽 Fix all Flake8 + formatting issues across universal_recon/)
 def mock_driver_with_html(html):
     class MockDriver:
         def __init__(self, html):

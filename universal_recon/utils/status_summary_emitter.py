@@ -4,6 +4,7 @@ import json
 import yaml
 from pathlib import Path
 
+
 def load_validation_matrix(yaml_path):
     """
     Load the validation matrix from a YAML file.
@@ -12,6 +13,7 @@ def load_validation_matrix(yaml_path):
         raise FileNotFoundError(f"Validation matrix file not found: {yaml_path}")
     with open(yaml_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
+
 
 def emit_status_summary(schema_matrix_path, validation_matrix_path, output_path):
     """
@@ -47,7 +49,7 @@ def emit_status_summary(schema_matrix_path, validation_matrix_path, output_path)
         status_summary[site] = {
             "validator_drift": validator_drift,
             "plugins_removed": plugins_removed,
-            "site_health": "degraded" if validator_drift else "ok"
+            "site_health": "degraded" if validator_drift else "ok",
         }
 
     # Ensure output directory exists
@@ -59,6 +61,7 @@ def emit_status_summary(schema_matrix_path, validation_matrix_path, output_path)
         json.dump(status_summary, f, indent=2)
 
     print(f"Status summary written to {output_path}")
+
 
 def emit_status(matrix_path, export_path, verbose=False):
     """
@@ -74,11 +77,23 @@ def emit_status(matrix_path, export_path, verbose=False):
     except Exception as e:
         print(f"emit_status: Error - {e}")
 
+
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description="Emit status summary for Universal Recon.")
-    parser.add_argument('--matrix_path', type=str, default="output/schema_matrix.json", help="Path to schema_matrix.json")
-    parser.add_argument('--export_path', type=str, default="output/output_status.json", help="Path to output status JSON")
-    parser.add_argument('--verbose', action='store_true', help="Enable verbose output")
+    parser.add_argument(
+        "--matrix_path",
+        type=str,
+        default="output/schema_matrix.json",
+        help="Path to schema_matrix.json",
+    )
+    parser.add_argument(
+        "--export_path",
+        type=str,
+        default="output/output_status.json",
+        help="Path to output status JSON",
+    )
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
     emit_status(args.matrix_path, args.export_path, args.verbose)

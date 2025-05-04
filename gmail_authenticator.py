@@ -1,15 +1,22 @@
 import json
 import logging
 import os
+import sys
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-# Import directly, without sys.path modification
+# Ensure root project path is in sys.path
+try:
+    from project_path import set_root_path
+
+    set_root_path()
+except ImportError:
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from env_loader import load_environment
 
-# Initialize environment
 load_environment()
 
 # Constants
@@ -23,7 +30,9 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     encoding="utf-8",
+    encoding="utf-8",
 )
+
 
 
 def authenticate_gmail():
@@ -51,6 +60,7 @@ def authenticate_gmail():
         print(f"❌ Authentication failed: {e}")
 
 
+
 def revoke_token():
     try:
         if os.path.exists(TOKEN_PATH):
@@ -62,6 +72,7 @@ def revoke_token():
     except Exception as e:
         logging.error(f"❌ Failed to revoke token: {e}")
         print(f"❌ Failed to revoke token: {e}")
+
 
 
 if __name__ == "__main__":

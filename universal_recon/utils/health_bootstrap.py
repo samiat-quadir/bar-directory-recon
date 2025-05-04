@@ -2,6 +2,7 @@
 
 import sys
 import os
+
 # Ensure the project root (parent of universal_recon) is on sys.path
 PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.join(__file__, "../..")))
 if PROJECT_ROOT not in sys.path:
@@ -10,10 +11,12 @@ if PROJECT_ROOT not in sys.path:
 import importlib.util
 from pathlib import Path
 
+
 def banner(title):
     print("\n" + "=" * 60)
     print(f"🔍 {title}")
     print("=" * 60)
+
 
 def check_sys_path():
     banner("PYTHONPATH + sys.path Check")
@@ -23,12 +26,16 @@ def check_sys_path():
     for p in sys.path:
         print(f"    - {p}")
     if "universal_recon" not in os.listdir():
-        print("⚠️  'universal_recon' folder not visible from CWD — check where you're running this from.")
+        print(
+            "⚠️  'universal_recon' folder not visible from CWD — check where you're running this from."
+        )
+
 
 def insert_root_to_syspath():
     root = Path(__file__).resolve().parent.parent
     sys.path.insert(0, str(root))
     print(f"\n✅ Added root to sys.path → {root}")
+
 
 def try_import(name):
     try:
@@ -39,6 +46,7 @@ def try_import(name):
             print(f"✅ {name} → Importable.")
     except Exception as e:
         print(f"❌ {name} → Failed: {e}")
+
 
 def check_overlay_status(module_name, html_path):
     print(f"\n--- Overlay Check: {module_name} ---")
@@ -54,6 +62,7 @@ def check_overlay_status(module_name, html_path):
             print(f"[BADGE: NEEDS REGENERATION] {html_path} missing.")
     except Exception as e:
         print(f"❌ {module_name} → Failed: {e} [BADGE: MISSING]")
+
 
 def run_all_checks():
     check_sys_path()
@@ -72,8 +81,13 @@ def run_all_checks():
     for mod in modules:
         try_import(mod)
     # Overlay awareness
-    check_overlay_status("universal_recon.analytics.plugin_decay_overlay", "output/plugin_decay_overlay.html")
-    check_overlay_status("universal_recon.analytics.validator_drift_overlay", "output/validator_drift_overlay.html")
+    check_overlay_status(
+        "universal_recon.analytics.plugin_decay_overlay", "output/plugin_decay_overlay.html"
+    )
+    check_overlay_status(
+        "universal_recon.analytics.validator_drift_overlay", "output/validator_drift_overlay.html"
+    )
+
 
 if __name__ == "__main__":
     run_all_checks()
