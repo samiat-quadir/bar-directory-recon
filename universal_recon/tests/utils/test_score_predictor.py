@@ -2,7 +2,8 @@
 
 import unittest
 
-from utils import score_predictor
+# Import from proper package path
+from universal_recon.utils import score_predictor
 
 
 class TestScorePredictor(unittest.TestCase):

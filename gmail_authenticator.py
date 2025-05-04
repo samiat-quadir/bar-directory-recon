@@ -1,22 +1,15 @@
 import json
 import logging
 import os
-import sys
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-# Ensure root project path is in sys.path
-try:
-    from project_path import set_root_path
-
-    set_root_path()
-except ImportError:
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
+# Import directly, without sys.path modification
 from env_loader import load_environment
 
+# Initialize environment
 load_environment()
 
 # Constants

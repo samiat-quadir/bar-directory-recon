@@ -1,6 +1,7 @@
 import unittest
 
-from utils import score_visualizer
+# Import from proper package path
+from universal_recon.utils import score_visualizer
 
 MOCK_RECORDS = [
     {"plugin": "email_plugin", "type": "email", "score": 1},

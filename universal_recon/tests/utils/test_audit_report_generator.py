@@ -1,6 +1,7 @@
 import unittest
 
-from utils import audit_report_generator
+# Import from proper package path
+from universal_recon.utils import audit_report_generator
 
 
 class TestAuditReportGenerator(unittest.TestCase):

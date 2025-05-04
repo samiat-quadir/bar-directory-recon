@@ -1,8 +1,9 @@
 import unittest
 
-from utils.record_normalizer import normalize
+from universal_recon.plugins import social_link_parser
 
-from plugins import social_link_parser
+# Import from proper package path
+from universal_recon.utils.record_normalizer import normalize
 
 
 # Mock WebDriver and context
@@ -37,7 +38,9 @@ class TestSocialLinkParser(unittest.TestCase):
     def test_social_links_strict_mode(self):
         records = social_link_parser.apply(self.driver, context="test_strict")
         try:
+            # Store the result and assert it's a list to verify normalization succeeded
             normalized = normalize(records, strict=True)
+            self.assertIsInstance(normalized, list)
         except Exception as e:
             self.fail(f"Strict normalization failed: {e}")
 

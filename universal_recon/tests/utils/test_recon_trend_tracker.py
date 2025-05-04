@@ -1,6 +1,7 @@
 import unittest
 
-from utils.recon_trend_tracker import analyze_trends
+# Import from proper package path
+from universal_recon.utils.recon_trend_tracker import analyze_trends
 
 mock_summary_past = {
     "site": "test_site",
