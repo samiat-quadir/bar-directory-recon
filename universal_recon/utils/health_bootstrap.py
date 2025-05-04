@@ -26,7 +26,9 @@ def check_sys_path():
     for p in sys.path:
         print(f"    - {p}")
     if "universal_recon" not in os.listdir():
-        print("⚠️  'universal_recon' folder not visible from CWD — check where you're running this from.")
+        print(
+            "⚠️  'universal_recon' folder not visible from CWD — check where you're running this from."
+        )
 
 
 def insert_root_to_syspath():

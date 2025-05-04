@@ -3,7 +3,9 @@
 try:
     import yaml
 except ImportError as e:
-    raise ImportError("The 'yaml' module is required but not installed. Install it using 'pip install pyyaml'.") from e
+    raise ImportError(
+        "The 'yaml' module is required but not installed. Install it using 'pip install pyyaml'."
+    ) from e
 from pathlib import Path
 
 

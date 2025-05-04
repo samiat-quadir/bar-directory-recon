@@ -70,7 +70,9 @@ def generate_overlay():
         print(f"[✓] Exported plugin decay risk JSON → {EXPORT_JSON}")
 
     # Build HTML
-    html = ["<html><head><title>Plugin Decay Overlay</title></head><body><h1>Plugin Risk Overlay</h1>"]
+    html = [
+        "<html><head><title>Plugin Decay Overlay</title></head><body><h1>Plugin Risk Overlay</h1>"
+    ]
     for site, meta in output.items():
         html.append(f"<h2>{site} – Health: {meta['site_health'].upper()}</h2><ul>")
         for risk in meta["validator_risk"]:
