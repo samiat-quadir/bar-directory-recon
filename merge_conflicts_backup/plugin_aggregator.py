@@ -6,15 +6,14 @@ from datetime import datetime
 from pathlib import Path
 
 <<<<<<< HEAD
-from analytics.risk_analysis import run_analysis as run_risk_analysis
-from analytics.schema_score_linter import run_schema_score_lint
-from analytics.score_heatmap_overlay import run_analysis as run_heatmap_overlay
-from analytics.trend_badge_tracker import run_analysis as run_trend_tracker
-from plugin_loader import load_plugins_by_type
-from report_printer import print_audit, print_health, print_schema_score, print_summary, print_trend
 =======
-from universal_recon.core.report_printer import print_audit, print_health, print_summary, print_trend
->>>>>>> 3ccf4fd (Committing all changes)
+from universal_recon.core.report_printer import (
+    print_audit,
+    print_health,
+    print_summary,
+    print_trend,
+)
+>>>>>>> b46510c (✅ Update submodule bar-recon-clean after rebase)
 
 
 def archive_previous_matrix():
@@ -72,12 +71,6 @@ def aggregate_and_print(records, site_name, config, cli_flags):
         "trend": trend_result,
         "heatmap": heatmap_result,
         "schema_score": schema_score_result,
-<<<<<<< HEAD
-        "risk_profile": risk_result,
-=======
-        "risk_profile": {},
-        "plugins_used": sorted(list(plugins_used)),
->>>>>>> 3ccf4fd (Committing all changes)
     }
 
     full_path = os.path.join(output_dir, f"{site_name}_full_report.json")

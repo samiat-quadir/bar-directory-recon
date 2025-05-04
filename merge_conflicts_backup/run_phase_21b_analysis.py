@@ -2,23 +2,11 @@
 
 import json
 import os
-<<<<<<< HEAD
-from glob import glob
-=======
->>>>>>> 3ccf4fd (Committing all changes)
 
 ARCHIVE_PATH = "output/archive/"
 LATEST_PATH = "output/schema_matrix.json"
 REGRESSION_THRESHOLD = 5.0
 
-<<<<<<< HEAD
-=======
-
-def validate_matrix_structure(matrix):
-    if "sites" not in matrix:
-        print("❌ Matrix missing 'sites' key.")
-        return False
->>>>>>> 3ccf4fd (Committing all changes)
 
 def load_matrix(path):
     try:
@@ -30,16 +18,27 @@ def load_matrix(path):
 
 
 <<<<<<< HEAD
-def get_latest_snapshot_path():
-    files = sorted(glob(os.path.join(ARCHIVE_PATH, "schema_matrix_*.json")))
-    return files[-1] if files else None
 =======
-
 def validate_site_status():
     if not os.path.exists(STATUS_PATH):
         print("⚠️  No status summary found (skipping validator_drift check)")
         return True
->>>>>>> 3ccf4fd (Committing all changes)
+
+    with open(STATUS_PATH, "r", encoding="utf-8") as f:
+        status = json.load(f)
+
+    issue_found = False
+    for site, info in status.items():
+        if info.get("site_health") == "degraded":
+            print(
+                f"🟥 {site}: DEGRADATION DETECTED → Plugins Removed: {info.get('plugins_removed', [])}"
+            )
+            issue_found = True
+        elif info.get("validator_drift"):
+            print(f"🟧 {site}: validator_drift = True")
+
+    return not issue_found
+>>>>>>> b46510c (✅ Update submodule bar-recon-clean after rebase)
 
 
 def compare_scores(latest, previous):
@@ -48,19 +47,6 @@ def compare_scores(latest, previous):
     latest_sites = latest.get("sites", {})
     prev_sites = previous.get("sites", {})
 
-<<<<<<< HEAD
-    for site in latest_sites:
-        new_score = latest_sites[site].get("score_summary", {}).get("field_score")
-        old_score = prev_sites.get(site, {}).get("score_summary", {}).get("field_score")
-        new_anomalies = len(latest_sites[site].get("anomaly_flags", []))
-        old_anomalies = len(prev_sites.get(site, {}).get("anomaly_flags", []))
-=======
-
-def run_sanity_check():
-    if not os.path.exists(MATRIX_PATH):
-        print("❌ schema_matrix.json is missing.")
-        return False
->>>>>>> 3ccf4fd (Committing all changes)
 
         drift = None
         if new_score is not None and old_score is not None:
