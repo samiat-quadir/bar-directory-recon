@@ -2,7 +2,6 @@ import os
 import sys
 
 
-
 def set_root_path():
 <<<<<<< HEAD
     """

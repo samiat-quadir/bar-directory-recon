@@ -1,23 +1,28 @@
 # === universal_recon/main.py ===
 
 import argparse
+import os  # ensure os is available
+
+from universal_recon.core.config_loader import ConfigManager
+from universal_recon.plugin_aggregator import aggregate_and_print
+from universal_recon.plugin_loader import load_normalized_records
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--site", required=True)
+    parser.add_argument("--schema-matrix", action="store_true")  # existing
+    parser.add_argument("--emit-status", action="store_true", help="Emit per-site status JSON after schema-matrix")
     parser.add_argument("--schema-collect", action="store_true")
     parser.add_argument("--schema-lint", action="store_true")
     parser.add_argument("--domain-lint", action="store_true")
     parser.add_argument("--schema-score", action="store_true")
-    parser.add_argument("--schema-matrix", action="store_true")
     parser.add_argument("--full-report", action="store_true")
     parser.add_argument("--score-drift", action="store_true")
     parser.add_argument("--plugin-diff", action="store_true")
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
 
-    args = parser.parse_args()
     site_name = args.site
 
     os.makedirs("output/fieldmap", exist_ok=True)
@@ -45,8 +50,25 @@ def main():
         domain_lint_fieldmap(path, verbose=args.verbose)
 
     if args.schema_matrix:
+        # Collect and write schema matrix
+        from analytics.schema_matrix_collector import collect_schema_matrix, write_schema_matrix
+
+        matrix = collect_schema_matrix()
+        write_schema_matrix(matrix, save_path="output/schema_matrix.json", verbose=args.verbose)
         if args.verbose:
             print("✅ Schema matrix collected and saved.")
+        # Emit per-site status if requested
+        if args.emit_status:
+            from universal_recon.utils.output_status_emitter import emit_status_json
+            from universal_recon.utils.status_summary_emitter import emit_status_summary
+
+            summary = emit_status_summary(
+                "output/schema_matrix.json",
+                "universal_recon/validators/validation_matrix.yaml",
+                "output/output_status.json",
+            )
+            site_status = summary.get(site_name, {})
+            emit_status_json(site_name, site_status)
 
     if args.full_report:
         records = load_normalized_records(site_name)

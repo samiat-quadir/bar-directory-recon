@@ -1,5 +1,6 @@
 import os
 import sys
+
 load_environment()
 
 REQUIRED_VARS = [

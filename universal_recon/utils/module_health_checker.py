@@ -57,9 +57,7 @@ def build_html_report(results, file_results, staleness_warnings, missing_matrix,
         emoji = "✅" if status and not missing_funcs else "❌"
         color = "#2ecc71" if status and not missing_funcs else "#e74c3c"
         fn_text = "All OK" if not missing_funcs else f"Missing: {', '.join(missing_funcs)}"
-        rows.append(
-            f"<tr><td>{mod}</td><td style='color:{color}'>{emoji}</td><td>{fn_text}</td></tr>"
-        )
+        rows.append(f"<tr><td>{mod}</td><td style='color:{color}'>{emoji}</td><td>{fn_text}</td></tr>")
     for path, exists in file_results.items():
         emoji = "✅" if exists else "❌"
         color = "#2ecc71" if exists else "#e67e22"
@@ -105,9 +103,7 @@ def main():
         status, missing_funcs = check_import_and_functions(mod, funcs)
         results[mod] = (status, missing_funcs)
         emoji = "✅" if status and not missing_funcs else "❌"
-        print(
-            f"{emoji} {mod}" + (f" — Missing: {', '.join(missing_funcs)}" if missing_funcs else "")
-        )
+        print(f"{emoji} {mod}" + (f" — Missing: {', '.join(missing_funcs)}" if missing_funcs else ""))
     file_results = {}
     staleness_warnings = []
     missing_matrix = False

@@ -4,6 +4,7 @@ import json
 import os
 
 import yaml
+
 from utils.validator_drift_badges import VALIDATOR_DRIFT_BADGES
 
 BADGE_COLORS = {
@@ -79,9 +80,7 @@ def export_html(results, path):
 
         for alert in result["alerts"]:
             icon = VALIDATOR_DRIFT_BADGES.get(alert["severity"], {}).get("icon", "❔")
-            tip = alert.get("description") or VALIDATOR_DRIFT_BADGES.get(alert["severity"], {}).get(
-                "tooltip", ""
-            )
+            tip = alert.get("description") or VALIDATOR_DRIFT_BADGES.get(alert["severity"], {}).get("tooltip", "")
             html.append(
                 f"<li title='{tip}'>{icon} <b>{alert['validator']}</b> → "
                 f"<code>{alert['missing_plugin']}</code> "
@@ -109,9 +108,7 @@ def export_json(results, path):
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Analyze validator-plugin drift with suppression logic"
-    )
+    parser = argparse.ArgumentParser(description="Analyze validator-plugin drift with suppression logic")
     parser.add_argument("--matrix-path", default="output/schema_matrix.json")
     parser.add_argument("--yaml-path", default="validation_matrix.yaml")
     parser.add_argument("--status-path", default="output/output_status.json")

@@ -31,9 +31,7 @@ def render_row(site, entry):
     return f"<tr><td>{site}</td><td>{score}</td><td>{drift_symbol}</td><td>{plugins}</td><td>{tags}</td><td>{anomalies}</td></tr>"
 
 
-def generate_overlay(
-    matrix_path="output/schema_matrix.json", output_path="output/dashboard_overlay.html"
-):
+def generate_overlay(matrix_path="output/schema_matrix.json", output_path="output/dashboard_overlay.html"):
     with open(matrix_path, "r", encoding="utf-8") as f:
         matrix = json.load(f)
     rows = [render_row(site, data) for site, data in matrix.get("sites", {}).items()]

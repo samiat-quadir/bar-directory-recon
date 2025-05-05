@@ -1,9 +1,7 @@
 # universal_recon/analytics/trend_dashboard_stub.py
 
 
-
 def run_analysis(records, config=None):
-
     try:
         if not records:
             return trend_data

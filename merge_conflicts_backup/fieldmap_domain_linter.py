@@ -1,12 +1,14 @@
 # === validators/fieldmap_domain_linter.py ===
 
 import json
+
 <<<<<<< HEAD
 =======
 import os
 from pathlib import Path
 
 import yaml
+
 >>>>>>> 3ccf4fd (Committing all changes)
 
 

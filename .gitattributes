@@ -2,3 +2,10 @@
 *.yaml text eol=lf
 *.sh text eol=lf
 *.bat text eol=crlf
+# Prevent merge conflicts on local env/config/trash
+*.env merge=ours
+*.yaml merge=ours
+*.yaml merge=union
+*_backup/** merge=ours
+.venv*/** merge=ours
+mega_memory.yaml merge=ours

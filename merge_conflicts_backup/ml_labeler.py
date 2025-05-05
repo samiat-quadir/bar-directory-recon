@@ -6,6 +6,7 @@ Purpose: Label structured text fields (e.g. names, firms, bar numbers)
 <<<<<<< HEAD
 =======
 import re
+
 >>>>>>> 3ccf4fd (Committing all changes)
 
 from bs4 import BeautifulSoup

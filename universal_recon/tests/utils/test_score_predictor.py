@@ -6,10 +6,8 @@ import unittest
 # Import from proper package path
 from universal_recon.utils import score_predictor
 
-
 =======
 from utils import score_predictor
-
 
 >>>>>>> bf5b0be (🧽 Fix all Flake8 + formatting issues across universal_recon/)
 class TestScorePredictor(unittest.TestCase):

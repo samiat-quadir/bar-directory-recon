@@ -2,8 +2,6 @@
 
 import json
 
-
-
     domain_tags = data.get("domain_tags", [])
     fields = data.get("fields", [])
     field_names = {f.get("name") for f in fields if isinstance(f, dict)}
@@ -23,4 +21,3 @@ import json
     else:
         if verbose:
             print("[✓] No domain lint issues found.")
-

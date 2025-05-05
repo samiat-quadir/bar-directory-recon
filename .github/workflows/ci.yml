@@ -1,0 +1,25 @@
+---
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, feature/*]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -r requirements.txt
+      - name: Run pre-commit hooks
+        run: |
+          pre-commit run --all-files

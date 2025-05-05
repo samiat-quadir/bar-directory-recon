@@ -7,25 +7,24 @@ LOG_FILE = "automation_run.log"
 
 
 def log(message):
-"""TODO: Add docstring."""
+    """TODO: Add docstring."""
     timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(f"{timestamp} {message}\n")
     print(f"{timestamp} {message}")
 
 
-
 def run_script(script_path):
-"""TODO: Add docstring."""
+    """Run the specified script and log the output."""
     try:
         log(f"Running: {script_path}")
+        result = subprocess.run(["python", script_path], capture_output=True, text=True, check=True)
         log(result.stdout)
         if result.stderr:
             log(f"ERROR: {result.stderr}")
     except subprocess.CalledProcessError as e:
         log(f"FAILED: {script_path}")
         log(e.stderr)
-
 
 
 # === Define script paths ===

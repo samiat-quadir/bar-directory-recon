@@ -1,145 +1,49 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-Run project‑wide auto‑formatting (Black + isort), linting (flake8), and pre‑commit
-hooks, then stage—and optionally commit—any changes.
+# tools/format_and_lint.py
 
-Usage examples
---------------
-# dry‑run (show diffs only)
-python format_and_lint.py --dry-run
-
-# format, run hooks, stage everything, commit with default message
-python format_and_lint.py --commit
-
-# same but custom commit message
-python format_and_lint.py --commit "chore: auto‑format + lint fixes"
-
-# only touch universal_recon/ and tools/
-python format_and_lint.py universal_recon tools --commit
-"""
-
-from __future__ import annotations
-
-import argparse
-import os
 import subprocess
 import sys
 from pathlib import Path
 
-PROJECT_DIR = Path(__file__).resolve().parent
+# Paths to exclude from YAML linting
+YAML_WHITELIST = {
+    "mega_memory.yaml",
+    "Ai Project Setup & Automation Roadmap.txt",
+    "ai_integration_config.yaml",
+}
 
 
-def run(cmd: list[str], check: bool = True) -> int:
-    """
-    Execute *cmd* and stream output live.
-
-    Parameters
-    ----------
-    cmd : list[str]
-        Command and arguments to execute.
-    check : bool, default True
-        If *True* exit the script when the command returns non‑zero.
-
-    Returns
-    -------
-    int
-        The command's return‑code.
-    """
-    print(f"\n▶️  {' '.join(cmd)}")
-    proc = subprocess.Popen(
-        cmd,
-        cwd=PROJECT_DIR,
-        text=True,
-        encoding="utf-8",
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-    )
-    assert proc.stdout  # for typing
-    for line in proc.stdout:
-        print(line, end="")
-    proc.wait()
-
-    if check and proc.returncode:
-        print(f"❌  command failed with code {proc.returncode}")
-        sys.exit(proc.returncode)
-    return proc.returncode
+# Color-coded output
+def color(msg, code):
+    print(f"\033[{code}m{msg}\033[0m")
 
 
-def git_changes_staged() -> bool:
-    """Return *True* if there is anything staged for commit."""
-    rc = subprocess.call(
-        ["git", "diff", "--cached", "--quiet"],
-        cwd=PROJECT_DIR,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
-    return rc != 0  # non‑zero means “there are differences”
+def run_command(command, name):
+    print(f"Running {name}...")
+    try:
+        subprocess.run(command, shell=True, check=True)
+        color(f"PASS: {name} succeeded.\n", "32")
+    except subprocess.CalledProcessError as e:
+        color(f"FAIL: {name} failed.\n", "31")
+        print(e)
 
 
-def main() -> None:
-    os.chdir(PROJECT_DIR)
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "paths",
-        nargs="*",
-        default=["."],
-        help="Specific paths to format/lint (default: whole repo).",
-    )
-    parser.add_argument(
-        "-n",
-        "--dry-run",
-        action="store_true",
-        help="Show what would change without modifying files.",
-    )
-    parser.add_argument(
-        "-c",
-        "--commit",
-        nargs="?",
-        const="chore: auto‑format & lint fixes",
-        metavar='"msg"',
-        help="Stage and commit with optional message.",
-    )
-    args = parser.parse_args()
-
-    # 1️⃣  Black
-    black_cmd = [sys.executable, "-m", "black", *args.paths]
-    if args.dry_run:
-        black_cmd.insert(black_cmd.index("black") + 1, "--check")
-        black_cmd.insert(black_cmd.index("--check") + 1, "--diff")
-    run(black_cmd)
-
-    # 2️⃣  isort
-    isort_cmd = [sys.executable, "-m", "isort", *args.paths]
-    if args.dry_run:
-        isort_cmd += ["--check-only", "--diff"]
-    run(isort_cmd)
-
-    # 3️⃣  flake8 (always run, even in dry‑run)
-    run([sys.executable, "-m", "flake8", *args.paths], check=False)
-
-    # 4️⃣  pre‑commit hooks
-    if args.dry_run:
-        print("ℹ️  Dry‑run: skipping pre‑commit hook execution.")
-    else:
-        run([sys.executable, "-m", "pre_commit", "run", "--all-files"], check=False)
-
-    # stop here if no writes happened
-    if args.dry_run:
-        print("\n✅ Dry‑run complete — no files modified.")
+def lint_yaml():
+    repo_root = Path(".")
+    all_yaml_files = [
+        str(p) for p in repo_root.rglob("*.yaml") if p.name not in YAML_WHITELIST and ".venv" not in str(p)
+    ]
+    if not all_yaml_files:
+        color("PASS: No YAML files to lint.", "32")
         return
+    run_command(f"yamllint {' '.join(all_yaml_files)}", "YAML Lint")
 
-    # 5️⃣  Stage everything that changed
-    run(["git", "add", *args.paths])
 
-    # 6️⃣  Commit (optional)
-    if args.commit:
-        if git_changes_staged():
-            run(["git", "commit", "-m", args.commit])
-            print("✅ Changes committed.")
-        else:
-            print("ℹ️  No changes to commit.")
+def main():
+    run_command("black .", "Black")
+    run_command("isort .", "Isort")
+    run_command("ruff check .", "Ruff")
+    run_command("autoflake --remove-unused-variables --in-place --recursive .", "Autoflake")
+    lint_yaml()
 
 
 if __name__ == "__main__":

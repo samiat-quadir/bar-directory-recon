@@ -3,8 +3,10 @@ import unittest
 <<<<<<< HEAD
 # Import from proper package path
 from universal_recon.utils.recon_trend_tracker import analyze_trends
+
 =======
 from utils.recon_trend_tracker import analyze_trends
+
 >>>>>>> bf5b0be (🧽 Fix all Flake8 + formatting issues across universal_recon/)
 
 mock_summary_past = {

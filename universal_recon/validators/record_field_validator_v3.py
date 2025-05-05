@@ -10,7 +10,6 @@ def run_field_validators(fieldmap, verbose=False):
             continue
 
 
-
 def run_analysis(records=None, config=None):
     if records is None:
         records = [{"type": "email", "value": "test@example.com", "rank": 1, "plugin": "test"}]

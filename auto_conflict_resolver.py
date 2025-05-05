@@ -1,13 +1,17 @@
 import subprocess
 import sys
 
+
 def get_conflicted_files():
     """Get a dynamic list of all conflicted files."""
     result = subprocess.run(
         ["git", "diff", "--name-only", "--diff-filter=U"],
-        capture_output=True, text=True, check=True
+        capture_output=True,
+        text=True,
+        check=True,
     )
     return result.stdout.strip().splitlines()
+
 
 def resolve_file(file, primary_strategy, fallback_strategy):
     """Attempt to resolve conflicts with primary strategy first, fallback if fails."""
@@ -24,6 +28,7 @@ def resolve_file(file, primary_strategy, fallback_strategy):
             sys.exit(1)
     subprocess.run(["git", "add", file], check=True)
 
+
 def resolve_conflicts(primary_strategy="ours", fallback_strategy="theirs"):
     conflicted_files = get_conflicted_files()
 
@@ -38,6 +43,7 @@ def resolve_conflicts(primary_strategy="ours", fallback_strategy="theirs"):
 
     print(f"🎉 Successfully resolved all conflicts using '{primary_strategy}' with fallback to '{fallback_strategy}'.")
     print("\nNext step: run 'git rebase --continue' to finalize your rebase.")
+
 
 if __name__ == "__main__":
     resolve_conflicts()

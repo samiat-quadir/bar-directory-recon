@@ -20,7 +20,6 @@ def score_fieldmap(fieldmap_path: str, verbose: bool = False) -> dict:
 
     fieldmap["score_summary"] = {"field_score": round(score, 2)}
 
-
     if verbose:
         print(f"[✓] Fieldmap scored: {fieldmap_path} → {score:.2f}")
 

@@ -1,7 +1,9 @@
 import os
+
 <<<<<<< HEAD
 =======
 import smtplib
+
 >>>>>>> 3ccf4fd (Committing all changes)
 import sys
 from datetime import datetime

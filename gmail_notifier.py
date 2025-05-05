@@ -15,7 +15,6 @@ RECIPIENT_EMAIL = "samq@damg.com"
 CC_EMAILS = ["jasmin@damg.com", "sam.quadir@gmail.com"]
 
 
-
 def load_gmail_credentials():
     """Load Gmail credentials from the JSON token file."""
     if not os.path.exists(GMAIL_TOKEN_PATH):

@@ -29,7 +29,6 @@ def cleanup_old_files():
     print(f"✅ Cleanup complete. Removed {removed} old files.")
 
 
-
 if __name__ == "__main__":
     logger.info("Starting cleanup process...")
     cleanup_old_files()

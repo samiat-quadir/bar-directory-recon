@@ -3,9 +3,7 @@
 import json
 
 
-def collect_site_schema(
-    site_name: str, output_dir: str = "output/fieldmap", verbose: bool = False
-) -> str:
+def collect_site_schema(site_name: str, output_dir: str = "output/fieldmap", verbose: bool = False) -> str:
     """
     Collects a fieldmap schema for a given site. This mock is a placeholder.
     In production, this should trigger whatever recon/scraping pipeline is active.

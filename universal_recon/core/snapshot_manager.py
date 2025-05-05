@@ -5,7 +5,6 @@ from datetime import datetime
 from pathlib import Path
 
 
-
 class SnapshotArchiver:
     def __init__(self, matrix_path="output/schema_matrix.json", archive_dir="output/archive/"):
         self.matrix_path = Path(matrix_path)

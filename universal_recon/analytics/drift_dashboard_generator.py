@@ -23,11 +23,7 @@ def generate_html(status_data, output_path="output/drift_dashboard.html"):
     for site, details in status_data.items():
         health = details.get("site_health", "unknown")
         drift = "Yes" if details.get("validator_drift") else "No"
-        plugins = (
-            ", ".join(details.get("plugins_removed", []))
-            if details.get("plugins_removed")
-            else "None"
-        )
+        plugins = ", ".join(details.get("plugins_removed", [])) if details.get("plugins_removed") else "None"
         color = BADGE_COLORS.get(health, "#bdc3c7")  # default: gray
 
         rows.append(
@@ -81,9 +77,7 @@ def generate_html(status_data, output_path="output/drift_dashboard.html"):
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Generate the Drift Dashboard from site status data"
-    )
+    parser = argparse.ArgumentParser(description="Generate the Drift Dashboard from site status data")
     parser.add_argument(
         "--status-path",
         default="output/output_status.json",

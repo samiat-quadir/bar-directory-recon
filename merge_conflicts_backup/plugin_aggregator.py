@@ -7,12 +7,8 @@ from pathlib import Path
 
 <<<<<<< HEAD
 =======
-from universal_recon.core.report_printer import (
-    print_audit,
-    print_health,
-    print_summary,
-    print_trend,
-)
+from universal_recon.core.report_printer import print_audit, print_health, print_summary, print_trend
+
 >>>>>>> b46510c (✅ Update submodule bar-recon-clean after rebase)
 
 

@@ -29,9 +29,7 @@ def load_environment():
     else:
         available = [p.name for p in project_root.glob(".env*")]
         raise FileNotFoundError(
-            "No .env file found!\n"
-            f"Tried: {env_specific.name} and {env_default.name}\n"
-            f"Available: {available}"
+            "No .env file found!\n" f"Tried: {env_specific.name} and {env_default.name}\n" f"Available: {available}"
         )
 
     # Load and report

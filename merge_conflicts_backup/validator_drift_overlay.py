@@ -5,7 +5,6 @@ from datetime import datetime
 from pathlib import Path
 
 
-
 def run_overlay(
     matrix_path="output/schema_matrix.json",
     output_html="output/validator_drift_overlay.html",

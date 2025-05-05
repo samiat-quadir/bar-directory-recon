@@ -3,7 +3,6 @@ import os
 from typing import Dict, List
 
 
-
 def run_batch_sites(site_names: List[str], output_dir: str = "output/reports") -> Dict[str, Dict]:
     """TODO: Add docstring."""
     aggregate = {}

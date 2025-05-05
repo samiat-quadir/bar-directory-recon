@@ -1,15 +1,18 @@
 <<<<<<< HEAD
 import logging
+
 =======
 <<<<<<< HEAD
 """Manage cleanup of log files and temporary data."""
 >>>>>>> 3ccf4fd (Committing all changes)
 import os
 from datetime import datetime, timedelta
+
 <<<<<<< HEAD
 
 from env_loader import load_environment
 from project_path import set_root_path
+
 =======
 from pathlib import Path
 
@@ -67,25 +70,25 @@ def cleanup_old_files():
 
 def archive_logs(archive_dir: str = "logs/archive") -> None:
     """Archive logs that shouldn't be deleted yet.
-    
+
     Args:
         archive_dir: Directory to store archived logs
     """
     archive_path = Path(archive_dir)
     archive_path.mkdir(parents=True, exist_ok=True)
-    
+
     date_suffix = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     log_dir = Path("logs")
-    
+
     if not log_dir.exists():
         logger.warning("Log directory does not exist, nothing to archive")
         return
-        
+
     archived = 0
     for log_file in log_dir.glob("*.log"):
         if log_file.name == "cleanup_report.log":
             continue
-        
+
         archive_name = f"{log_file.stem}_{date_suffix}{log_file.suffix}"
         try:
             shutil.move(str(log_file), str(archive_path / archive_name))
@@ -93,7 +96,7 @@ def archive_logs(archive_dir: str = "logs/archive") -> None:
             logger.info(f"Archived: {log_file.name} -> {archive_name}")
         except Exception as e:
             logger.error(f"Failed to archive {log_file}: {e}")
-    
+
     logger.info(f"✅ Archive complete. Moved {archived} files to {archive_dir}")
 =======
 

@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 =======
 import argparse
+
 >>>>>>> 3ccf4fd (Committing all changes)
 import json
 from pathlib import Path

@@ -18,12 +18,11 @@ TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 LOG_FILE = "gmail_auth.log"
 
-logging.basicConfig(
-)
+logging.basicConfig()
 
 
 def authenticate_gmail():
-"""TODO: Add docstring."""
+    """TODO: Add docstring."""
     creds = None
     try:
         if os.path.exists(TOKEN_PATH):
@@ -49,7 +48,7 @@ def authenticate_gmail():
 
 
 def revoke_token():
-"""TODO: Add docstring."""
+    """TODO: Add docstring."""
     try:
         if os.path.exists(TOKEN_PATH):
             os.remove(TOKEN_PATH)

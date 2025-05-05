@@ -1,9 +1,11 @@
 import os
 import sys
+
 <<<<<<< HEAD
 from base64 import urlsafe_b64encode
 from datetime import datetime
 from email.message import EmailMessage
+
 =======
 >>>>>>> 3ccf4fd (Committing all changes)
 
@@ -15,6 +17,7 @@ if PARENT_DIR not in sys.path:
 <<<<<<< HEAD
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+
 =======
 from project_path import set_root_path
 
@@ -29,6 +32,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
 from env_loader import load_environment
+
 >>>>>>> 3ccf4fd (Committing all changes)
 
 from env_loader import load_environment

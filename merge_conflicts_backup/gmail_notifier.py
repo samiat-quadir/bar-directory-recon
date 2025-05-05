@@ -9,8 +9,10 @@ import os
 from email.mime.text import MIMEText
 
 from dotenv import load_dotenv
+
 <<<<<<< HEAD
 from google.auth.transport.requests import Request
+
 =======
 >>>>>>> 3ccf4fd (Committing all changes)
 from google.oauth2.credentials import Credentials

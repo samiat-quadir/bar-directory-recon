@@ -62,4 +62,3 @@ Auto-embed suppression % tooltips if validator plugins are lost
 
 ✅ Phase 26 Summary
 The drift dashboard makes it easy to spot regressions across hundreds of bar directories automatically, fueling CI triggers and badge alerts for Phase 27.
-

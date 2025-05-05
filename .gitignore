@@ -37,6 +37,13 @@ var/
 # Do not track sensitive configuration files (including environment files)
 config.json
 *.env
+.env*
+
+# Prevent conflicts for environment and cache files
+.env*
+.venv311/
+.pytest_cache/
+.coverage
 
 # =====================================================
 # Third-Party Binaries
@@ -66,3 +73,28 @@ archives/
 auto_pruned/
 archive/
 env_loader.py
+
+# Virtual Environments
+.venv*/
+.env*
+.venv311/
+
+# Backups / Conflicts / Snapshots
+*_backup/
+merge_conflicts_backup/
+mega_memory.yaml
+
+# Python internals
+__pycache__/
+*.py[cod]
+
+# Virtual environments and Python internals
+.venv*/
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.venv311/
+
+# Copilot agent relay
+copilot_agent_relay.md

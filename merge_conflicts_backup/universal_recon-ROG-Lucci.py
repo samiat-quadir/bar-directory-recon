@@ -7,19 +7,24 @@ Outputs JSON recon report + screenshots + logs.
 import json
 import logging
 import os
+
 <<<<<<< HEAD
 =======
 import time
+
 >>>>>>> 3ccf4fd (Committing all changes)
 from datetime import datetime
 
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from selenium import webdriver
+
 <<<<<<< HEAD
 from selenium.common.exceptions import WebDriverException
+
 =======
 from selenium.common.exceptions import TimeoutException, WebDriverException
+
 >>>>>>> 3ccf4fd (Committing all changes)
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By

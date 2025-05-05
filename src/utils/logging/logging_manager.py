@@ -71,9 +71,7 @@ def setup_logger(
 
 def setup_health_logger() -> logging.Logger:
     """Configure specialized logger for health checks."""
-    return setup_logger(
-        "health_check", os.path.join(DEFAULT_LOG_DIR, "health.log"), level=logging.INFO
-    )
+    return setup_logger("health_check", os.path.join(DEFAULT_LOG_DIR, "health.log"), level=logging.INFO)
 
 
 def setup_audit_logger() -> logging.Logger:

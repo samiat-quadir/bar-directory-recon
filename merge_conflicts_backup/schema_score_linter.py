@@ -1,8 +1,10 @@
 # === analytics/schema_score_linter.py ===
 
 import json
+
 <<<<<<< HEAD
 from pathlib import Path
+
 =======
 import os
 

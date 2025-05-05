@@ -1,0 +1,19 @@
+# .yamllint
+extends: default
+rules:
+  line-length:
+    max: 100
+  comments:
+    level: warning
+
+ignore: |
+  mega_memory.yaml
+  Ai Integration Setup.yaml
+  Ai Project Setup & Automation Roadmap.txt
+  .venv/**
+  .venv311/**
+  universal_recon/bar-recon-clean/**
+  **/docker-compose*.yml
+  **/validation_matrix.yaml
+  **/prefect.yaml
+  **/logging.yaml

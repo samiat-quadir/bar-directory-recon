@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 
 
-
 def archive_previous_matrix():
     src = Path("output/schema_matrix.json")
     if src.exists():

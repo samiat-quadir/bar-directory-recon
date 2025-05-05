@@ -62,6 +62,7 @@ def emit_status_summary(schema_matrix_path, validation_matrix_path, output_path)
         json.dump(status_summary, f, indent=2)
 
     print(f"Status summary written to {output_path}")
+    return status_summary
 
 
 def emit_status(matrix_path, export_path, verbose=False):
