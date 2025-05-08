@@ -94,6 +94,118 @@
 				"kind": "build",
 				"isDefault": true
 			}
+		},
+		{
+			"label": "Switch to ASUS Profile",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"tools/resolve_device_profile.py",
+				"asus"
+			],
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Switch to Work Profile",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"tools/resolve_device_profile.py",
+				"work"
+			],
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Auto-Detect and Apply Profile",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"tools/resolve_device_profile.py"
+			],
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Update GitMo Task Progress",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"tools/update_tracker_gitmo.py",
+				"${input:taskIndex}"
+			],
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Update Python Task Progress",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"tools/update_tracker_python.py",
+				"${input:taskIndex}"
+			],
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Update ADA Task Progress",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"tools/update_tracker_ada.py",
+				"${input:taskIndex}"
+			],
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Update Claude Task Progress",
+			"type": "shell",
+			"command": "${config:python.defaultInterpreterPath}",
+			"args": [
+				"tools/update_tracker_claude.py",
+				"${input:taskIndex}"
+			],
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		}
+	],
+	"inputs": [
+		{
+			"id": "taskIndex",
+			"description": "Task index number to update",
+			"default": "1",
+			"type": "promptString"
 		}
 	]
 }

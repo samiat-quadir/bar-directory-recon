@@ -1,0 +1,59 @@
+Supervisor_relay
+
+
+phase_28_gitmo_signal:
+  date: 2025-05-07
+  from: Supervisor Assistant
+  to: GitMo
+  subject: Phase 28 QA Oversight – Execution Tracker Integration
+
+  summary:
+    context: >
+      Supervisor has reviewed Claude’s `README_phase_28.md` and compared it to the
+      YAML execution tracker used for Phase 28 orchestration. The README is strong
+      for documentation but does not capture internal execution state or progress.
+    decision: >
+      Maintain both: use `README_phase_28.md` for public CI/docs, and
+      `planning/phase_28_execution_tracker.yaml` for real-time task coordination and reporting.
+
+  new_scripts_added:
+    - path: tools/generate_phase_report.py
+      purpose: "Creates readable daily report from execution tracker YAML"
+    - path: tools/phase_execution_checker.py
+      purpose: "Validates expected outputs, CI workflows, and test coverage"
+
+  optional_recommendations:
+    scoped_update_scripts:
+      description: >
+        Create per-assistant YAML updater scripts (e.g. update_tracker_python.py) to mark their
+        tasks as complete in `phase_28_execution_tracker.yaml` safely.
+      benefit: "Prevents role collision, enables modular assistant updates"
+
+    copilot_integration:
+      prompt_example: >
+        "Copilot Agent: Mark 2nd task as complete for ADA in phase_28_execution_tracker.yaml"
+      benefit: "Non-scripted assistants (like Claude) can update tracker via prompt relay"
+
+    automation_trigger:
+      option: "Add generate_phase_report.py to GitHub Actions or Task Scheduler (daily summary)"
+      output: "Export to /logs/phase_28/report_<date>.md"
+
+  implementation_request:
+    - Assign GitMo responsibility to own and validate `planning/phase_28_execution_tracker.yaml`
+    - Confirm write-access model:
+        - [ ] Can GitMo directly patch assistant checkboxes?
+        - [ ] Or should each assistant receive scoped patch scripts?
+    - Optionally generate:
+        - [ ] update_tracker_python.py
+        - [ ] update_tracker_ada.py
+        - [ ] update_tracker_claude.py
+    - Update `.gitignore` and `.pre-commit-config.yaml` if required
+
+  next_actions:
+    - Confirm tracker as live operational file with GitMo
+    - Embed tracker status into GitMo-to-Director relay
+    - Once approved, assign update script scaffold per assistant
+
+  notes_to_gitmo:
+    - I (Supervisor) will remain passive unless QA anomalies or inefficiencies arise
+    - Let me know if any update format, validation policy, or CI integration needs design help

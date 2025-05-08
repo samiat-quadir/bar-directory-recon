@@ -1,0 +1,78 @@
+name: Automated Git Commit Flow
+
+on:
+  schedule:
+    # Run daily at 3am UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    # Allow manual triggering
+    inputs:
+      force_commit:
+        description: 'Force commit even if no changes detected'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  run-auto-commit-flow:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for proper git operations
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Create logs directory
+        run: mkdir -p logs
+
+      - name: Run git auto-commit flow
+        run: python flows/git_auto_commit_flow.py
+        env:
+          # Pass any required environment variables
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Set DEBUG=true to enable debug logging
+          DEBUG: 'false'
+
+      - name: Upload logs as artifacts
+        uses: actions/upload-artifact@v3
+        if: always()  # Upload logs even if the flow fails
+        with:
+          name: flow-logs
+          path: logs/
+          retention-days: 7
+
+      - name: Push changes if needed
+        run: |
+          if [[ -n $(git status -s) || "${{ github.event.inputs.force_commit }}" == "true" ]]; then
+            git config --global user.name "GitHub Actions Bot"
+            git config --global user.email "actions@github.com"
+
+            echo "Changes detected, preparing commit..."
+            git add .
+
+            # Create a useful commit message with timestamp
+            COMMIT_MSG="Auto-commit from scheduled flow [$(date '+%Y-%m-%d %H:%M:%S UTC')]"
+
+            if [[ "${{ github.event.inputs.force_commit }}" == "true" ]]; then
+              COMMIT_MSG="$COMMIT_MSG [FORCED]"
+            fi
+
+            git commit -m "$COMMIT_MSG [skip ci]"
+            git push
+
+            echo "Changes pushed successfully!"
+          else
+            echo "No changes to commit"
+          fi

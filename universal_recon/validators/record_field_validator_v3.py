@@ -2,8 +2,7 @@
 
 
 def run_field_validators(fieldmap, verbose=False):
-    matrix = load_validation_matrix()
-    results = []
+    load_validation_matrix()
     for field in fieldmap.get("fields", []):
         field_name = field.get("name")
         if not field_name:

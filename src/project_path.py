@@ -1,10 +1,9 @@
 import os
-import sys
 
 
 def set_root_path():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.dirname(__file__))
+    os.path.dirname(os.path.abspath(__file__))
+    os.path.abspath(os.path.dirname(__file__))
 
 
 if __name__ == "__main__":

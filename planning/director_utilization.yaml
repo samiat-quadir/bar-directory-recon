@@ -1,0 +1,83 @@
+director_utilization_plan:
+  role: "Project Director & AI Orchestrator"
+
+  primary_responsibilities:
+    - high_level_architecture:
+        description: >
+          Maintain the overarching Phase 28 roadmap, ensuring all deliverables (CI/CD hardening,
+          dashboard hosting, Motion API migration, test expansion) align with strategic goals.
+        activities:
+          - Review progress across Automation and Recon streams
+          - Adjust priorities as blockers arise
+          - Coordinate cross-assistant handoffs
+    - cross_assistant_coordination:
+        description: >
+          Act as the single source of truth, relaying tasks to specialized assistants (GitMo,
+          Claude, ADA, Python) and validating their outputs against project standards.
+        activities:
+          - Triage incoming assistant proposals
+          - Merge and reconcile contradictory advice
+          - Assign each task to the assistant best suited to deliver
+    - CI/CD_strategy_and_review:
+        description: >
+          Design and oversee the GitHub Actions workflows and Prefect flows, including
+          per-PR dashboard previews, health-check gates, and HTML deployment to Pages.
+        activities:
+          - Draft and review workflow YAMLs
+          - Validate CI runs, monitor logs, and troubleshoot failures
+          - Propose enhancements for self-validation steps
+    - documentation_and_knowledge_management:
+        description: >
+          Author and maintain critical docs (README_phase_28.md, onboarding guides,
+          assistant task matrices), and ensure all team members and assistants have
+          up-to-date context.
+        activities:
+          - Draft phase kickoff and closure docs
+          - Keep mega_memory.yaml in sync with reality
+          - Publish ‘how to’ guides for env sync, Copilot prompts, and dashboard testing
+    - risk_monitoring_and_quality_assurance:
+        description: >
+          Define and enforce quality gates around overlay accuracy, test coverage,
+          linting standards, and secret management.
+        activities:
+          - Review test reports, coverage metrics
+          - Validate risk_overlay.json against schema
+          - Ensure docstring and lint policies through pre-commit and CI
+
+  code_and_automation_support:
+    - templating_and_scaffold_generation:
+        description: >
+          Generate Python/YAML stubs (sync_env_files.py, motion_task_via_api.py,
+          flow_runner.yml, dashboard_deploy.yml, test modules) on demand.
+    - advanced_analysis_and_review:
+        description: >
+          Perform deep code reviews, error analysis, and suggest performance/security improvements.
+    - prompt_engineering:
+        description: >
+          Craft precise Copilot Agent prompts and advanced ChatGPT queries to maximize
+          downstream code generation quality.
+
+  collaboration_and_feedback:
+    - regular_syncs:
+        description: >
+          Facilitate weekly “stand-up” summaries and sprint retrospectives across
+          AI assistants and human stakeholders.
+    - question_triage:
+        description: >
+          Surface and prioritize open questions (e.g., PR dashboard hosting, health-check
+          endpoint scope, API migration readiness) and drive them to resolution.
+
+  tools_and_integrations:
+    - GitHub & Copilot Agent
+    - Prefect (local + optional Cloud)
+    - GitHub Actions
+    - Flask & Healthchecks.io
+    - Motion & Gmail APIs
+    - Docker & VS Code Insiders
+
+  outcomes_and_metrics:
+    - Complete Phase 27 merge and tagging (v0.27.0)
+    - Deploy dashboards to GitHub Pages with per-PR previews
+    - Migrate fully to Motion API with no email fallback errors
+    - Achieve ≥90% test coverage on new overlay code
+    - Enforce docstring linting by the end of Phase 28

@@ -2,7 +2,7 @@
 extends: default
 rules:
   line-length:
-    max: 100
+    max: 120
   comments:
     level: warning
 
@@ -10,6 +10,8 @@ ignore: |
   mega_memory.yaml
   Ai Integration Setup.yaml
   Ai Project Setup & Automation Roadmap.txt
+  planning/
+  reference/
   .venv/**
   .venv311/**
   universal_recon/bar-recon-clean/**

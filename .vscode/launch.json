@@ -5,7 +5,7 @@
         {"name":"Python Debugger: Current File","type":"debugpy","request":"launch","program":"${file}","console":"integratedTerminal"},
         {
             "name": "Python: Debug Tests",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "pytest",
             "args": [
@@ -19,7 +19,7 @@
         },
         {
             "name": "Python: Universal Recon",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "src/universal_recon.py",
             "console": "integratedTerminal",
@@ -29,7 +29,7 @@
         },
         {
             "name": "Docker: Debug",
-            "type": "python",
+            "type": "debugpy",
             "request": "attach",
             "connect": {
                 "host": "localhost",

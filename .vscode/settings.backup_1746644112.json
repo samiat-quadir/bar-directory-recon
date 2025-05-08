@@ -1,6 +1,6 @@
 {
-  "python.pythonPath": "${workspaceFolder}/.venv311/Scripts/python.exe",
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv311/Scripts/python.exe",
+  "python.pythonPath": ".venv/Scripts/python.exe",
+  "python.defaultInterpreterPath": "./.venv311/Scripts/python.exe",
   "editor.formatOnSave": true,
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 1000,
@@ -30,9 +30,7 @@
   "github.copilot.chat.agent.thinkingTool": true,
   "github.copilot.chat.experimentalFeatures": true,
   "github.copilot.chat.enabled": true,
-  "github.copilot.enable": {
-    "default": true
-  },
+  "github.copilot.enable": { "default": true },
   "github.copilot.agentMode": true,
   "python.analysis.extraPaths": [
     "./src",
@@ -64,6 +62,5 @@
       ]
     }
   },
-  "terminal.integrated.defaultProfile.windows": "PowerShell (.venv311)",
-  "gitmo_host": "work"
+  "terminal.integrated.defaultProfile.windows": "PowerShell (.venv311)"
 }

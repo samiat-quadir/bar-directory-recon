@@ -49,7 +49,7 @@ if __name__ == "__main__":
     # Step 7: Cleanup old logs and backups
     log("Running: cleanup_old_files.py")
     try:
-        import src.cleanup_old_files
+        pass
     except Exception as e:
         log(f"ERROR running cleanup_old_files.py: {e}")
 

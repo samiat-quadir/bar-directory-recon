@@ -1,0 +1,51 @@
+# universal_recon/validators/validator_tiers.yaml
+
+bar_number_check:
+  tier: critical
+  suppression_factor: 0.8
+  suppression_reason: "Bar number plugin missing; attorney verification failed."
+
+email_validator:
+  tier: warning
+  suppression_factor: 0.9
+  suppression_reason: "Contact email plugin removed; user cannot verify outreach method."
+
+field_completeness_check:
+  tier: warning
+  suppression_factor: 0.95
+  suppression_reason: "Key field detection plugin missing; field count uncertain."
+
+domain_metadata_check:
+  tier: info
+  suppression_factor: 1.0
+  suppression_reason: "Domain tags incomplete; only cosmetic."
+
+form_plugin_check:
+  tier: warning
+  suppression_factor: 0.9
+  suppression_reason: "Contact form plugin removed; accessibility reduced."
+
+social_link_check:
+  tier: info
+  suppression_factor: 1.0
+  suppression_reason: "Social presence check disabled; informational only."
+
+firm_name_validator:
+  tier: warning
+  suppression_factor: 0.9
+  suppression_reason: "Firm name matching plugin lost; entity matching weakened."
+
+license_lookup_check:
+  tier: critical
+  suppression_factor: 0.75
+  suppression_reason: "Licensing check disabled; official bar data cannot be validated."
+
+template_health_score:
+  tier: warning
+  suppression_factor: 0.95
+  suppression_reason: "Template completeness plugins disabled; data template quality unknown."
+
+ai_template_indexer:
+  tier: info
+  suppression_factor: 1.0
+  suppression_reason: "AI template parser unavailable; minor visual loss only."

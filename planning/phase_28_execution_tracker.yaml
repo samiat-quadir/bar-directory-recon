@@ -1,0 +1,74 @@
+phase_28_execution_tracker:
+  date: 2025-05-07
+  workspace: Work Desktop
+  environment: venv311
+  primary_orchestrator: GitMo
+  assistants_active:
+  - GitMo
+  - Python
+  - ADA
+  - Claude
+  task_status:
+    GitMo: 0
+    Python: 2
+    ADA: 3
+    Claude: 4
+  assistant_roles:
+    GitMo:
+      purpose: Repo + CI pipeline controller
+      critical_tasks:
+      - 'Merge PR: `feature/phase-28-automation-setup`'
+      - 'Run: `python tools/sync_env.py` (ASUS + Work Desktop)'
+      - 'Execute: `python tools/lint_helpers.py`'
+      - 'Review: `logs/lint_report.log`'
+      - 'Trigger: `.github/workflows/flow_runner.yml` + `dashboard_deploy.yml`'
+      - 'Push new outputs/logs/docs to: `feature/phase-28-dashboard-init`'
+    Python:
+      purpose: Code delivery & test coverage
+      critical_tasks:
+      - task: Finalize `tools/sync_env.py`
+        notes: Must include host detection, timestamp logging
+      - task: Patch `plugin_usage_diff.py`
+        args: '`--before`, `--after`, `--export-json`; wire into `main.py`'
+      - task: Write test files
+        subtasks:
+        - '`test_risk_overlay_emitter.py`'
+        - '`test_drift_dashboard_generator.py`'
+        - '`test_plugin_usage_diff.py`'
+    ADA:
+      purpose: Validator YAML logic & test support
+      critical_tasks:
+      - task: Extend `validator_tiers.yaml`
+        notes: Add 'suppression_reason' per validator
+      - Draft test expectations for `risk_overlay_emitter.py`
+      - (Optional) Begin `validator_tiers.schema.yaml` for future schema linting
+    Claude:
+      purpose: Documentation & overlay integration
+      critical_tasks:
+      - Finalize `README_phase_27.md` (CI/test summary)
+      - Scaffold `README_phase_28.md` (start date, dashboard links, scope)
+      - task: Patch `drift_dashboard_generator.py`
+        notes: Enable tooltip render of `suppression_reason`
+      - 'Draft test: `test_drift_dashboard_generator.py`'
+  protocols:
+    control_flow: "Director \u2192 GitMo \u2192 Assistant"
+    response_model: Only report completions or blockers
+    scope_enforcement: No assistant acts outside assigned bounds
+  today's_schedule:
+    morning:
+    - 'GitMo: PR merge, env sync, lint tools, trigger workflows'
+    midday:
+    - 'Python: sync_env.py + plugin_diff updates + test drafts'
+    afternoon:
+    - 'ADA: Extend YAML + test specs'
+    evening:
+    - 'Claude: 2 README files + dashboard patch + test file'
+  directives:
+    single_source_of_truth: This YAML governs all actions in Phase 28
+    escalation_path: "CI failures \u2192 GitMo \u2192 Director"
+    assistant_coordination: No direct assistant-to-assistant communication
+  reporting_format:
+    each_assistant:
+    - checkboxes for deliverables
+    - update on completion or blocker
+    - 'no status verbosity: output or issue only'

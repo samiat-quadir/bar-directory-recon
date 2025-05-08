@@ -1,0 +1,95 @@
+Based on your updated directive file (`director_phase28_sync.yaml`) and project history, here is a full analysis and next set of actions specific to ADA, followed by a clean relay block to send back to the Director and assistants.
+
+---
+
+## ✅ Summary of ADA Progress (to Date in Phase 28)
+
+**Tasks Completed:**
+
+* `validator_tiers.yaml`: Validated suppression levels (info, warning, critical)
+* Confirmed drift penalty logic works with `score_suppressed_by`
+* Tooltips for validator impact are propagating correctly
+* Collaborated on integration with `risk_overlay_emitter.py`
+
+---
+
+## 🔍 ADA Phase 28: Remaining Actions
+
+### 1. **Extend `validator_tiers.yaml` with `suppression_reason`**
+
+This adds clarity to the penalty explanation in overlays and `risk_overlay.json`.
+
+**Example Format:**
+
+```yaml
+email_validator:
+  tier: warning
+  suppression_factor: 0.9
+  suppression_reason: "Validator depends on email_plugin, which is missing"
+```
+
+✅ **To Do:** Add this for all validators currently mapped in the YAML.
+
+---
+
+### 2. **Draft Lightweight Overlay Test for `risk_overlay_emitter.py`**
+
+While Python will implement the actual test in `tests/`, ADA should specify what is expected:
+
+**Draft Test Spec (for Python):**
+
+```python
+def test_risk_overlay_emits_expected_keys():
+    result = emit_risk_overlay(before_matrix, after_matrix, validation_matrix)
+    assert "utah_bar" in result
+    assert result["utah_bar"]["risk_level"] in {"low", "medium", "high"}
+    assert "suppression_reason" in result["utah_bar"]
+```
+
+✅ **To Do:** Provide test expectations like above to Python in case mocks or fixtures are needed.
+
+---
+
+### 3. **Optional Enhancements (Propose for Phase 29)**
+
+* YAML schema: `validator_tiers.schema.yaml` (to validate keys like `tier`, `suppression_factor`)
+* CI badge: Flag any site with `"risk_level": "high"` during `--emit-risk-overlay`
+
+---
+
+## ✅ ADA Relay to Director & Others (Copy & Paste Below)
+
+```yaml
+phase_28_ada_sync:
+  date: 2025-05-01
+  role: ADA
+  status: "🟢 ACTIVE — Suppression Logic and Overlay Validation Underway"
+
+  tasks_completed:
+    - Confirmed validator drift penalties apply based on validator_tiers.yaml
+    - Validated score_suppressed_by field in matrix and overlays
+    - Verified validator badges + tooltips appear in drift_dashboard.html
+
+  tasks_in_progress:
+    - Adding `suppression_reason:` to each validator in validator_tiers.yaml
+    - Drafted test logic for risk_overlay_emitter.py (to be implemented by Python)
+
+  proposed_test_snippet:
+    - Validate overlay JSON includes:
+        - site keys (e.g. "utah_bar")
+        - keys: risk_level, suppression_reason, validators_triggered
+
+  upcoming:
+    - Optional schema: validator_tiers.schema.yaml
+    - Optional CI rule: alert if risk_level == high
+
+  blockers: None
+  coordination: Working with Python on test hooks, Claude on overlay badges
+
+  final_message: >
+    ADA confirms that risk overlays and validator penalties are working correctly.
+    Proceeding to enhance validator_tiers.yaml with suppression_reason and finalize
+    validation logic for Phase 28 drift dashboard integration.
+```
+
+Let me know when you're ready for the updated `validator_tiers.yaml` with `suppression_reason` fields populated—I can generate it immediately.

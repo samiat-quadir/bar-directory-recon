@@ -1,0 +1,86 @@
+Based on the latest `director_phase28_sync.yaml` relay and the current state of our work, here’s a complete response that addresses both your immediate question (“What should I do next?”) and the next steps I (Claude) will now undertake:
+
+---
+
+### ✅ Summary of Current Phase 28 Progress
+
+* **Phase 27 is finalized**, including test/lint integration, docstrings, and hotfix restoration.
+* **Phase 28 is underway**, focused on environment syncing, CI/CD workflow, overlay enhancements, Motion API migration, and test expansion.
+* Claude's tasks from Phase 27 (badge rendering, HTML overlays, risk emitter) are complete and verified.
+* You have aligned the workstream across assistants and ensured cross-device parity (Work Desktop + ASUS).
+
+---
+
+### 📌 Claude's Immediate Responsibilities (based on `director_phase28_sync.yaml`)
+
+#### 1. Finalize `README_phase_27.md`
+
+* ✅ Status: Nearly complete.
+* 🔄 Action: I will drop the **final copy** with:
+
+  * CI testing strategy (Docker + local)
+  * pytest usage notes
+  * docstring lint logic
+  * overlay validation summary
+
+#### 2. Bootstrap `README_phase_28.md`
+
+* 🎯 Goal: Scope out dashboard deployment, Motion API work, `.env` sync, and CI-driven HTML preview logic.
+* 🟢 I will provide the scaffolded draft right after the README for 27.
+
+#### 3. Integrate `risk_overlay.json` hook into `drift_dashboard_generator.py`
+
+* 🔗 Status: HTML already shows badges from `validator_tiers.yaml`.
+* 🔄 Update: I’ll inject `risk_overlay.json` consumption to:
+
+  * show **tier badge**, **reason**, and **risk level** per site.
+  * include tooltips from `suppression_reason` when ADA finishes the YAML patch.
+
+#### 4. Write pytest for `drift_dashboard_generator.py`
+
+* 🧪 Status: Pending, delegated from Python after overlay integration is complete.
+* ✅ I will drop this test file in `universal_recon/tests/test_drift_dashboard_generator.py`.
+
+---
+
+### 🧭 What *You* Should Do Next (Director Guidance)
+
+Here’s what I recommend you focus on now:
+
+#### 🔄 Merge Tracking + Environment Sanity
+
+1. **Review the open PRs from Copilot**:
+
+   * `sync_env.py`
+   * `motion_task_via_api.py`
+   * GitHub Action workflows (`flow_runner.yml`, `dashboard_deploy.yml`)
+
+2. **Commit and verify `.env.template`**
+
+   * Cross-check that its keys match both `.env.work` and `.env.asus`
+   * I can help you generate a validator for these if needed.
+
+3. **Coordinate with Python on `plugin_usage_diff.py`**
+
+   * It needs to be parameterized with `--before` and `--after`
+   * Once patched, I can use it to enrich the risk dashboard.
+
+4. **Ping ADA about `suppression_reason`**
+
+   * Confirm the YAML format (she’s expected to finalize that soon)
+   * Once it lands, I’ll propagate it to `risk_overlay.json` and the HTML overlays.
+
+---
+
+### 📤 Immediate Drops From Claude
+
+I will now generate and post the following, in separate markdowns for easy saving:
+
+1. `README_phase_27.md` (final)
+2. `README_phase_28.md` (scaffold + assignments)
+3. `test_drift_dashboard_generator.py`
+4. `drift_dashboard_generator.py` update with `risk_overlay.json` integration (if not already patched)
+
+Would you like me to include `risk_overlay.schema.json` for future CI schema validation as well?
+
+Let me know if you want a YAML schema validator for suppression or overlays. Otherwise, I’ll begin the drops now.

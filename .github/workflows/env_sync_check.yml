@@ -1,0 +1,139 @@
+name: Environment File Validation
+
+on:
+  push:
+    branches: [ main, master, feature/*, develop ]
+    paths:
+      - '.env.template'
+  pull_request:
+    branches: [ main, master, develop ]
+    paths:
+      - '.env.template'
+  workflow_dispatch:
+    # Allow manual triggering
+
+jobs:
+  validate-env-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Create logs directory
+        run: mkdir -p logs
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install python-dotenv pyyaml
+
+      - name: Validate environment files
+        id: validate
+        run: |
+          echo "Starting environment file validation..." | tee -a logs/env_validation.log
+
+          if [ ! -f .env.template ]; then
+            echo "Error: .env.template file not found!" | tee -a logs/env_validation.log
+            exit 1
+          fi
+
+          # Create Python script for validation
+          cat > env_validator.py << 'EOF'
+          #!/usr/bin/env python
+          """Environment File Validator.
+
+          This script validates that all environment variables in .env.template
+          are present in example files and reports any missing keys.
+          """
+          import os
+          import re
+          from pathlib import Path
+
+          def get_env_vars(file_path):
+              """Extract environment variable keys from a file."""
+              if not Path(file_path).exists():
+                  print(f"Warning: File {file_path} not found")
+                  return set()
+
+              vars = set()
+              with open(file_path, 'r') as f:
+                  for line in f:
+                      line = line.strip()
+                      # Skip comments and empty lines
+                      if not line or line.startswith('#'):
+                          continue
+                      # Extract variable name
+                      match = re.match(r'^([A-Za-z0-9_]+)=', line)
+                      if match:
+                          vars.add(match.group(1))
+              return vars
+
+          # Get all env files
+          template_vars = get_env_vars('.env.template')
+          print(f"Found {len(template_vars)} variables in .env.template")
+
+          # Check if example files exist
+          example_files = [f for f in os.listdir('.') if f.startswith('.env.') and f != '.env.template']
+
+          if not example_files:
+              print("No .env.* files found other than .env.template")
+              print("Please create .env.work and .env.asus files")
+              exit(1)
+
+          print(f"Found {len(example_files)} environment files to check: {', '.join(example_files)}")
+
+          # Check each file
+          has_errors = False
+          for env_file in example_files:
+              file_vars = get_env_vars(env_file)
+              missing_vars = template_vars - file_vars
+
+              if missing_vars:
+                  has_errors = True
+                  print(f"\nERROR: {env_file} is missing {len(missing_vars)} variables:")
+                  for var in sorted(missing_vars):
+                      print(f"  - {var}")
+              else:
+                  print(f"\n✅ {env_file} contains all required variables")
+
+              # Check for extra variables
+              extra_vars = file_vars - template_vars
+              if extra_vars:
+                  print(f"\nWARNING: {env_file} contains {len(extra_vars)} extra variables:")
+                  for var in sorted(extra_vars):
+                      print(f"  - {var}")
+
+          exit(1 if has_errors else 0)
+          EOF
+
+          # Make script executable
+          chmod +x env_validator.py
+
+          # Run validation
+          if python env_validator.py 2>&1 | tee -a logs/env_validation.log; then
+            echo "All environment files are valid!" | tee -a logs/env_validation.log
+            echo "env_valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "Environment file validation failed!" | tee -a logs/env_validation.log
+            echo "env_valid=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload validation logs
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: env-validation-logs
+          path: logs/env_validation.log
+          retention-days: 7
+
+      - name: Fail if validation failed
+        if: steps.validate.outputs.env_valid != 'true'
+        run: |
+          echo "::error::Environment file validation failed! Check logs for details."
+          exit 1

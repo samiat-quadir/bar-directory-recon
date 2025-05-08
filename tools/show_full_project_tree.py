@@ -1,6 +1,5 @@
 # tools/show_full_project_tree.py
 
-import os
 from pathlib import Path
 
 

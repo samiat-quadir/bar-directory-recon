@@ -1,5 +1,4 @@
 import subprocess
-import sys
 
 TARGET_DIR = "."
 # Exclude virtual environments and build artifacts

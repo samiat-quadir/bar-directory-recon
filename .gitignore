@@ -98,3 +98,7 @@ __pycache__/
 
 # Copilot agent relay
 copilot_agent_relay.md
+
+# Phase 28 additions - ignore zero-byte python executable and python directory
+python/
+python

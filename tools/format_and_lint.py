@@ -1,7 +1,6 @@
 # tools/format_and_lint.py
 
 import subprocess
-import sys
 from pathlib import Path
 
 # Paths to exclude from YAML linting
