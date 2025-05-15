@@ -11,3 +11,6 @@
 mega_memory.yaml merge=ours
 merge_conflicts_backup/** merge=ours
 .temp_conflicts/** merge=ours
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.bin filter=lfs diff=lfs merge=lfs -text
