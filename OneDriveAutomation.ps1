@@ -1,6 +1,75 @@
 <#
 .SYNOPSIS
-OneDriveAutomation.ps1 - Comprehensive management script for OneDrive-based development environments.
+OneDriveAutomation.ps1 - Comprparam (
+    [Parameter(Mandatory = $false)]
+    [ValidateSet("All", "ResolvePath", "StandardizeFolders", "SyncEnvironment", "GitCleanup", "ScanSecrets", "ScheduleTasks")]
+    [string[]]$Tasks = @("All"),
+
+    [Parameter(Mandatory = $false)]
+    [string]$OneDrivePath,
+
+    [Parameter(Mandatory = $false)]
+    [string]$PrimaryRepoPath = "C:\bar-directory-recon",
+
+    [Parameter(Mandatory = $false)]
+    [string]$DeviceId,
+
+    [Parameter(Mandatory = $false)]
+    [switch]$WhatIf
+)
+
+# Load device path resolver if exists
+$pathResolverScript = Join-Path -Path $PSScriptRoot -ChildPath "tools\DevicePathResolver.ps1"
+if (Test-Path $pathResolverScript) {
+    . $pathResolverScript
+    Write-Host "Cross-device path resolver loaded." -ForegroundColor Green
+
+    # Set OneDrivePath if not provided
+    if (-not $OneDrivePath) {
+        $OneDrivePath = Get-OneDrivePath
+        Write-Host "Automatically detected OneDrive path: $OneDrivePath" -ForegroundColor Green
+    }
+
+    # Set DeviceId if not provided
+    if (-not $DeviceId) {
+        $DeviceId = $env:COMPUTERNAME
+        Write-Host "Using computer name as device ID: $DeviceId" -ForegroundColor Green
+
+        # Register device if not already registered
+        $configFile = Join-Path -Path (Get-ProjectRootPath) -ChildPath "config\device_config.json"
+        if (-not (Test-Path $configFile)) {
+            Write-Host "This device is not registered. Registering device information..." -ForegroundColor Yellow
+            Register-CurrentDevice
+        }
+    }
+} else {
+    # Fallback to hardcoded path if resolver not available
+    if (-not $OneDrivePath) {
+        # Try common paths
+        $possiblePaths = @(
+            "C:\Users\samq\OneDrive - Digital Age Marketing Group",
+            "C:\Users\samqu\OneDrive - Digital Age Marketing Group",
+            "C:\Users\$env:USERNAME\OneDrive - Digital Age Marketing Group"
+        )
+
+        foreach ($path in $possiblePaths) {
+            if (Test-Path $path) {
+                $OneDrivePath = $path
+                break
+            }
+        }
+
+        # If still not set, use a default
+        if (-not $OneDrivePath) {
+            $OneDrivePath = "C:\Users\$env:USERNAME\OneDrive - Digital Age Marketing Group"
+            Write-Warning "Could not detect OneDrive path automatically. Using default: $OneDrivePath"
+        }
+    }
+    # Set DeviceId if not provided
+    if (-not $DeviceId) {
+        $DeviceId = $env:COMPUTERNAME
+    }
+}nt script for OneDrive-based development environments.
 
 .DESCRIPTION
 This script automates and standardizes development environments across multiple devices by:

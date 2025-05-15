@@ -1,0 +1,13 @@
+{
+    "DeviceId":  "SALESREP",
+    "Username":  "samq",
+    "Settings":  {
+                     "DefaultEditor":  "code"
+                 },
+    "Paths":  {
+                  "ProjectRoot":  "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon",
+                  "OneDrive":  "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group"
+              },
+    "FirstRegistered":  "2025-05-15T14:18:53.4814365-04:00",
+    "LastUpdated":  "2025-05-15T14:18:53.4814365-04:00"
+}

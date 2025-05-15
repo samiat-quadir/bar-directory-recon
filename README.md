@@ -17,10 +17,46 @@ This automation solution addresses common challenges with using OneDrive for dev
 
 - Windows 10/11 with PowerShell 5.1 or higher
 - OneDrive installed and configured
-- Python 3.6+ (for secrets scanning)
+- Python 3.11+ (for Python automation and scripts)
 - Administrator rights (for scheduled tasks)
 
 ## Getting Started
+
+### Virtual Environment Setup
+
+This project uses a Python virtual environment to manage dependencies. You have several ways to activate it:
+
+#### For CMD/Command Prompt Users
+
+```bat
+# One-time activation
+activate_venv.bat
+
+# For a full development environment with a menu
+RunDevelopment.bat
+```
+
+#### For PowerShell Users
+
+```powershell
+# Start a development PowerShell session with virtual environment
+.\StartDevPowerShell.bat
+
+# Or from an existing PowerShell window
+.\ActivateVenv.ps1
+```
+
+#### First-Time Setup
+
+If you need to recreate or fix the virtual environment:
+
+```bat
+# Fix activation scripts
+fix_venv_activation.bat
+
+# Install all dependencies
+InstallDependencies.bat
+```
 
 ### Quick Start
 
@@ -70,6 +106,7 @@ The solution includes several utility scripts in the `tools` folder:
 - `consolidate_env_files.ps1`: Merges .env files from different devices
 - `git_repo_cleanup.ps1`: Manages Git repositories in OneDrive
 - `secrets_scan.py`: Python-based scanner for sensitive information
+- `VirtualEnvHelper.ps1`: Manages Python virtual environments
 
 ## Troubleshooting
 
@@ -77,6 +114,7 @@ The solution includes several utility scripts in the `tools` folder:
 - **Permission Errors**: Run as Administrator for tasks that require elevated privileges
 - **Synchronization Conflicts**: Run `GitCleanup` to resolve Git-related issues
 - **Log Files**: Check the `Logs` folder for detailed execution logs
+- **Virtual Environment Issues**: Use `fix_venv_activation.bat` to repair activation scripts
 
 ## License
 
