@@ -1,0 +1,111 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Detect and Configure Device",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-NoProfile",
+				"-File",
+				"${workspaceFolder}\\tools\\AutoDeviceSetup.ps1"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "dedicated",
+				"clear": true
+			},
+			"problemMatcher": [],
+			"runOptions": {
+				"runOn": "folderOpen"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Start Development Environment",
+			"type": "shell",
+			"command": "${workspaceFolder}\\StartDevPowerShell.bat",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Run OneDrive Automation",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-NoProfile",
+				"-File",
+				"${workspaceFolder}\\OneDriveAutomation.ps1"
+			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Test Cross-Device Compatibility",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-NoProfile",
+				"-File",
+				"${workspaceFolder}\\Test-CrossDevicePaths.ps1",
+				"-Verbose"
+			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Update Virtual Environment for Cross-Device",
+			"type": "shell",
+			"command": "${workspaceFolder}\\Fix-VenvPath.bat",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Scan for Hardcoded Paths",
+			"type": "shell",
+			"command": "${workspaceFolder}\\ScanPaths.bat",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Fix Hardcoded Paths",
+			"type": "shell",
+			"command": "${workspaceFolder}\\ScanPaths.bat --fix",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		}
+	]
+}

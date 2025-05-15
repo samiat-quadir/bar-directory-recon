@@ -126,5 +126,144 @@ else {
     Write-Host "Run RunDevelopment.bat to create" -ForegroundColor White
 }
 
+# Test virtual environment paths
+Write-Host "`nVirtual Environment Test:" -ForegroundColor Yellow
+$venvPath = Join-Path -Path $projectRoot -ChildPath ".venv"
+$venvScriptsPath = Join-Path -Path $venvPath -ChildPath "Scripts"
+$venvActivatePath = Join-Path -Path $venvScriptsPath -ChildPath "activate.ps1"
+$venvCrossDeviceActivatePath = Join-Path -Path $venvScriptsPath -ChildPath "activate_cross_device.ps1"
+$venvPythonPath = Join-Path -Path $venvScriptsPath -ChildPath "python.exe"
+
+if (Test-Path $venvPath) {
+    Write-Host "Virtual environment found at: $venvPath" -ForegroundColor Green
+
+    if (Test-Path $venvScriptsPath) {
+        Write-Host "Scripts directory found at: $venvScriptsPath" -ForegroundColor Green
+    }
+    else {
+        Write-Host "WARNING: Scripts directory not found at: $venvScriptsPath" -ForegroundColor Red
+    }
+
+    if (Test-Path $venvActivatePath) {
+        Write-Host "Activation script found at: $venvActivatePath" -ForegroundColor Green
+    }
+    else {
+        Write-Host "WARNING: Activation script not found at: $venvActivatePath" -ForegroundColor Red
+    }
+
+    if (Test-Path $venvCrossDeviceActivatePath) {
+        Write-Host "Cross-device activation script found at: $venvCrossDeviceActivatePath" -ForegroundColor Green
+    }
+    else {
+        Write-Host "INFO: Cross-device activation script not found. Consider creating it." -ForegroundColor Yellow
+    }
+
+    if (Test-Path $venvPythonPath) {
+        Write-Host "Python executable found at: $venvPythonPath" -ForegroundColor Green
+    }
+    else {
+        Write-Host "WARNING: Python executable not found at: $venvPythonPath" -ForegroundColor Red
+    }
+}
+else {
+    Write-Host "WARNING: Virtual environment not found at: $venvPath" -ForegroundColor Red
+}
+
+# Check VS Code configuration
+Write-Host "`nVS Code Configuration Test:" -ForegroundColor Yellow
+$vscodeDir = Join-Path -Path $projectRoot -ChildPath ".vscode"
+$settingsPath = Join-Path -Path $vscodeDir -ChildPath "settings.json"
+$tasksPath = Join-Path -Path $vscodeDir -ChildPath "tasks.json"
+$startupPath = Join-Path -Path $vscodeDir -ChildPath "startup.ps1"
+
+if (Test-Path $vscodeDir) {
+    Write-Host "VS Code directory found at: $vscodeDir" -ForegroundColor Green
+
+    if (Test-Path $settingsPath) {
+        Write-Host "Settings file found at: $settingsPath" -ForegroundColor Green
+
+        # Check the content for proper paths
+        $settings = Get-Content -Path $settingsPath -Raw | ConvertFrom-Json
+        if ($settings.'python.defaultInterpreterPath') {
+            Write-Host "Python interpreter path in settings: $($settings.'python.defaultInterpreterPath')" -ForegroundColor Green
+
+            # Check if the path is device-agnostic (uses ${workspaceFolder})
+            if ($settings.'python.defaultInterpreterPath' -like "*`${workspaceFolder}*") {
+                Write-Host "Python interpreter path uses workspace folder variable (good)" -ForegroundColor Green
+            }
+            else {
+                Write-Host "WARNING: Python interpreter path may be hardcoded" -ForegroundColor Yellow
+            }
+        }
+        else {
+            Write-Host "WARNING: Python interpreter path not set in settings.json" -ForegroundColor Yellow
+        }
+    }
+    else {
+        Write-Host "WARNING: Settings file not found at: $settingsPath" -ForegroundColor Yellow
+    }
+
+    if (Test-Path $tasksPath) {
+        Write-Host "Tasks file found at: $tasksPath" -ForegroundColor Green
+    }
+    else {
+        Write-Host "WARNING: Tasks file not found at: $tasksPath" -ForegroundColor Yellow
+    }
+
+    if (Test-Path $startupPath) {
+        Write-Host "Startup script found at: $startupPath" -ForegroundColor Green
+    }
+    else {
+        Write-Host "WARNING: Startup script not found at: $startupPath" -ForegroundColor Yellow
+    }
+}
+else {
+    Write-Host "WARNING: VS Code directory not found at: $vscodeDir" -ForegroundColor Yellow
+}
+
+# Test device registration
+Write-Host "`nDevice Registration Test:" -ForegroundColor Yellow
+$configDir = Join-Path -Path $projectRoot -ChildPath "config"
+$deviceConfigPath = Join-Path -Path $configDir -ChildPath "device_config.json"
+
+if (Test-Path $deviceConfigPath) {
+    Write-Host "Device configuration found at: $deviceConfigPath" -ForegroundColor Green
+
+    try {
+        $deviceConfig = Get-Content -Path $deviceConfigPath -Raw | ConvertFrom-Json
+        Write-Host "Registered device: $($deviceConfig.DeviceId)" -ForegroundColor Green
+
+        if ($deviceConfig.DeviceId -eq $env:COMPUTERNAME) {
+            Write-Host "Device ID matches current computer (good)" -ForegroundColor Green
+        }
+        else {
+            Write-Host "WARNING: Device ID doesn't match current computer" -ForegroundColor Yellow
+            Write-Host "Current: $env:COMPUTERNAME, Registered: $($deviceConfig.DeviceId)" -ForegroundColor Yellow
+
+            if ($RegisterDevice -or $Force) {
+                Write-Host "Re-registering device..." -ForegroundColor Yellow
+                Register-CurrentDevice -Force:$Force
+            }
+            else {
+                Write-Host "Run with -RegisterDevice to register current device" -ForegroundColor Yellow
+            }
+        }
+    }
+    catch {
+        Write-Host "ERROR reading device configuration: $_" -ForegroundColor Red
+    }
+}
+else {
+    Write-Host "Device configuration not found at: $deviceConfigPath" -ForegroundColor Yellow
+
+    if ($RegisterDevice -or $Force) {
+        Write-Host "Registering current device..." -ForegroundColor Yellow
+        Register-CurrentDevice -Force:$Force
+    }
+    else {
+        Write-Host "Run with -RegisterDevice to register current device" -ForegroundColor Yellow
+    }
+}
+
 Write-Host "`nCross-device path test completed" -ForegroundColor Cyan
 Write-Host "For detailed instructions, see CROSS_DEVICE_GUIDE.md" -ForegroundColor White

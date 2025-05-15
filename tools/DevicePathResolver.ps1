@@ -324,6 +324,53 @@ function Register-CurrentDevice {
     return $config
 }
 
+# Function to get device info for current device
+function Get-DeviceInfo {
+    $device = Get-CurrentDevice
+    $computerName = $env:COMPUTERNAME
+    $username = $env:USERNAME
+
+    # Create a device info object
+    $deviceInfo = [PSCustomObject]@{
+        DeviceId     = $computerName
+        Username     = $username
+        DeviceType   = "Unknown"
+        IsRegistered = $false
+    }
+
+    # Add device type based on computer name
+    if ($computerName -match "DESKTOP") {
+        $deviceInfo.DeviceType = "Desktop"
+    }
+    elseif ($computerName -match "LAPTOP") {
+        $deviceInfo.DeviceType = "Laptop"
+    }
+    elseif ($computerName -match "SRV") {
+        $deviceInfo.DeviceType = "Server"
+    }
+
+    # Check if device is registered
+    try {
+        $configFile = Join-Path -Path (Get-ProjectRootPath -DefaultPath (Get-Location).Path) -ChildPath "config\device_config.json"
+        if (Test-Path $configFile) {
+            $config = Get-Content -Path $configFile -Raw | ConvertFrom-Json
+            if ($config.DeviceId -eq $computerName) {
+                $deviceInfo.IsRegistered = $true
+
+                # Add any additional properties from the config
+                if ($config.DeviceType) {
+                    $deviceInfo.DeviceType = $config.DeviceType
+                }
+            }
+        }
+    }
+    catch {
+        # Silently handle errors
+    }
+
+    return $deviceInfo
+}
+
 # Export functions for use in other scripts
 # Note: Originally had Export-ModuleMember here, but it's unnecessary for dot-sourcing
 # and causes warnings when the script is run directly
