@@ -18,17 +18,11 @@ line-length = 120
 target-version = ["py311"]
 include = '\.pyi?$'
 exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | \.venv311
-  | _build
-  | build
-  | dist
-)/
+(
+  /\.venv.*
+  |/merge_conflicts_backup/
+  |/\.temp_conflicts/
+)
 '''
 
 [tool.isort]
@@ -38,6 +32,7 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 line_length = 120
+skip = [".venv311", "merge_conflicts_backup", ".temp_conflicts"]
 
 [tool.ruff]
 line-length = 120

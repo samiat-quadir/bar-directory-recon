@@ -1,4 +1,4 @@
 [flake8]
 max-line-length = 120
 select = E501,F401,E402,F841,E722,F541
-exclude = .git,__pycache__,*.bak,*.log,*.json,*.png,*.venv_old*
+exclude = .git,__pycache__,*.bak,*.log,*.json,*.png,*.venv_old,*.venv311,merge_conflicts_backup,.temp_conflicts

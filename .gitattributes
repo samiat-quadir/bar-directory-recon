@@ -9,3 +9,5 @@
 *_backup/** merge=ours
 .venv*/** merge=ours
 mega_memory.yaml merge=ours
+merge_conflicts_backup/** merge=ours
+.temp_conflicts/** merge=ours

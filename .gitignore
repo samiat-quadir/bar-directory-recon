@@ -82,6 +82,7 @@ env_loader.py
 # Backups / Conflicts / Snapshots
 *_backup/
 merge_conflicts_backup/
+.temp_conflicts/
 mega_memory.yaml
 
 # Python internals
@@ -102,3 +103,27 @@ copilot_agent_relay.md
 # Phase 28 additions - ignore zero-byte python executable and python directory
 python/
 python
+
+# Ignore planning YAML and relay files (except README files)
+planning/*.yaml
+!planning/README*.md
+
+.temp_conflicts/
+universal_recon/bar-recon-clean
+
+# Ignore all broken/conflict and backup code folders
+src/
+temp_backup/
+temp_broken_code/
+universal_recon/bar-recon-clean/
+
+# macOS specific
+.DS_Store
+
+.venv/
+archive/
+*.env
+__pycache__/
+.vscode/for-win
+.vscode/for-win
+.vscode/for-win

@@ -1,62 +1,87 @@
-# Bar Directory Recon
+# OneDrive Automation Solution
 
-[![CI Status](https://github.com/user/bar-directory-recon/actions/workflows/ci.yml/badge.svg)](https://github.com/user/bar-directory-recon/actions/workflows/ci.yml)
-[![Dashboard](https://img.shields.io/badge/Dashboard-Live-brightgreen)](https://user.github.io/bar-directory-recon/)
+A comprehensive PowerShell automation solution for managing OneDrive-based development environments.
 
-## Project Overview
+## Overview
 
-Bar Directory Recon is a comprehensive tool for gathering, analyzing, and organizing attorney directory data across multiple state bar associations.
+This automation solution addresses common challenges with using OneDrive for development:
 
-## Features
+1. 🔍 **Path Resolution**: Correctly identifies and resolves OneDrive paths across different devices
+2. 📁 **Folder Standardization**: Creates and maintains a consistent folder structure
+3. 🔄 **Cross-Device Synchronization**: Ensures environment parity (Python packages, VS Code extensions, etc.)
+4. 🐙 **Git Repository Management**: Detects and resolves Git repository conflicts
+5. 🔒 **Secrets Scanning**: Identifies sensitive information in files
+6. ⏰ **Scheduled Tasks**: Automates maintenance operations
 
-- Automated data collection from state bar association websites
-- Data validation and deduplication
-- Exportable reports and visualizations
-- Scheduled data refresh and monitoring
+## Requirements
+
+- Windows 10/11 with PowerShell 5.1 or higher
+- OneDrive installed and configured
+- Python 3.6+ (for secrets scanning)
+- Administrator rights (for scheduled tasks)
 
 ## Getting Started
 
-1. Clone the repository
-2. Create a `.env` file based on `.env.template`
-3. Run `tools/sync_env.py` to set up your environment
-4. Install dependencies: `pip install -r requirements.txt`
-5. Run the application: `python src/universal_recon.py`
+### Quick Start
 
-## Development
+1. Run `RunOneDriveAutomation.bat` and select an option from the menu
+2. For first-time setup, choose option 7 "Run in preview mode" to see what changes would be made
+3. Then run option 1 "Run all tasks" to apply all changes
 
-This project uses Python 3.12+ and follows best practices for code quality and testing.
+### Command-Line Usage
 
-### Environment Setup
+The main script can be run directly from PowerShell:
 
-Use the virtual environment `.venv311` for development:
+```powershell
+# Run all tasks
+.\OneDriveAutomation.ps1 -Tasks All
 
-#### Windows
+# Run specific task with preview (no changes)
+.\OneDriveAutomation.ps1 -Tasks StandardizeFolders -WhatIf
 
-tools/activate_venv.ps1
-
-#### Linux/MacOS
-
-source .venv311/bin/activate
-pytest -v
-
-```
-# Windows
-tools/activate_venv.ps1
-
-# Linux/MacOS
-source .venv311/bin/activate
+# Specify custom OneDrive path
+.\OneDriveAutomation.ps1 -OneDrivePath "D:\Custom OneDrive Path"
 ```
 
-### Run Tests
+## Available Tasks
 
-```
-pytest -v
-```
+| Task | Description |
+|------|-------------|
+| `ResolvePath` | Detects and validates OneDrive path |
+| `StandardizeFolders` | Creates standard folder structure and organizes files |
+| `SyncEnvironment` | Synchronizes development environments across devices |
+| `GitCleanup` | Manages Git repositories and resolves conflicts |
+| `ScanSecrets` | Scans for sensitive information in files |
+| `ScheduleTasks` | Sets up scheduled automation tasks |
+| `All` | Runs all tasks in sequence |
 
-## Contributing
+## Configuration
 
-Contributions are welcome! Please follow the existing code style and add tests for new features.
+The scripts use default values that can be overridden:
+
+- OneDrive path: `C:\Users\samq\OneDrive - Digital Age Marketing Group`
+- Primary repo path: `C:\bar-directory-recon`
+- Device ID: Uses computer name by default
+
+## Utility Tools
+
+The solution includes several utility scripts in the `tools` folder:
+
+- `consolidate_env_files.ps1`: Merges .env files from different devices
+- `git_repo_cleanup.ps1`: Manages Git repositories in OneDrive
+- `secrets_scan.py`: Python-based scanner for sensitive information
+
+## Troubleshooting
+
+- **Path Issues**: Use the `ResolvePath` task to verify OneDrive path detection
+- **Permission Errors**: Run as Administrator for tasks that require elevated privileges
+- **Synchronization Conflicts**: Run `GitCleanup` to resolve Git-related issues
+- **Log Files**: Check the `Logs` folder for detailed execution logs
 
 ## License
 
-Proprietary - All rights reserved.
+MIT
+
+## Author
+
+Created with GitHub Copilot
