@@ -2,3 +2,24 @@
 *.yaml text eol=lf
 *.sh text eol=lf
 *.bat text eol=crlf
+# Prevent merge conflicts on local env/config/trash
+*.env merge=ours
+*.yaml merge=ours
+*.yaml merge=union
+*_backup/** merge=ours
+.venv*/** merge=ours
+mega_memory.yaml merge=ours
+merge_conflicts_backup/** merge=ours
+.temp_conflicts/** merge=ours
+
+# Cross-device compatibility settings
+config/device_config.json merge=ours
+config/device_*.json merge=ours
+*_device_specific.* merge=ours
+.device_cache/** merge=ours
+*samq*.tmp merge=ours
+*samqu*.tmp merge=ours
+
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.bin filter=lfs diff=lfs merge=lfs -text

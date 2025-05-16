@@ -1,0 +1,9 @@
+[submodule ".vscode/for-win"]
+	path = .vscode/for-win
+	url = https://github.com/docker/for-win.git
+	ignore = dirty
+
+[submodule "pre-commit-hooks"]
+	path = pre-commit-hooks
+	url = https://github.com/pre-commit/pre-commit-hooks.git
+	ignore = dirty
