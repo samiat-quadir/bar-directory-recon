@@ -349,10 +349,7 @@ function Get-DeviceInfo {
     }
     elseif ($computerName -match "SRV") {
         $deviceInfo.DeviceType = "Server"
-    }
-
-    # Check if device is registered
-    try {
+    }    # Check if device is registered
     try {
         $configFile = Join-Path -Path (Get-ProjectRootPath -DefaultPath (Get-Location).Path) -ChildPath "config\device_config.json"
         if (Test-Path $configFile) {
@@ -366,7 +363,7 @@ function Get-DeviceInfo {
                 }
             }
         }
-    }
+    } catch {
         # Silently handle errors
     }
 
