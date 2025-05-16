@@ -363,7 +363,8 @@ function Get-DeviceInfo {
                 }
             }
         }
-    } catch {
+    }
+    catch {
         # Silently handle errors
     }
 
