@@ -121,7 +121,7 @@ Write-Host "Project root: $projectRoot"
 from tools.device_path_resolver import get_onedrive_path, get_project_root_path
 
 # Get the correct OneDrive path for this device
-onedrive_path = get_onedrive_path()
+onedrive_path = get_onedrive_path() <!-- TODO: Use device-agnostic path --> <!-- TODO: Use device-agnostic path --> <!-- TODO: Use device-agnostic path --> <!-- TODO: Use device-agnostic path -->
 print(f"OneDrive path: {onedrive_path}")
 
 # Get the project root path
@@ -151,7 +151,7 @@ print(f"Project root: {project_root}")
    file_path = os.path.join(project_root, "data/output.json")
 
    # Python - Bad
-   file_path = "C:/Users/samq/OneDrive - Digital Age Marketing Group/Desktop/Local Py/Work Projects/bar-directory-recon/data/output.json"
+   file_path = "C:/Users/samq/OneDrive <!-- TODO: Use device-agnostic path --> - Digital Age Marketing Group <!-- TODO: Use device-agnostic path -->/Desktop/Local Py/Work Projects/bar-directory-recon/data/output.json"
    ```
 
 2. **Use the Virtual Environment**: Always activate the cross-device virtual environment

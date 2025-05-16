@@ -121,7 +121,7 @@ function Get-OneDrivePath {
 
 ```python
 # From device_path_resolver.py
-def get_onedrive_path() -> str:
+def get_onedrive_path() <!-- TODO: Use device-agnostic path --> <!-- TODO: Use device-agnostic path --> <!-- TODO: Use device-agnostic path --> <!-- TODO: Use device-agnostic path --> -> str:
     """
     Get the correct OneDrive path for the current device.
     """

@@ -25,12 +25,12 @@ except ImportError:
 PATH_PATTERNS = [
     r'C:\\Users\\samq\\OneDrive',
     r'C:\\Users\\samqu\\OneDrive',
-    r'C:/Users/samq/OneDrive',
-    r'C:/Users/samqu/OneDrive',
+    r'get_onedrive_path()',
+    r'get_onedrive_path()',
     r'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group',
     r'C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group',
-    r'C:/Users/samq/OneDrive - Digital Age Marketing Group',
-    r'C:/Users/samqu/OneDrive - Digital Age Marketing Group',
+    r'get_onedrive_path()',
+    r'get_onedrive_path()',
     r'samq\\OneDrive',
     r'samqu\\OneDrive'
 ]

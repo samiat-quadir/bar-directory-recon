@@ -66,24 +66,26 @@ $pathPatterns = @(
     "C:\\Users\\samqu\\OneDrive",
     "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group",
     "C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group",
-    "C:/Users/samq/OneDrive",
-    "C:/Users/samqu/OneDrive",
-    "C:/Users/samq/OneDrive - Digital Age Marketing Group",
-    "C:/Users/samqu/OneDrive - Digital Age Marketing Group",
+    "$(Get-OneDrivePath)",
+    "$(Get-OneDrivePath)",
+    "$(Get-OneDrivePath)",
+    "$(Get-OneDrivePath)",
     "samq\\OneDrive",
     "samqu\\OneDrive"
 )
 
 # Add VS Code settings and virtual environment paths to check
-$pathPatterns += @(
-    "\"".venv\\Scripts\\python.exe\"",
-    "\"\\\\.venv\\\\Scripts\\\\python.exe\"",
-    "\"/.venv/Scripts/python.exe\"",
+$venvPatterns = @(
+    '.venv\\Scripts\\python.exe',
+    '\\.venv\\\\Scripts\\\\python.exe',
+    '/.venv/Scripts/python.exe',
     "C:\\Users\\samq\\.venv",
     "C:\\Users\\samqu\\.venv",
     "C:/Users/samq/.venv",
     "C:/Users/samqu/.venv"
 )
+
+$pathPatterns += $venvPatterns
 
 function Get-ScriptFilesToProcess {
     $allFiles = @()
@@ -184,7 +186,7 @@ function Search-HardcodedPaths {
                     }
                     elseif ($extension -eq ".py") {
                         # For Python files
-                        $dynamicPath = "onedrive_path = get_onedrive_path()"
+                        $dynamicPath = "onedrive_path = $(Get-OneDrivePath)"
                         $relativePath = ConvertTo-ProjectRelativePath -Path $issueLine.Pattern -ProjectRoot $projectRoot
                         $suggestedFix = "project_root = get_project_root_path(); os.path.join(project_root, '$relativePath')"
                     }
@@ -212,7 +214,7 @@ function Search-HardcodedPaths {
                 }
                 else {
                     Write-Host "  Consider using device-agnostic paths instead of hardcoded paths." -ForegroundColor Cyan
-                    Write-Host "  Use Get-OneDrivePath / get_onedrive_path() to get the correct path for the current device." -ForegroundColor Cyan
+                    Write-Host "  Use Get-OneDrivePath / $(Get-OneDrivePath) to get the correct path for the current device." -ForegroundColor Cyan
                 }
 
                 Write-Host ""

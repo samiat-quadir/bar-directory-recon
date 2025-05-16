@@ -26,6 +26,10 @@ $DEVICE_CONFIGS = @{
         Username       = "samqu"
         OneDriveFolder = "OneDrive - Digital Age Marketing Group"
     }
+    "ROG-LUCCI"    = @{
+        Username       = "samqu"
+        OneDriveFolder = "OneDrive - Digital Age Marketing Group"
+    }
 }
 
 # Function to detect current device
@@ -326,13 +330,11 @@ function Register-CurrentDevice {
 
 # Function to get device info for current device
 function Get-DeviceInfo {
-    $device = Get-CurrentDevice
-    $computerName = $env:COMPUTERNAME
     $username = $env:USERNAME
 
     # Create a device info object
     $deviceInfo = [PSCustomObject]@{
-        DeviceId     = $computerName
+        DeviceId     = $env:COMPUTERNAME
         Username     = $username
         DeviceType   = "Unknown"
         IsRegistered = $false
@@ -351,10 +353,11 @@ function Get-DeviceInfo {
 
     # Check if device is registered
     try {
+    try {
         $configFile = Join-Path -Path (Get-ProjectRootPath -DefaultPath (Get-Location).Path) -ChildPath "config\device_config.json"
         if (Test-Path $configFile) {
             $config = Get-Content -Path $configFile -Raw | ConvertFrom-Json
-            if ($config.DeviceId -eq $computerName) {
+            if ($config.DeviceId -eq $env:COMPUTERNAME) {
                 $deviceInfo.IsRegistered = $true
 
                 # Add any additional properties from the config
@@ -364,7 +367,6 @@ function Get-DeviceInfo {
             }
         }
     }
-    catch {
         # Silently handle errors
     }
 

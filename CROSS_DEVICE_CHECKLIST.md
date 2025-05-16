@@ -16,7 +16,7 @@ When creating new files, ensure they follow these guidelines:
 
 - [ ] Use path resolver functions instead of hardcoded paths
   - PowerShell: `Get-ProjectRootPath`, `Get-OneDrivePath`
-  - Python: `get_project_root_path()`, `get_onedrive_path()`
+  - Python: `get_project_root_path()`, `get_onedrive_path() <!-- TODO: Use device-agnostic path --> <!-- TODO: Use device-agnostic path --> <!-- TODO: Use device-agnostic path --> <!-- TODO: Use device-agnostic path -->`
 - [ ] If the file needs device detection, import the appropriate resolver
   - PowerShell: `. $PSScriptRoot\tools\DevicePathResolver.ps1`
   - Python: `from tools.device_path_resolver import ...`
