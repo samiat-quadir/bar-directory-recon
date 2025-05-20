@@ -2,80 +2,108 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "docker-build",
-			"type": "docker-build",
-			"platform": "python",
-			"dockerBuild": {
-				"tag": "bardirectoryrecon:latest",
-				"dockerfile": "${workspaceFolder}/Dockerfile",
-				"context": "${workspaceFolder}",
-				"pull": true
-			}
-		},
-		{
-			"label": "docker-run: debug",
-			"type": "docker-run",
-			"dependsOn": [
-				"docker-build"
-			],
-			"python": {
-				"file": "src\\universal_recon.py"
-			}
-		},
-		{
-			"label": "Security Check",
+			"label": "Detect and Configure Device",
 			"type": "shell",
-			"command": "${config:python.defaultInterpreterPath}",
+			"command": "powershell",
 			"args": [
-				"-m",
-				"bandit",
-				"-r",
-				"src/",
-				"universal_recon/",
-				"-ll"
+				"-ExecutionPolicy",
+				"Bypass",
+				"-NoProfile",
+				"-File",
+				"${workspaceFolder}\\tools\\AutoDeviceSetup.ps1"
 			],
-			"group": "test",
 			"presentation": {
-				"reveal": "always",
-				"panel": "new"
+				"reveal": "silent",
+				"panel": "dedicated",
+				"clear": true
 			},
-			"problemMatcher": []
-		},
-		{
-			"label": "Dependency Check",
-			"type": "shell",
-			"command": "${config:python.defaultInterpreterPath}",
-			"args": [
-				"-m",
-				"safety",
-				"check"
-			],
-			"group": "test",
-			"presentation": {
-				"reveal": "always",
-				"panel": "new"
+			"problemMatcher": [],
+			"runOptions": {
+				"runOn": "folderOpen"
 			},
-			"problemMatcher": []
-		},
-		{
-			"label": "Run Tests",
-			"type": "shell",
-			"command": "${config:python.defaultInterpreterPath}",
-			"args": [
-				"-m",
-				"pytest",
-				"-v",
-				"--cov=src",
-				"--cov=universal_recon",
-				"--cov-report=html"
-			],
 			"group": {
-				"kind": "test",
+				"kind": "build",
 				"isDefault": true
-			},
+			}
+		},
+		{
+			"label": "Start Development Environment",
+			"type": "shell",
+			"command": "${workspaceFolder}\\StartDevPowerShell.bat",
 			"presentation": {
 				"reveal": "always",
-				"panel": "new"
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Run OneDrive Automation",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-NoProfile",
+				"-File",
+				"${workspaceFolder}\\OneDriveAutomation.ps1"
+			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Test Cross-Device Compatibility",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-NoProfile",
+				"-File",
+				"${workspaceFolder}\\Test-CrossDevicePaths.ps1",
+				"-Verbose"
+			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Update Virtual Environment for Cross-Device",
+			"type": "shell",
+			"command": "${workspaceFolder}\\Fix-VenvPath.bat",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Scan for Hardcoded Paths",
+			"type": "shell",
+			"command": "${workspaceFolder}\\ScanPaths.bat",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Fix Hardcoded Paths",
+			"type": "shell",
+			"command": "${workspaceFolder}\\ScanPaths.bat --fix",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
 			},
 			"problemMatcher": []
 		}

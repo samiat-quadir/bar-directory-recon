@@ -6,16 +6,53 @@
 logs/
 screenshots/
 data/
+*.log
+*_errors.log
+OneDriveAutomation_*.log
+
+# Cross-device specific files
+# These files may contain device-specific paths or configurations
+local_device_config.json
+*_device_specific.*
+*.device.config
+.device_cache/
+device_*.json
+*samq*.tmp
+*samqu*.tmp
+config/device_cache/
+
+# Reference files and temporary work files
+*.new
+*.bak
+*.tmp
+*_reference*
+docs/*_summary.yaml
+
+# VS Code workspace-specific settings
+# These can vary by machine and should be excluded if needed
+.vscode/settings.json
+.vscode/launch.json
+
+# Code formatter and linter artifacts
+*.isorted
+*.ruff_cache
+*.mypy_cache
+*.isort.cfg.bak
 
 # Ignore any automatically generated cache or temporary files
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
 
-# Virtual environments (if you use .venv or env directories)
-.venv/
+# Virtual environments
+.venv*/
 env/
+venv/
 
 # Build and distribution artifacts
 build/
@@ -34,13 +71,30 @@ var/
 # Sensitive and Configuration Files
 # =====================================================
 
+# Device-specific configuration files
+config/device_config.json
+
 # Do not track sensitive configuration files (including environment files)
-config.json
 *.env
+.env*
+
+# VS Code settings that might differ between devices
+.vscode/settings_*.json
+.vscode/for-win/
+.vscode/for-win/*
+settings_*.json
 
 # =====================================================
-# Third-Party Binaries
+# Third-Party Binaries and Archives
 # =====================================================
+
+# Binary archives and compressed files
+*.zip
+*.gz
+*.tar
+*.rar
+*.7z
+src/backups/archives/
 
 # Ignore ChromeDriver binaries
 chromedriver*.exe
@@ -49,20 +103,51 @@ chromedriver*.exe
 # Custom Folders / Files
 # =====================================================
 
+# Output folders
 output/
 run_logs/
 
-# Ignore all virtualenv folders
-.venv/
-.venv_old/
-
-# Additional project-specific exclusions
-mega_memory.yaml
-repo_tree.txt
-*.log
+# Backup, conflict, and temporary files
 *.bak
-*.txt
+temp_backup/
+temp_broken_code/
+merge_conflicts_backup/
+.temp_conflicts/
+snapshots/
+
+# Legacy and archive folders
+archive/
 archives/
 auto_pruned/
-archive/
+legacy_device_syncs/
+legacy_scripts/
+
+# Project specific files to exclude
+mega_memory.yaml
+repo_tree.txt
 env_loader.py
+copilot_agent_relay.md
+
+# Phase 28 additions - ignore zero-byte python executable and python directory
+python/
+python
+
+# Planning files (except README files)
+planning/*.yaml
+!planning/README*.md
+
+# Git subdirectories in project folders
+**/.git/
+**/.git/*
+
+# OS specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# OS specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+MASTER_IMPLEMENTATION_REPORT.md
+docs/COPILOT_AGENT_SETUP.md

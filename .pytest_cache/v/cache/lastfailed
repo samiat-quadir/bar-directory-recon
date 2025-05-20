@@ -1,5 +1,11 @@
 {
   "src/test_chromedriver.py": true,
   "universal_recon/bar-recon-clean/src/tests/test_cleanup_manager.py": true,
-  "universal_recon/tests/analytics/test_risk_overlay_emitter.py": true
+  "universal_recon/tests/plugins/test_firm_parser.py": true,
+  "universal_recon/tests/plugins/test_ml_labeler.py": true,
+  "universal_recon/tests/plugins/test_social_link_parser.py": true,
+  "universal_recon/tests/utils/test_audit_report_generator.py": true,
+  "universal_recon/tests/utils/test_recon_trend_tracker.py": true,
+  "universal_recon/tests/utils/test_score_predictor.py": true,
+  "universal_recon/tests/utils/test_score_visualizer.py": true
 }
