@@ -38,7 +38,7 @@ else {
 
 # Verify Git upstream configuration
 $gitConfig = ".\.git\config"
-if (Test-Path $gitConfig -and (Select-String -Path $gitConfig -Pattern "url = .*github\.com.*" -Quiet)) {
+if ((Test-Path $gitConfig) -and (Select-String -Path $gitConfig -Pattern "url = .*github\.com.*" -Quiet)) {
     Log "Git remote configured correctly." "SUCCESS"
 }
 else {
