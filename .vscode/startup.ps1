@@ -1,4 +1,4 @@
-# VS Code Workspace Startup Script
+# Corrected .vscode/startup.ps1
 $logPath = Join-Path $PSScriptRoot "..\logs\cross_device_sync.log"
 $timestamp = (Get-Date).ToString("o")
 
@@ -9,16 +9,22 @@ function Log {
     Write-Host $logEntry
 }
 
-# Activate Virtual Environment
-try {
-    & "$PSScriptRoot\..\..\.venv\Scripts\activate.ps1"
-    Log ".venv environment activated." "SUCCESS"
+# Activate Virtual Environment (fixed path)
+$activateScript = Join-Path $PSScriptRoot "..\.venv\Scripts\activate.ps1"
+if (Test-Path $activateScript) {
+    try {
+        & $activateScript
+        Log ".venv environment activated." "SUCCESS"
+    }
+    catch {
+        Log "Failed to activate .venv environment. Error: $_" "ERROR"
+    }
 }
-catch {
-    Log "Failed to activate .venv environment. Error: $_" "ERROR"
+else {
+    Log ".venv activation script not found at $activateScript" "ERROR"
 }
 
-# Load Copilot-specific profile (if exists)
+# Load Copilot-specific PowerShell profile (optional)
 $copilotProfilePath = Join-Path $PSScriptRoot "copilot_profile.ps1"
 if (Test-Path $copilotProfilePath) {
     try {
