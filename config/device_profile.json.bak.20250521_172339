@@ -1,0 +1,31 @@
+{
+    "device_id":  "SALESREP",
+    "username":  "samq",
+    "device_type":  "WorkDesktop",
+    "onedrive_path":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group",
+    "project_root":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon",
+    "python_path":  {
+                        "base":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon\\\\.venv\\\\Scripts\\\\python.exe",
+                        "alternative":  "C:\\\\Users\\\\samq\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe"
+                    },
+    "terminal_settings":  {
+                              "default_shell":  "pwsh.exe",
+                              "editor_terminal_path":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon\\\\tools\\\\editor_terminal_integration.ps1"
+                          },
+    "paths":  {
+                  "tools":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon\\\\tools",
+                  "scripts":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon\\\\scripts",
+                  "logs":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon\\\\logs",
+                  "data":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon\\\\data"
+              },
+    "backup_paths":  {
+                         "onedrive_backup":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Backups\\\\bar-directory-recon",
+                         "local_backup":  "C:\\\\Backups\\\\bar-directory-recon"
+                     },
+    "environment_variables":  {
+                                  "PYTHONPATH":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon",
+                                  "PATH_EXTENSIONS":  "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon\\\\tools;C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group\\\\Desktop\\\\Local Py\\\\Work Projects\\\\bar-directory-recon\\\\.venv\\\\Scripts"
+                              },
+    "last_updated":  "2025-05-20T15:28:13.3844203-04:00",
+    "is_work_device":  true
+}

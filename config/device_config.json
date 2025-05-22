@@ -1,13 +1,41 @@
 {
-    "DeviceId":  "SALESREP",
-    "Username":  "samq",
-    "Settings":  {
-                     "DefaultEditor":  "code"
-                 },
-    "Paths":  {
-                  "ProjectRoot":  "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon",
-                  "OneDrive":  "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group"
-              },
-    "FirstRegistered":  "2025-05-19T13:46:57.4738319-04:00",
-    "LastUpdated":  "2025-05-19T13:46:57.4798951-04:00"
+    "device_mapping": {
+        "SALESREP": {
+            "computer_name_patterns": [
+                "SALESREP",
+                "DESKTOP-"
+            ],
+            "username": "samq",
+            "profile_path": "config/device_profile_SALESREP.json",
+            "is_work_device": true
+        },
+        "ROG-LUCCI": {
+            "computer_name_patterns": [
+                "ROG-LUCCI",
+                "ASUS-"
+            ],
+            "username": "samqu",
+            "profile_path": "config/device_profile_ROG-LUCCI.json",
+            "is_work_device": false
+        }
+    },
+    "cross_device_settings": {
+        "use_relative_paths": true,
+        "sync_extensions": true,
+        "sync_settings": true,
+        "auto_detect_device": true,
+        "copy_device_specific_files_on_detect": true
+    },
+    "onedrive_paths": {
+        "SALESREP": "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group",
+        "ROG-LUCCI": "C:\\\\Users\\\\samqu\\\\OneDrive - Digital Age Marketing Group"
+    },
+    "python_environments": {
+        "SALESREP": ".venv\\\\Scripts\\\\python.exe",
+        "ROG-LUCCI": ".venv\\\\Scripts\\\\python.exe"
+    },
+    "default_device_profile": "config/device_profile_SALESREP.json",
+    "last_updated": "2025-05-20T15:28:13.4599599-04:00",
+    "DeviceId": "SalesRep",
+    "LastUpdated": "2025-05-21T17:30:03.362130"
 }
