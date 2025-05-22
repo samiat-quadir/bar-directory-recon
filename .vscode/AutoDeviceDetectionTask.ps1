@@ -52,7 +52,33 @@ try {
     # Log startup
     Write-Log "AutoDeviceDetectionTask starting" "INFO"
     Write-Log "Device: $env:COMPUTERNAME | User: $env:USERNAME" "INFO"
-    
+
+    # --- ENHANCEMENT: Copy correct device profile to device_profile.json and log to cross_device_sync.log ---
+    $deviceProfileName = "device_profile_$($env:COMPUTERNAME).json"
+    $deviceProfileSource = Join-Path -Path (Join-Path $projectRoot 'config') -ChildPath $deviceProfileName
+    $deviceProfileDest = Join-Path -Path (Join-Path $projectRoot 'config') -ChildPath 'device_profile.json'
+    $crossDeviceLog = Join-Path -Path $logDir -ChildPath 'cross_device_sync.log'
+
+    if (Test-Path $deviceProfileSource) {
+        try {
+            Copy-Item -Path $deviceProfileSource -Destination $deviceProfileDest -Force
+            $msg = "Copied $deviceProfileName to device_profile.json successfully."
+            Write-Log $msg "SUCCESS"
+            Add-Content -Path $crossDeviceLog -Value "[$(Get-Date -Format o)] [SUCCESS] $msg"
+        }
+        catch {
+            $msg = "Failed to copy $deviceProfileName to device_profile.json. Error: $_"
+            Write-Log $msg "ERROR"
+            Add-Content -Path $crossDeviceLog -Value "[$(Get-Date -Format o)] [ERROR] $msg"
+        }
+    }
+    else {
+        $msg = "$deviceProfileName not found in config. Device profile not updated."
+        Write-Log $msg "ERROR"
+        Add-Content -Path $crossDeviceLog -Value "[$(Get-Date -Format o)] [ERROR] $msg"
+    }
+    # --- END ENHANCEMENT ---
+
     # Try to run the Python resolver first if it exists
     $pythonResolver = Join-Path -Path $projectRoot -ChildPath "tools\resolve_device_profile.py"
     if (Test-Path $pythonResolver) {

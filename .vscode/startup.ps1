@@ -39,4 +39,27 @@ else {
     Log "copilot_profile.ps1 not found. Continuing without it." "WARNING"
 }
 
+# Verify Copilot Agent runtime setup
+$copilotContext = Join-Path $PSScriptRoot "copilot_context.json"
+if (Test-Path $copilotContext) {
+    try {
+        $contextContent = Get-Content $copilotContext -Raw | ConvertFrom-Json
+        Log "copilot_context.json loaded successfully. Agent context: $($contextContent | ConvertTo-Json -Compress)" "SUCCESS"
+    }
+    catch {
+        Log "copilot_context.json exists but failed to parse. Error: $_" "ERROR"
+    }
+}
+else {
+    Log "copilot_context.json not found. Copilot Agent runtime context missing." "ERROR"
+}
+
+# Check for required environment variables (example: AGENT_ENV_READY)
+if ($env:AGENT_ENV_READY -eq '1') {
+    Log "Copilot Agent environment ready (AGENT_ENV_READY=1)." "SUCCESS"
+}
+else {
+    Log "Copilot Agent environment not ready. AGENT_ENV_READY is not set to '1'." "ERROR"
+}
+
 Log "Workspace startup script executed successfully."

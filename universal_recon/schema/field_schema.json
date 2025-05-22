@@ -1,0 +1,21 @@
+{
+  "email": {
+    "pattern": "^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$",
+    "required": true,
+    "description": "Must be a valid email address"
+  },
+  "phone": {
+    "min_length": 10,
+    "digits_only": true,
+    "description": "At least 10 digits after stripping symbols"
+  },
+  "bar_number": {
+    "pattern": "^\\d{5}-[A-Z]{2}$",
+    "description": "Bar number must match 5 digits + dash + 2 uppercase letters"
+  },
+  "firm_name": {
+    "min_length": 3,
+    "not_start": "unknown",
+    "description": "Firm name must not start with 'unknown' and be at least 3 characters"
+  }
+}

@@ -1,0 +1,64 @@
+chat_summary:
+  identifier: Claude 3.7 (Sonnet) – Universal Recon Architecture Support
+  role: |
+    Core architectural advisor, plugin and utility engineer, and schema compliance lead
+    for the Universal Recon v3.1 project. Focused on making the recon system robust,
+    modular, and future-proof through pluggable components, strict schema validation,
+    snapshot automation, and standard output formatting.
+
+  responsibilities:
+    - ✅ Design and implementation of utility modules:
+        - snapshot_manager.py (with internal config checks)
+        - record_normalizer.py (with strict/soft modes)
+    - ✅ Author and maintainer of `email_plugin.py` (plugin-compliant interface)
+    - ✅ Plugin compliance validator (ensuring all .apply() plugins adhere to ADA schema)
+    - ✅ Schema normalization and field default logic
+    - ✅ Assisted in Phase 3 and 4 plugin integration strategy
+    - 🧠 Phase 5 co-lead for test harness scaffolding, CLI stubs, and plugin test modeling
+    - 🔜 Phase 6: ML plugin prototyping (e.g., ml_labeler.py design)
+
+  major milestones:
+    phase_3:
+      - Validated core architecture with ADA and Python
+      - Proposed modular plugin structure and tagging standards
+      - Introduced plugin metadata tagging for discovery and doc purposes
+    phase_4:
+      - Delivered:
+          - email_plugin.py
+          - snapshot_manager.py
+          - record_normalizer.py
+      - Ensured all modules were config-safe and orchestrator-compatible
+      - Finalized record schema integration with ADA’s spec
+    phase_5:
+      - Approved to inject snapshot_manager into orchestrator
+      - Staging test harnesses for plugins and utils
+      - CLI argument draft underway for `--strict`, `--dry-run`, `--run-plugin`
+      - Awaiting orchestrator.py upload to inject snapshot hooks
+
+  confirmed alignments:
+    with_python_chat:
+      - Plugin `.apply(driver, context)` interface adopted
+      - Retry decorators accepted for volatile actions
+      - Normalization schema shared across all plugin outputs
+      - SnapshotManager is live and integrated
+    with_ada:
+      - Tagging schema and logging format fully enforced
+      - All outputs are passed to record_normalizer(strict=False)
+      - CLAUDE plugins are treated as reference for standards
+      - Plugin loader and script generation are shared utilities
+
+  pending actions:
+    - ⏳ Awaiting orchestrator.py to complete snapshot integration
+    - 🔜 Create unit tests:
+        - tests/plugins/test_email_plugin.py
+        - tests/utils/test_normalizer.py
+    - 🛠️ CLI argument stubs in main.py (strict mode, dry-run, plugin runner)
+    - 🧪 Begin outlining ml_labeler.py (Phase 6 AI detection)
+
+  status:
+    readiness: ✅ Fully integrated with ADA + Python workflows
+    schema: ✅ Normalizer and plugin outputs are ADA-compliant
+    snapshot_manager: ✅ Confirmed internally config-aware
+    record_normalizer: ✅ soft (default) and strict (opt-in) modes available
+    CLI support: 🔧 CLI flags planned for Phase 5 finalization
+    next_trigger: orchestrator.py injection + test suite launch

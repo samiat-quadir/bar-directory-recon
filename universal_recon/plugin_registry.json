@@ -1,0 +1,66 @@
+[
+  {
+    "name": "record_field_validator_v3",
+    "type": "validator",
+    "run_mode": "full",
+    "entrypoint": "run_analysis",
+    "module": "validators.record_field_validator_v3",
+    "enabled": true
+  },
+  {
+    "name": "bar_number_format_validator",
+    "type": "validator",
+    "module": "validators.bar_number_format_validator",
+    "enabled": true,
+    "entrypoint": "run_analysis"
+  },
+  {
+    "name": "firm_name_matcher",
+    "type": "validator",
+    "module": "validators.firm_name_matcher",
+    "enabled": true,
+    "entrypoint": "run_analysis"
+  },
+  {
+    "name": "audit_score_matrix_generator",
+    "type": "analytics",
+    "module": "analytics.audit_score_matrix_generator",
+    "enabled": true,
+    "entrypoint": "run_analysis"
+  },
+  {
+    "name": "template_health_flagger",
+    "type": "analytics",
+    "module": "analytics.template_health_flagger",
+    "enabled": true,
+    "entrypoint": "run_analysis"
+  },
+  {
+    "name": "full_report_generator",
+    "type": "analytics",
+    "module": "analytics.full_report_generator",
+    "enabled": true,
+    "entrypoint": "run_analysis"
+  },
+  {
+    "name": "trend_dashboard_stub",
+    "type": "analytics",
+    "module": "analytics.trend_dashboard_stub",
+    "enabled": true,
+    "entrypoint": "run_analysis"
+  },
+  {
+    "name": "fieldmap_validator",
+    "type": "validator",
+    "module": "validators.fieldmap_validator",
+    "enabled": true,
+    "entrypoint": "run_analysis"
+  },
+  {
+    "name": "schema_matrix_collector",
+    "type": "analytics",
+    "module": "analytics.schema_matrix_collector",
+    "enabled": true,
+    "entrypoint": "run_analysis"
+  }
+]

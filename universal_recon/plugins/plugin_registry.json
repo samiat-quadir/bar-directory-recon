@@ -1,0 +1,17 @@
+{
+  "email_plugin": {
+    "description": "Extracts mailto: and obfuscated emails from HTML content.",
+    "version": "1.0",
+    "author": "Claude 3.7",
+    "dry_run_safe": true,
+    "tags": ["email", "contact", "basic"]
+  },
+  "ml_labeler": {
+    "description": "Uses heuristics to label fields like Bar Number, Firm, and Jurisdiction.",
+    "version": "0.1",
+    "author": "Claude 3.7",
+    "dry_run_safe": true,
+    "tags": ["ml", "labeling", "experimental"],
+    "requires": ["BeautifulSoup", "re"]
+  }
+}
