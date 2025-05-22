@@ -72,5 +72,48 @@
     "github.copilot.advanced.securitySettings.executables.enable": true,
     "github.copilot.advanced.securitySettings.executables.timeout": 300,
     "github.copilot.chat.server.security.anonymizeCallStackFrames": false,
-    "settingsSync.ignoredExtensions": []
+    "settingsSync.ignoredExtensions": [],
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Cross Device Bootstrap",
+            "type": "shell",
+            "command": "cross_device_bootstrap.bat >> logs/cross_device_sync.log 2>&1",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "Validate .venv Activation",
+            "type": "shell",
+            "command": "cmd /c \".venv\\Scripts\\python.exe -c \"import sys; print('[VENV ACTIVE]' if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') && sys.base_prefix != sys.prefix) else '[VENV ERROR]')\" >> logs/cross_device_sync.log 2>&1\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "Check device_profile.json",
+            "type": "shell",
+            "command": "if exist config\\device_profile.json (echo [PROFILE OK] device_profile.json found.) else (echo [PROFILE ERROR] device_profile.json missing.) >> logs/cross_device_sync.log 2>&1",
+            "problemMatcher": []
+        },
+        {
+            "label": "Check Git Sync Status",
+            "type": "shell",
+            "command": "git status >> logs/cross_device_sync.log 2>&1 && echo [GIT OK] || echo [GIT ERROR] >> logs/cross_device_sync.log 2>&1",
+            "problemMatcher": []
+        },
+        {
+            "label": "Cross Device Full Sync",
+            "dependsOn": [
+                "Run Cross Device Bootstrap",
+                "Validate .venv Activation",
+                "Check device_profile.json",
+                "Check Git Sync Status"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
 }
