@@ -159,54 +159,54 @@ def get_project_root_path(onedrive_path: Optional[str] = None,
                          sub_path: str = "Desktop\\Local Py\\Work Projects") -> Optional[str]:
     """
     Get the correct project root path for the current device.
-    
+
     Args:
         onedrive_path: Override the OneDrive path detection (optional)
         project_name: Name of the project folder
         sub_path: Subfolder path under OneDrive
-        
+
     Returns:
         str: The detected project root path, or None if not found
     """
     # Use provided OneDrive path or detect it
     if onedrive_path is None:
         onedrive_path = get_onedrive_path()
-    
+
     # Try with provided project name
     project_path = os.path.join(onedrive_path, sub_path, project_name)
     if os.path.exists(project_path):
         return project_path
-        
+
     # Try with original project name (without -new suffix)
     if "new" in project_name:
         original_name = project_name.replace("-new", "")
         project_path = os.path.join(onedrive_path, sub_path, original_name)
         if os.path.exists(project_path):
             return project_path
-    
+
     # If project name is already without -new, try with -new added
     else:
         new_name = f"{project_name}-new"
         project_path = os.path.join(onedrive_path, sub_path, new_name)
         if os.path.exists(project_path):
             return project_path
-    
+
     # Try searching for any folder that starts with the project name
     base_path = os.path.join(onedrive_path, sub_path)
     if os.path.exists(base_path):
         for folder in os.listdir(base_path):
             if folder.startswith(project_name.split("-")[0]) and os.path.isdir(os.path.join(base_path, folder)):
                 return os.path.join(base_path, folder)
-    
+
     # As a last resort, try current directory or its parent
     current_dir = os.getcwd()
     if os.path.basename(current_dir) == project_name:
         return current_dir
-    
+
     parent_dir = os.path.dirname(current_dir)
     if os.path.basename(parent_dir) == project_name:
         return parent_dir
-        
+
     # If all else fails, return None
     print(f"Warning: Could not determine project root path for {project_name}.")
     return None
@@ -215,26 +215,26 @@ def get_project_root_path(onedrive_path: Optional[str] = None,
 def to_project_relative_path(path: str, project_root: Optional[str] = None) -> str:
     """
     Convert an absolute path to a project-relative path.
-    
+
     Args:
         path: The absolute path to convert
         project_root: The project root path (optional, will be detected if not provided)
-        
+
     Returns:
         str: The project-relative path
     """
     if project_root is None:
         project_root = get_project_root_path()
-        
+
     if project_root is None:
         # If we can't determine project root, return the original path
         return path
-        
+
     # Convert both to Path objects for easier manipulation
     try:
         path_obj = Path(path)
         root_obj = Path(project_root)
-        
+
         # Try to make the path relative to project root
         try:
             relative = path_obj.relative_to(root_obj)
@@ -250,7 +250,7 @@ def to_project_relative_path(path: str, project_root: Optional[str] = None) -> s
 def get_repository_root() -> str:
     """
     Get the Git repository root for the current project.
-    
+
     Returns:
         str: Path to the repository root
     """
@@ -258,12 +258,12 @@ def get_repository_root() -> str:
     project_root = get_project_root_path()
     if not project_root:
         return os.getcwd()
-    
+
     # Check if project root is a git repo
     git_dir = os.path.join(project_root, ".git")
     if os.path.exists(git_dir) and os.path.isdir(git_dir):
         return project_root
-        
+
     # Check parent directories
     current_dir = project_root
     while current_dir and current_dir != os.path.dirname(current_dir):
@@ -271,7 +271,7 @@ def get_repository_root() -> str:
         if os.path.exists(git_dir) and os.path.isdir(git_dir):
             return current_dir
         current_dir = os.path.dirname(current_dir)
-        
+
     # If no git repository found, return project root
     return project_root
 
@@ -479,7 +479,7 @@ if __name__ == "__main__":
     parser.add_argument("--project", action="store_true", help="Output only the project root path")
     parser.add_argument("--python", action="store_true", help="Output only the Python interpreter path")
     parser.add_argument("--register", action="store_true", help="Register the current device")
-    parser.add_argument("--force", action="store_true", 
+    parser.add_argument("--force", action="store_true",
                       help="Force registration even if already registered")
     parser.add_argument("--config", nargs="*", help="Get or set configuration")
     args = parser.parse_args()

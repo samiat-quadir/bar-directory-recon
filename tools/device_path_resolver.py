@@ -27,10 +27,10 @@ DEVICE_CONFIGS = {
 def get_python_interpreter() -> str:
     """
     Returns the appropriate Python interpreter path for the current device.
-    
+
     This function handles differences between Windows and Unix-based systems,
     and provides device-specific Python paths if needed.
-    
+
     Returns:
         str: Path to the Python interpreter
     """

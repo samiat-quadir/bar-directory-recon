@@ -120,6 +120,18 @@
             "type": "shell",
             "command": "git fetch --prune >> logs/cross_device_sync.log 2>&1 && git fsck >> logs/cross_device_sync.log 2>&1 && git gc --auto >> logs/cross_device_sync.log 2>&1 && echo [GIT HEALTH] Repair and health check complete. >> logs/cross_device_sync.log 2>&1",
             "problemMatcher": []
+        },
+        {
+            "label": "Run Pre-commit",
+            "type": "shell",
+            "command": "pre-commit run --all-files",
+            "problemMatcher": []
+        },
+        {
+            "label": "Test Cross-Device",
+            "type": "shell",
+            "command": "powershell -File tools/Test-CrossDeviceCompatibility.ps1",
+            "problemMatcher": []
         }
     ]
 }

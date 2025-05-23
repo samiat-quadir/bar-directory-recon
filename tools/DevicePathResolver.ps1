@@ -130,10 +130,10 @@ function Get-ProjectRootPath {
     if (Test-Path $projectPath) {
         return $projectPath
     }
-    
+
     # Try with original project name (without -new)
     $originalProjectPath = Join-Path -Path $OneDrivePath -ChildPath "$SubPath\bar-directory-recon"
-    
+
     if (Test-Path $originalProjectPath) {
         return $originalProjectPath
     }

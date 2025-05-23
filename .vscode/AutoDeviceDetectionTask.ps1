@@ -34,15 +34,15 @@ function Write-Log {
     param (
         [Parameter(Mandatory = $true)]
         [string]$Message,
-        
+
         [Parameter(Mandatory = $false)]
         [ValidateSet("INFO", "WARNING", "ERROR", "SUCCESS")]
         [string]$Level = "INFO"
     )
-    
+
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $logEntry = "[$timestamp] [$Level] $Message"
-    
+
     # Write to log file
     Add-Content -Path $logFile -Value $logEntry
 }
@@ -85,7 +85,7 @@ try {
         # Try to find Python
         $pythonExe = $null
         $venvPython = Join-Path -Path $projectRoot -ChildPath ".venv\Scripts\python.exe"
-        
+
         if (Test-Path $venvPython) {
             $pythonExe = $venvPython
         }
@@ -93,7 +93,7 @@ try {
             # Try system Python
             $pythonExe = "python"
         }
-        
+
         try {
             Write-Log "Running Python resolver: $pythonResolver" "INFO"
             Start-Process -FilePath $pythonExe -ArgumentList "`"$pythonResolver`"" -NoNewWindow -Wait
@@ -106,7 +106,7 @@ try {
     else {
         Write-Log "Python resolver not found: $pythonResolver" "WARNING"
     }
-    
+
     # Run the PowerShell device detection script as a backup
     $deviceSetupScript = Join-Path -Path $projectRoot -ChildPath "tools\AutoDeviceSetup.ps1"
     if (Test-Path $deviceSetupScript) {
@@ -122,7 +122,7 @@ try {
     else {
         Write-Log "Device setup script not found: $deviceSetupScript" "ERROR"
     }
-    
+
     # Log completion
     Write-Log "AutoDeviceDetectionTask completed" "INFO"
 }
