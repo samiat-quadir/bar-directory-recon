@@ -152,3 +152,7 @@ desktop.ini
 MASTER_IMPLEMENTATION_REPORT.md
 docs/COPILOT_AGENT_SETUP.md
 bar-directory-recon-fresh
+docs/archive/
+logs/phase_4/
+.env.work
+.env.asus
