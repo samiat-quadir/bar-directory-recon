@@ -12,7 +12,11 @@ import sys
 from pathlib import Path
 
 
+<<<<<<< HEAD
+def os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')():
+=======
 def get_onedrive_path():
+>>>>>>> origin/main
     """Get the OneDrive path for the current device."""
     # Try common locations first
     username = os.environ.get("USERNAME", "")
@@ -51,12 +55,21 @@ def scan_file(file_path: str, fix: bool = False) -> int:
     patterns = [
         (r"C:\\Users\\samq\\OneDrive - Digital Age Marketing Group", r"Get-OneDrivePath"),
         (r"C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group", r"Get-OneDrivePath"),
+<<<<<<< HEAD
+        (r"os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", r"Get-OneDrivePath"),
+        (r"os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", r"Get-OneDrivePath"),
+        (r"C:\\Users\\samq\\OneDrive", r"Get-OneDrivePath"),
+        (r"C:\\Users\\samqu\\OneDrive", r"Get-OneDrivePath"),
+        (r"os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", r"Get-OneDrivePath"),
+        (r"os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", r"Get-OneDrivePath"),
+=======
         (r"get_onedrive_path()", r"Get-OneDrivePath"),
         (r"get_onedrive_path()", r"Get-OneDrivePath"),
         (r"C:\\Users\\samq\\OneDrive", r"Get-OneDrivePath"),
         (r"C:\\Users\\samqu\\OneDrive", r"Get-OneDrivePath"),
         (r"get_onedrive_path()", r"Get-OneDrivePath"),
         (r"get_onedrive_path()", r"Get-OneDrivePath"),
+>>>>>>> origin/main
     ]
 
     # Check for each pattern
@@ -72,7 +85,11 @@ def scan_file(file_path: str, fix: bool = False) -> int:
                     content = re.sub(re.escape(pattern), "$(Get-OneDrivePath)", content)
                 # For Python files
                 elif file_path.endswith(".py"):
+<<<<<<< HEAD
+                    content = re.sub(re.escape(pattern), "os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", content)
+=======
                     content = re.sub(re.escape(pattern), "get_onedrive_path()", content)
+>>>>>>> origin/main
                 # For Batch files, insert a variable
                 elif file_path.endswith(".bat") or file_path.endswith(".cmd"):
                     # Insert a line at the top to get OneDrive path if not already there

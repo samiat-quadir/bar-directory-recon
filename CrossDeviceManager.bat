@@ -36,9 +36,16 @@ echo  [5] Switch to another device
 echo  [6] Run full system check
 echo  [7] Update VS Code configuration
 echo  [8] Run OneDrive automation
+<<<<<<< HEAD
+echo  [9] Safe commit and push
+echo  [0] Exit
+echo.
+set /p CHOICE=Enter your choice (0-9):
+=======
 echo  [9] Exit
 echo.
 set /p CHOICE=Enter your choice (1-9):
+>>>>>>> origin/main
 
 if "%CHOICE%"=="1" goto CHECK_STATUS
 if "%CHOICE%"=="2" goto FIX_VENV
@@ -48,7 +55,12 @@ if "%CHOICE%"=="5" goto SWITCH_DEVICE
 if "%CHOICE%"=="6" goto FULL_CHECK
 if "%CHOICE%"=="7" goto UPDATE_VSCODE
 if "%CHOICE%"=="8" goto RUN_ONEDRIVE
+<<<<<<< HEAD
+if "%CHOICE%"=="9" goto SAFE_COMMIT
+if "%CHOICE%"=="0" goto EXIT
+=======
 if "%CHOICE%"=="9" goto EXIT
+>>>>>>> origin/main
 echo Invalid choice. Please try again.
 goto MENU
 
@@ -142,6 +154,34 @@ powershell -ExecutionPolicy Bypass -NoProfile -File "%PROJECT_ROOT%\OneDriveAuto
 pause
 goto MENU
 
+<<<<<<< HEAD
+:SAFE_COMMIT
+echo.
+echo ===================================================
+echo     Safe Commit and Push
+echo ===================================================
+echo.
+call "%PROJECT_ROOT%\safe_commit_push.bat" --dry-run
+echo.
+echo Safe commit dry run completed.
+echo.
+echo Do you want to commit and push changes? (Y/N)
+set /p COMMIT_CHOICE=
+if /i "%COMMIT_CHOICE%"=="Y" (
+    echo.
+    echo Enter commit message (press Enter for default):
+    set /p COMMIT_MSG=
+    if not "%COMMIT_MSG%"=="" (
+        call "%PROJECT_ROOT%\safe_commit_push.bat" --message "%COMMIT_MSG%"
+    ) else (
+        call "%PROJECT_ROOT%\safe_commit_push.bat"
+    )
+)
+pause
+goto MENU
+
+=======
+>>>>>>> origin/main
 :EXIT
 echo.
 echo Exiting Cross-Device Manager...

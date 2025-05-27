@@ -30,6 +30,13 @@ $DEVICE_CONFIGS = @{
         Username       = "samqu"
         OneDriveFolder = "OneDrive - Digital Age Marketing Group"
     }
+<<<<<<< HEAD
+    "SALESREP"     = @{
+        Username       = "samq"
+        OneDriveFolder = "OneDrive - Digital Age Marketing Group"
+    }
+=======
+>>>>>>> origin/main
 }
 
 # Function to detect current device
@@ -115,8 +122,14 @@ function Get-OneDrivePath {
 function Get-ProjectRootPath {
     param (
         [string]$OneDrivePath = (Get-OneDrivePath),
+<<<<<<< HEAD
+        [string]$ProjectName = "bar-directory-recon-new",
+        [string]$SubPath = "Desktop\Local Py\Work Projects",
+        [string]$DefaultPath = $null
+=======
         [string]$ProjectName = "bar-directory-recon",
         [string]$SubPath = "Desktop\Local Py\Work Projects"
+>>>>>>> origin/main
     )
 
     # First try the expected path within OneDrive
@@ -126,6 +139,16 @@ function Get-ProjectRootPath {
         return $projectPath
     }
 
+<<<<<<< HEAD
+    # Try with original project name (without -new)
+    $originalProjectPath = Join-Path -Path $OneDrivePath -ChildPath "$SubPath\bar-directory-recon"
+
+    if (Test-Path $originalProjectPath) {
+        return $originalProjectPath
+    }
+
+=======
+>>>>>>> origin/main
     # If not found, try to locate it anywhere within OneDrive
     $foundPaths = Get-ChildItem -Path $OneDrivePath -Recurse -Directory -Filter $ProjectName -ErrorAction SilentlyContinue |
     Select-Object -First 1 -ExpandProperty FullName

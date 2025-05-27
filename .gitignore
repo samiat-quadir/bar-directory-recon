@@ -150,3 +150,15 @@ desktop.ini
 Thumbs.db
 desktop.ini
 MASTER_IMPLEMENTATION_REPORT.md
+<<<<<<< HEAD
+docs/COPILOT_AGENT_SETUP.md
+bar-directory-recon-fresh
+docs/archive/
+logs/phase_4/
+.env.work
+.env.asus
+=======
+>>>>>>> origin/main
+.git_backup_SalesRep/
+.vscode/tasks-ROG-Lucci.json
+tools/Test-CrossDeviceCompatibility.ps1
