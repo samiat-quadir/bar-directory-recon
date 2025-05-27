@@ -162,3 +162,5 @@ logs/phase_4/
 .git_backup_SalesRep/
 .vscode/tasks-ROG-Lucci.json
 tools/Test-CrossDeviceCompatibility.ps1
+universal_recon/bar-recon-clean
+bar-directory-recon-fresh
