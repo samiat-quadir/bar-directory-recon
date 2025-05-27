@@ -16,7 +16,11 @@ from typing import List, Dict, Tuple, Set, Optional
 # Import our device path resolver if possible
 try:
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'tools'))
+<<<<<<< HEAD
+    from device_path_resolver import get_project_root_path, os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')
+=======
     from device_path_resolver import get_project_root_path, get_onedrive_path
+>>>>>>> origin/main
     RESOLVER_AVAILABLE = True
 except ImportError:
     RESOLVER_AVAILABLE = False
@@ -25,12 +29,21 @@ except ImportError:
 PATH_PATTERNS = [
     r'C:\\Users\\samq\\OneDrive',
     r'C:\\Users\\samqu\\OneDrive',
+<<<<<<< HEAD
+    r'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()',
+    r'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()',
+    r'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group',
+    r'C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group',
+    r'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()',
+    r'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()',
+=======
     r'get_onedrive_path()',
     r'get_onedrive_path()',
     r'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group',
     r'C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group',
     r'get_onedrive_path()',
     r'get_onedrive_path()',
+>>>>>>> origin/main
     r'samq\\OneDrive',
     r'samqu\\OneDrive'
 ]
@@ -159,7 +172,11 @@ class PathScanner:
         norm_path = full_path.replace('\\', '/')
 
         # Get project root and OneDrive path
+<<<<<<< HEAD
+        onedrive_path = os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()
+=======
         onedrive_path = get_onedrive_path()
+>>>>>>> origin/main
         if onedrive_path:
             norm_onedrive = onedrive_path.replace('\\', '/')
 

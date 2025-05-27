@@ -1,5 +1,7 @@
 # universal_recon/analytics/audit_score_matrix_generator.py
 
+from typing import Dict, List
+
 
 def run_analysis(records, config=None):
 """TODO: Add docstring."""

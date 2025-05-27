@@ -1,0 +1,44 @@
+---
+email_validator:
+  plugin: email_plugin
+  on_plugin_removed: warning
+  badge_label: "Email Field Validation"
+  suppression_reason: "Missing email field decreases site contactability."
+  risk_band: medium
+
+bar_number_check:
+  plugin: bar_number_annotator
+  on_plugin_removed: critical
+  badge_label: "Attorney Bar Number Check"
+  suppression_reason: "Bar number missing reduces legal trust verification."
+  risk_band: critical
+
+firm_name_matcher:
+  plugin: firm_parser
+  on_plugin_removed: warning
+  badge_label: "Firm Name Matching"
+  suppression_reason: "Firm names missing or mismatched reduce directory accuracy."
+  risk_band: medium
+
+firm_name_validator:
+  plugin: firm_parser
+  on_plugin_removed: warning
+  badge_label: "Law Firm Presence Validation"
+  suppression_reason: "Missing or mismatched firm names affect credibility."
+  risk_band: medium
+
+address_validator:
+  badge_label: "Address Presence Check"
+  suppression_reason: "Missing address reduces mailing and regional trust signals."
+  severity: warning
+  required_if_domain: ["legal"]
+  risk_band: medium
+
+form_completeness_check:
+  plugin: form_autofill
+  on_plugin_removed: warning
+  badge_label: "Form Completeness Detection"
+  suppression_reason: "Incomplete contact forms limit directory usability."
+  drift_penalty: 0.05
+  tooltip: "Detects whether directory includes autofill-ready contact forms."
+  risk_band: medium

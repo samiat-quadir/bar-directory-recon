@@ -1,0 +1,480 @@
+Folder PATH listing for volume Acer
+Volume serial number is DE9F-4209
+C:.
+¦   .gitattributes
+¦   Claude 3.7 Recon Assistant.txt
+¦   main.py
+¦   multisite_config.json
+¦   plugin_aggregator.py
+¦   plugin_loader.py
+¦   plugin_registry.json
+¦   Python Chat (Recon Dev).txt
+¦   README_phase_24.md
+¦   README_phase_25.md
+¦   README_phase_26.md
+¦   requirements.txt
+¦   run_phase_21b_analysis.py
+¦   universal_recon_project_files.txt
+¦   universal_recon_structure.txt
+¦   __init__.py
+¦
++---analytics
+¦   ¦   audit_score_matrix_generator.py
+¦   ¦   domain_anomaly_flagger.py
+¦   ¦   drift_dashboard_generator.py
+¦   ¦   export_csv_summary.py
+¦   ¦   full_report_generator.py
+¦   ¦   overlay_visualizer.py
+¦   ¦   plugin_decay_overlay.py
+¦   ¦   plugin_registry_dashboard.py
+¦   ¦   plugin_usage_diff.py
+¦   ¦   risk_overlay_emitter.py
+¦   ¦   schema_dashboard_stub.py
+¦   ¦   schema_matrix_collector.py
+¦   ¦   schema_score_linter.py
+¦   ¦   score_drift_export.py
+¦   ¦   site_schema_collector.py
+¦   ¦   template_health_flagger.py
+¦   ¦   trend_badge_tracker.py
+¦   ¦   trend_dashboard_stub.py
+¦   ¦   validator_drift_overlay.py
+¦   ¦   __init__.py
+¦   ¦
+¦   +---assets
+¦   ¦       style_overlay.css
+¦   ¦       __init__.py
+¦   ¦
+¦   +---__pycache__
+¦           plugin_usage_diff.cpython-313.pyc
+¦           risk_overlay_emitter.cpython-312.pyc
+¦           risk_overlay_emitter.cpython-313.pyc
+¦           site_schema_collector.cpython-312.pyc
+¦           site_schema_collector.cpython-313.pyc
+¦           validator_drift_overlay.cpython-312.pyc
+¦           validator_drift_overlay.cpython-313.pyc
+¦           __init__.cpython-312.pyc
+¦           __init__.cpython-313.pyc
+¦
++---bar-recon-clean
+¦   ¦   -ROG-Lucci.gitignore
+¦   ¦   .dockerignore
+¦   ¦   .env.asus
+¦   ¦   .env.example
+¦   ¦   .env.work
+¦   ¦   .gitignore
+¦   ¦   Ai Integration Setup.yaml
+¦   ¦   Ai Project Setup & Automation Roadmap.txt
+¦   ¦   ASUS_AI_Integration_Status.yaml
+¦   ¦   automation_run.log
+¦   ¦   AUTOMATION_SUMMARY.yaml
+¦   ¦   auto_commit.ps1
+¦   ¦   auto_git_commit.py
+¦   ¦   cleanup_report.log
+¦   ¦   daily_automation.py
+¦   ¦   docker-compose.debug.yml
+¦   ¦   docker-compose.yml
+¦   ¦   Dockerfile
+¦   ¦   email_notifier.log
+¦   ¦   env_loader.py
+¦   ¦   folder_structure.txt
+¦   ¦   generate_readme.py
+¦   ¦   git
+¦   ¦   git_commit.log
+¦   ¦   git_commit_and_notify.py
+¦   ¦   git_commit_api.py
+¦   ¦   git_commit_notify.log
+¦   ¦   git_commit_notify.log.zip
+¦   ¦   gmail_auth.log
+¦   ¦   gmail_authenticator.py
+¦   ¦   gmail_notifier.log.zip
+¦   ¦   gmail_notifier.py
+¦   ¦   google_sheets_updater.log.zip
+¦   ¦   google_sheets_updater.py
+¦   ¦   init_launcher.py
+¦   ¦   motion_email_task.log
+¦   ¦   motion_task_creator.log
+¦   ¦   ngrok recovery passwords.txt
+¦   ¦   notifier.log.zip
+¦   ¦   notifier.py
+¦   ¦   plugin_registry.json
+¦   ¦   plugin_snapshot.json
+¦   ¦   project_path.py
+¦   ¦   project_status.yaml
+¦   ¦   python
+¦   ¦   README-ROG-Lucci.md
+¦   ¦   README.md
+¦   ¦   requirements-ROG-Lucci.txt
+¦   ¦   requirements.txt
+¦   ¦   scheduled_task_script.py
+¦   ¦   Set Up Info.txt
+¦   ¦   Setup Instructions v1.txt
+¦   ¦   system_info.txt
+¦   ¦   system_report.log
+¦   ¦   system_report.py
+¦   ¦   tasks_list.txt
+¦   ¦   test.txt
+¦   ¦   test_git_asus.txt
+¦   ¦   test_git_commit.txt
+¦   ¦   universal_recon_tracker.yaml
+¦   ¦   usalawyersdb.py
+¦   ¦
+¦   +---.git
+¦   ¦   ¦   config
+¦   ¦   ¦   description
+¦   ¦   ¦   FETCH_HEAD
+¦   ¦   ¦   HEAD
+¦   ¦   ¦   index
+¦   ¦   ¦   packed-refs
+¦   ¦   ¦   shallow
+¦   ¦   ¦
+¦   ¦   +---hooks
+¦   ¦   ¦       applypatch-msg.sample
+¦   ¦   ¦       commit-msg.sample
+¦   ¦   ¦       fsmonitor-watchman.sample
+¦   ¦   ¦       post-update.sample
+¦   ¦   ¦       pre-applypatch.sample
+¦   ¦   ¦       pre-commit.sample
+¦   ¦   ¦       pre-merge-commit.sample
+¦   ¦   ¦       pre-push.sample
+¦   ¦   ¦       pre-rebase.sample
+¦   ¦   ¦       pre-receive.sample
+¦   ¦   ¦       prepare-commit-msg.sample
+¦   ¦   ¦       push-to-checkout.sample
+¦   ¦   ¦       sendemail-validate.sample
+¦   ¦   ¦       update.sample
+¦   ¦   ¦
+¦   ¦   +---info
+¦   ¦   ¦       exclude
+¦   ¦   ¦
+¦   ¦   +---logs
+¦   ¦   ¦   ¦   HEAD
+¦   ¦   ¦   ¦
+¦   ¦   ¦   +---refs
+¦   ¦   ¦       +---heads
+¦   ¦   ¦       ¦       main
+¦   ¦   ¦       ¦
+¦   ¦   ¦       +---remotes
+¦   ¦   ¦           +---origin
+¦   ¦   ¦                   HEAD
+¦   ¦   ¦                   main
+¦   ¦   ¦
+¦   ¦   +---objects
+¦   ¦   ¦   +---info
+¦   ¦   ¦   +---pack
+¦   ¦   ¦           pack-143c1045762c25205ca459e2c5e9b3c524ebaf2b.idx
+¦   ¦   ¦           pack-143c1045762c25205ca459e2c5e9b3c524ebaf2b.pack
+¦   ¦   ¦           pack-143c1045762c25205ca459e2c5e9b3c524ebaf2b.rev
+¦   ¦   ¦           pack-395a04a9bd79e250ae9e9883e3fcce110aae21cf.idx
+¦   ¦   ¦           pack-395a04a9bd79e250ae9e9883e3fcce110aae21cf.pack
+¦   ¦   ¦           pack-395a04a9bd79e250ae9e9883e3fcce110aae21cf.rev
+¦   ¦   ¦
+¦   ¦   +---refs
+¦   ¦       +---heads
+¦   ¦       ¦       main
+¦   ¦       ¦
+¦   ¦       +---remotes
+¦   ¦       ¦   +---origin
+¦   ¦       ¦           HEAD
+¦   ¦       ¦           main
+¦   ¦       ¦
+¦   ¦       +---tags
+¦   +---.github
+¦   ¦   +---ISSUE_TEMPLATE
+¦   ¦   ¦       bug_report.md
+¦   ¦   ¦       feature_request.md
+¦   ¦   ¦
+¦   ¦   +---workflows
+¦   ¦           basic-test.yml.txt
+¦   ¦           Github info.txt
+¦   ¦
+¦   +---.vscode
+¦   ¦       launch.json
+¦   ¦       mcp.json
+¦   ¦       my_instructions.prompt.md
+¦   ¦       settings.json
+¦   ¦       tasks.json
+¦   ¦
+¦   +---output
+¦   ¦       landing_2025-03-04_16-19-32.png
+¦   ¦       landing_2025-03-04_16-51-59.png
+¦   ¦       recon_2025-03-04_16-19-33.json
+¦   ¦       recon_2025-03-04_16-52-01.json
+¦   ¦       recon_2025-03-04_16-57-36.json
+¦   ¦       recon_2025-03-09_22-32-32.json
+¦   ¦       recon_2025-03-10_01-21-35.json
+¦   ¦       recon_2025-03-13_14-51-13.json
+¦   ¦       recon_2025-03-13_16-20-37.json
+¦   ¦       recon_2025-03-27_17-33-51.log
+¦   ¦       root_depth_0_2025-03-04_16-19-32.png
+¦   ¦       root_depth_0_2025-03-04_16-52-00.png
+¦   ¦
+¦   +---src
+¦   ¦   ¦   auto_zip_archiver.py
+¦   ¦   ¦   backup_manager.py
+¦   ¦   ¦   cleanup_manager.py
+¦   ¦   ¦   cleanup_old_files.py
+¦   ¦   ¦   email_summary_report.py
+¦   ¦   ¦   health_check.py
+¦   ¦   ¦   log_rotator.py
+¦   ¦   ¦   log_summary.py
+¦   ¦   ¦   motion_create_task.py
+¦   ¦   ¦   motion_task_via_email.py
+¦   ¦   ¦   observer_task.py
+¦   ¦   ¦   plugin_snapshot.py
+¦   ¦   ¦   recon1.py
+¦   ¦   ¦   test_chromedriver.py
+¦   ¦   ¦   universal_recon-ROG-Lucci.py
+¦   ¦   ¦   universal_recon.py
+¦   ¦   ¦   utah_bar_scraper.py
+¦   ¦   ¦   ut_bar.py
+¦   ¦   ¦
+¦   ¦   +---backups
+¦   ¦   ¦   +---archives
+¦   ¦   ¦           backup_archive_20250415_122932.zip
+¦   ¦   ¦           backup_archive_20250415_135404.zip
+¦   ¦   ¦           backup_archive_20250415_135820.zip
+¦   ¦   ¦           backup_archive_20250415_153056.zip
+¦   ¦   ¦           backup_archive_20250415_154233.zip
+¦   ¦   ¦
+¦   ¦   +---plugins
+¦   ¦   ¦       plugin_snapshot.json
+¦   ¦   ¦
+¦   ¦   +---__pycache__
+¦   ¦           test_chromedriver.cpython-312-pytest-8.3.5.pyc
+¦   ¦           test_chromedriver.cpython-313-pytest-8.3.5.pyc
+¦   ¦
+¦   +---universal_recon
+¦       ¦   Claude 3.7 Recon Assistant.txt
+¦       ¦   main.py
+¦       ¦   plugin_registry.json
+¦       ¦   Python Chat (Recon Dev).txt
+¦       ¦   requirements.txt
+¦       ¦   universal_recon_project_files.txt
+¦       ¦
+¦       +---analytics
+¦       ¦       audit_score_matrix_generator.py
+¦       ¦       full_report_generator.py
+¦       ¦       template_health_flagger.py
+¦       ¦       trend_dashboard_stub.py
+¦       ¦
+¦       +---core
+¦       ¦       batch_site_runner.py
+¦       ¦       config_loader.py
+¦       ¦       driver_manager.py
+¦       ¦       logger.py
+¦       ¦       orchestrator.py
+¦       ¦       retry.py
+¦       ¦
+¦       +---detection
+¦       ¦       email.py
+¦       ¦
+¦       +---output
+¦       ¦       validator_output_example.json
+¦       ¦
+¦       +---plugins
+¦       ¦       ai_template_indexer.py
+¦       ¦       bar_number_annotator.py
+¦       ¦       email_plugin.py
+¦       ¦       firm_parser.py
+¦       ¦       form_autofill.py
+¦       ¦       ml_labeler.py
+¦       ¦       plugin_registry.json
+¦       ¦       record_field_validator_v3.py
+¦       ¦       social_link_parser.py
+¦       ¦
+¦       +---schema
+¦       ¦       field_schema.json
+¦       ¦       validation_matrix.yaml
+¦       ¦
+¦       +---utils
+¦       ¦       field_ranker.py
+¦       ¦       recon_summary_builder.py
+¦       ¦       recon_trend_tracker.py
+¦       ¦       record_field_validator.py
+¦       ¦       record_field_validator_v2.py
+¦       ¦       record_normalizer.py
+¦       ¦       retry.py
+¦       ¦       score_predictor.py
+¦       ¦       snapshot_manager.py
+¦       ¦       template_clusterer.py
+¦       ¦       template_completeness_checker.py
+¦       ¦
+¦       +---validators
+¦               bar_number_format_validator.py
+¦               firm_name_matcher.py
+¦               record_field_validator_v3.py
+¦
++---core
+¦   ¦   batch_site_runner.py
+¦   ¦   config_loader.py
+¦   ¦   driver_manager.py
+¦   ¦   logger.py
+¦   ¦   orchestrator.py
+¦   ¦   output_manager.py
+¦   ¦   report_printer.py
+¦   ¦   retry.py
+¦   ¦   snapshot_manager.py
+¦   ¦   __init__.py
+¦   ¦
+¦   +---__pycache__
+¦           logger.cpython-312.pyc
+¦           logger.cpython-313.pyc
+¦           __init__.cpython-312.pyc
+¦           __init__.cpython-313.pyc
+¦
++---detection
+¦       email.py
+¦
++---output
+¦       validator_output_example.json
+¦
++---plugins
+¦   ¦   ai_template_indexer.py
+¦   ¦   bar_number_annotator.py
+¦   ¦   email_plugin.py
+¦   ¦   firm_parser.py
+¦   ¦   form_autofill.py
+¦   ¦   ml_labeler.py
+¦   ¦   plugin_registry.json
+¦   ¦   record_field_validator_v3.py
+¦   ¦   social_link_parser.py
+¦   ¦   __init__.py
+¦   ¦
+¦   +---__pycache__
+¦           firm_parser.cpython-313.pyc
+¦           ml_labeler.cpython-313.pyc
+¦           social_link_parser.cpython-313.pyc
+¦           __init__.cpython-313.pyc
+¦
++---schema
+¦       field_schema.json
+¦       validation_matrix.yaml
+¦
++---tests
+¦   ¦   conftest.py
+¦   ¦   test_basic.py
+¦   ¦   test_drift_dashboard_generator.py
+¦   ¦   test_plugin_usage_diff.py
+¦   ¦   test_risk_overlay_emitter.py
+¦   ¦   __init__.py
+¦   ¦
+¦   +---analytics
+¦   ¦   ¦   conftest.py
+¦   ¦   ¦   test_plugin_usage_diff.py
+¦   ¦   ¦   test_risk_overlay_emitter.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦
+¦   ¦   +---__pycache__
+¦   ¦           conftest.cpython-313-pytest-8.3.5.pyc
+¦   ¦           test_plugin_usage_diff.cpython-313-pytest-8.3.5.pyc
+¦   ¦           test_risk_overlay_emitter.cpython-313-pytest-8.3.5.pyc
+¦   ¦           __init__.cpython-313.pyc
+¦   ¦
+¦   +---fixtures
+¦   ¦       sample_schema.json
+¦   ¦       __init__.py
+¦   ¦
+¦   +---infrastructure
+¦   ¦   ¦   test_chromedriver.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦
+¦   ¦   +---__pycache__
+¦   ¦           test_chromedriver.cpython-312-pytest-8.3.5.pyc
+¦   ¦           test_chromedriver.cpython-313-pytest-8.3.5.pyc
+¦   ¦           __init__.cpython-312.pyc
+¦   ¦           __init__.cpython-313.pyc
+¦   ¦
+¦   +---plugins
+¦   ¦   ¦   test_firm_parser.py
+¦   ¦   ¦   test_ml_labeler.py
+¦   ¦   ¦   test_social_link_parser.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦
+¦   ¦   +---__pycache__
+¦   ¦           test_firm_parser.cpython-313-pytest-8.3.5.pyc
+¦   ¦           test_ml_labeler.cpython-313-pytest-8.3.5.pyc
+¦   ¦           test_social_link_parser.cpython-313-pytest-8.3.5.pyc
+¦   ¦           __init__.cpython-313.pyc
+¦   ¦
+¦   +---utils
+¦   ¦   ¦   test_audit_report_generator.py
+¦   ¦   ¦   test_recon_trend_tracker.py
+¦   ¦   ¦   test_score_predictor.py
+¦   ¦   ¦   test_score_visualizer.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦
+¦   ¦   +---__pycache__
+¦   ¦           test_audit_report_generator.cpython-312-pytest-8.3.5.pyc
+¦   ¦           test_audit_report_generator.cpython-313-pytest-8.3.5.pyc
+¦   ¦           test_recon_trend_tracker.cpython-312-pytest-8.3.5.pyc
+¦   ¦           test_recon_trend_tracker.cpython-313-pytest-8.3.5.pyc
+¦   ¦           test_score_predictor.cpython-312-pytest-8.3.5.pyc
+¦   ¦           test_score_predictor.cpython-313-pytest-8.3.5.pyc
+¦   ¦           test_score_visualizer.cpython-312-pytest-8.3.5.pyc
+¦   ¦           test_score_visualizer.cpython-313-pytest-8.3.5.pyc
+¦   ¦           __init__.cpython-312.pyc
+¦   ¦           __init__.cpython-313.pyc
+¦   ¦
+¦   +---__pycache__
+¦           conftest.cpython-312-pytest-8.3.5.pyc
+¦           conftest.cpython-313-pytest-8.3.5.pyc
+¦           test_basic.cpython-312-pytest-8.3.5.pyc
+¦           test_basic.cpython-313-pytest-8.3.5.pyc
+¦           test_risk_overlay_emitter.cpython-312-pytest-8.3.5.pyc
+¦           test_risk_overlay_emitter.cpython-313-pytest-8.3.5.pyc
+¦           __init__.cpython-312.pyc
+¦           __init__.cpython-313.pyc
+¦
++---utils
+¦   ¦   audit_report_generator.py
+¦   ¦   field_ranker.py
+¦   ¦   health_bootstrap.py
+¦   ¦   module_health_checker.py
+¦   ¦   phase_27_health_report.py
+¦   ¦   recon_summary_builder.py
+¦   ¦   recon_trend_tracker.py
+¦   ¦   record_field_validator.py
+¦   ¦   record_field_validator_v2.py
+¦   ¦   record_normalizer.py
+¦   ¦   retry.py
+¦   ¦   score_predictor.py
+¦   ¦   score_suppressor.py
+¦   ¦   score_visualizer.py
+¦   ¦   status_html_emitter.py
+¦   ¦   status_summary_emitter.py
+¦   ¦   template_clusterer.py
+¦   ¦   template_completeness_checker.py
+¦   ¦   validation_loader.py
+¦   ¦   validator_drift_badges.py
+¦   ¦   __init__.py
+¦   ¦
+¦   +---__pycache__
+¦           audit_report_generator.cpython-312.pyc
+¦           audit_report_generator.cpython-313.pyc
+¦           recon_trend_tracker.cpython-312.pyc
+¦           recon_trend_tracker.cpython-313.pyc
+¦           record_normalizer.cpython-313.pyc
+¦           score_predictor.cpython-312.pyc
+¦           score_predictor.cpython-313.pyc
+¦           score_visualizer.cpython-312.pyc
+¦           score_visualizer.cpython-313.pyc
+¦           __init__.cpython-312.pyc
+¦           __init__.cpython-313.pyc
+¦
++---validators
+¦       bar_number_format_validator.py
+¦       fieldmap_domain_linter.py
+¦       fieldmap_validator.py
+¦       firm_name_matcher.py
+¦       record_field_validator_v3.py
+¦       run_phase_21b_analysis.py
+¦       validation_matrix.py
+¦       validation_matrix.yam
+¦       validation_matrix.yaml
+¦       validator_drift_overlay.py
+¦       validator_tiers.yaml
+¦       __init__.py
+¦
++---__pycache__
+        __init__.cpython-312.pyc
+        __init__.cpython-313.pyc

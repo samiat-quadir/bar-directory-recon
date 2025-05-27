@@ -1,7 +1,10 @@
 import unittest
 
+<<<<<<< HEAD:universal_recon/tests/utils/test_recon_trend_tracker.py
+=======
 <<<<<<< HEAD
 # Import from proper package path
+>>>>>>> origin/main:universal_recon/tests/utils/test_recon_trend_tracker.py.isorted
 from universal_recon.utils.recon_trend_tracker import analyze_trends
 
 =======
@@ -31,6 +34,7 @@ mock_summary_current = {
 
 
 class TestReconTrendTracker(unittest.TestCase):
+
     def test_analyze_trends_output_shape(self):
         result = analyze_trends("test_site", [mock_summary_past, mock_summary_current])
         self.assertIn("field_score_drift", result)
@@ -50,6 +54,11 @@ class TestReconTrendTracker(unittest.TestCase):
     def test_field_absence_trend_detected(self):
         result = analyze_trends("test_site", [mock_summary_past, mock_summary_current])
         self.assertIn("phone", result["field_absence_trends"])
+
+
+def test_analyze_trends():
+    """Basic test to verify trend analysis functionality."""
+    assert callable(analyze_trends)
 
 
 if __name__ == "__main__":

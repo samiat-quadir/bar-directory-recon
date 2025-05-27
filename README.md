@@ -1,125 +1,89 @@
-# OneDrive Automation Solution
-
-A comprehensive PowerShell automation solution for managing OneDrive-based development environments.
+# OneDrive Automation & AI Integration Project
 
 ## Overview
 
-This automation solution addresses common challenges with using OneDrive for development:
+This project provides a unified automation and AI integration solution for managing OneDrive-based development environments across multiple devices (e.g., ASUS laptop and Work Desktop). It includes robust environment detection, cross-device sync, Git automation, secrets scanning, and AI-powered task automation.
 
-1. 🔍 **Path Resolution**: Correctly identifies and resolves OneDrive paths across different devices
-2. 📁 **Folder Standardization**: Creates and maintains a consistent folder structure
-3. 🔄 **Cross-Device Synchronization**: Ensures environment parity (Python packages, VS Code extensions, etc.)
-4. 🐙 **Git Repository Management**: Detects and resolves Git repository conflicts
-5. 🔒 **Secrets Scanning**: Identifies sensitive information in files
-6. ⏰ **Scheduled Tasks**: Automates maintenance operations
+---
 
-## Requirements
+## Key Features
 
-- Windows 10/11 with PowerShell 5.1 or higher
-- OneDrive installed and configured
-- Python 3.11+ (for Python automation and scripts)
-- Administrator rights (for scheduled tasks)
+- **Path Resolution & Folder Standardization**: Ensures consistent folder structure and path resolution across devices.
+- **Cross-Device Synchronization**: Syncs Python environments, VS Code extensions, and device-specific configs using `.env.work` and `.env.asus` files, auto-loaded by `env_loader.py`.
+- **Git Automation**: Auto-commit, push, and notification scripts (`auto_git_commit.py`, `git_commit_and_notify.py`).
+- **Secrets Scanning**: Identifies sensitive info in files.
+- **Central Logging**: All logs are UTF-8 and stored in the synced OneDrive project folder for easy access.
+- **AI & Motion App Integration**: Local Flask API and Motion App API for automated task creation, replacing Zapier.
+- **Health Checks & Maintenance**: Includes health check scripts, log rotation, and scheduled tasks.
+
+---
 
 ## Getting Started
 
+### Requirements
+
+- Windows 10/11, PowerShell 5.1+
+- OneDrive installed and configured
+- Python 3.11+
+- Admin rights for scheduled tasks
+
 ### Virtual Environment Setup
 
-This project uses a Python virtual environment to manage dependencies. You have several ways to activate it:
+- Use `activate_venv.bat` (CMD) or `ActivateVenv.ps1` (PowerShell) to activate the Python environment.
+- For full dev setup: `RunDevelopment.bat` or `StartDevPowerShell.bat`.
+- To fix or recreate the venv: `fix_venv_activation.bat` and `InstallDependencies.bat`.
 
-#### For CMD/Command Prompt Users
+### Environment Variables
 
-```bat
-# One-time activation
-activate_venv.bat
+- `.env.work` and `.env.asus` are used for device-specific configs.
+- `env_loader.py` auto-detects and loads the correct file.
+- Only one `.env` is loaded per execution.
 
-# For a full development environment with a menu
-RunDevelopment.bat
-```
+### First-Time Setup
 
-#### For PowerShell Users
+1. Activate the venv and install dependencies.
+2. Run `RunOneDriveAutomation.bat` and follow the menu.
+3. For preview, use option 7; for full automation, use option 1.
 
-```powershell
-# Start a development PowerShell session with virtual environment
-.\StartDevPowerShell.bat
+---
 
-# Or from an existing PowerShell window
-.\ActivateVenv.ps1
-```
+## Automation Scripts
 
-#### First-Time Setup
+- **OneDriveAutomation.ps1**: Main entry for all tasks.
+- **auto_git_commit.py**: Auto-commits and pushes to GitHub.
+- **git_commit_and_notify.py**: Commits, pushes, and sends notifications.
+- **notifier.py**: Handles all email notifications (HTML supported).
+- **motion_task_creator.py**: Local integration with Motion App via Flask API.
+- **health_check.py**: Verifies environment and variables.
+- **log_rotator.py**: Archives old logs.
 
-If you need to recreate or fix the virtual environment:
+---
 
-```bat
-# Fix activation scripts
-fix_venv_activation.bat
+## Best Practices
 
-# Install all dependencies
-InstallDependencies.bat
-```
+- Always use `env_loader.py` for environment detection.
+- Maintain only one version of each core script.
+- Keep `.env` files in the project root.
+- Log all actions for traceability.
+- Deprecated: `.env` (generic), `token.pickle`, device-specific notifier scripts.
 
-### Quick Start
+---
 
-1. Run `RunOneDriveAutomation.bat` and select an option from the menu
-2. For first-time setup, choose option 7 "Run in preview mode" to see what changes would be made
-3. Then run option 1 "Run all tasks" to apply all changes
+## Project Roadmap (Excerpt)
 
-### Command-Line Usage
+- [x] Unified .env management and loader
+- [x] Centralized logging
+- [x] AI-powered task automation (Motion App integration)
+- [x] Git automation and notification
+- [ ] Optional: Further AI enhancements and advanced analytics
 
-The main script can be run directly from PowerShell:
+---
 
-```powershell
-# Run all tasks
-.\OneDriveAutomation.ps1 -Tasks All
+## Contributors & Contact
 
-# Run specific task with preview (no changes)
-.\OneDriveAutomation.ps1 -Tasks StandardizeFolders -WhatIf
+- For setup help, see the archived Setup Instructions and Roadmap in `docs/archive/`.
+- For issues, open a ticket or contact the maintainer.
 
-# Specify custom OneDrive path
-.\OneDriveAutomation.ps1 -OneDrivePath "D:\Custom OneDrive Path"
-```
+---
 
-## Available Tasks
-
-| Task | Description |
-|------|-------------|
-| `ResolvePath` | Detects and validates OneDrive path |
-| `StandardizeFolders` | Creates standard folder structure and organizes files |
-| `SyncEnvironment` | Synchronizes development environments across devices |
-| `GitCleanup` | Manages Git repositories and resolves conflicts |
-| `ScanSecrets` | Scans for sensitive information in files |
-| `ScheduleTasks` | Sets up scheduled automation tasks |
-| `All` | Runs all tasks in sequence |
-
-## Configuration
-
-The scripts use default values that can be overridden:
-
-- OneDrive path: `C:\Users\samq\OneDrive - Digital Age Marketing Group`
-- Primary repo path: `C:\bar-directory-recon`
-- Device ID: Uses computer name by default
-
-## Utility Tools
-
-The solution includes several utility scripts in the `tools` folder:
-
-- `consolidate_env_files.ps1`: Merges .env files from different devices
-- `git_repo_cleanup.ps1`: Manages Git repositories in OneDrive
-- `secrets_scan.py`: Python-based scanner for sensitive information
-- `VirtualEnvHelper.ps1`: Manages Python virtual environments
-
-## Troubleshooting
-
-- **Path Issues**: Use the `ResolvePath` task to verify OneDrive path detection
-- **Permission Errors**: Run as Administrator for tasks that require elevated privileges
-- **Synchronization Conflicts**: Run `GitCleanup` to resolve Git-related issues
-- **Log Files**: Check the `Logs` folder for detailed execution logs
-- **Virtual Environment Issues**: Use `fix_venv_activation.bat` to repair activation scripts
-
-## License
-
-MIT
-
-## Author
-
-Created with GitHub Copilot
+*This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*

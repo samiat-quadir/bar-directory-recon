@@ -1,0 +1,68 @@
+{
+    "repository_meta": {
+        "name": "bar-directory-recon",
+        "description": "Cross-device compatible repository with OneDrive integration",
+        "last_status_update": "2025-05-20"
+    },
+    "current_issues": {
+        "git_issues": {
+            "symlinks": "Multiple symbolic links causing Git commit failures",
+            "missing_objects": "Some Git objects are corrupt or missing",
+            "status_file": "GIT_REPOSITORY_STATUS.md contains full details"
+        }
+    },
+    "devices": {
+        "SALESREP": {
+            "description": "Work Desktop",
+            "path_format": "c:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon",
+            "venv": ".venv",
+            "os": "Windows",
+            "python_version": "3.13.3"
+        },
+        "ROG-LUCCI": {
+            "description": "ASUS Gaming Laptop",
+            "path_format": "c:\\Users\\samqu\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon",
+            "venv": ".venv",
+            "os": "Windows",
+            "python_version": "3.13.3"
+        }
+    },
+    "cross_device_setup": {
+        "main_files": [
+            "config/device_profile.json",
+            "tools/DevicePathResolver.ps1",
+            "tools/device_path_resolver.py"
+        ],
+        "device_detection": "Automatic via startup.ps1",
+        "manual_switch": "Use DeviceSwitch.bat to switch device profiles"
+    },
+    "agent_instructions": {
+        "general": [
+            "Always check GIT_REPOSITORY_STATUS.md for latest status",
+            "Use Test-CrossDeviceCompatibility.ps1 to verify environment",
+            "Run VS Code tasks for common operations"
+        ],
+        "SALESREP_specific": [
+            "Fix Git symlink issues before any commits",
+            "Run fix_symlinks_comprehensive.ps1 if Git errors occur",
+            "Always verify OneDrive sync status"
+        ],
+        "ROG-LUCCI_specific": [
+            "Run DeviceSwitch.bat when switching to this device",
+            "Verify path resolution with device_profile.json"
+        ],
+        "phase_28_dashboard": [
+            "Consult phase_28_execution_tracker.yaml for current status",
+            "Log all operations in logs/phase_28/ directory",
+            "Use planning/ directory for documentation updates"
+        ]
+    },
+    "vs_code_tasks": {
+        "recommended": [
+            "Test Cross-Device Compatibility",
+            "Detect and Configure Device",
+            "Set Up Cross-Device Environment",
+            "Scan for Hardcoded Paths"
+        ]
+    }
+}

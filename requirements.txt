@@ -12,6 +12,12 @@ fastapi>=0.104.0
 uvicorn>=0.23.2
 sqlalchemy>=2.0.0
 alembic>=1.12.0
+selenium
+webdriver-manager
+beautifulsoup4
+pillow
+typer>=0.9.0
+lxml
 
 # Azure Integration
 # --------------------
