@@ -1,0 +1,94 @@
+origin/main is not a valid attribute name: .gitattributes:11
+warning: in the working copy of 'universal_recon/README_phase_24.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'universal_recon/README_phase_25.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'universal_recon/analytics/template_health_flagger.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'universal_recon/analytics/trend_dashboard_stub.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'universal_recon/core/batch_site_runner.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'universal_recon/plugins/ai_template_indexer.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'universal_recon/plugins/form_autofill.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'universal_recon/schema/validation_matrix.yaml', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'universal_recon/utils/recon_summary_builder.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'universal_recon/utils/record_normalizer.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'universal_recon/utils/template_clusterer.py', CRLF will be replaced by LF the next time Git touches it
+.env.work
+.gitattributes
+.gitignore
+.vscode/startup.ps1
+.vscode/tasks.json
+CrossDeviceLauncher.bat
+CrossDeviceManager.bat
+README.md
+ROG-LUCCI_SYNC_REPORT.md
+config/device_config.json
+requirements.txt
+tools/DevicePathResolver.ps1
+tools/device_path_resolver.py
+tools/fix_hardcoded_paths.py
+tools/scan_hardcoded_paths.py
+universal_recon/README_phase_24.md
+universal_recon/README_phase_25.md
+universal_recon/README_phase_26.md
+universal_recon/analytics/domain_anomaly_flagger.py
+universal_recon/analytics/drift_dashboard_generator.py
+universal_recon/analytics/export_csv_summary.py
+universal_recon/analytics/overlay_visualizer.py
+universal_recon/analytics/plugin_decay_overlay.py
+universal_recon/analytics/plugin_registry_dashboard.py
+universal_recon/analytics/plugin_usage_diff.py
+universal_recon/analytics/risk_overlay_emitter.py
+universal_recon/analytics/schema_dashboard_stub.py
+universal_recon/analytics/schema_matrix_collector.py
+universal_recon/analytics/schema_score_linter.py
+universal_recon/analytics/score_drift_export.py
+universal_recon/analytics/site_schema_collector.py
+universal_recon/analytics/template_health_flagger.py
+universal_recon/analytics/trend_badge_tracker.py
+universal_recon/analytics/trend_dashboard_stub.py
+universal_recon/analytics/validator_drift_overlay.py
+universal_recon/bar-recon-clean
+universal_recon/core/batch_site_runner.py
+universal_recon/core/config_loader.py
+universal_recon/core/logger.py
+universal_recon/core/report_printer.py
+universal_recon/core/snapshot_manager.py
+universal_recon/main.py
+universal_recon/plugin_aggregator.py
+universal_recon/plugin_loader.py
+universal_recon/plugins/ai_template_indexer.py
+universal_recon/plugins/form_autofill.py
+universal_recon/plugins/ml_labeler.py
+universal_recon/plugins/record_field_validator_v3.py
+universal_recon/plugins/social_link_parser.py
+universal_recon/schema/validation_matrix.yaml
+universal_recon/tests/__init__.py
+universal_recon/tests/analytics/test_plugin_usage_diff.py
+universal_recon/tests/conftest.py
+universal_recon/tests/infrastructure/test_chromedriver.py
+universal_recon/tests/plugins/test_firm_parser.py
+universal_recon/tests/plugins/test_ml_labeler.py
+universal_recon/tests/plugins/test_social_link_parser.py
+universal_recon/tests/utils/test_audit_report_generator.py
+universal_recon/tests/utils/test_recon_trend_tracker.py.isorted
+universal_recon/tests/utils/test_score_predictor.py
+universal_recon/tests/utils/test_score_visualizer.py
+universal_recon/utils/audit_report_generator.py
+universal_recon/utils/health_bootstrap.py
+universal_recon/utils/module_health_checker.py
+universal_recon/utils/phase_27_health_report.py
+universal_recon/utils/recon_summary_builder.py
+universal_recon/utils/recon_trend_tracker.py
+universal_recon/utils/record_normalizer.py
+universal_recon/utils/score_predictor.py
+universal_recon/utils/score_suppressor.py
+universal_recon/utils/score_visualizer.py
+universal_recon/utils/status_html_emitter.py
+universal_recon/utils/status_summary_emitter.py
+universal_recon/utils/template_clusterer.py
+universal_recon/utils/validation_loader.py
+universal_recon/utils/validator_drift_badges.py
+universal_recon/validators/fieldmap_domain_linter.py
+universal_recon/validators/record_field_validator_v3.py
+universal_recon/validators/run_phase_21b_analysis.py
+universal_recon/validators/validation_matrix.py
+universal_recon/validators/validation_matrix.yaml
+universal_recon/validators/validator_drift_overlay.py
