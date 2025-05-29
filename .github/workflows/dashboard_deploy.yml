@@ -1,0 +1,17 @@
+name: Dashboard Deploy
+on:
+  push:
+    branches:
+      - feature/phase-29-universal-recon
+jobs:
+  deploy-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Dashboard Output
+        run: |
+          # TODO: generate HTML output in /output
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./output
