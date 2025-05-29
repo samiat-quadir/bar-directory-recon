@@ -1,4 +1,7 @@
 name: Dashboard Deploy
+permissions:
+  contents: read
+  pages: write
 on:
   push:
     branches:
