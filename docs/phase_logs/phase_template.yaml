@@ -1,0 +1,17 @@
+phase_number: 00  # Replace with real phase
+start_date: YYYY-MM-DD
+end_date: YYYY-MM-DD
+
+completed_tasks:
+  - Task description 1
+  - Task description 2
+
+artifacts:
+  - path: relative/path/to/output_file.ext
+  - path: another/artifact/file.json
+
+assistant_indices:
+  claude: task_index
+  python: task_index
+  ada: task_index
+  gitmo: task_index
