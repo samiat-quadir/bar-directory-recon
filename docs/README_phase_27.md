@@ -1,8 +1,8 @@
 # Phase 27 – CI Hardening, Dashboard Hooks & Motion Stub
 
-**Tag:** `v0.27.0`  
-**Milestone Completed:** April 30, 2025  
-**CI Passed:** ✅ GitHub Actions workflows green  
+**Tag:** `v0.27.0`
+**Milestone Completed:** April 30, 2025
+**CI Passed:** ✅ GitHub Actions workflows green
 **Scope:** Final cleanup of hot-fix restores, initiation of stable CI/CD hooks, beginning Motion API transition
 
 ---
@@ -20,7 +20,7 @@
         --schema-score --schema-matrix --full-report ^
         --emit-status --emit-drift-dashboard --verbose
   ```
-  
+
   🧪 CI, Lint & Docker
   Docker image: bardirectoryrecon:latest builds clean
 

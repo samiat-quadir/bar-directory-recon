@@ -1,14 +1,20 @@
 [
   "universal_recon/tests/analytics/test_plugin_usage_diff.py::test_placeholder",
+  "universal_recon/tests/infrastructure/test_chromedriver-ROG-Lucci.py::test_chromedriver_version_compatibility",
   "universal_recon/tests/plugins/test_firm_parser.py::TestFirmParserPlugin::test_plugin_output_soft_mode",
   "universal_recon/tests/plugins/test_firm_parser.py::TestFirmParserPlugin::test_plugin_output_strict_mode",
   "universal_recon/tests/plugins/test_ml_labeler.py::TestMLLabelerPlugin::test_plugin_output_soft_mode",
   "universal_recon/tests/plugins/test_ml_labeler.py::TestMLLabelerPlugin::test_plugin_output_strict_mode",
   "universal_recon/tests/plugins/test_social_link_parser.py::TestSocialLinkParser::test_social_links_soft_mode",
   "universal_recon/tests/plugins/test_social_link_parser.py::TestSocialLinkParser::test_social_links_strict_mode",
+  "universal_recon/tests/test_basic.py::test_basic",
+  "universal_recon/tests/test_risk_overlay_emitter.py::test_calculate_risk_level",
+  "universal_recon/tests/test_risk_overlay_emitter.py::test_emit_site_risk_json",
+  "universal_recon/tests/test_risk_overlay_emitter.py::test_load_validator_tiers",
   "universal_recon/tests/utils/test_audit_report_generator.py::TestAuditReportGenerator::test_generate_audit_report_structure",
   "universal_recon/tests/utils/test_audit_report_generator.py::TestAuditReportGenerator::test_plugin_grouping",
   "universal_recon/tests/utils/test_audit_report_generator.py::TestAuditReportGenerator::test_score_tier_counts",
+  "universal_recon/tests/utils/test_audit_report_generator.py::test_generate_audit_report",
   "universal_recon/tests/utils/test_recon_trend_tracker.py::TestReconTrendTracker::test_analyze_trends_output_shape",
   "universal_recon/tests/utils/test_recon_trend_tracker.py::TestReconTrendTracker::test_detect_field_score_drop",
   "universal_recon/tests/utils/test_recon_trend_tracker.py::TestReconTrendTracker::test_detect_plugin_usage_drop",
@@ -16,6 +22,8 @@
   "universal_recon/tests/utils/test_score_predictor.py::TestScorePredictor::test_confidence_mapping",
   "universal_recon/tests/utils/test_score_predictor.py::TestScorePredictor::test_prediction_keys_added",
   "universal_recon/tests/utils/test_score_predictor.py::TestScorePredictor::test_score_range",
+  "universal_recon/tests/utils/test_score_predictor.py::test_predict_score",
   "universal_recon/tests/utils/test_score_visualizer.py::TestScoreVisualizer::test_generate_heatmap_data_structure",
-  "universal_recon/tests/utils/test_score_visualizer.py::TestScoreVisualizer::test_save_heatmap_data"
+  "universal_recon/tests/utils/test_score_visualizer.py::TestScoreVisualizer::test_save_heatmap_data",
+  "universal_recon/tests/utils/test_score_visualizer.py::test_generate_visualization"
 ]
