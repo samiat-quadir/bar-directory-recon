@@ -3,6 +3,7 @@
   "universal_recon/tests/infrastructure/test_chromedriver-ROG-Lucci.py::test_chromedriver_version_compatibility",
   "universal_recon/tests/plugins/test_firm_parser.py::TestFirmParserPlugin::test_plugin_output_soft_mode",
   "universal_recon/tests/plugins/test_firm_parser.py::TestFirmParserPlugin::test_plugin_output_strict_mode",
+  "universal_recon/tests/plugins/test_firm_parser.py::test_parse_firm_data",
   "universal_recon/tests/plugins/test_ml_labeler.py::TestMLLabelerPlugin::test_plugin_output_soft_mode",
   "universal_recon/tests/plugins/test_ml_labeler.py::TestMLLabelerPlugin::test_plugin_output_strict_mode",
   "universal_recon/tests/plugins/test_social_link_parser.py::TestSocialLinkParser::test_social_links_soft_mode",
