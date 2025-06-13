@@ -1,7 +1,7 @@
 # Phase 28 – Infra Sync, Git Hooks, Overlay Integration
 
-**Start Date:** May 1, 2025  
-**CI Gate:** `feature/phase-28-dashboard-init`  
+**Start Date:** May 1, 2025
+**CI Gate:** `feature/phase-28-dashboard-init`
 **Scope:** Cross-machine environment automation, validator overlay polish, test and CI scaffolds
 
 ---
@@ -17,8 +17,8 @@
 
 ## 🛠 Git & CI Integration
 
-- Git hooks now consume dynamic profile paths  
-- Lint runner: `tools/lint_helpers.py` → logs/lint_report.log  
+- Git hooks now consume dynamic profile paths
+- Lint runner: `tools/lint_helpers.py` → logs/lint_report.log
 - GitHub Actions:
   - `flow_runner.yml`: test flows
   - `dashboard_deploy.yml`: pushes `/output/*.html` to `docs/`
