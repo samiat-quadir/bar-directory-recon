@@ -1,3 +1,5 @@
 # Phase 29 backlog – WIP
 tasks:
-  - "example-task" # add real items later
+  - "[ ] Implement social_link_parser soft-mode scoring"
+  - "[ ] Review firm_parser scoring buckets"
+  - "[ ] Draft Phase 29 design doc"
