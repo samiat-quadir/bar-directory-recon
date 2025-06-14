@@ -1,164 +1,127 @@
-# =====================================================
-# Project Files and Folders to Ignore
-# =====================================================
+############################################################
+# 1 · Operating-system cruft
+############################################################
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+desktop.ini
 
-# Logs, screenshots, and data files generated during runtime
-logs/
-screenshots/
-data/
-*.log
-*_errors.log
-OneDriveAutomation_*.log
+############################################################
+# 2 · Editor / IDE artefacts
+############################################################
+.vscode/
+!.vscode/extensions.json          # keep shared extension list
+!.vscode/settings.example.json    # keep templated settings
+.idea/
+*.suo
+*.user
+*.code-workspace
 
-# Cross-device specific files
-# These files may contain device-specific paths or configurations
-local_device_config.json
-*_device_specific.*
-*.device.config
-.device_cache/
-device_*.json
-*samq*.tmp
-*samqu*.tmp
-config/device_cache/
-
-# Reference files and temporary work files
-*.new
-*.bak
-*.tmp
-*_reference*
-docs/*_summary.yaml
-
-# VS Code workspace-specific settings
-# These can vary by machine and should be excluded if needed
-.vscode/settings.json
-.vscode/launch.json
-
-# Code formatter and linter artifacts
-*.isorted
-*.ruff_cache
-*.mypy_cache
-*.isort.cfg.bak
-
-# Ignore any automatically generated cache or temporary files
+############################################################
+# 3 · Python build & virtual-envs
+############################################################
+# venvs (any depth, any name)
+**/venv*/
+**/.venv*/
+**/env/
+# compiled
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
 *.pyo
+.so
+# build / dist
+build/
+dist/
+.eggs/
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+
+############################################################
+# 4 · Tool caches & coverage
+############################################################
 .pytest_cache/
 .coverage
 htmlcov/
+.mypy_cache/
+.ruff_cache/
+.isort.cfg.bak
+*.isorted
 
-# Virtual environments
-.venv*/
-env/
-venv/
-
-# Build and distribution artifacts
-build/
-develop-eggs/
-dist/
-eggs/
-.eggs/
-sdist/
-parts/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# =====================================================
-# Sensitive and Configuration Files
-# =====================================================
-
-# Device-specific configuration files
-config/device_config.json
-
-# Do not track sensitive configuration files (including environment files)
-*.env
-.env*
-
-# VS Code settings that might differ between devices
-.vscode/settings_*.json
-.vscode/for-win/
-.vscode/for-win/*
-settings_*.json
-
-# =====================================================
-# Third-Party Binaries and Archives
-# =====================================================
-
-# Binary archives and compressed files
-*.zip
-*.gz
-*.tar
-*.rar
-*.7z
-src/backups/archives/
-
-# Ignore ChromeDriver binaries
-chromedriver*.exe
-
-# =====================================================
-# Custom Folders / Files
-# =====================================================
-
-# Output folders
+############################################################
+# 5 · Logs, data, screenshots, backups
+############################################################
+logs/
+*.log
+*_errors.log
+screenshots/
+data/
 output/
 run_logs/
-
-# Backup, conflict, and temporary files
-*.bak
 temp_backup/
 temp_broken_code/
 merge_conflicts_backup/
 .temp_conflicts/
 snapshots/
+src/backups/archives/
 
-# Legacy and archive folders
-archive/
-archives/
-auto_pruned/
-legacy_device_syncs/
-legacy_scripts/
+############################################################
+# 6 · Device-specific or secret config
+############################################################
+# generic env / secrets
+*.env
+.env*
+# project-specific
+config/device_config.json
+local_device_config.json
+*_device_specific.*
+.device_cache/
+config/device_cache/
+device_*.json
+settings_*.json
+.env.work
+.env.asus
 
-# Project specific files to exclude
+############################################################
+# 7 · One-off project artefacts
+############################################################
 mega_memory.yaml
 repo_tree.txt
 env_loader.py
 copilot_agent_relay.md
-
-# Phase 28 additions - ignore zero-byte python executable and python directory
-python/
-python
-
-# Planning files (except README files)
-planning/*.yaml
-!planning/README*.md
-
-# Git subdirectories in project folders
-**/.git/
-**/.git/*
-
-# OS specific files
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# OS specific files
-.DS_Store
-Thumbs.db
-desktop.ini
-MASTER_IMPLEMENTATION_REPORT.md
-<<<<<<< HEAD
+bar-directory-recon-fresh/
+bar-recon-clean/
 docs/COPILOT_AGENT_SETUP.md
-bar-directory-recon-fresh
 docs/archive/
 logs/phase_4/
-.env.work
-.env.asus
-=======
->>>>>>> origin/main
 .git_backup_SalesRep/
 .vscode/tasks-ROG-Lucci.json
 tools/Test-CrossDeviceCompatibility.ps1
+planning/*.yaml
+!planning/README*.md
+MASTER_IMPLEMENTATION_REPORT.md
+
+############################################################
+# 8 · Binary / large files
+############################################################
+*.zip
+*.gz
+*.tar
+*.rar
+*.7z
+chromedriver*.exe
+
+############################################################
+# 9 · Git internals (safety net)
+############################################################
+**/.git/
+**/.git/*
+
+############################################################
+# 10 · Merge-conflict artefacts (removed if committed)
+############################################################
+*<<<<<<<*
+*=======*
+*>>>>>>>*
