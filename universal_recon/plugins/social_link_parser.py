@@ -25,7 +25,7 @@ def apply(driver, context="root"):
             if pattern.search(href):
                 results.append(
                     {
-                        "type": "social_link",
+                        "type": "social",
                         "value": href,
                         "category": platform,
                         "url": current_url,

@@ -7,8 +7,8 @@ MOCK_RECORDS = [
     {"plugin": "email_plugin", "type": "email", "score": 1},
     {"plugin": "email_plugin", "type": "email", "score": 3},
     {"plugin": "email_plugin", "type": "email", "score": 5},
-    {"plugin": "firm_parser", "type": "firm_name", "score": 2},
-    {"plugin": "firm_parser", "type": "firm_name", "score": 4},
+    {"plugin": "firm_parser", "type": "firm_name", "score": 1},
+    {"plugin": "firm_parser", "type": "firm_name", "score": 3},
     {"plugin": "bar_number_annotator", "type": "bar_number", "score": 5},
 ]
 

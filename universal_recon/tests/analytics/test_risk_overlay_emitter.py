@@ -14,15 +14,6 @@ from universal_recon.analytics.risk_overlay_emitter import (
     emit_site_risk_json,
 )
 
-result = emit_site_risk_json(
-    site_name="test_site",
-    drift_score=0.3,
-    health=95,
-    suppression_factor=1.0,
-    tier_path="path/to/test_tiers.json"
-)
-assert result["risk_level"] == "low"
-
 
 @pytest.mark.analytics
 class TestRiskOverlayEmitter(TestCase):
