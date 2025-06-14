@@ -14,7 +14,7 @@ def load_plugins(schema_path):
     if not os.path.exists(schema_path):
         logger.warning(f"Missing schema: {schema_path}")
         return set()
-    
+
     try:
         with open(schema_path, "r", encoding="utf-8") as f:
             data = json.load(f)

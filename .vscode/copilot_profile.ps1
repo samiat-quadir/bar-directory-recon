@@ -10,15 +10,15 @@ function Write-CopilotLog {
         [string]$Message,
         [string]$Type = "INFO"
     )
-    
+
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $logDir = Join-Path $workspaceRoot "logs"
     $logFile = Join-Path $logDir "copilot_agent.log"
-    
+
     if (!(Test-Path $logDir)) {
         New-Item -ItemType Directory -Path $logDir -Force | Out-Null
     }
-    
+
     Add-Content -Path $logFile -Value "[$timestamp] [$Type] $Message"
 }
 

@@ -1,0 +1,1 @@
+def emit_risk_overlay(matrix_path: str, tiers_path: str) -
