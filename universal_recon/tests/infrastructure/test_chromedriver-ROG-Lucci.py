@@ -29,8 +29,8 @@ def test_chromedriver_version_compatibility():
         assert "Google" in driver.title
 
     except WebDriverException as e:
-        if ("version" in str(e).lower() or 
-            "incompatible" in str(e).lower() or 
+        if ("version" in str(e).lower() or
+            "incompatible" in str(e).lower() or
             "session not created" in str(e).lower() or
             "chromedriver" in str(e).lower()):
             pytest.skip(f"ChromeDriver version mismatch: {e}")

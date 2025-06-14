@@ -60,7 +60,7 @@ def emit_risk_overlay(matrix_path: str, validator_tiers_path: str) -> Dict[str, 
         if not validator_tiers:
             logger.warning("No validator tiers loaded, using defaults")
             return {"risk_badges": {}}
-        
+
         # Load matrix data
         try:
             with open(matrix_path, "r", encoding="utf-8") as f:
@@ -68,27 +68,27 @@ def emit_risk_overlay(matrix_path: str, validator_tiers_path: str) -> Dict[str, 
         except Exception as e:
             logger.error(f"Error loading matrix data: {e}")
             return {"risk_badges": {}}
-        
+
         # Generate risk badges for each site and validator
         risk_badges = {}
         for site_name, site_data in matrix_data.items():
             if not isinstance(site_data, dict):
                 continue
-                
+
             validators = site_data.get("validators", {})
             drift_metrics = site_data.get("drift_metrics", {})
             drift_score = drift_metrics.get("drift_score", 0.0)
-            
+
             site_badges = {}
             for validator_name, validator_data in validators.items():
                 if not isinstance(validator_data, dict):
                     continue
-                    
+
                 health = validator_data.get("health", 100.0)
-                
+
                 # Calculate risk level for this validator
                 risk_level, message = calculate_risk_level(drift_score, health, 1.0)
-                
+
                 # Find appropriate badge from validator tiers
                 badge = "🟩"  # Default
                 for tier_name, tier_data in validator_tiers.items():
@@ -99,26 +99,26 @@ def emit_risk_overlay(matrix_path: str, validator_tiers_path: str) -> Dict[str, 
                             badge = tier_data.get("badge", "🟧")
                         elif risk_level == "low" and tier_name == "info":
                             badge = tier_data.get("badge", "🟩")
-                
+
                 site_badges[validator_name] = {
                     "risk_level": risk_level,
                     "message": message,
                     "badge": badge,
                     "health": health
                 }
-            
+
             risk_badges[site_name] = site_badges
-        
+
         result = {"risk_badges": risk_badges}
-        
+
         # Export to JSON file (same directory as matrix)
         output_dir = os.path.dirname(matrix_path)
         output_path = os.path.join(output_dir, "risk_overlay.json")
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(result, f, indent=2)
-        
+
         return result
-        
+
     except Exception as e:
         logger.error(f"Error generating risk overlay: {e}")
         return {"risk_badges": {}}
