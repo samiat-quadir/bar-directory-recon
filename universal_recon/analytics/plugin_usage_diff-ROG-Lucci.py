@@ -3,28 +3,29 @@
 import argparse
 import json
 import os
-from typing import Set
 
 from universal_recon.core.logger import get_logger
 
 logger = get_logger("plugin_diff")
 
 
-def load_plugins(schema_path: str) -> Set[str]:
+def load_plugins(schema_path):
+    """Load plugins from schema JSON file."""
     if not os.path.exists(schema_path):
         logger.warning(f"Missing schema: {schema_path}")
         return set()
+
     try:
         with open(schema_path, "r", encoding="utf-8") as f:
             data = json.load(f)
             plugins = set(data.get("plugins_used", [])) if isinstance(data, dict) else set()
-    except json.JSONDecodeError:
-        logger.warning(f"Invalid JSON in schema: {schema_path}")
+        return plugins
+    except (json.JSONDecodeError, Exception) as e:
+        logger.error(f"Error loading plugins from {schema_path}: {e}")
         return set()
-    return plugins
 
 
-def main() -> None:
+def main():
     parser = argparse.ArgumentParser(description="Compare plugin usage between two schema matrices")
     parser.add_argument("--before", required=True, help="Path to the before schema matrix JSON")
     parser.add_argument("--after", required=True, help="Path to the after schema matrix JSON")

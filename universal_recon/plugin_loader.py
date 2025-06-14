@@ -4,10 +4,10 @@ import importlib
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 
-def load_plugins_by_type(plugin_type: str):
+def load_plugins_by_type(plugin_type: str) -> List[Any]:
     plugins = []
     root = Path(__file__).resolve().parent
     registry_path = os.path.join(root, "plugin_registry.json")
@@ -16,8 +16,12 @@ def load_plugins_by_type(plugin_type: str):
         print(f"❌ Plugin registry not found: {registry_path}")
         return []
 
-    with open(registry_path, "r", encoding="utf-8") as f:
-        registry = json.load(f)
+    try:
+        with open(registry_path, "r", encoding="utf-8") as f:
+            registry = json.load(f)
+    except json.JSONDecodeError:
+        print(f"❌ Invalid JSON in plugin registry: {registry_path}")
+        return []
 
     for entry in registry:
         if entry.get("type") == plugin_type:
@@ -33,8 +37,12 @@ def load_plugins_by_type(plugin_type: str):
 
 def load_normalized_records(site_name: str) -> List[Dict[str, Any]]:
     path = os.path.join("output", "fieldmap", f"{site_name}_fieldmap.json")
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except json.JSONDecodeError:
+        print(f"❌ Invalid JSON in fieldmap: {path}")
+        return []
 
     if isinstance(data, list):
         return data

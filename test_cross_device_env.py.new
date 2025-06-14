@@ -1,0 +1,195 @@
+#!/usr/bin/env python
+"""
+Test script for cross-device environment compatibility.
+This script verifies that paths and environment variables are correctly set up for cross-device usage.
+"""
+
+import os
+import sys
+import json
+import platform
+import datetime
+import subprocess
+from pathlib import Path
+
+# Try to import device path resolver
+try:
+    sys.path.append(str(Path(__file__).parent / "tools"))
+    from device_path_resolver import get_project_root_path, to_project_relative_path, get_current_device
+    RESOLVER_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️ Warning: device_path_resolver.py not found or couldn't be imported. Error: {e}")
+    RESOLVER_AVAILABLE = False
+
+def print_header(text):
+    """Print a formatted header."""
+    print("\n" + "=" * 60)
+    print(f" {text}")
+    print("=" * 60)
+
+def print_success(text):
+    """Print a success message."""
+    print(f"✅ {text}")
+
+def print_warning(text):
+    """Print a warning message."""
+    print(f"⚠️ {text}")
+
+def print_error(text):
+    """Print an error message."""
+    print(f"❌ {text}")
+
+def check_python_environment():
+    """Check the Python environment."""
+    print_header("PYTHON ENVIRONMENT")
+    
+    # Check Python version
+    python_version = platform.python_version()
+    print(f"Python version: {python_version}")
+    
+    # Check if running in virtual environment
+    in_venv = sys.prefix != sys.base_prefix
+    if in_venv:
+        print_success(f"Running in virtual environment: {sys.prefix}")
+    else:
+        print_warning("Not running in a virtual environment")
+    
+    # Check Python executable
+    python_executable = sys.executable
+    print(f"Python executable: {python_executable}")
+    
+    # Check for pip
+    try:
+        pip_version = subprocess.check_output([sys.executable, "-m", "pip", "--version"]).decode().strip()
+        print_success(f"Pip available: {pip_version}")
+    except:
+        print_error("Pip not available")
+
+def check_project_structure():
+    """Check the project structure."""
+    print_header("PROJECT STRUCTURE")
+    
+    # Determine project root
+    script_path = Path(__file__).resolve()
+    project_root = script_path.parent
+    print(f"Script location: {script_path}")
+    print(f"Project root: {project_root}")
+    
+    # Check for key directories
+    for dir_name in ["tools", ".vscode", "config", "logs"]:
+        dir_path = project_root / dir_name
+        if dir_path.exists():
+            print_success(f"Found directory: {dir_name}")
+        else:
+            print_warning(f"Missing directory: {dir_name}")
+    
+    # Check for key files
+    key_files = [
+        ".vscode/settings.json",
+        ".vscode/startup.ps1",
+        "config/device_config.json",
+        "tools/device_path_resolver.py",
+        "tools/DevicePathResolver.ps1"
+    ]
+    
+    for file_path in key_files:
+        full_path = project_root / file_path
+        if full_path.exists():
+            print_success(f"Found file: {file_path}")
+        else:
+            print_warning(f"Missing file: {file_path}")
+
+def check_device_configuration():
+    """Check the device configuration."""
+    print_header("DEVICE CONFIGURATION")
+    
+    # Get current device info
+    device_name = platform.node()
+    print(f"Current device: {device_name}")
+    
+    # Check device_config.json
+    config_path = Path(__file__).parent / "config" / "device_config.json"
+    if config_path.exists():
+        try:
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            
+            print_success(f"Device config found: {config_path}")
+            print(f"Registered device: {config.get('DeviceId', 'Unknown')}")
+            print(f"Registration date: {config.get('FirstRegistered', 'Unknown')}")
+            print(f"Last updated: {config.get('LastUpdated', 'Unknown')}")
+            
+            if config.get('DeviceId').upper() == device_name.upper():
+                print_success("Device ID matches current device (case insensitive)")
+            else:
+                print_warning(f"Device ID mismatch: Config has {config.get('DeviceId')}, current is {device_name}")
+        except Exception as e:
+            print_error(f"Error reading device config: {e}")
+    else:
+        print_warning(f"Device config not found at {config_path}")
+
+def check_path_resolution():
+    """Check path resolution functionality."""
+    print_header("PATH RESOLUTION")
+    
+    if not RESOLVER_AVAILABLE:
+        print_error("Path resolver not available. Skipping path resolution tests.")
+        return
+    
+    # Test project root detection
+    detected_root = get_project_root_path()
+    actual_root = str(Path(__file__).parent.resolve())
+    
+    print(f"Detected project root: {detected_root}")
+    print(f"Actual project root: {actual_root}")
+    
+    if detected_root == actual_root:
+        print_success("Project root detection working correctly")
+    else:
+        print_warning("Project root detection mismatch")
+    
+    # Test path resolution for a few common paths
+    test_paths = [
+        "tools/device_path_resolver.py",
+        ".vscode/settings.json",
+        "config/device_config.json"
+    ]
+    
+    for rel_path in test_paths:
+        try:
+            # First construct the absolute path
+            absolute_path = os.path.join(actual_root, rel_path)
+            # Then try to make it relative using the resolver
+            relative_path = to_project_relative_path(absolute_path)
+            
+            print(f"Path: {rel_path}")
+            print(f"  Absolute: {absolute_path}")
+            print(f"  Relative: {relative_path}")
+            
+            if os.path.exists(absolute_path):
+                print_success(f"  Path exists")
+            else:
+                print_error(f"  Path does not exist")
+        except Exception as e:
+            print_error(f"  Error processing path {rel_path}: {e}")
+
+def run_all_tests():
+    """Run all tests."""
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"Cross-Device Environment Test - {timestamp}")
+    print(f"Device: {platform.node()}")
+    print(f"OS: {platform.system()} {platform.release()}")
+    print(f"User: {os.getenv('USERNAME', 'Unknown')}")
+    
+    check_python_environment()
+    check_project_structure()
+    check_device_configuration()
+    check_path_resolution()
+    
+    print_header("TEST SUMMARY")
+    print("Tests completed. Review any warnings or errors above.")
+    print("If there are path resolution issues, run ScanPaths.bat --fix to attempt fixes.")
+    print("For device registration issues, run Test-CrossDevicePaths.ps1 -RegisterDevice")
+    
+if __name__ == "__main__":
+    run_all_tests()
