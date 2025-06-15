@@ -1,20 +1,25 @@
-# OneDrive Automation & AI Integration Project
+# Universal Recon - Bar Directory Reconnaissance Tool
+
+[![PyPI version](https://img.shields.io/pypi/v/bar-directory-recon.svg)](https://pypi.org/project/bar-directory-recon/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Tests](https://img.shields.io/badge/tests-33%20passed-green.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions)
 
 ## Overview
 
-This project provides a unified automation and AI integration solution for managing OneDrive-based development environments across multiple devices (e.g., ASUS laptop and Work Desktop). It includes robust environment detection, cross-device sync, Git automation, secrets scanning, and AI-powered task automation.
+Universal Recon is a comprehensive bar directory reconnaissance and automation tool designed for legal professional data extraction. It provides a modular plugin system for extracting, validating, and analyzing data from legal bar directories and professional websites.
 
 ---
 
 ## Key Features
 
-- **Path Resolution & Folder Standardization**: Ensures consistent folder structure and path resolution across devices.
-- **Cross-Device Synchronization**: Syncs Python environments, VS Code extensions, and device-specific configs using `.env.work` and `.env.asus` files, auto-loaded by `env_loader.py`.
-- **Git Automation**: Auto-commit, push, and notification scripts (`auto_git_commit.py`, `git_commit_and_notify.py`).
-- **Secrets Scanning**: Identifies sensitive info in files.
-- **Central Logging**: All logs are UTF-8 and stored in the synced OneDrive project folder for easy access.
-- **AI & Motion App Integration**: Local Flask API and Motion App API for automated task creation, replacing Zapier.
-- **Health Checks & Maintenance**: Includes health check scripts, log rotation, and scheduled tasks.
+- **Plugin-Based Architecture**: Modular system with specialized extractors for different data types
+- **Social Media Detection**: Automated discovery of LinkedIn, Twitter, Facebook, and Instagram profiles
+- **Firm Data Extraction**: Intelligent parsing of law firm information and contact details
+- **ML-Powered Classification**: Machine learning-based content labeling and categorization
+- **Validation Framework**: Comprehensive data validation and quality assessment tools
+- **Analytics Suite**: Risk assessment, trend analysis, and reporting capabilities
+- **Cross-Platform Support**: Works on Windows and Linux with automated environment detection
 
 ---
 
