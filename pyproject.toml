@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bar-directory-recon"
-version = "1.0.0"
-description = "Bar directory reconnaissance and automation project"
+version = "0.1.0"
+description = "Bar directory reconnaissance and automation tool for legal professional data extraction"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }

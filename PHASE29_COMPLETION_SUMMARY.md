@@ -36,8 +36,8 @@
 
 ## 🚀 **Ready for Draft PR**
 
-**Branch**: `phase29/refine` → `main`  
-**Title**: "Phase 29 - test polish & backlog"  
+**Branch**: `phase29/refine` → `main`
+**Title**: "Phase 29 - test polish & backlog"
 **Status**: Ready to open draft PR
 
 ## 📊 **Final State**
