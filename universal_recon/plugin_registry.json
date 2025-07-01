@@ -1,0 +1,10 @@
+[
+    {
+        "site_name": "realtor_directory",
+        "module": "universal_recon.plugins.realtor_directory_plugin",
+        "function": "scrape_realtor_directory",
+        "type": "directory_scraper",
+        "description": "Scrapes lead data from realtor directory",
+        "output_format": "csv"
+    }
+]

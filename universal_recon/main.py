@@ -31,9 +31,33 @@ def main():
         action="store_true",
         help="emit risk_overlay.json using validator tiers",
     )
+    # Realtor directory automation arguments
+    parser.add_argument("--output", help="Output file path for realtor directory scraping")
+    parser.add_argument("--max-records", type=int, help="Maximum number of records to scrape")
+    parser.add_argument("--google-sheet-id", help="Google Sheets ID for upload")
     args = parser.parse_args()
 
     site_name = args.site
+
+    # Handle realtor directory scraping
+    if site_name == "realtor_directory":
+        from universal_recon.plugins.realtor_directory_plugin import scrape_realtor_directory
+
+        result = scrape_realtor_directory(
+            output_path=args.output,
+            max_records=args.max_records,
+            google_sheet_id=args.google_sheet_id,
+            verbose=args.verbose,
+        )
+
+        if result["success"]:
+            print(f"✅ Successfully scraped {result['leads_count']} leads")
+            if args.output:
+                print(f"📄 Results saved to: {result['output_path']}")
+        else:
+            print(f"❌ Scraping failed: {result['error']}")
+
+        return
 
     if args.schema_collect:
         from universal_recon.analytics.site_schema_collector import collect_fieldmap
