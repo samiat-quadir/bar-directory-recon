@@ -5,6 +5,43 @@
         "function": "scrape_realtor_directory",
         "type": "directory_scraper",
         "description": "Scrapes lead data from realtor directory",
-        "output_format": "csv"
+        "output_format": "csv",
+        "industry": "real_estate"
+    },
+    {
+        "site_name": "pool_contractors",
+        "module": "universal_recon.plugins.pool_contractor_plugin",
+        "function": "run_plugin",
+        "type": "industry_scraper",
+        "description": "Scrapes pool contractor business directories",
+        "output_format": "csv",
+        "industry": "pool_contractors"
+    },
+    {
+        "site_name": "lawyers",
+        "module": "universal_recon.plugins.lawyer_directory_plugin",
+        "function": "run_plugin",
+        "type": "industry_scraper",
+        "description": "Scrapes bar association and legal directories",
+        "output_format": "csv",
+        "industry": "lawyers"
+    },
+    {
+        "site_name": "hvac_plumbers",
+        "module": "universal_recon.plugins.hvac_plumber_plugin",
+        "function": "run_plugin",
+        "type": "industry_scraper",
+        "description": "Scrapes HVAC and plumbing contractor directories",
+        "output_format": "csv",
+        "industry": "hvac_plumbers"
+    },
+    {
+        "site_name": "auto_dealers",
+        "module": "universal_recon.plugins.auto_dealer_plugin",
+        "function": "run_plugin",
+        "type": "industry_scraper",
+        "description": "Scrapes franchise auto dealership directories",
+        "output_format": "csv",
+        "industry": "auto_dealers"
     }
 ]
