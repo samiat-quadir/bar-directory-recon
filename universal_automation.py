@@ -17,7 +17,6 @@ import pandas as pd
 
 # Phase 4 imports
 from lead_enrichment_plugin import LeadEnrichmentEngine
-from google_sheets_integration import export_leads_to_sheets
 
 # Google Sheets integration (optional)
 try:
@@ -31,9 +30,24 @@ except ImportError:
 script_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(script_dir))
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Configure logging to write to logs directory
+logs_dir = script_dir / "logs"
+logs_dir.mkdir(exist_ok=True)
+
+# Set up file logging with timestamp
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+log_file = logs_dir / f"lead_automation_{timestamp}.log"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
 logger = logging.getLogger(__name__)
+logger.info(f"Logging initialized. Log file: {log_file}")
 
 # Available industries
 AVAILABLE_INDUSTRIES = [
@@ -278,7 +292,9 @@ class UniversalLeadAutomation:
         google_sheet_name: Optional[str] = None,
         enable_enrichment: bool = True,
         hunter_api_key: Optional[str] = None,
-        numverify_api_key: Optional[str] = None
+        numverify_api_key: Optional[str] = None,
+        export_format: str = "both",
+        credentials_path: Optional[str] = None
     ) -> Dict[str, Any]:
         """Scrape leads for a specific industry with Phase 4 enrichment."""
 
@@ -354,24 +370,67 @@ class UniversalLeadAutomation:
         google_sheets_stats = {}
 
         if enriched_leads:
-            # Save to CSV as backup
-            output_path = self.save_leads_to_csv(enriched_leads, industry, city)
+            # Determine what to export based on export_format
+            should_export_csv = export_format in ["csv", "both"]
+            should_export_sheets = export_format in ["google_sheets", "both"]
+            
+            # Save to CSV if requested
+            if should_export_csv:
+                output_path = self.save_leads_to_csv(enriched_leads, industry, city)
 
-            # Upload to Google Sheets by default (if configured)
-            if google_sheet_id or os.getenv('DEFAULT_GOOGLE_SHEET_ID'):
-                sheet_id = google_sheet_id or os.getenv('DEFAULT_GOOGLE_SHEET_ID')
-                sheet_name = google_sheet_name or f"{industry}_{city}_leads"
-
+            # Upload to Google Sheets if requested and configured
+            if should_export_sheets and (google_sheet_id or os.getenv('DEFAULT_GOOGLE_SHEET_ID')):
                 try:
-                    google_sheets_uploaded, google_sheets_stats = export_leads_to_sheets(
-                        enriched_leads,
-                        sheet_id,
-                        sheet_name,
-                        avoid_duplicates=True
-                    )
-                    logger.info(f"Google Sheets export: {google_sheets_stats}")
+                    # Use provided sheet ID or fall back to environment variable
+                    sheet_id = google_sheet_id or os.getenv('DEFAULT_GOOGLE_SHEET_ID')
+                    
+                    if not sheet_id:
+                        logger.warning("No Google Sheet ID provided - skipping Google Sheets export")
+                    else:
+                        # Initialize Google Sheets integration with custom credentials if provided
+                        from google_sheets_integration import GoogleSheetsIntegration
+                        
+                        if credentials_path:
+                            sheets_integration = GoogleSheetsIntegration(credentials_path=credentials_path)
+                        else:
+                            sheets_integration = GoogleSheetsIntegration()
+                        
+                        # Export using the integration
+                        if sheets_integration.service:
+                            sheet_name_final = google_sheet_name or f"{industry}_{city}_leads"
+                            
+                            # Setup sheet headers and formatting
+                            sheets_integration.setup_sheet_headers(sheet_id, sheet_name_final)
+                            
+                            # Batch upsert leads with deduplication
+                            inserted, updated, skipped = sheets_integration.batch_upsert_leads(
+                                sheet_id, enriched_leads, sheet_name_final, avoid_duplicates=True
+                            )
+                            
+                            google_sheets_stats = {
+                                'inserted': inserted,
+                                'updated': updated,
+                                'skipped': skipped,
+                                'total_processed': len(enriched_leads)
+                            }
+                            
+                            google_sheets_uploaded = inserted > 0 or updated > 0
+                            
+                            if google_sheets_uploaded:
+                                sheet_url = sheets_integration.get_sheet_url(sheet_id, sheet_name_final)
+                                logger.info(f"✅ Google Sheets export successful: {sheet_url}")
+                                print(f"📊 Google Sheets Link: {sheet_url}")
+                            
+                            logger.info(f"Google Sheets export stats: {google_sheets_stats}")
+                        else:
+                            logger.warning("Google Sheets service not initialized - authentication may be required")
+                        
                 except Exception as e:
                     logger.warning(f"Google Sheets export failed: {e}")
+                    # If Google Sheets export fails and CSV wasn't requested, create CSV as backup
+                    if not should_export_csv and not output_path:
+                        logger.info("Creating CSV backup since Google Sheets export failed")
+                        output_path = self.save_leads_to_csv(enriched_leads, industry, city)
 
         return {
             "success": len(enriched_leads) > 0,
@@ -553,6 +612,18 @@ Examples:
         help="Name for the Google Sheet tab (optional)"
     )
 
+    parser.add_argument(
+        "--export",
+        choices=["csv", "google_sheets", "both"],
+        default="both",
+        help="Export format: csv, google_sheets, or both (default: both)"
+    )
+
+    parser.add_argument(
+        "--credentials",
+        help="Path to Google OAuth credentials JSON file (default: client_secret_*.json in project root)"
+    )
+
     args = parser.parse_args()
 
     # Set logging level
@@ -576,18 +647,18 @@ Examples:
         if result["success"]:
             if "industries_processed" in result:
                 # Multi-industry result
-                print(f"\n✅ Multi-industry processing completed!")
+                print("\n✅ Multi-industry processing completed!")
                 print(f"📊 Industries processed: {result['industries_processed']}")
                 print(f"📊 Total leads found: {result['total_leads']}")
                 print(f"✅ Successful industries: {', '.join(result['successful_industries'])}")
             else:
                 # Single industry result
-                print(f"\n✅ Lead generation completed!")
+                print("\n✅ Lead generation completed!")
                 print(f"📊 Found {result['count']} leads")
                 if result['output_path']:
                     print(f"📁 Saved to: {result['output_path']}")
         else:
-            print(f"\n❌ Lead generation failed")
+            print("\n❌ Lead generation failed")
 
         return
 
@@ -607,12 +678,14 @@ Examples:
         test_mode=args.test,
         keywords=args.keywords or "",
         google_sheet_id=args.google_sheet_id,
-        google_sheet_name=args.google_sheet_name
+        google_sheet_name=args.google_sheet_name,
+        export_format=args.export,
+        credentials_path=args.credentials
     )
 
     # Display results
     if result["success"]:
-        print(f"\n✅ Lead generation completed!")
+        print("\n✅ Lead generation completed!")
         print(f"📊 Industry: {result['industry'].replace('_', ' ').title()}")
         print(f"📊 Found {result['count']} leads")
         print(f"🔧 Plugins run: {result['plugins_run']}")

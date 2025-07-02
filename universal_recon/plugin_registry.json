@@ -43,5 +43,41 @@
         "description": "Scrapes franchise auto dealership directories",
         "output_format": "csv",
         "industry": "auto_dealers"
+    },
+    {
+        "site_name": "homeadvisor",
+        "module": "universal_recon.plugins.homeadvisor_plugin",
+        "function": "run_plugin",
+        "type": "service_platform",
+        "description": "Scrapes contractor and service provider profiles from HomeAdvisor",
+        "output_format": "csv",
+        "industry": "home_services"
+    },
+    {
+        "site_name": "thumbtack",
+        "module": "universal_recon.plugins.thumbtack_plugin",
+        "function": "run_plugin",
+        "type": "service_platform",
+        "description": "Scrapes service professional profiles from Thumbtack",
+        "output_format": "csv",
+        "industry": "professional_services"
+    },
+    {
+        "site_name": "houzz",
+        "module": "universal_recon.plugins.houzz_plugin",
+        "function": "run_plugin",
+        "type": "service_platform",
+        "description": "Scrapes design professional profiles from Houzz",
+        "output_format": "csv",
+        "industry": "design_services"
+    },
+    {
+        "site_name": "angi",
+        "module": "universal_recon.plugins.angi_plugin",
+        "function": "run_plugin",
+        "type": "service_platform",
+        "description": "Scrapes contractor and service provider profiles from Angi (formerly Angie's List)",
+        "output_format": "csv",
+        "industry": "home_services"
     }
 ]

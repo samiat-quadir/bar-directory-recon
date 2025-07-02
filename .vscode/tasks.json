@@ -238,6 +238,19 @@
                 "clear": true
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Full Environment Bootstrap",
+            "dependsOn": [
+                "Cross Device Full Sync",
+                "Git Repair and Health Check",
+                "Run Pre-commit",
+                "Test Cross-Device"
+            ],
+            "dependsOrder": "sequence",
+            "type": "shell",
+            "problemMatcher": [],
+            "group": "build"
         }
     ]
 }

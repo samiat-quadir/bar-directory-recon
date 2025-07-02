@@ -22,6 +22,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 
+# Google Sheets integration (optional)
+try:
+    from google.oauth2.service_account import Credentials
+    from googleapiclient.discovery import build
+    GOOGLE_SHEETS_AVAILABLE = True
+except ImportError:
+    GOOGLE_SHEETS_AVAILABLE = False
+
 OUTPUT_DIR = "outputs"
 LOG_DIR = "logs"
 
@@ -509,12 +517,89 @@ class RealtorDirectoryScraperV2:
             
         return website[:200]  # Limit length
 
+    def export_to_google_sheets(self, data: List[Dict[str, Any]], sheet_id: str, sheet_name: Optional[str] = None) -> bool:
+        """Export leads to Google Sheets."""
+        if not GOOGLE_SHEETS_AVAILABLE:
+            log_message("Google Sheets integration not available. Install google-api-python-client packages.")
+            return False
+        
+        if not data:
+            log_message("No data to export to Google Sheets")
+            return False
+        
+        try:
+            # Set up credentials
+            credentials_path = "config/google_service_account.json"
+            if not os.path.exists(credentials_path):
+                log_message(f"Google Sheets credentials not found at: {credentials_path}")
+                return False
+            
+            from google.oauth2.service_account import Credentials
+            from googleapiclient.discovery import build
+            
+            # Define the required scopes
+            SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+            
+            # Load credentials
+            credentials = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
+            
+            # Build the service
+            service = build('sheets', 'v4', credentials=credentials)
+            
+            # Set default sheet name
+            if not sheet_name:
+                timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+                sheet_name = f"Realtor_Leads_{timestamp}"
+            
+            # Convert data to format for Google Sheets
+            df = pd.DataFrame(data)
+            headers = df.columns.tolist()
+            values = [headers] + df.values.tolist()
+            
+            # Try to create a new sheet
+            try:
+                body = {
+                    'requests': [{
+                        'addSheet': {
+                            'properties': {
+                                'title': sheet_name
+                            }
+                        }
+                    }]
+                }
+                service.spreadsheets().batchUpdate(spreadsheetId=sheet_id, body=body).execute()
+                log_message(f"Created new sheet: {sheet_name}")
+            except Exception:
+                log_message(f"Using existing sheet: {sheet_name}")
+            
+            # Upload data
+            range_name = f"{sheet_name}!A1"
+            body = {
+                'values': values
+            }
+            
+            service.spreadsheets().values().update(
+                spreadsheetId=sheet_id,
+                range=range_name,
+                valueInputOption='RAW',
+                body=body
+            ).execute()
+            
+            log_message(f"Successfully exported {len(data)} leads to Google Sheets: {sheet_name}")
+            return True
+            
+        except Exception as e:
+            log_message(f"Error exporting to Google Sheets: {e}")
+            return False
+
 
 def scrape_realtor_directory(
     max_records: int = 50, 
     debug: bool = False, 
     use_selenium: bool = True,
-    test_mode: bool = False
+    test_mode: bool = False,
+    google_sheet_id: Optional[str] = None,
+    google_sheet_name: Optional[str] = None
 ) -> Optional[str]:
     """
     Enhanced Phase 2 Realtor Directory Scraper
@@ -556,10 +641,26 @@ def scrape_realtor_directory(
         output_file = os.path.join(OUTPUT_DIR, f"realtor_leads_live_{timestamp}.csv")
         df.to_csv(output_file, index=False)
 
+        # Export to Google Sheets if requested
+        if google_sheet_id:
+            log_message("Exporting to Google Sheets...")
+            google_export_success = scraper.export_to_google_sheets(
+                leads, 
+                google_sheet_id, 
+                google_sheet_name
+            )
+            if google_export_success:
+                log_message("✅ Google Sheets export completed successfully")
+            else:
+                log_message("⚠️ Google Sheets export failed")
+
         log_message(f"✅ Phase 2 scraping completed: {len(leads)} records saved to {output_file}")
         print("✅ Phase 2 Enhanced Scraping completed!")
         print(f"📊 Found {len(leads)} leads from real sources")
         print(f"📁 Saved to: {output_file}")
+        
+        if google_sheet_id and google_export_success:
+            print(f"☁️ Also exported to Google Sheets: {google_sheet_name or 'Realtor Leads'}")
         
         if debug:
             print("\n📋 Sample data:")

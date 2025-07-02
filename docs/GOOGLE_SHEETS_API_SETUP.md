@@ -101,7 +101,7 @@ from google_sheets_integration import export_leads_to_sheets
 leads = [
     {
         "name": "John Smith",
-        "company": "Smith Pool Services", 
+        "company": "Smith Pool Services",
         "email": "john@smithpools.com",
         "phone": "(555) 123-4567",
         "industry": "pool_contractors",
@@ -149,7 +149,7 @@ automation = UniversalLeadAutomation()
 # Run with enrichment and sheets integration
 result = automation.scrape_industry(
     industry="lawyers",
-    city="Orlando", 
+    city="Orlando",
     state="FL",
     max_records=50,
     test_mode=False,
@@ -174,6 +174,7 @@ if result["success"]:
 2. Create a new spreadsheet
 3. Name it (e.g., "Universal Lead Generation - Phase 4")
 4. Copy the Sheet ID from the URL:
+
    ```
    https://docs.google.com/spreadsheets/d/1ABC...xyz/edit
                                           ^^^^^^^^^^^
@@ -226,27 +227,35 @@ The system automatically applies conditional formatting:
 ### Common Issues
 
 #### 1. Permission Denied
+
 ```
 Error: The caller does not have permission
 ```
+
 **Solution**: Ensure the service account email is added to your Google Sheet with Editor permissions.
 
 #### 2. API Not Enabled
+
 ```
 Error: Google Sheets API has not been used in project
 ```
+
 **Solution**: Enable Google Sheets API in Google Cloud Console.
 
 #### 3. Quota Exceeded
+
 ```
 Error: Quota exceeded for quota metric
 ```
+
 **Solution**: The system includes automatic rate limiting. Wait a few minutes and try again.
 
 #### 4. Invalid Credentials
+
 ```
 Error: Could not automatically determine credentials
 ```
+
 **Solution**: Check that `config/google_service_account.json` exists and is valid.
 
 ### Debug Mode
@@ -271,22 +280,22 @@ from google_sheets_integration import GoogleSheetsIntegration
 integration = GoogleSheetsIntegration()
 if integration.connect():
     print("✅ Google Sheets connection successful!")
-    
+
     # Test with sample data
     test_leads = [{
         "name": "Test Lead",
-        "email": "test@example.com", 
+        "email": "test@example.com",
         "company": "Test Company",
         "industry": "test",
         "lead_score": 50
     }]
-    
+
     success, stats = integration.export_leads(
-        test_leads, 
+        test_leads,
         "1ABC...xyz",  # Your sheet ID
         "Test Sheet"
     )
-    
+
     print(f"Test export: {success}")
     print(f"Stats: {stats}")
 else:
@@ -296,19 +305,23 @@ else:
 ## Security Best Practices
 
 ### 1. Protect Service Account Key
+
 - Never commit `google_service_account.json` to version control
 - Add to `.gitignore`:
+
   ```
   config/google_service_account.json
   config/*.json
   ```
 
 ### 2. Limit Service Account Permissions
+
 - Only share sheets that need automation
 - Use separate service accounts for different projects
 - Regularly rotate service account keys
 
 ### 3. Environment Variables
+
 - Store sensitive data in environment variables
 - Use `.env` files for local development
 - Never hardcode credentials in source code
@@ -316,18 +329,23 @@ else:
 ## Performance Optimization
 
 ### 1. Batch Operations
+
 The system automatically batches operations for efficiency:
+
 - Default batch size: 100 rows
 - Configurable via `batch_size` parameter
 - Automatic retry with exponential backoff
 
 ### 2. Rate Limiting
+
 Built-in rate limiting prevents API quota issues:
+
 - 1 second delay between requests
 - Automatic quota monitoring
 - Graceful degradation on limits
 
 ### 3. Caching
+
 - Local caching of sheet metadata
 - Duplicate detection optimization
 - Minimal API calls for status checks
@@ -335,11 +353,13 @@ Built-in rate limiting prevents API quota issues:
 ## API Limits and Quotas
 
 ### Google Sheets API Limits
+
 - **Read requests**: 300 per minute per project
 - **Write requests**: 300 per minute per project
 - **Requests per 100 seconds per user**: 100
 
 ### Best Practices
+
 - Use batch operations when possible
 - Implement exponential backoff
 - Cache data locally when appropriate
@@ -348,13 +368,16 @@ Built-in rate limiting prevents API quota issues:
 ## Support and Updates
 
 ### Getting Help
+
 1. Check this documentation first
 2. Review error logs for specific issues
 3. Test with minimal examples
 4. Check Google Cloud Console for API status
 
 ### Updates
+
 Phase 4 includes automatic error handling and self-healing capabilities. The system will:
+
 - Automatically retry failed operations
 - Fall back to CSV export if Sheets unavailable
 - Log all operations for debugging
