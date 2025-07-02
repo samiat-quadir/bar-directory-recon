@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Universal Lead Generation Automation - Phase 3
-Multi-industry lead scraping with city/state/industry filtering
+Universal Lead Generation Automation - Phase 4 Optimize Prime
+Multi-industry lead scraping with advanced CRM integration
 """
 
 import argparse
@@ -14,6 +14,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
+
+# Phase 4 imports
+from lead_enrichment_plugin import LeadEnrichmentEngine, EnrichedLead
+from google_sheets_integration import GoogleSheetsIntegration, export_leads_to_sheets
 
 # Google Sheets integration (optional)
 try:
@@ -37,7 +41,10 @@ AVAILABLE_INDUSTRIES = [
     "pool_contractors", 
     "lawyers",
     "hvac_plumbers",
-    "auto_dealers"
+    "auto_dealers",
+    "home_services",
+    "professional_services",
+    "design_services"
 ]
 
 
@@ -268,9 +275,12 @@ class UniversalLeadAutomation:
         test_mode: bool = True,
         keywords: str = "",
         google_sheet_id: Optional[str] = None,
-        google_sheet_name: Optional[str] = None
+        google_sheet_name: Optional[str] = None,
+        enable_enrichment: bool = True,
+        hunter_api_key: Optional[str] = None,
+        numverify_api_key: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Scrape leads for a specific industry."""
+        """Scrape leads for a specific industry with Phase 4 enrichment."""
         
         # Filter plugins by industry
         target_plugins = self.filter_plugins_by_industry(industry)
@@ -292,7 +302,9 @@ class UniversalLeadAutomation:
             "state": state,
             "max_records": max_records,
             "test_mode": test_mode,
-            "keywords": keywords
+            "keywords": keywords,
+            "google_sheet_id": google_sheet_id,
+            "google_sheet_name": google_sheet_name
         }
         
         # Run each plugin for the industry
@@ -302,10 +314,10 @@ class UniversalLeadAutomation:
             if result["success"] and result["leads"]:
                 # Add metadata to each lead
                 for lead in result["leads"]:
-                    if "Industry" not in lead:
-                        lead["Industry"] = industry
-                    if "Source" not in lead:
-                        lead["Source"] = plugin["site_name"]
+                    if "industry" not in lead:
+                        lead["industry"] = industry
+                    if "source" not in lead:
+                        lead["source"] = plugin["site_name"]
                     if "Tag" not in lead:
                         lead["Tag"] = self.generate_tag(city, industry)
                 
@@ -322,25 +334,58 @@ class UniversalLeadAutomation:
                     "status": f"failed: {result.get('error', 'unknown error')}"
                 })
         
+        # Phase 4: Lead enrichment
+        enriched_leads = []
+        if all_leads and enable_enrichment:
+            try:
+                enricher = LeadEnrichmentEngine(hunter_api_key, numverify_api_key)
+                enriched_objects = enricher.enrich_leads_batch(all_leads)
+                enriched_leads = [lead.__dict__ for lead in enriched_objects]
+                logger.info(f"Enriched {len(enriched_leads)} leads with advanced scoring")
+            except Exception as e:
+                logger.warning(f"Lead enrichment failed, using raw data: {e}")
+                enriched_leads = all_leads
+        else:
+            enriched_leads = all_leads
+        
         # Save results if any leads found
         output_path = None
         google_sheets_uploaded = False
+        google_sheets_stats = {}
         
-        if all_leads:
-            output_path = self.save_leads_to_csv(all_leads, industry, city)
+        if enriched_leads:
+            # Save to CSV as backup
+            output_path = self.save_leads_to_csv(enriched_leads, industry, city)
             
-            # Upload to Google Sheets if requested
-            if google_sheet_id:
-                google_sheets_uploaded = self.upload_to_google_sheets(
-                    all_leads, 
-                    google_sheet_id, 
-                    google_sheet_name
-                )
+            # Upload to Google Sheets by default (if configured)
+            if google_sheet_id or os.getenv('DEFAULT_GOOGLE_SHEET_ID'):
+                sheet_id = google_sheet_id or os.getenv('DEFAULT_GOOGLE_SHEET_ID')
+                sheet_name = google_sheet_name or f"{industry}_{city}_leads"
+                
+                try:
+                    google_sheets_uploaded, google_sheets_stats = export_leads_to_sheets(
+                        enriched_leads,
+                        sheet_id,
+                        sheet_name,
+                        avoid_duplicates=True
+                    )
+                    logger.info(f"Google Sheets export: {google_sheets_stats}")
+                except Exception as e:
+                    logger.warning(f"Google Sheets export failed: {e}")
         
         return {
-            "success": len(all_leads) > 0,
-            "leads": all_leads,
-            "count": len(all_leads),
+            "success": len(enriched_leads) > 0,
+            "leads": enriched_leads,
+            "count": len(enriched_leads),
+            "enriched_count": len(enriched_leads) if enable_enrichment else 0,
+            "industry": industry,
+            "output_path": str(output_path) if output_path else None,
+            "plugins_run": len(target_plugins),
+            "results_summary": results_summary,
+            "google_sheets_uploaded": google_sheets_uploaded,
+            "google_sheets_stats": google_sheets_stats,
+            "urgent_leads": sum(1 for lead in enriched_leads if lead.get('urgency_flag', False))
+        }
             "industry": industry,
             "output_path": str(output_path) if output_path else None,
             "plugins_run": len(target_plugins),
@@ -441,7 +486,7 @@ def main():
     """Main function with CLI argument parsing."""
     
     parser = argparse.ArgumentParser(
-        description="Universal Lead Generation Automation - Phase 3",
+        description="Universal Lead Generation Automation - Phase 4 Optimize Prime",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
