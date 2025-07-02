@@ -32,7 +32,7 @@ class GoogleSheetsIntegration:
     """Advanced Google Sheets integration with OAuth authentication and enterprise features."""
 
     def __init__(
-        self, 
+        self,
         credentials_path: str = "client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json",  # noqa: E501
         token_path: str = "token.pickle"
     ):
@@ -69,12 +69,12 @@ class GoogleSheetsIntegration:
 
         try:
             creds = None
-            
+
             # Load existing token if available
             if os.path.exists(self.token_path):
                 with open(self.token_path, 'rb') as token:
                     creds = pickle.load(token)
-            
+
             # If there are no (valid) credentials available, request authentication
             if not creds or not creds.valid:
                 if creds and creds.expired and creds.refresh_token:
@@ -83,16 +83,16 @@ class GoogleSheetsIntegration:
                 else:
                     logger.info("Starting OAuth authentication flow...")
                     logger.info("Please authenticate with sam@optimizeprimeconsulting.com when prompted")
-                    
+
                     if not os.path.exists(self.credentials_path):
                         logger.error(f"OAuth credentials file not found: {self.credentials_path}")
                         return False
-                    
+
                     flow = InstalledAppFlow.from_client_secrets_file(
                         self.credentials_path, self.scopes
                     )
                     creds = flow.run_local_server(port=0)
-                    
+
                 # Save the credentials for the next run
                 with open(self.token_path, 'wb') as token:
                     pickle.dump(creds, token)

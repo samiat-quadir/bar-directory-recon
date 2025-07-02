@@ -373,7 +373,7 @@ class UniversalLeadAutomation:
             # Determine what to export based on export_format
             should_export_csv = export_format in ["csv", "both"]
             should_export_sheets = export_format in ["google_sheets", "both"]
-            
+
             # Save to CSV if requested
             if should_export_csv:
                 output_path = self.save_leads_to_csv(enriched_leads, industry, city)
@@ -383,48 +383,48 @@ class UniversalLeadAutomation:
                 try:
                     # Use provided sheet ID or fall back to environment variable
                     sheet_id = google_sheet_id or os.getenv('DEFAULT_GOOGLE_SHEET_ID')
-                    
+
                     if not sheet_id:
                         logger.warning("No Google Sheet ID provided - skipping Google Sheets export")
                     else:
                         # Initialize Google Sheets integration with custom credentials if provided
                         from google_sheets_integration import GoogleSheetsIntegration
-                        
+
                         if credentials_path:
                             sheets_integration = GoogleSheetsIntegration(credentials_path=credentials_path)
                         else:
                             sheets_integration = GoogleSheetsIntegration()
-                        
+
                         # Export using the integration
                         if sheets_integration.service:
                             sheet_name_final = google_sheet_name or f"{industry}_{city}_leads"
-                            
+
                             # Setup sheet headers and formatting
                             sheets_integration.setup_sheet_headers(sheet_id, sheet_name_final)
-                            
+
                             # Batch upsert leads with deduplication
                             inserted, updated, skipped = sheets_integration.batch_upsert_leads(
                                 sheet_id, enriched_leads, sheet_name_final, avoid_duplicates=True
                             )
-                            
+
                             google_sheets_stats = {
                                 'inserted': inserted,
                                 'updated': updated,
                                 'skipped': skipped,
                                 'total_processed': len(enriched_leads)
                             }
-                            
+
                             google_sheets_uploaded = inserted > 0 or updated > 0
-                            
+
                             if google_sheets_uploaded:
                                 sheet_url = sheets_integration.get_sheet_url(sheet_id, sheet_name_final)
                                 logger.info(f"✅ Google Sheets export successful: {sheet_url}")
                                 print(f"📊 Google Sheets Link: {sheet_url}")
-                            
+
                             logger.info(f"Google Sheets export stats: {google_sheets_stats}")
                         else:
                             logger.warning("Google Sheets service not initialized - authentication may be required")
-                        
+
                 except Exception as e:
                     logger.warning(f"Google Sheets export failed: {e}")
                     # If Google Sheets export fails and CSV wasn't requested, create CSV as backup

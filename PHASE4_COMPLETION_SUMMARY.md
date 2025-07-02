@@ -104,7 +104,7 @@
 
 ### ✅ 6. OAuth Google Sheets Integration - COMPLETED July 2, 2025
 
-**Google Sheets integration with OAuth authentication using sam@optimizeprimeconsulting.com**
+**Google Sheets integration with OAuth authentication using <sam@optimizeprimeconsulting.com>**
 
 - **OAuth Authentication**: Uses `client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json`
 - **Browser Authentication**: Prompts for browser re-auth if token is missing/expired
@@ -118,7 +118,7 @@
 - OAuth 2.0 flow with InstalledAppFlow
 - Token persistence with `token.pickle`
 - Automatic token refresh
-- Browser-based authentication with sam@optimizeprimeconsulting.com
+- Browser-based authentication with <sam@optimizeprimeconsulting.com>
 - Secure credential management
 - Re-authentication on token expiry
 
@@ -132,7 +132,7 @@
 **Automation & Scheduling:**
 
 - `Automated-GoogleSheets-Export.ps1` - PowerShell automation script
-- Unattended operation with environment variable setup  
+- Unattended operation with environment variable setup
 - Log management and rotation (30-day retention)
 - Error handling and retry logic
 - Output file tracking and Google Sheets link extraction
@@ -142,7 +142,7 @@
 
 - ✅ `google_sheets_integration.py` - Updated to use OAuth instead of service account
 - ✅ `universal_automation.py` - Added CLI flags and export logic
-- ✅ `Automated-GoogleSheets-Export.ps1` - PowerShell automation script  
+- ✅ `Automated-GoogleSheets-Export.ps1` - PowerShell automation script
 - ✅ `demo_google_sheets.py` - OAuth demonstration and testing script
 - ✅ `test_integration.bat` - Batch file for testing integration
 - ✅ Enhanced logging to `/logs/` directory with timestamps

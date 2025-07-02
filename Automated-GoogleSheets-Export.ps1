@@ -48,7 +48,8 @@ if ($GoogleSheetId) {
 if ($CredentialsPath) {
     $env:GOOGLE_CREDENTIALS_PATH = $CredentialsPath
     Write-Log "Set credentials path: $CredentialsPath" "INFO"
-} else {
+}
+else {
     # Look for OAuth credentials file in project root
     $DefaultCredentials = Get-ChildItem -Path $ProjectRoot -Filter "client_secret_*.json" | Select-Object -First 1
     if ($DefaultCredentials) {
@@ -91,52 +92,54 @@ Write-Log "Python command: python $($PythonArgs -join ' ')" "INFO"
 try {
     # Change to project directory
     Set-Location $ProjectRoot
-    
+
     # Run the automation
     Write-Log "Executing lead generation automation..." "INFO"
-    
+
     $Process = Start-Process -FilePath "python" -ArgumentList $PythonArgs -PassThru -Wait -NoNewWindow -RedirectStandardOutput "$LogsDir\python_output_$Timestamp.log" -RedirectStandardError "$LogsDir\python_error_$Timestamp.log"
-    
+
     $ExitCode = $Process.ExitCode
     Write-Log "Python process completed with exit code: $ExitCode" "INFO"
-    
+
     # Read Python output and errors
     $PythonOutput = Get-Content "$LogsDir\python_output_$Timestamp.log" -ErrorAction SilentlyContinue
     $PythonErrors = Get-Content "$LogsDir\python_error_$Timestamp.log" -ErrorAction SilentlyContinue
-    
+
     if ($PythonOutput) {
         Write-Log "Python Output:" "INFO"
         $PythonOutput | ForEach-Object { Write-Log $_ "OUTPUT" }
     }
-    
+
     if ($PythonErrors) {
         Write-Log "Python Errors:" "ERROR"
         $PythonErrors | ForEach-Object { Write-Log $_ "ERROR" }
     }
-    
+
     if ($ExitCode -eq 0) {
         Write-Log "Automation completed successfully!" "SUCCESS"
-        
+
         # Check for new output files
         $RecentFiles = Get-ChildItem -Path $OutputsDir -Recurse -File | Where-Object { $_.LastWriteTime -gt (Get-Date).AddMinutes(-10) }
         if ($RecentFiles) {
             Write-Log "Recent output files created:" "INFO"
             $RecentFiles | ForEach-Object { Write-Log "  - $($_.FullName)" "INFO" }
         }
-        
+
         # Check for Google Sheets link in output
         if ($PythonOutput -and ($PythonOutput | Where-Object { $_ -match "https://docs.google.com/spreadsheets" })) {
             $SheetLinks = $PythonOutput | Where-Object { $_ -match "https://docs.google.com/spreadsheets" }
             Write-Log "Google Sheets links:" "SUCCESS"
             $SheetLinks | ForEach-Object { Write-Log "  - $_" "SUCCESS" }
         }
-        
-    } else {
+
+    }
+    else {
         Write-Log "Automation failed with exit code: $ExitCode" "ERROR"
         exit $ExitCode
     }
-    
-} catch {
+
+}
+catch {
     Write-Log "Error executing automation: $($_.Exception.Message)" "ERROR"
     Write-Log "Stack trace: $($_.Exception.StackTrace)" "ERROR"
     exit 1
@@ -149,7 +152,8 @@ try {
         Write-Log "Cleaning up $($OldLogs.Count) old log files" "INFO"
         $OldLogs | Remove-Item -Force
     }
-} catch {
+}
+catch {
     Write-Log "Warning: Could not clean up old logs: $($_.Exception.Message)" "WARNING"
 }
 
