@@ -54,18 +54,29 @@ Start-Transcript -Path $LogFile -Append
 try {
     Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Starting lead generation..." -ForegroundColor Green
 
-    # Build command
-    $Command = "python universal_automation.py --industry all --city `"$City`" --state `"$State`" --max-records $MaxRecords"
+    # Build unified CLI command
+    $Command = "python unified_scraper.py scrape --config-dir config --max-records $MaxRecords"
     if ($Verbose) {
         $Command += " --verbose"
     }
+    else {
+        $Command += " --quiet"
+    }
 
-    # Run lead generation
-    Write-Host "Executing: $Command" -ForegroundColor Gray
-    $Result = Invoke-Expression $Command
+    # Run lead generation for lawyers
+    Write-Host "Executing (Lawyers): $Command lawyer_directory" -ForegroundColor Gray
+    $LawyerResult = Invoke-Expression "$Command lawyer_directory"
 
     if ($LASTEXITCODE -ne 0) {
-        throw "Lead generation failed with exit code $LASTEXITCODE"
+        throw "Lawyer directory scraping failed with exit code $LASTEXITCODE"
+    }
+
+    # Run lead generation for realtors
+    Write-Host "Executing (Realtors): $Command realtor_directory" -ForegroundColor Gray
+    $RealtorResult = Invoke-Expression "$Command realtor_directory"
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Realtor directory scraping failed with exit code $LASTEXITCODE"
     }
 
     Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Lead generation completed successfully!" -ForegroundColor Green

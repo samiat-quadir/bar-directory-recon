@@ -58,24 +58,12 @@ else {
     }
 }
 
-# Build command arguments
+# Build unified CLI command arguments
 $PythonArgs = @()
-$PythonArgs += "universal_automation.py"
+$PythonArgs += "unified_scraper.py", "scrape", "--config-dir", "config"
 
-if ($Industry) {
-    $PythonArgs += "--industry", $Industry
-}
-if ($City) {
-    $PythonArgs += "--city", $City
-}
-if ($State) {
-    $PythonArgs += "--state", $State
-}
 if ($MaxRecords -gt 0) {
     $PythonArgs += "--max-records", $MaxRecords
-}
-if ($GoogleSheetId) {
-    $PythonArgs += "--google-sheet-id", $GoogleSheetId
 }
 if ($TestMode) {
     $PythonArgs += "--test"
@@ -83,40 +71,69 @@ if ($TestMode) {
 if ($Verbose) {
     $PythonArgs += "--verbose"
 }
+else {
+    $PythonArgs += "--quiet"
+}
 
-# Always export to Google Sheets if configured
-$PythonArgs += "--export", "google_sheets"
-
-Write-Log "Python command: python $($PythonArgs -join ' ')" "INFO"
+# Add configuration names based on industry
+if ($Industry -eq "all" -or $Industry -eq "lawyers") {
+    $LawyerArgs = $PythonArgs + @("lawyer_directory")
+    Write-Log "Lawyer scraping command: python $($LawyerArgs -join ' ')" "INFO"
+}
+if ($Industry -eq "all" -or $Industry -eq "realtors") {
+    $RealtorArgs = $PythonArgs + @("realtor_directory")
+    Write-Log "Realtor scraping command: python $($RealtorArgs -join ' ')" "INFO"
+}
 
 try {
     # Change to project directory
     Set-Location $ProjectRoot
 
-    # Run the automation
+    # Run the automation for each configured industry
     Write-Log "Executing lead generation automation..." "INFO"
 
-    $Process = Start-Process -FilePath "python" -ArgumentList $PythonArgs -PassThru -Wait -NoNewWindow -RedirectStandardOutput "$LogsDir\python_output_$Timestamp.log" -RedirectStandardError "$LogsDir\python_error_$Timestamp.log"
+    $SuccessCount = 0
+    $TotalCount = 0
 
-    $ExitCode = $Process.ExitCode
-    Write-Log "Python process completed with exit code: $ExitCode" "INFO"
+    # Execute lawyer scraping if applicable
+    if ($Industry -eq "all" -or $Industry -eq "lawyers") {
+        $TotalCount++
+        Write-Log "Starting lawyer directory scraping..." "INFO"
 
-    # Read Python output and errors
-    $PythonOutput = Get-Content "$LogsDir\python_output_$Timestamp.log" -ErrorAction SilentlyContinue
-    $PythonErrors = Get-Content "$LogsDir\python_error_$Timestamp.log" -ErrorAction SilentlyContinue
+        $LawyerArgs = $PythonArgs + @("lawyer_directory")
+        $Process = Start-Process -FilePath "python" -ArgumentList $LawyerArgs -PassThru -Wait -NoNewWindow -RedirectStandardOutput "$LogsDir\lawyers_output_$Timestamp.log" -RedirectStandardError "$LogsDir\lawyers_error_$Timestamp.log"
 
-    if ($PythonOutput) {
-        Write-Log "Python Output:" "INFO"
-        $PythonOutput | ForEach-Object { Write-Log $_ "OUTPUT" }
+        if ($Process.ExitCode -eq 0) {
+            Write-Log "Lawyer directory scraping completed successfully!" "SUCCESS"
+            $SuccessCount++
+        }
+        else {
+            Write-Log "Lawyer directory scraping failed with exit code: $($Process.ExitCode)" "ERROR"
+        }
     }
 
-    if ($PythonErrors) {
-        Write-Log "Python Errors:" "ERROR"
-        $PythonErrors | ForEach-Object { Write-Log $_ "ERROR" }
+    # Execute realtor scraping if applicable
+    if ($Industry -eq "all" -or $Industry -eq "realtors") {
+        $TotalCount++
+        Write-Log "Starting realtor directory scraping..." "INFO"
+
+        $RealtorArgs = $PythonArgs + @("realtor_directory")
+        $Process = Start-Process -FilePath "python" -ArgumentList $RealtorArgs -PassThru -Wait -NoNewWindow -RedirectStandardOutput "$LogsDir\realtors_output_$Timestamp.log" -RedirectStandardError "$LogsDir\realtors_error_$Timestamp.log"
+
+        if ($Process.ExitCode -eq 0) {
+            Write-Log "Realtor directory scraping completed successfully!" "SUCCESS"
+            $SuccessCount++
+        }
+        else {
+            Write-Log "Realtor directory scraping failed with exit code: $($Process.ExitCode)" "ERROR"
+        }
     }
 
-    if ($ExitCode -eq 0) {
-        Write-Log "Automation completed successfully!" "SUCCESS"
+    # Summary
+    Write-Log "Automation Summary: $SuccessCount/$TotalCount processes completed successfully" "INFO"
+
+    if ($SuccessCount -eq $TotalCount) {
+        Write-Log "All automation processes completed successfully!" "SUCCESS"
 
         # Check for new output files
         $RecentFiles = Get-ChildItem -Path $OutputsDir -Recurse -File | Where-Object { $_.LastWriteTime -gt (Get-Date).AddMinutes(-10) }

@@ -1,0 +1,158 @@
+{
+    "name": "lawyer_directory",
+    "description": "Configuration for scraping state bar and legal directories",
+    "base_url": "https://www.martindale.com/",
+    "listing_phase": {
+        "enabled": true,
+        "start_url": "https://www.martindale.com/",
+        "list_selector": ".lawyer-listing, .attorney-card, .legal-professional",
+        "link_selector": "a[href*='/attorney/'], a[href*='/lawyer/']",
+        "link_attribute": "href",
+        "max_pages": 20,
+        "delay": 2.0
+    },
+    "detail_phase": {
+        "enabled": true,
+        "delay": 1.5,
+        "timeout": 30,
+        "retry_count": 3
+    },
+    "pagination": {
+        "enabled": true,
+        "type": "auto",
+        "next_button": [
+            ".next",
+            ".pagination-next",
+            "[aria-label*='next']",
+            "a:contains('Next')"
+        ],
+        "page_numbers": [
+            ".pagination a",
+            ".page-numbers a"
+        ],
+        "load_more": [
+            ".load-more",
+            ".show-more",
+            ".view-more"
+        ],
+        "infinite_scroll": false,
+        "max_pages": 50,
+        "delay": 2.0
+    },
+    "data_extraction": {
+        "selectors": {
+            "name": {
+                "css": [
+                    "h1.attorney-name",
+                    "h2.lawyer-name",
+                    ".profile-name",
+                    ".attorney-title",
+                    "h1",
+                    "h2"
+                ],
+                "required": true
+            },
+            "email": {
+                "css": [
+                    "a[href^='mailto:']",
+                    ".email-link",
+                    ".contact-email"
+                ],
+                "attribute": "href",
+                "pattern": "mailto:(.+)",
+                "required": false
+            },
+            "phone": {
+                "css": [
+                    ".phone",
+                    ".tel",
+                    "a[href^='tel:']",
+                    ".contact-phone",
+                    ".office-phone"
+                ],
+                "patterns": [
+                    "\\(?\\d{3}\\)?[-\\.\\s]?\\d{3}[-\\.\\s]?\\d{4}",
+                    "\\d{3}[-\\.\\s]?\\d{3}[-\\.\\s]?\\d{4}"
+                ],
+                "required": false
+            },
+            "business_name": {
+                "css": [
+                    ".firm-name",
+                    ".law-office",
+                    ".practice-name",
+                    ".company-name"
+                ],
+                "required": false
+            },
+            "address": {
+                "css": [
+                    ".address",
+                    ".location",
+                    ".office-address",
+                    ".contact-address"
+                ],
+                "required": false
+            },
+            "website": {
+                "css": [
+                    "a[href^='http']",
+                    ".website-link",
+                    ".firm-website"
+                ],
+                "attribute": "href",
+                "required": false
+            },
+            "practice_areas": {
+                "css": [
+                    ".practice-areas",
+                    ".specialties",
+                    ".areas-of-practice",
+                    ".legal-services"
+                ],
+                "multiple": true,
+                "required": false
+            }
+        },
+        "structured_data": {
+            "json_ld": true,
+            "microdata": true,
+            "rdfa": false
+        },
+        "contact_extraction": {
+            "enabled": true,
+            "email_domains": [],
+            "phone_formats": [
+                "US"
+            ]
+        },
+        "required_fields": [
+            "name"
+        ]
+    },
+    "output": {
+        "format": "csv",
+        "filename": "lawyer_directory.csv",
+        "google_sheets": {
+            "enabled": false,
+            "spreadsheet_id": "",
+            "worksheet_name": "Lawyer Directory"
+        },
+        "include_metadata": true,
+        "include_screenshots": false
+    },
+    "options": {
+        "headless": true,
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "viewport": {
+            "width": 1920,
+            "height": 1080
+        },
+        "wait_strategy": "smart",
+        "screenshot_on_error": true,
+        "respect_robots_txt": true,
+        "rate_limit": 1.5,
+        "concurrent_requests": 1,
+        "timeout": 30
+    }
+}

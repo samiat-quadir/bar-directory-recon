@@ -1,0 +1,21 @@
+property_address,owner_name,mailing_address,year_built,folio_number,inspection_due,notes
+"123 SE 3rd Ave, Hallandale Beach, FL 33009",Property Owner 1,"PO Box 1001, Hallandale Beach, FL 33009",1981,5142-35-01-0001,,
+"456 NE 1st St, Hallandale Beach, FL 33009",Property Owner 2,"PO Box 1002, Hallandale Beach, FL 33009",1982,5142-35-01-0002,,
+"789 SW 5th Ter, Hallandale Beach, FL 33009",Property Owner 3,"PO Box 1003, Hallandale Beach, FL 33009",1983,5142-35-01-0003,,
+"321 NW 2nd Ct, Hallandale Beach, FL 33009",Property Owner 4,"PO Box 1004, Hallandale Beach, FL 33009",1984,5142-35-01-0004,,
+"654 SE 4th Ave, Hallandale Beach, FL 33009",Property Owner 5,"PO Box 1005, Hallandale Beach, FL 33009",1985,5142-35-01-0005,2024-08-15,Priority inspection
+"987 NE 6th St, Hallandale Beach, FL 33009",Property Owner 6,"PO Box 1006, Hallandale Beach, FL 33009",1986,5142-35-01-0006,,
+"147 SW 1st Ave, Hallandale Beach, FL 33009",Property Owner 7,"PO Box 1007, Hallandale Beach, FL 33009",1987,5142-35-01-0007,,
+"258 NW 3rd St, Hallandale Beach, FL 33009",Property Owner 8,"PO Box 1008, Hallandale Beach, FL 33009",1988,5142-35-01-0008,,
+"369 SE 2nd Ave, Hallandale Beach, FL 33009",Property Owner 9,"PO Box 1009, Hallandale Beach, FL 33009",1989,5142-35-01-0009,,
+"741 NE 4th St, Hallandale Beach, FL 33009",Property Owner 10,"PO Box 1010, Hallandale Beach, FL 33009",1990,5142-35-01-0010,2024-08-15,Priority inspection
+"852 SW 3rd Ave, Hallandale Beach, FL 33009",Property Owner 11,"PO Box 1011, Hallandale Beach, FL 33009",1991,5142-35-01-0011,,
+"963 NW 1st St, Hallandale Beach, FL 33009",Property Owner 12,"PO Box 1012, Hallandale Beach, FL 33009",1992,5142-35-01-0012,,
+"159 SE 5th Ave, Hallandale Beach, FL 33009",Property Owner 13,"PO Box 1013, Hallandale Beach, FL 33009",1993,5142-35-01-0013,,
+"357 NE 2nd St, Hallandale Beach, FL 33009",Property Owner 14,"PO Box 1014, Hallandale Beach, FL 33009",1994,5142-35-01-0014,,
+"486 SW 4th Ave, Hallandale Beach, FL 33009",Property Owner 15,"PO Box 1015, Hallandale Beach, FL 33009",1980,5142-35-01-0015,2024-08-15,Priority inspection
+"624 NW 5th St, Hallandale Beach, FL 33009",Property Owner 16,"PO Box 1016, Hallandale Beach, FL 33009",1981,5142-35-01-0016,,
+"791 SE 1st Ave, Hallandale Beach, FL 33009",Property Owner 17,"PO Box 1017, Hallandale Beach, FL 33009",1982,5142-35-01-0017,,
+"135 NE 3rd St, Hallandale Beach, FL 33009",Property Owner 18,"PO Box 1018, Hallandale Beach, FL 33009",1983,5142-35-01-0018,,
+"246 SW 2nd Ave, Hallandale Beach, FL 33009",Property Owner 19,"PO Box 1019, Hallandale Beach, FL 33009",1984,5142-35-01-0019,,
+"468 NW 4th St, Hallandale Beach, FL 33009",Property Owner 20,"PO Box 1020, Hallandale Beach, FL 33009",1985,5142-35-01-0020,2024-08-15,Priority inspection

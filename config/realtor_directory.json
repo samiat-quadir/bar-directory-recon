@@ -1,0 +1,154 @@
+{
+    "name": "realtor_directory",
+    "description": "Configuration for scraping real estate agent directories",
+    "base_url": "https://www.realtor.com/realestateagents/",
+    "listing_phase": {
+        "enabled": true,
+        "start_url": "https://www.realtor.com/realestateagents/",
+        "list_selector": ".agent-card, .realtor-card, .agent-listing",
+        "link_selector": "a[href*='/realestateagent/']",
+        "link_attribute": "href",
+        "max_pages": 25,
+        "delay": 2.0
+    },
+    "detail_phase": {
+        "enabled": true,
+        "delay": 1.0,
+        "timeout": 30,
+        "retry_count": 3
+    },
+    "pagination": {
+        "enabled": true,
+        "type": "auto",
+        "next_button": [
+            ".next",
+            ".pagination-next",
+            "[data-testid='pagination-next']"
+        ],
+        "page_numbers": [
+            ".pagination a",
+            ".page-numbers a"
+        ],
+        "load_more": [
+            ".load-more",
+            ".show-more"
+        ],
+        "infinite_scroll": false,
+        "max_pages": 50,
+        "delay": 2.0
+    },
+    "data_extraction": {
+        "selectors": {
+            "name": {
+                "css": [
+                    ".agent-name",
+                    ".realtor-name",
+                    "h1.profile-name",
+                    ".agent-title h1",
+                    "h1",
+                    "h2"
+                ],
+                "required": true
+            },
+            "email": {
+                "css": [
+                    "a[href^='mailto:']",
+                    ".email-link",
+                    ".contact-email"
+                ],
+                "attribute": "href",
+                "pattern": "mailto:(.+)",
+                "required": false
+            },
+            "phone": {
+                "css": [
+                    ".phone",
+                    ".agent-phone",
+                    "a[href^='tel:']",
+                    ".contact-phone"
+                ],
+                "patterns": [
+                    "\\(?\\d{3}\\)?[-\\.\\s]?\\d{3}[-\\.\\s]?\\d{4}"
+                ],
+                "required": false
+            },
+            "business_name": {
+                "css": [
+                    ".brokerage-name",
+                    ".office-name",
+                    ".company-name",
+                    ".agency-name"
+                ],
+                "required": false
+            },
+            "address": {
+                "css": [
+                    ".agent-address",
+                    ".office-address",
+                    ".location",
+                    ".address"
+                ],
+                "required": false
+            },
+            "website": {
+                "css": [
+                    "a[href^='http']",
+                    ".website-link",
+                    ".agent-website"
+                ],
+                "attribute": "href",
+                "required": false
+            },
+            "specialties": {
+                "css": [
+                    ".specialties",
+                    ".areas-served",
+                    ".service-areas",
+                    ".expertise"
+                ],
+                "multiple": true,
+                "required": false
+            }
+        },
+        "structured_data": {
+            "json_ld": true,
+            "microdata": true,
+            "rdfa": false
+        },
+        "contact_extraction": {
+            "enabled": true,
+            "email_domains": [],
+            "phone_formats": [
+                "US"
+            ]
+        },
+        "required_fields": [
+            "name"
+        ]
+    },
+    "output": {
+        "format": "csv",
+        "filename": "realtor_directory.csv",
+        "google_sheets": {
+            "enabled": false,
+            "spreadsheet_id": "",
+            "worksheet_name": "Realtor Directory"
+        },
+        "include_metadata": true,
+        "include_screenshots": false
+    },
+    "options": {
+        "headless": true,
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "viewport": {
+            "width": 1920,
+            "height": 1080
+        },
+        "wait_strategy": "smart",
+        "screenshot_on_error": true,
+        "respect_robots_txt": true,
+        "rate_limit": 1.0,
+        "concurrent_requests": 1,
+        "timeout": 30
+    }
+}

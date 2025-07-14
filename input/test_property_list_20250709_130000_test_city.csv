@@ -1,0 +1,4 @@
+Property ID,Address,Owner Name,Owner Email,Owner Phone,Property Type,Last Inspection
+TEST001,123 Test Street,Test Property Owner,test@example.com,555-0123,Commercial,2025-07-01
+TEST002,456 Sample Ave,Sample Owner LLC,sample@test.com,555-0456,Residential,2025-07-05
+TEST003,789 Demo Blvd,Demo Holdings Inc,demo@holdings.com,555-0789,Commercial,2025-07-08
