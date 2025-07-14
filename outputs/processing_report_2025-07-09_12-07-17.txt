@@ -1,0 +1,24 @@
+============================================================
+PROCESSING SUMMARY REPORT
+Generated: 2025-07-09 12:07:17
+============================================================
+
+RESULTS:
+
+HALLANDALE:
+  • Records processed: 10
+  • Google Sheets export: ❌ Failed
+  • Email completion: 7/10
+  • Phone completion: 7/10
+
+PRIORITY_LEADS:
+  • Records processed: 3
+  • Google Sheets export: ❌ Failed
+
+RECOMMENDATIONS:
+  • Fix Google Sheets configuration for failed exports
+  • Configure missing APIs: Hunter.io, ZeroBounce
+
+Additional PDFs found: 1
+
+============================================================
