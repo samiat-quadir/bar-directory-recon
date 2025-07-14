@@ -2,7 +2,8 @@
     "repository_meta": {
         "name": "bar-directory-recon",
         "description": "Cross-device compatible repository with OneDrive integration",
-        "last_status_update": "2025-05-20"
+        "last_status_update": "2025-07-14",
+        "audit_date": "2025-07-14"
     },
     "current_issues": {
         "git_issues": {
@@ -14,17 +15,19 @@
     "devices": {
         "SALESREP": {
             "description": "Work Desktop",
-            "path_format": "c:\\Users\\samq\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon",
+            "path_format": "OneDrive sync path",
             "venv": ".venv",
             "os": "Windows",
-            "python_version": "3.13.3"
+            "python_version": "3.13.3",
+            "status": "active"
         },
         "ROG-LUCCI": {
-            "description": "ASUS Gaming Laptop",
-            "path_format": "c:\\Users\\samqu\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon",
+            "description": "ASUS Gaming Laptop", 
+            "path_format": "OneDrive sync path",
             "venv": ".venv",
             "os": "Windows",
-            "python_version": "3.13.3"
+            "python_version": "3.13.3",
+            "status": "active"
         }
     },
     "cross_device_setup": {

@@ -1,0 +1,107 @@
+{
+    "sources": [
+        {
+            "name": "Miami-Dade",
+            "url": "https://www.miamidade.gov/pa/property_search.asp",
+            "patterns": [
+                ".*inspection.*\\.pdf",
+                ".*property.*list.*\\.pdf",
+                ".*recertification.*\\.pdf",
+                ".*building.*safety.*\\.pdf"
+            ],
+            "enabled": true,
+            "check_frequency_hours": 24
+        },
+        {
+            "name": "Broward",
+            "url": "https://www.broward.org/Building/Pages/default.aspx",
+            "patterns": [
+                ".*inspection.*\\.pdf",
+                ".*building.*safety.*\\.pdf",
+                ".*property.*list.*\\.pdf",
+                ".*inspection.*\\.xlsx?"
+            ],
+            "enabled": true,
+            "check_frequency_hours": 24
+        },
+        {
+            "name": "Palm-Beach",
+            "url": "https://discover.pbcgov.org/pzb/building/Pages/default.aspx",
+            "patterns": [
+                ".*recertification.*\\.pdf",
+                ".*building.*list.*\\.pdf",
+                ".*inspection.*\\.pdf",
+                ".*property.*\\.xlsx?"
+            ],
+            "enabled": true,
+            "check_frequency_hours": 24
+        },
+        {
+            "name": "Hillsborough",
+            "url": "https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections",
+            "patterns": [
+                ".*inspection.*\\.pdf",
+                ".*building.*permit.*\\.pdf",
+                ".*property.*inspection.*\\.pdf",
+                ".*safety.*report.*\\.xlsx?"
+            ],
+            "enabled": true,
+            "check_frequency_hours": 24
+        },
+        {
+            "name": "Orange-County",
+            "url": "https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx",
+            "patterns": [
+                ".*building.*inspection.*\\.pdf",
+                ".*permit.*list.*\\.pdf",
+                ".*inspection.*report.*\\.xlsx?",
+                ".*safety.*inspection.*\\.pdf"
+            ],
+            "enabled": true,
+            "check_frequency_hours": 24
+        },
+        {
+            "name": "Pinellas",
+            "url": "https://www.pinellascounty.org/building/",
+            "patterns": [
+                ".*inspection.*\\.pdf",
+                ".*building.*safety.*\\.pdf",
+                ".*permit.*inspection.*\\.xlsx?",
+                ".*property.*safety.*\\.pdf"
+            ],
+            "enabled": true,
+            "check_frequency_hours": 24
+        }
+    ],
+    "notifications": {
+        "email": {
+            "enabled": true,
+            "smtp_server": "smtp.gmail.com",
+            "smtp_port": 587,
+            "username": "your-email@gmail.com",
+            "password": "your-app-password",
+            "to_emails": [
+                "team@yourdomain.com",
+                "alerts@yourdomain.com"
+            ]
+        },
+        "slack": {
+            "enabled": true,
+            "webhook_url": "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+        },
+        "console": {
+            "enabled": true
+        }
+    },
+    "download_settings": {
+        "max_file_size_mb": 50,
+        "timeout_seconds": 30,
+        "retry_attempts": 3,
+        "retry_delay_seconds": 5
+    },
+    "schedule": {
+        "enabled": true,
+        "time": "09:00",
+        "timezone": "US/Eastern"
+    }
+}

@@ -91,4 +91,109 @@ Universal Recon is a comprehensive bar directory reconnaissance and automation t
 
 ---
 
+## Data Hunter - Automated Discovery Module
+
+The Data Hunter module provides automated discovery and download of property lists and inspection documents from municipal websites.
+
+### Key Features
+
+- **Automated Web Scanning**: Periodically crawls configured municipal websites
+- **Smart File Detection**: Uses regex patterns to identify relevant documents
+- **Intelligent Download Management**: Prevents duplicate downloads and manages file sizes
+- **Multi-Source Support**: Configurable sources for easy expansion
+- **Notification System**: Email, Slack, and console notifications for new discoveries
+- **Pipeline Integration**: Suggests processing commands for new files
+
+### Quick Start
+
+```bash
+# Test the system
+python test_data_hunter.py
+
+# Run discovery once
+python src/data_hunter.py --run-once
+
+# Start scheduled discovery (daily)
+python src/data_hunter.py --schedule
+
+# Windows users - use the batch script
+RunDataHunter.bat
+```
+
+### Configuration
+
+Edit `config/data_hunter_config.json` to:
+
+- Add new municipal data sources
+- Configure notification preferences
+- Adjust download settings and file patterns
+- Set scheduling preferences
+
+### Supported Sources
+
+Currently configured for:
+
+- **Miami-Dade County**: Property appraiser and inspection lists
+- **Broward County**: Building safety inspection programs
+- **Palm Beach County**: Recertification and property lists
+
+### Adding New Sources
+
+To add a new city/county source:
+
+```json
+{
+  "name": "New-City",
+  "url": "https://newcity.gov/inspections",
+  "patterns": [
+    ".*inspection.*\\.pdf",
+    ".*property.*list.*\\.pdf"
+  ],
+  "enabled": true,
+  "check_frequency_hours": 24
+}
+```
+
+### Notification Setup
+
+**Email Notifications:**
+
+```json
+"email": {
+  "enabled": true,
+  "smtp_server": "smtp.gmail.com",
+  "smtp_port": 587,
+  "username": "your-email@gmail.com",
+  "password": "your-app-password",
+  "to_emails": ["recipient@example.com"]
+}
+```
+
+**Slack Notifications:**
+
+```json
+"slack": {
+  "enabled": true,
+  "webhook_url": "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+}
+```
+
+### File Processing
+
+Downloaded files are saved to `input/` with timestamped names:
+
+```
+inspection_list_20250709_120000_miami_dade.pdf
+property_safety_20250709_120000_broward.xlsx
+```
+
+Process new files using existing pipeline scripts:
+
+```bash
+python unified_scraper.py --pdf input/filename.pdf
+python final_hallandale_pipeline.py  # Adapt for other cities
+```
+
+---
+
 *This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*

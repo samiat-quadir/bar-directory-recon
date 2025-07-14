@@ -1,0 +1,21 @@
+{
+  "processing_date": "2025-07-09T14:44:27.287048",
+  "total_cities_processed": 2,
+  "total_records_processed": 13,
+  "api_status": {
+    "google_sheets": true,
+    "hunter_io": false,
+    "zerobounce": false,
+    "gmail": false,
+    "timestamp": "2025-07-09T14:44:26.374323"
+  },
+  "export_results": {
+    "hallandale": false,
+    "priority_leads": false
+  },
+  "city_analyses": [
+    {
+      "city": "hallandale",
+      "total_records": 10,
+      "timestamp": "2025-07-09T14:44:26.375177",
+      "records_with_email": 
