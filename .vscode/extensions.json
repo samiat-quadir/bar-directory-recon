@@ -1,15 +1,47 @@
 {
     "recommendations": [
-        "ms-vscode.powershell",
+        // Core Python Development
         "ms-python.python",
         "ms-python.vscode-pylance",
         "ms-python.debugpy",
+        "ms-python.flake8",
+        "ms-python.mypy-type-checker",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        
+        // Template and Web Development
+        "wholroyd.jinja",
+        "samuelcolvin.jinjahtml",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        
+        // DevOps and Containers
         "ms-azuretools.vscode-docker",
-        "batisteo.vscode-django",
+        "ms-vscode-remote.remote-containers",
+        
+        // Shell and Scripting
         "foxundermoon.shell-format",
+        "ms-vscode.powershell",
+        "timonwong.shellcheck",
+        
+        // Git and Version Control
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "github.copilot",
+        "github.copilot-chat",
+        
+        // Documentation and Markdown
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "bierner.markdown-mermaid",
+        
+        // Code Quality and Testing
+        "ms-python.pytest",
         "streetsidesoftware.code-spell-checker",
         "gruntfuggly.todo-tree",
         "donjayamanne.python-environment-manager",
-        "eamodio.gitlens"
+        
+        // Environment Management
+        "donjayamanne.python-environment-manager"
     ]
 }
