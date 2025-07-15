@@ -143,81 +143,122 @@
         {
             "label": "Start Development Environment",
             "type": "shell",
-            "command": "${workspaceFolder}\\StartDevPowerShell.bat",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new",
-                "clear": true
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Run OneDrive Automation",
-            "type": "shell",
-            "command": "powershell",
+            "command": "${command:python.interpreterPath}",
             "args": [
-                "-ExecutionPolicy",
-                "Bypass",
-                "-NoProfile",
-                "-File",
-                "${workspaceFolder}\\OneDriveAutomation.ps1"
+                "-m", "pytest",
+                "-v",
+                "--tb=short",
+                "--cov=.",
+                "--cov-report=term-missing"
             ],
+            "group": "test",
             "presentation": {
+                "echo": true,
                 "reveal": "always",
-                "panel": "new",
-                "clear": true
+                "focus": false,
+                "panel": "shared"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
         },
         {
-            "label": "Test Cross-Device Compatibility",
+            "label": "Secrets Scan",
             "type": "shell",
-            "command": "powershell",
+            "command": "${command:python.interpreterPath}",
             "args": [
-                "-ExecutionPolicy",
-                "Bypass",
-                "-NoProfile",
-                "-File",
-                "${workspaceFolder}\\Test-CrossDevicePaths.ps1",
-                "-Verbose"
+                "tools/secrets_scan.py",
+                "--directory", ".",
+                "--severity", "medium",
+                "--output-format", "console",
+                "--github-annotations"
             ],
+            "group": "test",
             "presentation": {
+                "echo": true,
                 "reveal": "always",
-                "panel": "new",
-                "clear": true
+                "focus": false,
+                "panel": "shared"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
         },
         {
-            "label": "Update Virtual Environment for Cross-Device",
+            "label": "Full Quality Check",
             "type": "shell",
-            "command": "${workspaceFolder}\\Fix-VenvPath.bat",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "-c",
+                "import subprocess; import sys; tasks = ['flake8 --max-line-length=120 --ignore=E203,W503 .', 'mypy --config-file pyproject.toml .', 'pytest -v --tb=short']; [subprocess.run(task.split(), check=True) for task in tasks]; print('✅ All quality checks passed!')"
+            ],
+            "group": "test",
             "presentation": {
+                "echo": true,
                 "reveal": "always",
-                "panel": "new",
-                "clear": true
+                "focus": false,
+                "panel": "shared"
             },
-            "problemMatcher": []
+            "problemMatcher": ["$python"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
         },
         {
-            "label": "Scan for Hardcoded Paths",
+            "label": "Run Automation Setup",
             "type": "shell",
-            "command": "${workspaceFolder}\\ScanPaths.bat",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "setup_check.py"
+            ],
+            "group": "build",
             "presentation": {
+                "echo": true,
                 "reveal": "always",
-                "panel": "new",
-                "clear": true
+                "focus": false,
+                "panel": "shared"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
         },
         {
-            "label": "Fix Hardcoded Paths",
+            "label": "Debug Configuration Demo",
             "type": "shell",
-            "command": "${workspaceFolder}\\ScanPaths.bat --fix",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "configuration_demo.py"
+            ],
+            "group": "build",
             "presentation": {
+                "echo": true,
                 "reveal": "always",
-                "panel": "new",
-                "clear": true
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "Generate Documentation",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "scripts/merge_documentation.py",
+                "--project-root", ".",
+                "--create-indexes"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
             },
             "problemMatcher": []
         },

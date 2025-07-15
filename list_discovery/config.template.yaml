@@ -1,0 +1,22 @@
+# List Discovery Configuration Template
+# =====================================
+
+urls:
+  - url: "${LIST_DISCOVERY_URL1:https://example.com}"
+    name: "${LIST_DISCOVERY_NAME1:Example Site}"
+    check_interval: ${LIST_DISCOVERY_INTERVAL1:3600}
+    enabled: ${LIST_DISCOVERY_ENABLED1:true}
+
+security:
+  user_agent: "${LIST_DISCOVERY_USER_AGENT:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36}"
+  request_timeout: ${LIST_DISCOVERY_TIMEOUT:30}
+  rate_limit_delay: ${LIST_DISCOVERY_RATE_LIMIT:1.0}
+  max_retries: ${LIST_DISCOVERY_MAX_RETRIES:3}
+
+file_types:
+  documents: ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"]
+  images: ["jpg", "jpeg", "png", "gif", "bmp", "svg"]
+  archives: ["zip", "rar", "7z", "tar", "gz"]
+  data: ["json", "csv", "xml", "txt"]
+
+output_directory: "${LIST_DISCOVERY_OUTPUT:output/list_discovery}"

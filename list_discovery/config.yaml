@@ -1,0 +1,55 @@
+# List Discovery Agent Configuration
+# Phase 4 of the Bar Directory Reconnaissance Project
+
+# URLs to monitor for new file uploads
+monitored_urls:
+  # Example county liquor license page
+  - url: https://example-county.gov/licenses
+    name: "Example County Liquor Licenses"
+  
+  # Add more URLs here following this format:
+  # - url: https://another-county.gov/business-licenses
+  #   name: "Another County Business Licenses"
+
+# Directory where discovered files will be downloaded
+download_dir: "input/discovered_lists"
+
+# File extensions to look for and download
+file_extensions:
+  - ".pdf"
+  - ".csv"
+  - ".xls"
+  - ".xlsx"
+
+# How often to check for new files (in seconds)
+# 3600 = 1 hour, 1800 = 30 minutes, 86400 = 24 hours
+check_interval: 3600
+
+# Notification settings
+notifications:
+  # Discord webhook URL (optional)
+  discord_webhook: null
+  
+  # Email notification settings
+  email:
+    enabled: false
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    username: ""
+    password: ""  # Use app password for Gmail
+    from_email: ""
+    recipients: []
+    
+# Advanced settings
+advanced:
+  # User agent for web requests
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  
+  # Request timeout in seconds
+  request_timeout: 60
+  
+  # Delay between requests to be respectful to servers
+  request_delay: 2
+  
+  # Maximum file size to download (in MB)
+  max_file_size: 100

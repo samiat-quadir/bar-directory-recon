@@ -3,27 +3,24 @@
 Fix Hardcoded Paths Tool
 
 A simple script to find and fix hardcoded paths in a project.
+This version repairs the corruption from merge conflicts.
 """
 
+import argparse
 import os
 import re
-import argparse
 import sys
-from pathlib import Path
+from typing import Optional, Set
 
 
-<<<<<<< HEAD
-def os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')():
-=======
-def get_onedrive_path():
->>>>>>> origin/main
+def get_onedrive_path() -> Optional[str]:
     """Get the OneDrive path for the current device."""
     # Try common locations first
     username = os.environ.get("USERNAME", "")
     possible_paths = [
         f"C:\\Users\\{username}\\OneDrive - Digital Age Marketing Group",
-        f"C:\\Users\\samq\\OneDrive - Digital Age Marketing Group",
-        f"C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group",
+        "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group",
+        "C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group",
     ]
 
     for path in possible_paths:
@@ -33,7 +30,7 @@ def get_onedrive_path():
     return None
 
 
-def get_project_root_path():
+def get_project_root_path() -> str:
     """Get the project root path."""
     # Get the current script directory and go up one level
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,35 +38,24 @@ def get_project_root_path():
 
 def scan_file(file_path: str, fix: bool = False) -> int:
     """Scan a file for hardcoded paths and optionally fix them."""
-    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-        try:
+    try:
+        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
             content = f.read()
-        except UnicodeDecodeError:
-            print(f"Error reading {file_path} - skipping")
-            return 0
+    except (UnicodeDecodeError, PermissionError) as e:
+        print(f"Error reading {file_path}: {e} - skipping")
+        return 0
 
     original_content = content
     issues_count = 0
 
-    # Define the patterns to search for
+    # Define the patterns to search for - cleaned up from corruption
     patterns = [
-        (r"C:\\Users\\samq\\OneDrive - Digital Age Marketing Group", r"Get-OneDrivePath"),
-        (r"C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group", r"Get-OneDrivePath"),
-<<<<<<< HEAD
-        (r"os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", r"Get-OneDrivePath"),
-        (r"os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", r"Get-OneDrivePath"),
-        (r"C:\\Users\\samq\\OneDrive", r"Get-OneDrivePath"),
-        (r"C:\\Users\\samqu\\OneDrive", r"Get-OneDrivePath"),
-        (r"os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", r"Get-OneDrivePath"),
-        (r"os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", r"Get-OneDrivePath"),
-=======
-        (r"get_onedrive_path()", r"Get-OneDrivePath"),
-        (r"get_onedrive_path()", r"Get-OneDrivePath"),
-        (r"C:\\Users\\samq\\OneDrive", r"Get-OneDrivePath"),
-        (r"C:\\Users\\samqu\\OneDrive", r"Get-OneDrivePath"),
-        (r"get_onedrive_path()", r"Get-OneDrivePath"),
-        (r"get_onedrive_path()", r"Get-OneDrivePath"),
->>>>>>> origin/main
+        (r"C:\\Users\\samq\\OneDrive - Digital Age Marketing Group", "get_onedrive_path()"),
+        (r"C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group", "get_onedrive_path()"),
+        (r"C:\\Users\\samq\\OneDrive", "get_onedrive_path()"),
+        (r"C:\\Users\\samqu\\OneDrive", "get_onedrive_path()"),
+        # Remove any remaining corruption patterns
+        (r"os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\)'\)", "get_onedrive_path()"),
     ]
 
     # Check for each pattern
@@ -77,33 +63,38 @@ def scan_file(file_path: str, fix: bool = False) -> int:
         matches = re.findall(pattern, content)
         if matches:
             issues_count += len(matches)
-            print(f"Found {len(matches)} instances of '{pattern}' in {file_path}")
+            print(f"Found {len(matches)} instances of hardcoded path in {file_path}")
 
             if fix:
                 # For PowerShell files
                 if file_path.endswith(".ps1"):
-                    content = re.sub(re.escape(pattern), "$(Get-OneDrivePath)", content)
+                    content = re.sub(pattern, "$(Get-OneDrivePath)", content)
                 # For Python files
                 elif file_path.endswith(".py"):
-<<<<<<< HEAD
-                    content = re.sub(re.escape(pattern), "os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()", content)
-=======
-                    content = re.sub(re.escape(pattern), "get_onedrive_path()", content)
->>>>>>> origin/main
+                    content = re.sub(pattern, "get_onedrive_path()", content)
                 # For Batch files, insert a variable
-                elif file_path.endswith(".bat") or file_path.endswith(".cmd"):
+                elif file_path.endswith((".bat", ".cmd")):
                     # Insert a line at the top to get OneDrive path if not already there
-                    if "for /f" not in content and "ONEDRIVE_PATH" not in content:
+                    if "ONEDRIVE_PATH" not in content:
                         onedrive_setup = (
-                            "for /f \"tokens=*\" %%a in ('powershell -NoProfile -ExecutionPolicy Bypass "
-                            "-Command \"& { . '%~dp0tools\\DevicePathResolver.ps1'; Get-OneDrivePath }\"') do set ONEDRIVE_PATH=%%a\n\n"
+                            "@echo off\n"
+                            "REM Get OneDrive path dynamically\n"
+                            'for /f "tokens=*" %%a in (\'powershell -NoProfile '
+                            "-ExecutionPolicy Bypass -Command "
+                            "\"[Environment]::GetFolderPath('UserProfile') + "
+                            "'\\OneDrive - Digital Age Marketing Group'\"') "
+                            "do set ONEDRIVE_PATH=%%a\n\n"
                         )
-                        content = onedrive_setup + content
+                        # Insert after first @echo off or at beginning
+                        if "@echo off" in content:
+                            content = content.replace("@echo off", onedrive_setup, 1)
+                        else:
+                            content = onedrive_setup + content
 
-                    content = re.sub(re.escape(pattern), "%ONEDRIVE_PATH%", content)
-                # For Markdown and other text files, leave a comment
+                    content = re.sub(pattern, "%ONEDRIVE_PATH%", content)
+                # For other text files, leave a comment
                 else:
-                    content = re.sub(re.escape(pattern), f"{pattern} <!-- TODO: Use device-agnostic path -->", content)
+                    content = re.sub(pattern, f"[DYNAMIC_PATH_NEEDED] <!-- {pattern} -->", content)
 
     # If content changed and fix is enabled, write the changes back
     if fix and content != original_content:
@@ -118,10 +109,22 @@ def scan_file(file_path: str, fix: bool = False) -> int:
     return issues_count
 
 
-def scan_directory(directory, exclude_dirs=None, fix=False):
+def scan_directory(directory: str, exclude_dirs: Optional[Set[str]] = None, fix: bool = False) -> int:
     """Scan a directory for hardcoded paths."""
     if exclude_dirs is None:
-        exclude_dirs = {".git", ".venv", "venv", "__pycache__", "archive", "temp_backup", "temp_broken_code"}
+        exclude_dirs = {
+            ".git",
+            ".venv",
+            "venv",
+            "__pycache__",
+            "archive",
+            "temp_backup",
+            "temp_broken_code",
+            ".mypy_cache",
+            "node_modules",
+            "dist",
+            "build",
+        }
 
     total_issues = 0
 
@@ -131,20 +134,25 @@ def scan_directory(directory, exclude_dirs=None, fix=False):
 
         for file in files:
             # Only scan text files
-            if file.endswith((".py", ".ps1", ".bat", ".cmd", ".md", ".txt", ".json", ".html")):
+            if file.endswith((".py", ".ps1", ".bat", ".cmd", ".md", ".txt", ".json", ".html", ".yaml", ".yml")):
                 file_path = os.path.join(root, file)
-                issues = scan_file(file_path, fix)
-                total_issues += issues
+                try:
+                    issues = scan_file(file_path, fix)
+                    total_issues += issues
+                except Exception as e:
+                    print(f"Error processing {file_path}: {e}")
 
     return total_issues
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Scan for hardcoded paths")
+def main() -> int:
+    """Main function."""
+    parser = argparse.ArgumentParser(description="Scan for hardcoded paths and fix them")
     parser.add_argument("--fix", action="store_true", help="Fix the hardcoded paths")
+    parser.add_argument("--directory", "-d", default=".", help="Directory to scan (default: current)")
     args = parser.parse_args()
 
-    project_root = get_project_root_path()
+    project_root = os.path.abspath(args.directory)
     print(f"Scanning {project_root} for hardcoded paths...")
 
     total_issues = scan_directory(project_root, fix=args.fix)
@@ -152,6 +160,10 @@ def main():
     print(f"\nScan complete: Found {total_issues} hardcoded paths")
     if total_issues > 0 and not args.fix:
         print("Run with --fix to attempt automatic fixes")
+    elif total_issues > 0 and args.fix:
+        print("Attempted to fix all found issues")
+    else:
+        print("No hardcoded paths found!")
 
     return 0
 
