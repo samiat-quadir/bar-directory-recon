@@ -5,7 +5,13 @@
             "label": "Run Automation Setup",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["-m", "pip", "install", "-r", "requirements.txt"],
+            "args": [
+                "-m",
+                "pip",
+                "install",
+                "-r",
+                "requirements.txt"
+            ],
             "group": "build",
             "problemMatcher": []
         },
@@ -13,7 +19,13 @@
             "label": "Lint: flake8",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["-m", "flake8", ".", "--max-line-length=88", "--extend-ignore=E203,W503"],
+            "args": [
+                "-m",
+                "flake8",
+                ".",
+                "--max-line-length=88",
+                "--extend-ignore=E203,W503"
+            ],
             "group": "test",
             "problemMatcher": [],
             "presentation": {
@@ -25,7 +37,12 @@
             "label": "Type Check: mypy",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["-m", "mypy", ".", "--ignore-missing-imports"],
+            "args": [
+                "-m",
+                "mypy",
+                ".",
+                "--ignore-missing-imports"
+            ],
             "group": "test",
             "problemMatcher": [],
             "presentation": {
@@ -37,7 +54,11 @@
             "label": "Test: pytest",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["-m", "pytest", "-v"],
+            "args": [
+                "-m",
+                "pytest",
+                "-v"
+            ],
             "group": "test",
             "problemMatcher": [],
             "presentation": {
@@ -49,7 +70,9 @@
             "label": "Secrets Scan",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["tools/secrets_scan.py"],
+            "args": [
+                "tools/secrets_scan.py"
+            ],
             "group": "test",
             "problemMatcher": [],
             "presentation": {
@@ -145,7 +168,8 @@
             "type": "shell",
             "command": "${command:python.interpreterPath}",
             "args": [
-                "-m", "pytest",
+                "-m",
+                "pytest",
                 "-v",
                 "--tb=short",
                 "--cov=.",
@@ -169,9 +193,12 @@
             "command": "${command:python.interpreterPath}",
             "args": [
                 "tools/secrets_scan.py",
-                "--directory", ".",
-                "--severity", "medium",
-                "--output-format", "console",
+                "--directory",
+                ".",
+                "--severity",
+                "medium",
+                "--output-format",
+                "console",
                 "--github-annotations"
             ],
             "group": "test",
@@ -201,7 +228,9 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "problemMatcher": ["$python"],
+            "problemMatcher": [
+                "$python"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             }
@@ -250,7 +279,8 @@
             "command": "${command:python.interpreterPath}",
             "args": [
                 "scripts/merge_documentation.py",
-                "--project-root", ".",
+                "--project-root",
+                ".",
                 "--create-indexes"
             ],
             "group": "build",
@@ -274,6 +304,39 @@
             "type": "shell",
             "problemMatcher": [],
             "group": "build"
+        },
+        {
+            "label": "Update Virtual Environment for Cross-Device",
+            "type": "shell",
+            "command": "${workspaceFolder}\\Fix-VenvPath.bat",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Scan for Hardcoded Paths",
+            "type": "shell",
+            "command": "${workspaceFolder}\\ScanPaths.bat",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Fix Hardcoded Paths",
+            "type": "shell",
+            "command": "${workspaceFolder}\\ScanPaths.bat --fix",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": []
         }
     ]
 }
