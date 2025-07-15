@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Directory Recon - Universal Runner Dashboard</title>
+    <meta http-equiv="refresh" content="30">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --info-color: #3498db;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .sites-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .sites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .site-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            background: white;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .site-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .site-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .site-icon {
+            font-size: 1.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--success-color);
+            font-weight: 500;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success-color);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .sites-grid { grid-template-columns: 1fr; }
+            .dashboard-container { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="mb-2">🎯 Universal Runner Dashboard</h1>
+                    <p class="text-muted mb-0">Real-time monitoring and analytics for bar directory reconnaissance</p>
+                </div>
+                <div class="text-end">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        Live
+                    </div>
+                    <div class="text-muted small">Last updated: {{ last_updated }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number text-primary">{{ global_stats.total_runs }}</div>
+                <div class="stat-label">Total Runs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number text-success">{{ global_stats.successful_runs }}</div>
+                <div class="stat-label">Successful</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number text-danger">{{ global_stats.failed_runs }}</div>
+                <div class="stat-label">Failed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number text-{{ success_rate_class }}">{{ "%.1f"|format(success_rate) }}%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+        </div>
+
+        <!-- Performance Chart -->
+        {% if chart_data %}
+        <div class="chart-container">
+            <h3 class="mb-3">📊 Performance Overview</h3>
+            <canvas id="performanceChart" width="400" height="200"></canvas>
+        </div>
+        {% endif %}
+
+        <!-- Sites Status -->
+        <div class="sites-section">
+            <h3 class="mb-0">🌐 Sites Status</h3>
+            {% if sites %}
+            <div class="sites-grid">
+                {% for site_name, site_data in sites.items() %}
+                <div class="site-card">
+                    <div class="site-header">
+                        <div class="site-title">
+                            <span class="site-icon">{{ site_data.icon }}</span>
+                            <h5 class="mb-0">{{ site_name }}</h5>
+                        </div>
+                        <span class="status-badge" style="background-color: {{ site_data.color }}">
+                            {{ site_data.status.title() }}
+                        </span>
+                    </div>
+                    <div class="site-details">
+                        <p class="mb-1"><strong>Last Updated:</strong> {{ site_data.last_updated }}</p>
+                        {% if site_data.last_run_time %}
+                        <p class="mb-1"><strong>Last Run Time:</strong> {{ site_data.last_run_time }}</p>
+                        {% endif %}
+                        {% if site_data.error_message %}
+                        <p class="mb-0 text-danger small"><strong>Error:</strong> {{ site_data.error_message }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <div class="text-muted">
+                    <i class="fas fa-info-circle fa-3x mb-3"></i>
+                    <h5>No sites configured yet</h5>
+                    <p>Add sites to your configuration to see their status here.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- System Info -->
+        <div class="sites-section">
+            <h3 class="mb-3">⚙️ System Information</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>🔍 Monitoring</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Input Directories:</strong> {{ monitoring.input_directories|join(', ') }}</li>
+                        <li><strong>File Patterns:</strong> {{ monitoring.file_patterns|join(', ') }}</li>
+                        <li><strong>Auto Process:</strong> {{ '✅' if monitoring.auto_process else '❌' }}</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>📧 Notifications</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Discord:</strong> {{ '✅' if notifications.discord_webhook else '❌' }}</li>
+                        <li><strong>Email:</strong> {{ '✅' if notifications.email.enabled else '❌' }}</li>
+                        {% if notifications.email.enabled %}
+                        <li><strong>Recipients:</strong> {{ notifications.email.recipients|length }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🚀 Powered by Universal Runner | Auto-refresh every 30 seconds</p>
+        </div>
+    </div>
+
+    <!-- Chart.js Script -->
+    {% if chart_data %}
+    <script>
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_data.labels|tojson }},
+                datasets: [{
+                    label: 'Success Rate (%)',
+                    data: {{ chart_data.success_rates|tojson }},
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.4
+                }, {
+                    label: 'Total Runs',
+                    data: {{ chart_data.total_runs|tojson }},
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.4,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Success Rate (%)'
+                        },
+                        max: 100
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Total Runs'
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    }
+                }
+            }
+        });
+    </script>
+    {% endif %}
+
+    <!-- WebSocket for real-time updates (stub for future implementation) -->
+    <script>
+        // Future: WebSocket connection for real-time updates
+        // const ws = new WebSocket('ws://localhost:8080/dashboard');
+        // ws.onmessage = function(event) {
+        //     const data = JSON.parse(event.data);
+        //     updateDashboard(data);
+        // };
+    </script>
+</body>
+</html>

@@ -1,6 +1,9 @@
 """
-Notification Agent - Phase 4 Optimize Prime
+Notification Agent - Phase 4 Optimize Prime - Alienware Device Version
 Urgent lead notification system with email and SMS capabilities
+
+Device Origin: Alienware Desktop/Workstation
+Generated: July 15, 2025
 """
 
 import logging
