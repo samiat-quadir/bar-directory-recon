@@ -1,0 +1,62 @@
+{
+    "name": "test_config",
+    "description": "Test configuration for framework verification",
+    "base_url": "https://example.com",
+    "scraping": {
+        "enabled": true,
+        "max_retries": 3,
+        "retry_delay": 2,
+        "timeout": 30,
+        "user_agents": [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        ]
+    },
+    "output": {
+        "formats": {
+            "csv": {
+                "enabled": true,
+                "filename": "output/test_export.csv"
+            },
+            "excel": {
+                "enabled": false,
+                "filename": "output/test_export.xlsx"
+            },
+            "json": {
+                "enabled": false,
+                "filename": "output/test_export.json"
+            },
+            "google_sheets": {
+                "enabled": false,
+                "spreadsheet_id": "",
+                "credentials_path": ""
+            }
+        }
+    },
+    "notifications": {
+        "enabled": false,
+        "email": {
+            "enabled": false,
+            "smtp_server": "smtp.gmail.com",
+            "smtp_port": 587,
+            "sender_email": "",
+            "sender_password": "",
+            "recipients": []
+        },
+        "sms": {
+            "enabled": false,
+            "twilio_account_sid": "",
+            "twilio_auth_token": "",
+            "from_number": "",
+            "to_numbers": []
+        },
+        "slack": {
+            "enabled": false,
+            "webhook_url": ""
+        }
+    },
+    "logging": {
+        "level": "INFO",
+        "file": "logs/scraper.log",
+        "console": true
+    }
+}
