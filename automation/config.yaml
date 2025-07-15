@@ -1,0 +1,109 @@
+# Universal Runner Configuration
+# ============================
+
+# Scheduling Configuration
+schedules:
+  # Core pipeline tasks
+  scraping:
+    frequency: daily
+    time: "02:00"
+  
+  validation:
+    frequency: daily
+    time: "06:00"
+  
+  export:
+    frequency: weekly
+    time: "23:00"
+    day: sunday
+  
+  dashboard_update:
+    frequency: hourly
+
+  # List Discovery Configuration
+  list_discovery:
+    enabled: true
+    frequency: hourly  # Options: hourly, daily
+    time: "10:00"      # For daily frequency only
+
+# Input Monitoring Configuration
+monitoring:
+  # Directories to monitor for new files
+  input_directories:
+    - "input/"
+    - "snapshots/"
+  
+  # File patterns to watch for
+  file_patterns:
+    - "*.json"
+    - "*.csv" 
+    - "*.html"
+  
+  # Automatically process new files
+  auto_process: true
+  
+  # Delay before processing batch (seconds)
+  batch_delay: 300
+
+# Notification Configuration
+notifications:
+  # Discord webhook URL (set to your webhook URL)
+  discord_webhook: null
+  
+  # Email notification settings
+  email:
+    enabled: false
+    smtp_server: null
+    smtp_port: 587
+    username: null
+    password: null
+    recipients: []
+
+# Dashboard Configuration
+dashboard:
+  # Google Sheets integration
+  google_sheets:
+    enabled: false
+    spreadsheet_id: null
+    credentials_path: null
+  
+  # Local HTML dashboard
+  local_html:
+    enabled: true
+    output_path: "output/dashboard.html"
+
+# Pipeline Configuration
+pipeline:
+  # Default sites to process (add your target sites here)
+  sites: []
+  
+  # Default flags for pipeline execution
+  default_flags:
+    - "--schema-matrix"
+    - "--emit-status"
+    - "--emit-drift-dashboard"
+  
+  # Execution timeout in seconds (1 hour)
+  timeout: 3600
+  
+  # Number of retry attempts on failure
+  retry_count: 3
+
+# Example site configurations (uncomment and modify as needed)
+# sites:
+#   - "example-bar.com"
+#   - "another-bar.com"
+
+# Example Discord webhook configuration:
+# discord_webhook: "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN"
+
+# Example email configuration:
+# email:
+#   enabled: true
+#   smtp_server: "smtp.gmail.com"
+#   smtp_port: 587
+#   username: "your-email@gmail.com"
+#   password: "your-app-password"
+#   recipients:
+#     - "notifications@yourcompany.com"
+#     - "admin@yourcompany.com"
