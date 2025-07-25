@@ -1,239 +1,266 @@
 #!/usr/bin/env python3
 """
-Scan for Hardcoded Paths in Python Files
+Hardcoded Path Scanner
+=====================
 
-This script scans Python files for hardcoded paths that might cause
-cross-device compatibility issues and suggests replacements.
+Scans the codebase for hardcoded paths and suggests replacements.
 """
 
 import os
 import re
-import argparse
 import sys
+import argparse
 from pathlib import Path
-from typing import List, Dict, Tuple, Set, Optional
+from typing import List, Dict, Tuple, Optional
 
 # Import our device path resolver if possible
 try:
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'tools'))
-<<<<<<< HEAD
-    from device_path_resolver import get_project_root_path, os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')
-=======
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
     from device_path_resolver import get_project_root_path, get_onedrive_path
->>>>>>> origin/main
+
     RESOLVER_AVAILABLE = True
 except ImportError:
     RESOLVER_AVAILABLE = False
 
 # Patterns to search for - add any specific patterns relevant to your environment
 PATH_PATTERNS = [
-    r'C:\\Users\\samq\\OneDrive',
-    r'C:\\Users\\samqu\\OneDrive',
-<<<<<<< HEAD
-    r'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()',
-    r'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()',
-    r'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group',
-    r'C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group',
-    r'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()',
-    r'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()',
-=======
-    r'get_onedrive_path()',
-    r'get_onedrive_path()',
-    r'C:\\Users\\samq\\OneDrive - Digital Age Marketing Group',
-    r'C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group',
-    r'get_onedrive_path()',
-    r'get_onedrive_path()',
->>>>>>> origin/main
-    r'samq\\OneDrive',
-    r'samqu\\OneDrive'
+    r"C:\\Users\\samq\\OneDrive",
+    r"C:\\Users\\samqu\\OneDrive",
+    r"C:\\bar-directory-recon",
+    r"C:\\Code\\bar-directory-recon",
+    r"C:\\Users\\samq\\OneDrive - Digital Age Marketing Group",
+    r"C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group",
+    r"/c/",
+    r"/mnt/c/",
+    r"C:\\Users\\samq\\\.venv",
+    r"C:\\Users\\samqu\\\.venv",
+    r"samq\\OneDrive",
+    r"samqu\\OneDrive",
+    r"erssamq.*OneDrive",
+    r"erssamqu.*OneDrive",
 ]
 
-# Directories to exclude
-EXCLUDE_DIRS = {
-    '.git',
-    '.venv',
-    'venv',
-    '__pycache__',
-    'archive',
-    'temp_backup',
-    'temp_broken_code',
-    'htmlcov'
-}
+# Files to exclude from scanning
+EXCLUDE_PATTERNS = [
+    r"\.git",
+    r"\.vscode",
+    r"__pycache__",
+    r"\.pyc$",
+    r"node_modules",
+    r"\.log$",
+    r"\.tmp$",
+    r"\.cache",
+    r"logs[\\/]",
+    r"output[\\/]",
+    r"temp_backup[\\/]",
+    r"archive[\\/]",
+    r"htmlcov[\\/]",
+]
 
 # File extensions to scan
-FILE_EXTENSIONS = {
-    '.py',
-    '.ipynb',
-    '.md',
-    '.rst',
-    '.txt',
-    '.yaml',
-    '.yml',
-    '.json'
-}
+SCAN_EXTENSIONS = {".py", ".md", ".txt", ".json", ".yml", ".yaml", ".bat", ".ps1", ".sh"}
 
-class PathScanner:
-    """Scans files for hardcoded paths and suggests alternatives."""
 
-    def __init__(self, project_root: str, fix: bool = False):
-        self.project_root = project_root
+class HardcodedPathScanner:
+    """Scanner for hardcoded paths in codebase."""
+
+    def __init__(self, root_dir: str = None, fix: bool = False):
+        self.root_dir = Path(root_dir or os.getcwd())
         self.fix = fix
-        self.patterns = [re.compile(pattern) for pattern in PATH_PATTERNS]
-        self.issues_found = 0
-        self.files_with_issues = 0
+        self.findings: List[Dict[str, str]] = []
         self.files_fixed = 0
 
-    def get_files_to_scan(self) -> List[str]:
-        """Return a list of files to scan."""
-        all_files = []
+    def should_exclude_file(self, file_path: Path) -> bool:
+        """Check if file should be excluded from scanning."""
+        path_str = str(file_path.relative_to(self.root_dir))
+        for pattern in EXCLUDE_PATTERNS:
+            if re.search(pattern, path_str):
+                return True
+        return False
 
-        for root, dirs, files in os.walk(self.project_root):
-            # Skip excluded directories
-            dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
+    def scan_file(self, file_path: Path) -> List[Dict[str, str]]:
+        """Scan a single file for hardcoded paths."""
+        findings = []
 
-            for file in files:
-                file_path = os.path.join(root, file)
-                ext = os.path.splitext(file)[1].lower()
+        # Only scan files with relevant extensions
+        if file_path.suffix.lower() not in SCAN_EXTENSIONS:
+            return findings
 
-                if ext in FILE_EXTENSIONS:
-                    all_files.append(file_path)
-
-        return all_files
-
-    def scan_file(self, file_path: str) -> int:
-        """
-        Scan a file for hardcoded paths.
-        Returns the number of issues found.
-        """
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                 content = f.read()
-        except UnicodeDecodeError:
-            print(f"⚠️  Skipping binary file: {file_path}")
-            return 0
+                lines = content.splitlines()
 
-        issues = 0
+        except Exception as e:
+            print(f"Error reading {file_path}: {e}")
+            return findings
 
-        for pattern in self.patterns:
-            matches = pattern.finditer(content)
-            for match in matches:
-                issues += 1
-                matched_text = match.group(0)
-                line_number = content[:match.start()].count('\n') + 1
+        # Track if we made any changes for fixing
+        original_content = content
 
-                print(f"\n🔴 Issue in {file_path}:{line_number}")
+        for line_num, line in enumerate(lines, 1):
+            for pattern in PATH_PATTERNS:
+                matches = re.finditer(pattern, line, re.IGNORECASE)
+                for match in matches:
+                    finding = {
+                        "file": str(file_path.relative_to(self.root_dir)),
+                        "line": line_num,
+                        "pattern": pattern,
+                        "match": match.group(),
+                        "full_line": line.strip(),
+                        "suggestion": self._get_suggestion(match.group()),
+                        "fixed": False,
+                    }
 
-                # Extract the line containing the match
-                lines = content.split('\n')
-                line = lines[line_number - 1]
+                    # Apply fix if requested
+                    if self.fix:
+                        replacement = self._get_replacement(match.group())
+                        if replacement and replacement != match.group():
+                            content = content.replace(match.group(), replacement)
+                            finding["fixed"] = True
+                            finding["replacement"] = replacement
 
-                print(f"  Line: {line}")
-                print(f"  Hardcoded path: {matched_text}")
+                    findings.append(finding)
 
-                # Suggest a fix
-                if RESOLVER_AVAILABLE:
-                    if file_path.endswith('.py'):
-                        rel_path = self._get_relative_path(matched_text)
-                        suggestion = f"os.path.join(get_project_root_path(), '{rel_path}')"
-                    else:
-                        suggestion = "Use device_path_resolver functions instead of hardcoded paths"
-                else:
-                    suggestion = "Use device_path_resolver.py for cross-device compatibility"
+        # Write fixed content back to file
+        if self.fix and content != original_content:
+            try:
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write(content)
+                self.files_fixed += 1
+                print(f"✅ Fixed hardcoded paths in {file_path.relative_to(self.root_dir)}")
+            except Exception as e:
+                print(f"Error writing fixed content to {file_path}: {e}")
 
-                print(f"  Suggested fix: {suggestion}")
+        return findings
 
-                # Apply the fix if requested
-                if self.fix and file_path.endswith('.py') and RESOLVER_AVAILABLE:
-                    rel_path = self._get_relative_path(matched_text)
-                    new_content = content.replace(
-                        matched_text,
-                        f"os.path.join(get_project_root_path(), '{rel_path}')"
-                    )
+    def _get_suggestion(self, hardcoded_path: str) -> str:
+        """Get suggestion for replacing hardcoded path."""
+        if "OneDrive" in hardcoded_path:
+            if RESOLVER_AVAILABLE:
+                return "get_onedrive_path() or ${ONEDRIVE_PATH}"
+            else:
+                return "${ONEDRIVE_PATH} environment variable"
+        elif "bar-directory-recon" in hardcoded_path:
+            if RESOLVER_AVAILABLE:
+                return "get_project_root_path() or ${PROJECT_ROOT}"
+            else:
+                return "${PROJECT_ROOT} environment variable"
+        elif ".venv" in hardcoded_path:
+            return "os.path.join(get_project_root_path(), '.venv')"
+        else:
+            return "Use relative path or environment variable"
 
-                    if new_content != content:
-                        with open(file_path, 'w', encoding='utf-8') as f:
-                            f.write(new_content)
-                        print(f"  ✅ Fixed issue in {file_path}")
-                        content = new_content  # Update content for subsequent matches
-                        self.files_fixed += 1
-
-        if issues > 0:
-            self.files_with_issues += 1
-
-        self.issues_found += issues
-        return issues
-
-    def _get_relative_path(self, full_path: str) -> str:
-        """Convert absolute path to relative path from project root."""
+    def _get_replacement(self, hardcoded_path: str) -> Optional[str]:
+        """Get replacement text for hardcoded path."""
         if not RESOLVER_AVAILABLE:
-            return full_path
+            return None
 
-        # Normalize path separators
-        norm_path = full_path.replace('\\', '/')
+        if "OneDrive" in hardcoded_path and "bar-directory-recon" in hardcoded_path:
+            return "get_project_root_path()"
+        elif "OneDrive" in hardcoded_path:
+            return "get_onedrive_path()"
+        elif "bar-directory-recon" in hardcoded_path:
+            return "get_project_root_path()"
 
-        # Get project root and OneDrive path
-<<<<<<< HEAD
-        onedrive_path = os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'os.path.join(get_project_root_path(), 'get_onedrive_path')')')')')')')')')')')')')')')')')')')')')')')')()
-=======
-        onedrive_path = get_onedrive_path()
->>>>>>> origin/main
-        if onedrive_path:
-            norm_onedrive = onedrive_path.replace('\\', '/')
-
-            # Check if the path starts with OneDrive path
-            if norm_path.startswith(norm_onedrive):
-                relative = norm_path[len(norm_onedrive):].lstrip('/')
-                return relative
-
-        # If we can't determine the relative path, return the original
-        return full_path
+        return None
 
     def scan_all_files(self) -> None:
-        """Scan all files in the project."""
-        files = self.get_files_to_scan()
-        print(f"🔍 Scanning {len(files)} files for hardcoded paths...")
-
-        for file_path in files:
-            self.scan_file(file_path)
-
-        print("\n" + "="*70)
-        print(f"📊 Scan complete: {self.issues_found} issues found in {self.files_with_issues} files")
-
+        """Scan all files in the directory."""
+        print(f"🔍 Scanning for hardcoded paths in {self.root_dir}")
         if self.fix:
-            print(f"🛠️  Fixed issues in {self.files_fixed} files")
-        elif self.issues_found > 0:
-            print("💡 Run with --fix to automatically fix issues")
+            print("🛠️  Fix mode enabled - will attempt to fix issues automatically")
 
-        if self.issues_found == 0:
+        file_count = 0
+        for file_path in self.root_dir.rglob("*"):
+            if file_path.is_file() and not self.should_exclude_file(file_path):
+                findings = self.scan_file(file_path)
+                self.findings.extend(findings)
+                file_count += 1
+
+        print(f"📊 Scanned {file_count} files")
+
+    def generate_report(self) -> None:
+        """Generate and print the findings report."""
+        if not self.findings:
             print("✅ No hardcoded paths found!")
+            return
+
+        print(f"\n🔍 Found {len(self.findings)} hardcoded path issues:")
+        print("=" * 80)
+
+        # Group by file
+        files = {}
+        fixed_count = 0
+        for finding in self.findings:
+            file_path = finding["file"]
+            if file_path not in files:
+                files[file_path] = []
+            files[file_path].append(finding)
+            if finding.get("fixed", False):
+                fixed_count += 1
+
+        for file_path, file_findings in sorted(files.items()):
+            print(f"\n📄 {file_path}")
+            print("-" * 50)
+
+            for finding in file_findings:
+                status = "✅ FIXED" if finding.get("fixed", False) else "❌ ISSUE"
+                print(f"  {status} Line {finding['line']}: {finding['match']}")
+
+                if finding.get("fixed", False):
+                    print(f"    🔄 Replaced with: {finding.get('replacement', 'N/A')}")
+                else:
+                    print(f"    💡 Suggestion: {finding['suggestion']}")
+
+                # Show context (truncated)
+                context = finding["full_line"]
+                if len(context) > 100:
+                    context = context[:97] + "..."
+                print(f"    📝 Context: {context}")
+                print()
+
+        # Summary
+        print("=" * 80)
+        if self.fix:
+            print(f"✅ Fixed {fixed_count} issues in {self.files_fixed} files")
+            remaining = len(self.findings) - fixed_count
+            if remaining > 0:
+                print(f"⚠️  {remaining} issues require manual review")
+        else:
+            print(f"🛠️  Run with --fix to automatically fix {len(self.findings)} issues")
+
 
 def main():
-    """Main entry point for the script."""
+    """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Scan Python files for hardcoded paths that might cause cross-device compatibility issues"
+        description="Scan for hardcoded paths that cause cross-device compatibility issues"
     )
-    parser.add_argument(
-        "--fix",
-        action="store_true",
-        help="Automatically fix detected issues"
-    )
-    parser.add_argument(
-        "--path",
-        type=str,
-        default=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        help="Project root directory to scan (default: parent of script directory)"
-    )
+    parser.add_argument("--fix", action="store_true", help="Automatically fix detected issues where possible")
+    parser.add_argument("--directory", type=str, default=".", help="Directory to scan (default: current directory)")
 
     args = parser.parse_args()
 
     if not RESOLVER_AVAILABLE:
-        print("⚠️  Warning: device_path_resolver.py not found. Some features will be limited.")
+        print("⚠️  Warning: device_path_resolver.py not available. Fix mode will be limited.")
 
-    scanner = PathScanner(args.path, args.fix)
+    scanner = HardcodedPathScanner(args.directory, args.fix)
     scanner.scan_all_files()
+    scanner.generate_report()
 
-    # Return non-zero exit code if issues were found
-    return 1 if scanner.issues_found > 0 else 0
+    if scanner.findings:
+        print("\n🛠️  To fix these issues:")
+        print("1. Replace hardcoded paths with environment variables")
+        print("2. Use relative paths where possible")
+        print("3. Use device_path_resolver functions for cross-device compatibility")
+
+        # Exit with non-zero code if unfixed issues remain
+        if not args.fix or any(not f.get("fixed", False) for f in scanner.findings):
+            sys.exit(1)
+    else:
+        print("✅ All clear!")
+        sys.exit(0)
+
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

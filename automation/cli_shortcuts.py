@@ -6,26 +6,15 @@ Provides convenient shortcuts for common pipeline operations.
 """
 
 import argparse
-import asyncio
-import os
 import sys
 from pathlib import Path
 from typing import List, Optional
 
 # Add project root to path
-
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from automation.universal_runner import UniversalRunner
-
-# Optional import for configuration display
-try:
-    import yaml
-    YAML_AVAILABLE = True
-except ImportError:
-    YAML_AVAILABLE = False
-
 
 
 def quick_run(site: str) -> None:
@@ -35,12 +24,11 @@ def quick_run(site: str) -> None:
     runner.run_pipeline_for_site(site)
 
 
-
 def full_pipeline(sites: Optional[List[str]] = None) -> None:
     """Run full pipeline for all configured sites."""
     print("🔄 Running full pipeline...")
     runner = UniversalRunner()
-    config_sites = runner.config['pipeline']['sites']
+    config_sites = runner.config["pipeline"]["sites"]
     target_sites = sites if sites else config_sites
     if not target_sites:
         print("❌ No sites configured. Please add sites to automation/config.yaml")
@@ -80,37 +68,33 @@ def generate_dashboard() -> None:
     print("✅ Dashboard generated successfully")
 
 
-
 def test_notifications() -> None:
     """Test notification systems."""
     print("📢 Testing notification systems...")
     runner = UniversalRunner()
     # Test Discord notification if configured
-    discord_webhook = runner.config['notifications']['discord_webhook']
+    discord_webhook = runner.config["notifications"]["discord_webhook"]
     if discord_webhook:
         runner.notifier.send_info_notification(
-            "Test Notification",
-            "This is a test notification from the Universal Project Runner!"
+            "Test Notification", "This is a test notification from the Universal Project Runner!"
         )
         print("✅ Discord notification sent")
     else:
         print("⚠️ Discord webhook not configured")
     # Test email notification if configured
-    email_config = runner.config['notifications']['email']
-    if email_config.get('enabled'):
-        runner.notifier.send_info_notification(
-            "Test Email",
-            "This is a test email from the Universal Project Runner!"
-        )
+    email_config = runner.config["notifications"]["email"]
+    if email_config.get("enabled"):
+        runner.notifier.send_info_notification("Test Email", "This is a test email from the Universal Project Runner!")
         print("✅ Email notification sent")
     else:
         print("⚠️ Email notifications not enabled")
+
 
 def validate_system() -> None:
     """Validate system health and configuration"""
     print("🔍 Running system validation...")
     runner = UniversalRunner()
-    
+
     # 1. Validate environment for pipeline execution
     print("\n--- Validating Pipeline Environment ---")
     executor = runner.pipeline
@@ -123,7 +107,7 @@ def validate_system() -> None:
     print("\n--- Checking Automation Configuration ---")
     if runner.config:
         print("✅ Automation config loaded.")
-        sites = runner.config.get('pipeline', {}).get('sites', [])
+        sites = runner.config.get("pipeline", {}).get("sites", [])
         if sites:
             print(f"   - Found {len(sites)} sites.")
         else:
@@ -136,7 +120,7 @@ def validate_system() -> None:
     if runner.list_discovery:
         print("✅ List Discovery Agent is available.")
         discovery_config = runner.list_discovery.config
-        urls = discovery_config.get('monitored_urls', [])
+        urls = discovery_config.get("monitored_urls", [])
         if urls:
             print(f"   - Found {len(urls)} URLs to monitor.")
         else:
@@ -149,14 +133,12 @@ def validate_system() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Universal Runner CLI Shortcuts")
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
-    
-    # Quick run command
-    quick_parser = subparsers.add_parser('quick', help='Quick pipeline run for a site')
-    quick_parser.add_argument('site', help='Site to process')
-    
-    # Full pipeline command
-    full_parser = subparsers.add_parser('full', help='Run full pipeline')
-    full_parser.add_argument('--sites', nargs='*', help='Specific sites to process')
-    
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
+    # Quick run command
+    quick_parser = subparsers.add_parser("quick", help="Quick pipeline run for a site")
+    quick_parser.add_argument("site", help="Site to process")
+
+    # Full pipeline command
+    full_parser = subparsers.add_parser("full", help="Run full pipeline")
+    full_parser.add_argument("--sites", nargs="*", help="Specific sites to process")
