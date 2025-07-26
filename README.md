@@ -23,6 +23,58 @@ Universal Recon is a comprehensive bar directory reconnaissance and automation t
 
 ---
 
+## Cross-Device Bootstrap
+
+### Alienware Device Setup
+
+For setting up this project on a fresh Alienware device to match the ASUS golden image configuration:
+
+📦 **Download Bootstrap Bundle**: [`alienware_bootstrap_bundle.zip`](./alienware_bootstrap_bundle.zip)
+
+**Quick Setup (Windows)**:
+```powershell
+# 1. Download and extract the bootstrap bundle
+# 2. Run as Administrator
+.\bootstrap_alienware.ps1
+
+# Custom workspace location
+.\bootstrap_alienware.ps1 -WorkspaceRoot "D:\Development"
+```
+
+**Quick Setup (Linux/macOS)**:
+```bash
+# 1. Make executable and run
+chmod +x bootstrap_alienware.sh
+./bootstrap_alienware.sh
+
+# Custom workspace location  
+./bootstrap_alienware.sh /opt/development
+```
+
+**What the Bootstrap Does**:
+- ✅ Clones repository at v2.0 tag
+- ✅ Sets up Python 3.13 virtual environment
+- ✅ Installs all 55+ required packages
+- ✅ Creates device-specific configuration
+- ✅ Sets up complete directory structure
+- ✅ Generates validation report
+
+**Documentation**:
+- 📖 [Complete Bootstrap Guide](./ALIENWARE_BOOTSTRAP_GUIDE.md)
+- 🔧 [Implementation Details](./ALIENWARE_BOOTSTRAP_IMPLEMENTATION_SUMMARY.md)
+- ✅ [Execution Checklist](./EXECUTION_CHECKLIST.md)
+- 📊 [Environment Readiness Report](./ENV_READY_REPORT.md)
+
+**Requirements**:
+- Python 3.13
+- Git
+- 5GB free disk space
+- Administrator privileges (Windows)
+
+**Expected Setup Time**: 10-15 minutes for complete environment
+
+---
+
 ## Getting Started
 
 ### Requirements

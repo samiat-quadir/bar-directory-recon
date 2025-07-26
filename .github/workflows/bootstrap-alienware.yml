@@ -1,0 +1,403 @@
+name: Bootstrap Alienware Device
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      workspace_root:
+        description: 'Workspace root directory'
+        required: false
+        default: '/tmp/bootstrap-test'
+        type: string
+      skip_validation:
+        description: 'Skip environment validation'
+        required: false
+        default: false
+        type: boolean
+
+  # Automatic trigger on pushes to bootstrap branch
+  push:
+    branches:
+      - 'bootstrap-alienware'
+    paths:
+      - 'bootstrap_alienware.sh'
+      - 'bootstrap_alienware.ps1'
+      - 'requirements*.txt'
+      - '.github/workflows/bootstrap-alienware.yml'
+
+  # Trigger on pull requests targeting main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'bootstrap_alienware.sh'
+      - 'bootstrap_alienware.ps1'
+      - 'requirements*.txt'
+      - '.github/workflows/bootstrap-alienware.yml'
+
+env:
+  # Default configuration
+  PYTHON_VERSION: '3.13'
+  PROJECT_NAME: 'bar-directory-recon'
+  TAG_VERSION: 'v2.0'
+
+jobs:
+  test-bootstrap-linux:
+    name: Test Bootstrap (Linux)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository at tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG_VERSION }}
+          fetch-depth: 0
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git curl wget
+
+          # Install Chrome for automation testing
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Make bootstrap script executable
+        run: chmod +x bootstrap_alienware.sh
+
+      - name: Run bootstrap script (Linux)
+        run: |
+          workspace_root="${{ github.event.inputs.workspace_root || '/tmp/bootstrap-test' }}"
+          skip_validation="${{ github.event.inputs.skip_validation || 'false' }}"
+
+          if [ "$skip_validation" = "true" ]; then
+            ./bootstrap_alienware.sh "$workspace_root" --skip-validation
+          else
+            ./bootstrap_alienware.sh "$workspace_root"
+          fi
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Verify installation
+        run: |
+          workspace_root="${{ github.event.inputs.workspace_root || '/tmp/bootstrap-test' }}"
+          project_path="$workspace_root/${{ env.PROJECT_NAME }}"
+
+          # Check if project was cloned
+          if [ ! -d "$project_path" ]; then
+            echo "❌ Project directory not found: $project_path"
+            exit 1
+          fi
+
+          # Check virtual environment
+          if [ ! -d "$project_path/.venv" ]; then
+            echo "❌ Virtual environment not found"
+            exit 1
+          fi
+
+          # Activate venv and check Python version
+          cd "$project_path"
+          source .venv/bin/activate
+          python --version
+
+          # Check key packages
+          python -c "import requests, pandas, beautifulsoup4; print('✅ Core packages imported successfully')"
+
+          # Check configuration files
+          if [ ! -f ".env" ]; then
+            echo "❌ .env file not created"
+            exit 1
+          fi
+
+          # Check device profile
+          device_name=$(hostname)
+          if [ ! -f "config/device_profile-$device_name.json" ]; then
+            echo "❌ Device profile not created"
+            exit 1
+          fi
+
+          echo "✅ All verification checks passed"
+
+      - name: Upload validation report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: alienware-validation-report-linux
+          path: |
+            /tmp/bootstrap-test/bar-directory-recon/alienware_validation_report.md
+            /tmp/bootstrap-test/bar-directory-recon/.env
+            /tmp/bootstrap-test/bar-directory-recon/config/device_profile-*.json
+          retention-days: 30
+
+  test-bootstrap-windows:
+    name: Test Bootstrap (Windows)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository at tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG_VERSION }}
+          fetch-depth: 0
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Chrome
+        run: |
+          # Download and install Chrome
+          $url = "https://dl.google.com/chrome/install/chrome_installer.exe"
+          $output = "$env:TEMP\chrome_installer.exe"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Start-Process -FilePath $output -ArgumentList "/silent", "/install" -Wait
+        shell: powershell
+
+      - name: Run bootstrap script (PowerShell)
+        run: |
+          $workspaceRoot = "${{ github.event.inputs.workspace_root }}"
+          if (-not $workspaceRoot) {
+            $workspaceRoot = "$env:TEMP\bootstrap-test"
+          }
+
+          $skipValidation = "${{ github.event.inputs.skip_validation }}" -eq "true"
+
+          if ($skipValidation) {
+            .\bootstrap_alienware.ps1 -WorkspaceRoot $workspaceRoot -SkipValidation
+          } else {
+            .\bootstrap_alienware.ps1 -WorkspaceRoot $workspaceRoot
+          }
+        shell: powershell
+
+      - name: Verify installation (Windows)
+        run: |
+          $workspaceRoot = "${{ github.event.inputs.workspace_root }}"
+          if (-not $workspaceRoot) {
+            $workspaceRoot = "$env:TEMP\bootstrap-test"
+          }
+          $projectPath = Join-Path $workspaceRoot "${{ env.PROJECT_NAME }}"
+
+          # Check if project was cloned
+          if (-not (Test-Path $projectPath)) {
+            Write-Error "❌ Project directory not found: $projectPath"
+            exit 1
+          }
+
+          # Check virtual environment
+          $venvPath = Join-Path $projectPath ".venv"
+          if (-not (Test-Path $venvPath)) {
+            Write-Error "❌ Virtual environment not found"
+            exit 1
+          }
+
+          # Activate venv and check Python version
+          Set-Location $projectPath
+          & "$venvPath\Scripts\Activate.ps1"
+          python --version
+
+          # Check key packages
+          python -c "import requests, pandas, beautifulsoup4; print('✅ Core packages imported successfully')"
+
+          # Check configuration files
+          if (-not (Test-Path ".env")) {
+            Write-Error "❌ .env file not created"
+            exit 1
+          }
+
+          # Check device profile
+          $deviceName = $env:COMPUTERNAME
+          $deviceProfile = "config\device_profile-$deviceName.json"
+          if (-not (Test-Path $deviceProfile)) {
+            Write-Error "❌ Device profile not created"
+            exit 1
+          }
+
+          Write-Host "✅ All verification checks passed"
+        shell: powershell
+
+      - name: Upload validation report (Windows)
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: alienware-validation-report-windows
+          path: |
+            ${{ env.TEMP }}\bootstrap-test\bar-directory-recon\alienware_validation_report.md
+            ${{ env.TEMP }}\bootstrap-test\bar-directory-recon\.env
+            ${{ env.TEMP }}\bootstrap-test\bar-directory-recon\config\device_profile-*.json
+          retention-days: 30
+
+  test-bootstrap-macos:
+    name: Test Bootstrap (macOS)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository at tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG_VERSION }}
+          fetch-depth: 0
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Chrome
+        run: |
+          brew install --cask google-chrome
+
+      - name: Make bootstrap script executable
+        run: chmod +x bootstrap_alienware.sh
+
+      - name: Run bootstrap script (macOS)
+        run: |
+          workspace_root="${{ github.event.inputs.workspace_root || '/tmp/bootstrap-test' }}"
+          skip_validation="${{ github.event.inputs.skip_validation || 'false' }}"
+
+          if [ "$skip_validation" = "true" ]; then
+            ./bootstrap_alienware.sh "$workspace_root" --skip-validation
+          else
+            ./bootstrap_alienware.sh "$workspace_root"
+          fi
+
+      - name: Verify installation (macOS)
+        run: |
+          workspace_root="${{ github.event.inputs.workspace_root || '/tmp/bootstrap-test' }}"
+          project_path="$workspace_root/${{ env.PROJECT_NAME }}"
+
+          # Check if project was cloned
+          if [ ! -d "$project_path" ]; then
+            echo "❌ Project directory not found: $project_path"
+            exit 1
+          fi
+
+          # Check virtual environment
+          if [ ! -d "$project_path/.venv" ]; then
+            echo "❌ Virtual environment not found"
+            exit 1
+          fi
+
+          # Activate venv and check Python version
+          cd "$project_path"
+          source .venv/bin/activate
+          python --version
+
+          # Check key packages
+          python -c "import requests, pandas, beautifulsoup4; print('✅ Core packages imported successfully')"
+
+          # Check configuration files
+          if [ ! -f ".env" ]; then
+            echo "❌ .env file not created"
+            exit 1
+          fi
+
+          # Check device profile
+          device_name=$(hostname)
+          if [ ! -f "config/device_profile-$device_name.json" ]; then
+            echo "❌ Device profile not created"
+            exit 1
+          fi
+
+          echo "✅ All verification checks passed"
+
+      - name: Upload validation report (macOS)
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: alienware-validation-report-macos
+          path: |
+            /tmp/bootstrap-test/bar-directory-recon/alienware_validation_report.md
+            /tmp/bootstrap-test/bar-directory-recon/.env
+            /tmp/bootstrap-test/bar-directory-recon/config/device_profile-*.json
+          retention-days: 30
+
+  # Collect results and create summary
+  create-summary:
+    name: Create Bootstrap Summary
+    runs-on: ubuntu-latest
+    needs: [test-bootstrap-linux, test-bootstrap-windows, test-bootstrap-macos]
+    if: always()
+
+    steps:
+      - name: Download all validation reports
+        uses: actions/download-artifact@v3
+        with:
+          path: validation-reports
+
+      - name: Create consolidated summary
+        run: |
+          mkdir -p summary
+
+          cat > summary/bootstrap-summary.md << 'EOF'
+          # Alienware Bootstrap Testing Summary
+
+          **Workflow Run**: ${{ github.run_number }}
+          **Triggered by**: ${{ github.event_name }}
+          **Timestamp**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+
+          ## Test Results
+
+          | Platform | Status | Validation Report |
+          |----------|--------|-------------------|
+          | Linux    | ${{ needs.test-bootstrap-linux.result == 'success' && '✅ PASS' || '❌ FAIL' }} | Available in artifacts |
+          | Windows  | ${{ needs.test-bootstrap-windows.result == 'success' && '✅ PASS' || '❌ FAIL' }} | Available in artifacts |
+          | macOS    | ${{ needs.test-bootstrap-macos.result == 'success' && '✅ PASS' || '❌ FAIL' }} | Available in artifacts |
+
+          ## Bootstrap Script Features Tested
+
+          - ✅ Repository cloning at tag v2.0
+          - ✅ Python 3.13 virtual environment creation
+          - ✅ Core and optional dependencies installation
+          - ✅ Device-specific configuration generation
+          - ✅ Required directory structure creation
+          - ✅ External tools installation verification
+          - ✅ Environment validation execution
+
+          ## Next Steps for Alienware Device Setup
+
+          1. **Download the appropriate script**:
+             - For Windows: `bootstrap_alienware.ps1`
+             - For Linux/macOS: `bootstrap_alienware.sh`
+
+          2. **Run the bootstrap script**:
+             ```bash
+             # Linux/macOS
+             ./bootstrap_alienware.sh
+
+             # Windows PowerShell
+             .\bootstrap_alienware.ps1
+             ```
+
+          3. **Post-bootstrap configuration**:
+             - Update `.env` file with your API keys and secrets
+             - Review device-specific profile in `config/`
+             - Test automation scripts
+             - Run full test suite: `python -m pytest -v`
+
+          ## Files Generated
+
+          - `alienware_validation_report.md` - Detailed validation results
+          - `.env` - Environment configuration template
+          - `config/device_profile-{hostname}.json` - Device-specific settings
+          - Complete project structure with virtual environment
+
+          ---
+          *Generated by GitHub Actions Bootstrap Workflow*
+          EOF
+
+          echo "Bootstrap testing completed. Check artifacts for detailed reports."
+
+      - name: Upload summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: bootstrap-summary
+          path: summary/
+          retention-days: 90

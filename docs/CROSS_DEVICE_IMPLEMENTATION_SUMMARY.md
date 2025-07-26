@@ -35,16 +35,15 @@ Tools to identify and fix hardcoded paths:
 
 - **PowerShell Scanner**: `tools\Scan_For_Hardcoded_Paths.ps1`
 - **Python Scanner**: `tools\scan_hardcoded_paths.py`
-- **Combined Scanner**: `ScanPaths.bat`
-- **Git Hooks**: `pre-commit-hooks\check_hardcoded_paths.py`
+- **Cross-Device Tests**: `tools\Test-CrossDeviceCompatibility.ps1`
 
 ### 4. Virtual Environment Management
 
 Cross-device virtual environment support:
 
-- **Update Script**: `UpdateVenvCrossDevice.bat`
-- **Fix Script**: `fix_venv_activation.bat`
-- **Cross-Device Activation**: `.venv\Scripts\activate_cross_device.bat`
+- **Virtual Environment Helper**: `tools\VirtualEnvHelper.ps1`
+- **Device Setup Script**: `tools\AutoDeviceSetup.ps1`
+- **Environment Consolidation**: `tools\consolidate_env_files.ps1`
 
 ### 5. Cross-Device Documentation
 
@@ -59,11 +58,11 @@ Documentation to guide users:
 
 The typical workflow for cross-device development:
 
-1. **Device Detection**: Run `CrossDeviceLauncher.bat` or open VS Code with `OpenInVSCode.bat`
-2. **Virtual Environment**: Update with `UpdateVenvCrossDevice.bat` if needed
+1. **Device Detection**: Run `tools\CrossDeviceLauncher.bat` or use VS Code automatic device setup
+2. **Virtual Environment**: Use `tools\VirtualEnvHelper.ps1` for environment management
 3. **Development**: Use path resolver functions in code
-4. **Verification**: Scan for hardcoded paths with `ScanPaths.bat`
-5. **Device Transition**: Follow `DEVICE_TRANSITION_GUIDE.md`
+4. **Verification**: Scan for hardcoded paths with `python tools\scan_hardcoded_paths.py`
+5. **Cross-Device Testing**: Run `tools\Test-CrossDeviceCompatibility.ps1`
 
 ## Supported Devices
 
