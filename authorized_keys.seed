@@ -1,0 +1,19 @@
+# SSH Authorized Keys Seed Template
+# Generated: July 25, 2025
+# Purpose: Template for setting up SSH access across devices
+
+# Primary development key (ASUS ROG-Lucci)
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH0C1tACHPfbnmzvGfdIR8++ksDXwbmKdUj36X81o9le samqu@ROG-Lucci
+
+# Secondary key (Gmail account)
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJA9TjjjRU5PjJrhgvZ2siOuqNt3YGKkJyYl+/ntM9Wd sam.quadir@gmail.com
+
+# Template for additional keys:
+# ssh-ed25519 <key-data> <comment>
+# ssh-rsa <key-data> <comment>
+
+# Instructions:
+# 1. Copy this file to ~/.ssh/authorized_keys on target systems
+# 2. Set appropriate permissions: chmod 600 ~/.ssh/authorized_keys
+# 3. Ensure ~/.ssh directory permissions: chmod 700 ~/.ssh
+# 4. Add new keys as needed for additional devices or users

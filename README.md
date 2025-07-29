@@ -4,6 +4,18 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://img.shields.io/badge/tests-33%20passed-green.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions)
+[![Release](https://img.shields.io/badge/release-v2.0-brightgreen.svg)](https://github.com/samiat-quadir/bar-directory-recon/releases/tag/v2.0)
+[![Bootstrap Ready](https://img.shields.io/badge/bootstrap-ready-success.svg)](./alienware_bootstrap_bundle.zip)
+
+## Workflow Status
+
+[![Lint](https://github.com/samiat-quadir/bar-directory-recon/workflows/lint/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/lint.yml)
+[![Test](https://github.com/samiat-quadir/bar-directory-recon/workflows/test/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/test.yml)
+[![Docs Build](https://github.com/samiat-quadir/bar-directory-recon/workflows/docs-build/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/docs-build.yml)
+[![Nightly Scheduler](https://github.com/samiat-quadir/bar-directory-recon/workflows/nightly-scheduler/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/nightly-scheduler.yml)
+[![Benchmark](https://github.com/samiat-quadir/bar-directory-recon/workflows/benchmark/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/benchmark.yml)
+[![Security Scan](https://github.com/samiat-quadir/bar-directory-recon/workflows/security-scan/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/security-scan.yml)
+[![Cross-Device Bootstrap](https://github.com/samiat-quadir/bar-directory-recon/workflows/cross-device-bootstrap/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/cross-device-bootstrap.yml)
 
 ## Overview
 
@@ -29,7 +41,7 @@ Universal Recon is a comprehensive bar directory reconnaissance and automation t
 
 For setting up this project on a fresh Alienware device to match the ASUS golden image configuration:
 
-📦 **Download Bootstrap Bundle**: [`alienware_bootstrap_bundle.zip`](./alienware_bootstrap_bundle.zip)
+📦 **Download Bootstrap Bundle**: [`alienware_bootstrap_bundle.zip`](./alienware_bootstrap_bundle.zip) *(70KB - Updated July 26, 2025)*
 
 **Quick Setup (Windows)**:
 ```powershell
@@ -39,6 +51,9 @@ For setting up this project on a fresh Alienware device to match the ASUS golden
 
 # Custom workspace location
 .\bootstrap_alienware.ps1 -WorkspaceRoot "D:\Development"
+
+# Skip validation (faster setup)
+.\bootstrap_alienware.ps1 -SkipValidation
 ```
 
 **Quick Setup (Linux/macOS)**:
@@ -47,8 +62,8 @@ For setting up this project on a fresh Alienware device to match the ASUS golden
 chmod +x bootstrap_alienware.sh
 ./bootstrap_alienware.sh
 
-# Custom workspace location  
-./bootstrap_alienware.sh /opt/development
+# Custom workspace location
+./bootstrap_alienware.sh /opt/development --skip-validation
 ```
 
 **What the Bootstrap Does**:
@@ -58,20 +73,33 @@ chmod +x bootstrap_alienware.sh
 - ✅ Creates device-specific configuration
 - ✅ Sets up complete directory structure
 - ✅ Generates validation report
+- ✅ Configures automation framework
+- ✅ Sets up cross-device compatibility
+
+**Bundle Contents** *(7 files, 70KB total)*:
+- `bootstrap_alienware.ps1` - PowerShell bootstrap script (529 lines)
+- `bootstrap_alienware.sh` - Bash bootstrap script (523 lines)
+- `.env.template` - Environment variables template
+- `device_profile-Alienware.json` - Device-specific configuration
+- `validate_alienware_bootstrap.py` - Bootstrap validation script
+- `validate_env_state.py` - Environment validation script
+- `ENV_READY_REPORT.md` - Current environment status report
 
 **Documentation**:
-- 📖 [Complete Bootstrap Guide](./ALIENWARE_BOOTSTRAP_GUIDE.md)
-- 🔧 [Implementation Details](./ALIENWARE_BOOTSTRAP_IMPLEMENTATION_SUMMARY.md)
-- ✅ [Execution Checklist](./EXECUTION_CHECKLIST.md)
-- 📊 [Environment Readiness Report](./ENV_READY_REPORT.md)
+- � [Environment Readiness Report](./ENV_READY_REPORT.md) - **95% parity achieved**
+- 🔧 [Phase 3 Roadmap](./docs/PHASE3_ROADMAP.md) - Advanced features and planning
+- ✅ [ASUS Completion Report](./ASUS_PHASE2_COMPLETION_REPORT.md) - Phase 2 wrap-up status
 
 **Requirements**:
-- Python 3.13
-- Git
+- Python 3.13+
+- Git 2.40+
 - 5GB free disk space
-- Administrator privileges (Windows)
+- Administrator privileges (Windows) / sudo access (Linux)
+- Internet connection for package downloads
 
 **Expected Setup Time**: 10-15 minutes for complete environment
+
+**Validation Status**: ✅ **95% Golden Image Parity** - Ready for deployment
 
 ---
 
