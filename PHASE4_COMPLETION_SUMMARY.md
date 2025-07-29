@@ -239,7 +239,7 @@ RunAutomation.bat discovery
 The List Discovery Agent successfully fulfills all requirements from the original Phase 4 specification:
 
 ✅ **Monitor city/county web pages for new file uploads**
-✅ **Automatically download discovered files**  
+✅ **Automatically download discovered files**
 ✅ **Integration with Universal Project Runner**
 ✅ **Discord/Email notifications**
 ✅ **CLI interface and batch scripts**

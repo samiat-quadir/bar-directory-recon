@@ -72,7 +72,7 @@ function Write-PlaybookMessage {
 
 function Write-SectionHeader {
     param([string]$Title, [string]$StepNumber)
-    
+
     $separator = "###############################################################################"
     Write-Host $separator -ForegroundColor $Colors.Header
     Write-Host "# $StepNumber $Title" -ForegroundColor $Colors.Header
@@ -82,18 +82,18 @@ function Write-SectionHeader {
 
 function Test-PrerequisitesQuick {
     Write-PlaybookMessage "Performing quick prerequisites check..." "Info"
-    
+
     $issues = @()
-    
+
     # Check if we're running as Administrator
     $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($currentUser)
     $isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-    
+
     if (-not $isAdmin) {
         $issues += "Script must be run as Administrator"
     }
-    
+
     # Check Git
     try {
         $null = git --version
@@ -102,7 +102,7 @@ function Test-PrerequisitesQuick {
     catch {
         $issues += "Git is not installed or not in PATH"
     }
-    
+
     # Check Python 3.13
     try {
         $pythonVersion = py --version 2>&1
@@ -128,7 +128,7 @@ function Test-PrerequisitesQuick {
     catch {
         $issues += "Python 3.13 is not installed or not in PATH"
     }
-    
+
     if ($issues.Count -gt 0) {
         Write-PlaybookMessage "Prerequisites check failed!" "Error"
         foreach ($issue in $issues) {
@@ -136,7 +136,7 @@ function Test-PrerequisitesQuick {
         }
         throw "Prerequisites not met. Please resolve the issues above."
     }
-    
+
     Write-PlaybookMessage "All prerequisites satisfied" "Success"
 }
 
@@ -145,7 +145,7 @@ function Test-PrerequisitesQuick {
 ###############################################################################
 function Invoke-PrepStep {
     Write-SectionHeader "PREP: Set variables, recreate workspace, setup bootstrap bundle" "❶"
-    
+
     # Set key variables
     $script:WorkspacePath = $WorkspaceRoot
     $script:ProjectPath = $RepositoryPath
@@ -153,46 +153,46 @@ function Invoke-PrepStep {
     $script:DeviceName = $env:COMPUTERNAME
     $script:UserName = $env:USERNAME
     $script:Timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-    
+
     Write-PlaybookMessage "Workspace Root: $WorkspacePath" "Info" "PREP"
     Write-PlaybookMessage "Project Path: $ProjectPath" "Info" "PREP"
     Write-PlaybookMessage "Python Path: $PythonPath" "Info" "PREP"
     Write-PlaybookMessage "Device Name: $DeviceName" "Info" "PREP"
     Write-PlaybookMessage "Timestamp: $Timestamp" "Info" "PREP"
-    
+
     if ($WhatIf) {
         Write-PlaybookMessage "[DRY-RUN] Would recreate workspace folder structure" "Warning" "PREP"
         Write-PlaybookMessage "[DRY-RUN] Would verify bootstrap bundle files" "Warning" "PREP"
         return
     }
-    
+
     # Recreate workspace folder if needed
     if (-not (Test-Path $WorkspacePath)) {
         Write-PlaybookMessage "Creating workspace directory: $WorkspacePath" "Info" "PREP"
         New-Item -Path $WorkspacePath -ItemType Directory -Force | Out-Null
     }
-    
+
     # Verify we're in the correct directory and bootstrap bundle exists
     if (-not (Test-Path $ProjectPath)) {
         throw "Project directory not found: $ProjectPath. Please ensure the bootstrap bundle has been unzipped here."
     }
-    
+
     Set-Location $ProjectPath
-    
+
     # Verify bootstrap files exist
     $requiredFiles = @(
         "bootstrap_alienware.ps1",
         "bootstrap_alienware.sh",
         ".env.template"
     )
-    
+
     $missingFiles = @()
     foreach ($file in $requiredFiles) {
         if (-not (Test-Path $file)) {
             $missingFiles += $file
         }
     }
-    
+
     if ($missingFiles.Count -gt 0) {
         Write-PlaybookMessage "Missing bootstrap files: $($missingFiles -join ', ')" "Warning" "PREP"
         Write-PlaybookMessage "Continuing anyway - files may be in different locations" "Warning" "PREP"
@@ -200,7 +200,7 @@ function Invoke-PrepStep {
     else {
         Write-PlaybookMessage "All bootstrap files found" "Success" "PREP"
     }
-    
+
     # Check for device profile
     $deviceProfilePath = "config/device_profile-$DeviceName.json"
     if (Test-Path $deviceProfilePath) {
@@ -209,7 +209,7 @@ function Invoke-PrepStep {
     else {
         Write-PlaybookMessage "Device profile will be created during bootstrap" "Info" "PREP"
     }
-    
+
     # Check for validation scripts
     $validationScripts = @("validate_env_state.py", "validate_alienware_bootstrap.py")
     foreach ($script in $validationScripts) {
@@ -220,7 +220,7 @@ function Invoke-PrepStep {
             Write-PlaybookMessage "Validation script not found: $script" "Warning" "PREP"
         }
     }
-    
+
     Write-PlaybookMessage "PREP step completed successfully" "Success" "PREP"
 }
 
@@ -229,37 +229,37 @@ function Invoke-PrepStep {
 ###############################################################################
 function Invoke-BootstrapStep {
     Write-SectionHeader "BOOTSTRAP: Invoke bootstrap_alienware.ps1 with full error handling" "❷"
-    
+
     $bootstrapScript = Join-Path $ProjectPath "bootstrap_alienware.ps1"
-    
+
     if (-not (Test-Path $bootstrapScript)) {
         throw "Bootstrap script not found: $bootstrapScript"
     }
-    
+
     Write-PlaybookMessage "Found bootstrap script: $bootstrapScript" "Success" "BOOTSTRAP"
-    
+
     if ($WhatIf) {
         Write-PlaybookMessage "[DRY-RUN] Would execute: $bootstrapScript -Verbose" "Warning" "BOOTSTRAP"
         Write-PlaybookMessage "[DRY-RUN] Would check `$LASTEXITCODE for success" "Warning" "BOOTSTRAP"
         return
     }
-    
+
     # Set error handling for bootstrap execution
     $originalErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = 'Stop'
-    
+
     try {
         Write-PlaybookMessage "Executing bootstrap script with verbose output..." "Info" "BOOTSTRAP"
         Write-PlaybookMessage "Command: powershell -File `"$bootstrapScript`" -Verbose" "Info" "BOOTSTRAP"
-        
+
         # Execute the bootstrap script
         $bootstrapOutput = & powershell -File $bootstrapScript -Verbose 2>&1
         $bootstrapExitCode = $LASTEXITCODE
-        
+
         # Display bootstrap output
         Write-PlaybookMessage "Bootstrap script output:" "Info" "BOOTSTRAP"
         Write-Host $bootstrapOutput -ForegroundColor White
-        
+
         # Check exit code
         if ($bootstrapExitCode -eq 0) {
             Write-PlaybookMessage "Bootstrap script completed successfully (Exit Code: $bootstrapExitCode)" "Success" "BOOTSTRAP"
@@ -267,14 +267,14 @@ function Invoke-BootstrapStep {
         else {
             throw "Bootstrap script failed with exit code: $bootstrapExitCode"
         }
-        
+
         # Verify expected outcomes
         $expectedPaths = @(
             ".venv",
             ".env",
             "config"
         )
-        
+
         foreach ($path in $expectedPaths) {
             if (Test-Path $path) {
                 Write-PlaybookMessage "Verified: $path exists" "Success" "BOOTSTRAP"
@@ -283,7 +283,7 @@ function Invoke-BootstrapStep {
                 Write-PlaybookMessage "Warning: $path not found" "Warning" "BOOTSTRAP"
             }
         }
-        
+
     }
     catch {
         Write-PlaybookMessage "Bootstrap step failed: $_" "Error" "BOOTSTRAP"
@@ -294,7 +294,7 @@ function Invoke-BootstrapStep {
     finally {
         $ErrorActionPreference = $originalErrorActionPreference
     }
-    
+
     Write-PlaybookMessage "BOOTSTRAP step completed successfully" "Success" "BOOTSTRAP"
 }
 
@@ -303,24 +303,24 @@ function Invoke-BootstrapStep {
 ###############################################################################
 function Invoke-ValidationStep {
     Write-SectionHeader "VALIDATION: Display and analyze validation report" "❸"
-    
+
     $validationReportPath = Join-Path $ProjectPath "alienware_validation_report.md"
-    
+
     if ($WhatIf) {
         Write-PlaybookMessage "[DRY-RUN] Would check for validation report: $validationReportPath" "Warning" "VALIDATION"
         Write-PlaybookMessage "[DRY-RUN] Would scan for 'FAILED' entries and analyze results" "Warning" "VALIDATION"
         return
     }
-    
+
     # Check if validation report exists
     if (-not (Test-Path $validationReportPath)) {
         Write-PlaybookMessage "Validation report not found: $validationReportPath" "Warning" "VALIDATION"
         Write-PlaybookMessage "Attempting to run validation manually..." "Info" "VALIDATION"
-        
+
         # Try to run validation scripts manually
         $validationScripts = @("validate_env_state.py", "validate_alienware_bootstrap.py")
         $validationResults = @()
-        
+
         foreach ($script in $validationScripts) {
             if (Test-Path $script) {
                 try {
@@ -335,7 +335,7 @@ function Invoke-ValidationStep {
                 }
             }
         }
-        
+
         if ($validationResults.Count -gt 0) {
             # Create a basic validation report
             $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -360,7 +360,7 @@ Please review the results above for any issues.
         Write-PlaybookMessage "Created validation report: $validationReportPath" "Success" "VALIDATION"
         }
     }
-    
+
     if (Test-Path $validationReportPath) {
         Write-PlaybookMessage "Displaying validation report:" "Info" "VALIDATION"
         Write-Host ""
@@ -369,11 +369,11 @@ Please review the results above for any issues.
         Write-Host $reportContent -ForegroundColor White
         Write-Host "========================================================" -ForegroundColor Magenta
         Write-Host ""
-        
+
         # Scan for failures
         $failurePatterns = @("FAILED", "ERROR", "FAIL", "❌", "✗")
         $failures = @()
-        
+
         $reportLines = Get-Content $validationReportPath
         foreach ($line in $reportLines) {
             foreach ($pattern in $failurePatterns) {
@@ -383,20 +383,20 @@ Please review the results above for any issues.
                 }
             }
         }
-        
+
         if ($failures.Count -gt 0) {
             Write-PlaybookMessage "VALIDATION FAILURES DETECTED:" "Error" "VALIDATION"
             foreach ($failure in $failures) {
                 Write-PlaybookMessage $failure "Error" "VALIDATION"
             }
-            
+
             Write-PlaybookMessage "Troubleshooting hints:" "Info" "VALIDATION"
             Write-PlaybookMessage "1. Check Python virtual environment is activated" "Info" "VALIDATION"
             Write-PlaybookMessage "2. Verify all required packages are installed" "Info" "VALIDATION"
             Write-PlaybookMessage "3. Check .env file configuration" "Info" "VALIDATION"
             Write-PlaybookMessage "4. Ensure all directory structures are created" "Info" "VALIDATION"
             Write-PlaybookMessage "5. Review bootstrap output for any warnings" "Info" "VALIDATION"
-            
+
             throw "Validation step failed - $($failures.Count) failure(s) detected"
         }
         else {
@@ -406,14 +406,14 @@ Please review the results above for any issues.
     else {
         Write-PlaybookMessage "Unable to create or find validation report" "Warning" "VALIDATION"
         Write-PlaybookMessage "Continuing with manual verification..." "Warning" "VALIDATION"
-        
+
         # Basic manual checks
         $checks = @(
             @{ Path = ".venv"; Description = "Python virtual environment" },
             @{ Path = ".env"; Description = "Environment configuration file" },
             @{ Path = "config"; Description = "Configuration directory" }
         )
-        
+
         $passed = 0
         foreach ($check in $checks) {
             if (Test-Path $check.Path) {
@@ -424,12 +424,12 @@ Please review the results above for any issues.
                 Write-PlaybookMessage "[FAIL] $($check.Description): FAIL" "Error" "VALIDATION"
             }
         }
-        
+
         if ($passed -lt $checks.Count) {
             throw "Manual validation failed - $($checks.Count - $passed) check(s) failed"
         }
     }
-    
+
     Write-PlaybookMessage "VALIDATION step completed successfully" "Success" "VALIDATION"
 }
 
@@ -438,7 +438,7 @@ Please review the results above for any issues.
 ###############################################################################
 function Invoke-CiBenchmarkStep {
     Write-SectionHeader "CI/BENCHMARK: Configure Git, create smoketest branch, commit and push" "❹"
-    
+
     if ($WhatIf) {
         Write-PlaybookMessage "[DRY-RUN] Would configure Git user settings" "Warning" "CI/BENCHMARK"
         Write-PlaybookMessage "[DRY-RUN] Would create 'alienware-smoketest' branch" "Warning" "CI/BENCHMARK"
@@ -446,12 +446,12 @@ function Invoke-CiBenchmarkStep {
         Write-PlaybookMessage "[DRY-RUN] Would display next steps" "Warning" "CI/BENCHMARK"
         return
     }
-    
+
     # Configure Git user if not already set
     try {
         $gitUser = git config user.name 2>$null
         $gitEmail = git config user.email 2>$null
-        
+
         if (-not $gitUser) {
             Write-PlaybookMessage "Configuring Git user name..." "Info" "CI/BENCHMARK"
             git config user.name "Alienware-$DeviceName"
@@ -460,7 +460,7 @@ function Invoke-CiBenchmarkStep {
         else {
             Write-PlaybookMessage "Git user name already set: $gitUser" "Info" "CI/BENCHMARK"
         }
-        
+
         if (-not $gitEmail) {
             Write-PlaybookMessage "Configuring Git user email..." "Info" "CI/BENCHMARK"
             git config user.email "alienware-$DeviceName@bootstrap.local"
@@ -473,7 +473,7 @@ function Invoke-CiBenchmarkStep {
     catch {
         Write-PlaybookMessage "Failed to configure Git user: $_" "Warning" "CI/BENCHMARK"
     }
-    
+
     # Check current Git status
     try {
         $gitStatus = git status --porcelain 2>&1
@@ -488,12 +488,12 @@ function Invoke-CiBenchmarkStep {
     catch {
         Write-PlaybookMessage "Failed to check Git status: $_" "Warning" "CI/BENCHMARK"
     }
-    
+
     # Create alienware-smoketest branch
     $branchName = "alienware-smoketest"
     try {
         Write-PlaybookMessage "Creating branch: $branchName" "Info" "CI/BENCHMARK"
-        
+
         # Check if branch already exists
         $existingBranch = git branch --list $branchName 2>$null
         if ($existingBranch) {
@@ -508,12 +508,12 @@ function Invoke-CiBenchmarkStep {
     catch {
         Write-PlaybookMessage "Failed to create/switch branch: $_" "Warning" "CI/BENCHMARK"
     }
-    
+
     # Create a no-op commit with bootstrap completion marker
     try {
         $commitMessage = "Alienware bootstrap completed - $Timestamp"
         $markerFile = "ALIENWARE_BOOTSTRAP_COMPLETE.md"
-        
+
         # Create bootstrap completion marker
         $markerContent = @"
 # Alienware Bootstrap Completion Marker
@@ -549,20 +549,20 @@ This file marks the successful completion of the Alienware device bootstrap proc
 ---
 *Generated by alienware_playbook.ps1*
 "@
-        
+
         $markerContent | Out-File -FilePath $markerFile -Encoding UTF8
         Write-PlaybookMessage "Created bootstrap completion marker: $markerFile" "Success" "CI/BENCHMARK"
-        
+
         # Add and commit the marker file
         git add $markerFile
         git commit -m $commitMessage
         Write-PlaybookMessage "Created no-op commit: $commitMessage" "Success" "CI/BENCHMARK"
-        
+
     }
     catch {
         Write-PlaybookMessage "Failed to create commit: $_" "Warning" "CI/BENCHMARK"
     }
-    
+
     # Push to origin (unless SkipPush is specified)
     if (-not $SkipPush) {
         try {
@@ -578,7 +578,7 @@ This file marks the successful completion of the Alienware device bootstrap proc
     else {
         Write-PlaybookMessage "Skipping Git push as requested" "Info" "CI/BENCHMARK"
     }
-    
+
     # Display next steps
     Write-PlaybookMessage "Displaying next steps..." "Info" "CI/BENCHMARK"
     Write-Host ""
@@ -604,7 +604,7 @@ This file marks the successful completion of the Alienware device bootstrap proc
     Write-Host "   - Run tests: python -m pytest -v" -ForegroundColor White
     Write-Host "=================================================" -ForegroundColor Green
     Write-Host ""
-    
+
     Write-PlaybookMessage "CI/BENCHMARK step completed successfully" "Success" "CI/BENCHMARK"
 }
 
@@ -614,7 +614,7 @@ This file marks the successful completion of the Alienware device bootstrap proc
 function Invoke-AlienwarePlaybook {
     try {
         $startTime = Get-Date
-        
+
         Write-Host ""
         Write-Host "[STEP 4] ALIENWARE END-TO-END PLAYBOOK" -ForegroundColor Magenta
         Write-Host "=================================" -ForegroundColor Magenta
@@ -627,36 +627,36 @@ function Invoke-AlienwarePlaybook {
             Write-Host "Mode: DRY-RUN (no changes will be made)" -ForegroundColor Yellow
         }
         Write-Host ""
-        
+
         # Quick prerequisites check
         Test-PrerequisitesQuick
         Write-Host ""
-        
+
         # Execute all four steps
         Invoke-PrepStep
         Write-Host ""
-        
+
         Invoke-BootstrapStep
         Write-Host ""
-        
+
         Invoke-ValidationStep
         Write-Host ""
-        
+
         Invoke-CiBenchmarkStep
         Write-Host ""
-        
+
         # Final success message
         $endTime = Get-Date
         $duration = $endTime - $startTime
-        
+
         Write-Host "[SUCCESS] PLAYBOOK COMPLETED SUCCESSFULLY!" -ForegroundColor Green
         Write-Host "====================================" -ForegroundColor Green
         Write-Host "Duration: $($duration.ToString('hh\:mm\:ss'))" -ForegroundColor Cyan
         Write-Host "All four steps (1)(2)(3)(4) executed successfully" -ForegroundColor Green
         Write-Host ""
-        
+
         return $true
-        
+
     }
     catch {
         Write-PlaybookMessage "PLAYBOOK FAILED: $_" "Error"

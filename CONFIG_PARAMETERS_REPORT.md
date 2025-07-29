@@ -1,5 +1,5 @@
 # Configuration Parameters Report
-**Generated:** 2025-07-14  
+**Generated:** 2025-07-14
 **Purpose:** Complete analysis of all config.yaml parameters, types, and defaults
 
 ## 📋 Summary Overview
@@ -18,19 +18,19 @@ schedules:
   scraping:
     frequency: daily           # Type: string, Options: [hourly, daily, weekly]
     time: "02:00"             # Type: string, Format: HH:MM
-  
+
   validation:
     frequency: daily           # Type: string, Default: daily
     time: "06:00"             # Type: string, Default: 06:00
-  
+
   export:
     frequency: weekly          # Type: string, Default: weekly
     time: "23:00"             # Type: string, Default: 23:00
     day: sunday               # Type: string, Options: [monday-sunday]
-  
+
   dashboard_update:
     frequency: hourly          # Type: string, Default: hourly
-  
+
   list_discovery:
     enabled: true              # Type: boolean, Default: true
     frequency: hourly          # Type: string, Default: hourly
@@ -43,12 +43,12 @@ monitoring:
   input_directories:           # Type: array[string]
     - "input/"                # Default directories
     - "snapshots/"
-  
+
   file_patterns:              # Type: array[string]
     - "*.json"                # Default patterns
     - "*.csv"
     - "*.html"
-  
+
   auto_process: true          # Type: boolean, Default: true
   batch_delay: 300           # Type: integer, Unit: seconds, Default: 300
 ```
@@ -57,7 +57,7 @@ monitoring:
 ```yaml
 notifications:
   discord_webhook: null       # Type: string|null, Env: AUTOMATION_DISCORD_WEBHOOK
-  
+
   email:
     enabled: false           # Type: boolean, Default: false, Env: AUTOMATION_EMAIL_ENABLED
     smtp_server: null        # Type: string|null, Env: AUTOMATION_EMAIL_SMTP_SERVER
@@ -74,7 +74,7 @@ dashboard:
     enabled: false           # Type: boolean, Default: false
     spreadsheet_id: null     # Type: string|null, Env: AUTOMATION_GOOGLE_SHEETS_ID
     credentials_path: null   # Type: string|null, Env: AUTOMATION_GOOGLE_SHEETS_CREDENTIALS
-  
+
   local_html:
     enabled: true            # Type: boolean, Default: true
     output_path: "output/dashboard.html"  # Type: string, Default path
@@ -84,12 +84,12 @@ dashboard:
 ```yaml
 pipeline:
   sites: []                  # Type: array[string], Default: empty
-  
+
   default_flags:             # Type: array[string]
     - "--schema-matrix"      # Default flags
     - "--emit-status"
     - "--emit-drift-dashboard"
-  
+
   timeout: 3600             # Type: integer, Unit: seconds, Default: 1 hour
   retry_count: 3            # Type: integer, Default: 3
 ```
@@ -123,7 +123,7 @@ check_interval: 3600         # Type: integer, Unit: seconds, Default: 1 hour
 ```yaml
 notifications:
   discord_webhook: null      # Type: string|null, Env: LIST_DISCOVERY_DISCORD_WEBHOOK
-  
+
   email:
     enabled: false          # Type: boolean, Default: false
     smtp_server: "smtp.gmail.com"  # Type: string, Default: Gmail
@@ -139,7 +139,7 @@ notifications:
 advanced:
   user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
   # Type: string, Default: Chrome user agent
-  
+
   request_timeout: 60        # Type: integer, Unit: seconds, Default: 60
 ```
 

@@ -62,61 +62,61 @@ class ListDiscoveryDemo:
         print("Bar Directory Reconnaissance - Web Monitoring Capabilities")
         print("-"*70)
         print()
-    
+
     def demo_configuration(self) -> None:
         """Demonstrate configuration management."""
         print("📋 CONFIGURATION DEMO")
         print("-"*30)
-        
+
         if not LIST_DISCOVERY_AVAILABLE:
             print("❌ List Discovery Agent not available")
             return
-        
+
         # Create demo agent
         agent = ListDiscoveryAgent()
-        
+
         # Show current config
         print("Current configuration:")
         print(f"  Monitored URLs: {len(agent.config.get('monitored_urls', []))}")
         print(f"  Download directory: {agent.config.get('download_dir', 'Not set')}")
         print(f"  File extensions: {agent.config.get('file_extensions', [])}")
         print(f"  Check interval: {agent.config.get('check_interval', 0)} seconds")
-        
+
         # Add demo URL
         print("\n➕ Adding demo URL...")
         success = agent.add_url(
-            "https://example.com/licenses", 
+            "https://example.com/licenses",
             "Demo County Licenses"
         )
-        
+
         if success:
             print("✅ Demo URL added successfully")
         else:
             print("⚠️ URL may already exist")
-        
+
         # Show updated stats
         stats = agent.monitor.get_statistics()
         print("\nUpdated stats:")
         print(f"  Total monitored URLs: {stats['monitored_urls']}")
         print(f"  Files discovered: {stats['total_files_discovered']}")
         print(f"  Total downloads: {stats['total_downloads']}")
-        
+
         print("✅ Configuration demo complete\n")
-    
+
     async def demo_monitoring(self) -> None:
         """Demonstrate web monitoring capabilities."""
         print("🌐 WEB MONITORING DEMO")
         print("-"*30)
-        
+
         if not LIST_DISCOVERY_AVAILABLE:
             print("❌ List Discovery Agent not available")
             return
-        
+
         # Create demo agent
         agent = ListDiscoveryAgent()
-        
+
         print("Setting up demo monitoring...")
-        
+
         # Configure with demo URLs that we can control
         demo_urls = [
             {
@@ -124,45 +124,45 @@ class ListDiscoveryDemo:
                 'name': 'Demo HTML Page'
             }
         ]
-        
+
         agent.config['monitored_urls'] = demo_urls
-        
+
         print(f"📡 Monitoring {len(demo_urls)} demo URL(s)...")
-        
+
         # Run a single check
         try:
             downloaded_files = await agent.run_single_check()
-            
+
             if downloaded_files:
                 print(f"✅ Demo discovered {len(downloaded_files)} files:")
                 for file_path in downloaded_files:
                     print(f"  📄 {file_path}")
             else:
                 print("ℹ️ No files discovered (expected for demo URLs)")
-            
+
         except Exception as e:
             print(f"⚠️ Demo monitoring error: {e}")
             print("💡 This is normal for demo URLs that don't contain files")
-        
+
         print("✅ Monitoring demo complete\n")
-    
+
     def demo_integration(self) -> None:
         """Demonstrate integration with Universal Project Runner."""
         print("🔗 INTEGRATION DEMO")
         print("-"*30)
-        
+
         if not LIST_DISCOVERY_AVAILABLE:
             print("❌ List Discovery Agent not available")
             return
-        
+
         # Create Universal Runner instance
         runner = UniversalRunner()
-        
+
         print("Universal Project Runner integration:")
-        
+
         if runner.list_discovery:
             print("✅ List Discovery Agent initialized in Universal Runner")
-            
+
             # Show integration capabilities
             print("\nIntegration features:")
             print("  🔄 Scheduled discovery runs")
@@ -170,7 +170,7 @@ class ListDiscoveryDemo:
             print("  📢 Unified notification system")
             print("  📊 Dashboard integration")
             print("  🗂️ Shared configuration management")
-            
+
             # Show scheduler status
             try:
                 config = runner.config
@@ -185,14 +185,14 @@ class ListDiscoveryDemo:
         else:
             print("❌ List Discovery Agent not available in Universal Runner")
             print("💡 Check dependencies and configuration")
-        
+
         print("✅ Integration demo complete\n")
-    
+
     def demo_file_processing(self) -> None:
         """Demonstrate file processing capabilities."""
         print("📁 FILE PROCESSING DEMO")
         print("-"*30)
-        
+
         # Create demo directory
         demo_dir = Path("input/demo_discovered")
         demo_dir.mkdir(parents=True, exist_ok=True)
@@ -220,26 +220,26 @@ class ListDiscoveryDemo:
         else:
             print("⚠️ Cannot demonstrate processing - Universal Runner not available")
         print("✅ File processing demo complete\n")
-    
+
     def demo_notifications(self) -> None:
         """Demonstrate notification capabilities."""
         print("📢 NOTIFICATION DEMO")
         print("-"*30)
-        
+
         if LIST_DISCOVERY_AVAILABLE:
             agent = ListDiscoveryAgent()
-            
+
             if agent.monitor.notifier:
                 print("Notification system available:")
-                
+
                 # Show configured channels
                 config = agent.config.get('notifications', {})
                 discord = config.get('discord_webhook')
                 email = config.get('email', {})
-                
+
                 print(f"  Discord: {'✅ Configured' if discord else '❌ Not configured'}")
                 print(f"  Email: {'✅ Configured' if email.get('enabled') else '❌ Not configured'}")
-                
+
                 # Demo notification content
                 print("\nExample discovery notification:")
                 print("  Title: 'New Lists Discovered: County Licenses'")
@@ -248,20 +248,20 @@ class ListDiscoveryDemo:
                 print("    • permits_january.csv")
                 print("    • business_list.xlsx")
                 print("    Files are ready for processing...")
-                
+
                 print("\n💡 Configure webhooks/email in list_discovery/config.yaml")
             else:
                 print("❌ Notification system not available")
         else:
             print("❌ Cannot demonstrate notifications - Agent not available")
-        
+
         print("✅ Notification demo complete\n")
-    
+
     def show_usage_examples(self) -> None:
         """Show usage examples."""
         print("💡 USAGE EXAMPLES")
         print("-"*30)
-        
+
         examples = [
             ("Setup List Discovery", "python list_discovery/agent.py setup"),
             ("Add monitoring URL", "python list_discovery/agent.py add \"https://county.gov/licenses\""),
@@ -271,19 +271,19 @@ class ListDiscoveryDemo:
             ("Quick interface", "RunListDiscovery.bat"),
             ("Universal Runner", "RunAutomation.bat discovery"),
         ]
-        
+
         for description, command in examples:
             print(f"  {description}:")
             print(f"    {command}")
             print()
-        
+
         print("✅ Usage examples complete\n")
-    
+
     def show_summary(self) -> None:
         """Show demo summary."""
         print("📋 DEMO SUMMARY")
         print("-"*30)
-        
+
         print("List Discovery Agent Phase 4 Features:")
         print("  ✅ Web page monitoring with change detection")
         print("  ✅ Automatic file download (PDF, CSV, Excel)")
@@ -293,14 +293,14 @@ class ListDiscoveryDemo:
         print("  ✅ Configurable monitoring schedules")
         print("  ✅ State persistence and statistics")
         print("  ✅ Error handling and logging")
-        
+
         print("\nNext Steps:")
         print("  1. Install dependencies: pip install -r list_discovery/requirements.txt")
         print("  2. Setup configuration: python list_discovery/agent.py setup")
         print("  3. Add monitoring URLs: RunListDiscovery.bat add")
         print("  4. Start discovery: RunListDiscovery.bat check")
         print("  5. Enable scheduling: RunAutomation.bat schedule")
-        
+
         print("\n🎉 List Discovery Agent ready for production use!")
         print("="*70)
 

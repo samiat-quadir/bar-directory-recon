@@ -57,12 +57,12 @@ $cleanupActions = @(
 # Execute cleanup actions
 foreach ($action in $cleanupActions) {
     $filePath = Join-Path $rootPath $action.Original
-    
+
     if (Test-Path $filePath) {
         Write-Host "Processing: $($action.Original)" -ForegroundColor Yellow
         Write-Host "  Reason: $($action.Reason)" -ForegroundColor Cyan
         Write-Host "  Action: $($action.Action)" -ForegroundColor Red
-        
+
         try {
             if ($action.Action -eq "DELETE") {
                 Remove-Item $filePath -Force -Recurse -ErrorAction Stop

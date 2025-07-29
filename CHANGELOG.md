@@ -22,7 +22,7 @@
 ### Technical Implementation
 
 - **Chrome WebDriver automation**: Headless browser automation with webdriver-manager
-- **Rate limiting and ethical scraping**: Built-in delays and respectful crawling practices  
+- **Rate limiting and ethical scraping**: Built-in delays and respectful crawling practices
 - **Type safety**: Full type annotations and mypy compliance
 - **Virtual environment support**: Automated venv creation and dependency isolation
 - **Cross-device synchronization**: Compatible with existing cross-device infrastructure
@@ -31,7 +31,7 @@
 ### Dependencies Added
 
 - `schedule>=1.2.0` - Python job scheduling
-- `gspread>=5.12.0` - Google Sheets API integration  
+- `gspread>=5.12.0` - Google Sheets API integration
 - `google-auth>=2.23.0` - Google Cloud authentication
 
 ### Files Added
