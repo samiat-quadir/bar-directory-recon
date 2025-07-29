@@ -88,7 +88,7 @@ function Test-Prerequisites {
 
     # Check Python 3.13 installation
     try {
-        $pythonVersion = python --version 2>&1
+        $pythonVersion = py --version 2>&1
         if ($pythonVersion -match "Python 3\.13") {
             Write-StatusMessage "Python found: $pythonVersion" "Success"
         }
@@ -164,7 +164,7 @@ function Setup-PythonEnvironment {
 
     # Create virtual environment
     Write-StatusMessage "Creating virtual environment..." "Info"
-    python -m venv $venvPath
+    py -m venv $venvPath
 
     if (-not (Test-Path $venvPath)) {
         throw "Failed to create virtual environment"
@@ -177,7 +177,7 @@ function Setup-PythonEnvironment {
 
     # Upgrade pip
     Write-StatusMessage "Upgrading pip..." "Info"
-    python -m pip install --upgrade pip
+    py -m pip install --upgrade pip
 
     Write-StatusMessage "Python virtual environment created successfully" "Success"
 }
@@ -193,7 +193,7 @@ function Install-Dependencies {
     $coreReqFile = "requirements-core.txt"
     if (Test-Path $coreReqFile) {
         Write-StatusMessage "Installing core requirements..." "Info"
-        python -m pip install -r $coreReqFile
+        py -m pip install -r $coreReqFile
     }
     else {
         Write-StatusMessage "Core requirements file not found: $coreReqFile" "Warning"
@@ -203,7 +203,7 @@ function Install-Dependencies {
     $optionalReqFile = "requirements-optional.txt"
     if (Test-Path $optionalReqFile) {
         Write-StatusMessage "Installing optional requirements..." "Info"
-        python -m pip install -r $optionalReqFile
+        py -m pip install -r $optionalReqFile
     }
     else {
         Write-StatusMessage "Optional requirements file not found: $optionalReqFile" "Warning"
@@ -213,7 +213,7 @@ function Install-Dependencies {
     $mainReqFile = "requirements.txt"
     if (Test-Path $mainReqFile -and -not (Test-Path $coreReqFile)) {
         Write-StatusMessage "Installing main requirements..." "Info"
-        python -m pip install -r $mainReqFile
+        py -m pip install -r $mainReqFile
     }
 
     Write-StatusMessage "Dependencies installed successfully" "Success"
@@ -268,7 +268,7 @@ PYTHON_VERSION=3.13
     $deviceName = $env:COMPUTERNAME
     $userName = $env:USERNAME
     $userHome = $env:USERPROFILE
-    $pythonPath = (Get-Command python).Source
+    $pythonPath = (Get-Command py).Source
     $oneDrivePath = Join-Path $userHome "OneDrive"
 
     # Try to find OneDrive path variations
@@ -332,7 +332,7 @@ function Install-ExternalTools {
 
     # Install pre-commit
     try {
-        python -m pip install pre-commit
+        py -m pip install pre-commit
         Write-StatusMessage "Pre-commit installed successfully" "Success"
     }
     catch {
@@ -377,12 +377,12 @@ function Invoke-EnvironmentValidation {
 
     if (Test-Path $validationScript) {
         try {
-            $validationOutput = python $validationScript 2>&1
+            $validationOutput = py $validationScript 2>&1
 
             # Also run Alienware-specific validation if available
             $alienwareValidationOutput = ""
             if (Test-Path $alienwareValidationScript) {
-                $alienwareValidationOutput = python $alienwareValidationScript 2>&1
+                $alienwareValidationOutput = py $alienwareValidationScript 2>&1
             }
 
             # Create validation report
@@ -473,7 +473,7 @@ Please manually verify:
 3. All required directories exist
 4. External tools are available
 
-Run `python -c "import sys; print(sys.version)"` to verify Python installation.
+Run `py -c "import sys; print(sys.version)"` to verify Python installation.
 "@ | Out-File -FilePath $reportPath -Encoding UTF8
 
         Write-StatusMessage "Basic validation report created: $reportPath" "Success"
@@ -512,7 +512,7 @@ function Main {
         Write-StatusMessage "Next steps:" "Info"
         Write-StatusMessage "1. Review and update .env file with your secrets" "Info"
         Write-StatusMessage "2. Test the automation scripts" "Info"
-        Write-StatusMessage "3. Run 'python -m pytest -v' to verify installation" "Info"
+        Write-StatusMessage "3. Run 'py -m pytest -v' to verify installation" "Info"
 
         return $true
     }
