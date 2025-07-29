@@ -36,13 +36,13 @@ def setup_virtual_environment() -> bool:
         print("📦 Creating virtual environment...")
         if not run_command("python -m venv .venv", "Creating virtual environment"):
             return False
-    
+
     # Activate and upgrade pip
     if os.name == 'nt':  # Windows
         activate_cmd = ".venv\\Scripts\\python -m pip install --upgrade pip"
     else:  # Linux/Mac
         activate_cmd = ".venv/bin/python -m pip install --upgrade pip"
-    
+
     return run_command(activate_cmd, "Upgrading pip in virtual environment")
 
 
@@ -52,18 +52,18 @@ def install_dependencies() -> bool:
         pip_cmd = ".venv\\Scripts\\pip install -r requirements.txt"
     else:  # Linux/Mac
         pip_cmd = ".venv/bin/pip install -r requirements.txt"
-    
+
     return run_command(pip_cmd, "Installing Python dependencies")
 
 
 def create_directories() -> bool:
     """Create required directories."""
     directories = ["outputs", "logs", "config"]
-    
+
     for directory in directories:
         Path(directory).mkdir(exist_ok=True)
         print(f"📁 Created directory: {directory}")
-    
+
     return True
 
 
@@ -88,14 +88,14 @@ WEEKLY_SCRAPE_DAY=monday
 OUTPUT_DIRECTORY=outputs
 LOG_DIRECTORY=logs
 """
-    
+
     if not os.path.exists(".env"):
         with open(".env", "w") as f:
             f.write(env_content)
         print("📝 Created .env configuration file template")
     else:
         print("📝 .env file already exists")
-    
+
     return True
 
 
@@ -155,25 +155,25 @@ def create_task_scheduler_script() -> bool:
     </Exec>
   </Actions>
 </Task>'''
-    
+
     with open("realtor_automation_task.xml", "w") as f:
         f.write(xml_content)
-    
+
     print("📅 Created Task Scheduler XML file: realtor_automation_task.xml")
     print("   To install: `schtasks /create /xml realtor_automation_task.xml /tn \"Realtor Directory Automation\"`")
-    
+
     return True
 def test_installation() -> bool:
     """Test the installation by running a quick scrape."""
     print("\n🧪 Testing installation...")
-    
+
     if os.name == 'nt':  # Windows
         python_cmd = ".venv\\Scripts\\python"
     else:  # Linux/Mac
         python_cmd = ".venv/bin/python"
-    
+
     test_cmd = f'{python_cmd} realtor_automation.py --mode once --max-records 5'
-    
+
     print("Running test scrape with 5 records...")
     if run_command(test_cmd, "Test scrape"):
         print("✅ Installation test successful!")
@@ -185,11 +185,11 @@ def main() -> bool:
     """Main setup function."""
     print("🏠 Realtor Directory Automation Setup")
     print("=" * 50)
-    
+
     # Check Python version
     if not check_python_version():
         return False
-    
+
     # Setup steps
     setup_steps = [
         ("Virtual Environment", setup_virtual_environment),
@@ -198,13 +198,13 @@ def main() -> bool:
         ("Configuration", create_env_file),
         ("Task Scheduler", create_task_scheduler_script)
     ]
-    
+
     for step_name, step_function in setup_steps:
         print(f"\n📋 Setting up {step_name}...")
         if not step_function():
             print(f"❌ Setup failed at step: {step_name}")
             return False
-    
+
     print("\n" + "=" * 50)
     print("✅ Setup completed successfully!")
     print("\n📋 Next steps:")
@@ -213,10 +213,10 @@ def main() -> bool:
     print("3. For weekly automation, import the Task Scheduler XML:")
     print('   `schtasks /create /xml realtor_automation_task.xml /tn "Realtor Directory Automation"`')
     print("\n🧪 Running installation test...")
-    
+
     # Run test and capture its result
     test_result = test_installation()
-    
+
     return test_result
 
 

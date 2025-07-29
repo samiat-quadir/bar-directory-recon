@@ -44,20 +44,20 @@ if pyvenv_cfg.exists():
     print('Updating pyvenv.cfg for cross-device compatibility...')
     with open(pyvenv_cfg, 'r') as f:
         content = f.read()
-    
+
     # Update home path to current Python installation
     import sys
     python_home = str(Path(sys.executable).parent)
-    
+
     lines = content.split('\n')
     for i, line in enumerate(lines):
         if line.startswith('home = '):
             lines[i] = f'home = {python_home}'
             break
-    
+
     with open(pyvenv_cfg, 'w') as f:
         f.write('\n'.join(lines))
-    
+
     print('pyvenv.cfg updated successfully')
 "
 

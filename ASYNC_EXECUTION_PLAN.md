@@ -29,27 +29,27 @@ import logging
 
 class AsyncPipelineExecutor:
     """Async version of PipelineExecutor with concurrent execution."""
-    
+
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
         self.timeout = config.get('timeout', 3600)
         self.max_concurrent = config.get('max_concurrent_sites', 5)
         self.retry_count = config.get('retry_count', 3)
         self.semaphore = asyncio.Semaphore(self.max_concurrent)
-        
+
     async def run_all_async(self, sites: List[str]) -> Dict[str, bool]:
         """Run pipeline for all sites asynchronously with asyncio.gather."""
         logger.info(f"Starting async execution for {len(sites)} sites")
-        
+
         # Create async tasks for all sites
         tasks = [
-            self._execute_site_with_semaphore(site) 
+            self._execute_site_with_semaphore(site)
             for site in sites
         ]
-        
+
         # Execute all tasks concurrently
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         # Process results
         site_results = {}
         for site, result in zip(sites, results):
@@ -58,51 +58,51 @@ class AsyncPipelineExecutor:
                 site_results[site] = False
             else:
                 site_results[site] = result
-                
+
         return site_results
-    
+
     async def _execute_site_with_semaphore(self, site: str) -> bool:
         """Execute pipeline for a site with concurrency control."""
         async with self.semaphore:
             return await self._execute_pipeline_async(site)
-    
+
     async def _execute_pipeline_async(self, site: str) -> bool:
         """Execute pipeline for a specific site asynchronously."""
         for attempt in range(self.retry_count):
             try:
                 logger.info(f"Executing pipeline for {site} (attempt {attempt + 1})")
-                
+
                 # Run subprocess in thread pool to avoid blocking
                 loop = asyncio.get_event_loop()
                 with ProcessPoolExecutor() as executor:
                     result = await loop.run_in_executor(
-                        executor, 
-                        self._run_pipeline_subprocess, 
+                        executor,
+                        self._run_pipeline_subprocess,
                         site
                     )
-                
+
                 if result:
                     logger.info(f"Site {site} completed successfully")
                     return True
                 else:
                     logger.warning(f"Site {site} attempt {attempt + 1} failed")
-                    
+
             except Exception as e:
                 logger.error(f"Site {site} attempt {attempt + 1} error: {e}")
-                
+
             # Exponential backoff between retries
             if attempt < self.retry_count - 1:
                 delay = 2 ** attempt
                 await asyncio.sleep(delay)
-        
+
         logger.error(f"Site {site} failed after {self.retry_count} attempts")
         return False
-    
+
     def _run_pipeline_subprocess(self, site: str) -> bool:
         """Run the actual subprocess (blocking operation)."""
         import subprocess
         import sys
-        
+
         cmd = [
             sys.executable,
             '-m', 'universal_recon.main',
@@ -110,7 +110,7 @@ class AsyncPipelineExecutor:
             '--schema-matrix',
             '--emit-status'
         ]
-        
+
         try:
             result = subprocess.run(
                 cmd,
@@ -131,16 +131,16 @@ class AsyncPipelineExecutor:
         """Run with real-time progress reporting."""
         completed = {}
         pending_tasks = {
-            asyncio.create_task(self._execute_site_with_semaphore(site)): site 
+            asyncio.create_task(self._execute_site_with_semaphore(site)): site
             for site in sites
         }
-        
+
         while pending_tasks:
             done, pending_tasks = await asyncio.wait(
-                pending_tasks, 
+                pending_tasks,
                 return_when=asyncio.FIRST_COMPLETED
             )
-            
+
             for task in done:
                 site = pending_tasks.pop(task, "unknown")
                 try:
@@ -150,7 +150,7 @@ class AsyncPipelineExecutor:
                 except Exception as e:
                     logger.error(f"Site {site} failed: {e}")
                     completed[site] = False
-        
+
         return completed
 ```
 
@@ -163,15 +163,15 @@ class UniversalRunner:
         # Support both sync and async executors
         self.sync_executor = PipelineExecutor(self.config)
         self.async_executor = AsyncPipelineExecutor(self.config)
-    
+
     def run_pipeline_sync(self, sites: List[str]) -> Dict[str, bool]:
         """Run pipeline synchronously (backward compatibility)."""
         return self.sync_executor.run_all(sites)
-    
+
     async def run_pipeline_async(self, sites: List[str]) -> Dict[str, bool]:
         """Run pipeline asynchronously (new method)."""
         return await self.async_executor.run_all_async(sites)
-    
+
     def run_pipeline(self, sites: List[str], use_async: bool = True) -> Dict[str, bool]:
         """Main entry point - auto-detects async support."""
         if use_async:
@@ -199,7 +199,7 @@ pipeline:
   retry_count: 3
   max_concurrent_sites: 5  # NEW: Control concurrency
   use_async: true          # NEW: Enable async by default
-  
+
   # Advanced async settings
   async_settings:
     semaphore_limit: 5

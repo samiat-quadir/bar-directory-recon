@@ -91,7 +91,7 @@ The complete workflow file is ready to be placed at `.github/workflows/ci.yml` a
 
 - ✅ Fast feedback on code quality
 - ✅ Multi-version Python compatibility
-- ✅ Security vulnerability detection  
+- ✅ Security vulnerability detection
 - ✅ Cross-platform validation
 - ✅ Automated releases
 - ✅ Comprehensive coverage reporting

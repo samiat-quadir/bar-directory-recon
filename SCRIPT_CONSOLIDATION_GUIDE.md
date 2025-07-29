@@ -33,7 +33,7 @@ Get-ChildItem $rootPath -File | Where-Object {
         ".cmd" { Join-Path $scriptsPath "Batch" }
         default { Join-Path $scriptsPath "Utilities" }
     }
-    
+
     Move-Item $_.FullName -Destination $destination
     Write-Host "Moved: $($_.Name) → $destination"
 }
@@ -43,7 +43,7 @@ Get-ChildItem $rootPath -File | Where-Object {
 
 **A. Task References (VS Code tasks.json)**
 ```json
-// Before: 
+// Before:
 "command": "cross_device_bootstrap.bat"
 
 // After:
@@ -55,7 +55,7 @@ Get-ChildItem $rootPath -File | Where-Object {
 rem Before:
 call FixGitRepository.bat
 
-rem After: 
+rem After:
 call "%~dp0\scripts\FixGitRepository.bat"
 ```
 
@@ -93,7 +93,7 @@ scripts/
 #### Step 1: Identify Script Dependencies
 ```powershell
 # Scan for script references
-Get-ChildItem -Recurse -Include "*.bat","*.ps1","*.py" | 
+Get-ChildItem -Recurse -Include "*.bat","*.ps1","*.py" |
     Select-String -Pattern "\w+\.(bat|ps1|cmd)" |
     Group-Object Line | Sort-Object Count -Descending
 ```

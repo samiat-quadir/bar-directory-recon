@@ -7,16 +7,16 @@ schedules:
   scraping:
     frequency: daily
     time: "02:00"
-  
+
   validation:
     frequency: daily
     time: "06:00"
-  
+
   export:
     frequency: weekly
     time: "23:00"
     day: sunday
-  
+
   dashboard_update:
     frequency: hourly
 
@@ -32,16 +32,16 @@ monitoring:
   input_directories:
     - "input/"
     - "snapshots/"
-  
+
   # File patterns to watch for
   file_patterns:
     - "*.json"
-    - "*.csv" 
+    - "*.csv"
     - "*.html"
-  
+
   # Automatically process new files
   auto_process: true
-  
+
   # Delay before processing batch (seconds)
   batch_delay: 300
 
@@ -49,7 +49,7 @@ monitoring:
 notifications:
   # Discord webhook URL (set to your webhook URL)
   discord_webhook: null
-  
+
   # Email notification settings
   email:
     enabled: false
@@ -66,7 +66,7 @@ dashboard:
     enabled: false
     spreadsheet_id: null
     credentials_path: null
-  
+
   # Local HTML dashboard
   local_html:
     enabled: true
@@ -76,16 +76,16 @@ dashboard:
 pipeline:
   # Default sites to process (add your target sites here)
   sites: []
-  
+
   # Default flags for pipeline execution
   default_flags:
     - "--schema-matrix"
     - "--emit-status"
     - "--emit-drift-dashboard"
-  
+
   # Execution timeout in seconds (1 hour)
   timeout: 3600
-  
+
   # Number of retry attempts on failure
   retry_count: 3
 

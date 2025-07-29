@@ -1,7 +1,7 @@
 @echo off
 REM Universal Project Runner - Phase 3 Automation Initiative
 REM =========================================================
-REM 
+REM
 REM This batch script provides easy access to all automation features.
 REM Run without arguments to see the menu, or use specific commands.
 
@@ -269,7 +269,7 @@ echo ==========================================
 echo.
 echo Commands:
 echo   quick ^<site^>    - Quick pipeline run for a specific site
-echo   full            - Run full pipeline for all configured sites  
+echo   full            - Run full pipeline for all configured sites
 echo   monitor         - Start monitoring input directories for new files
 echo   schedule        - Start the automation scheduler (daily/weekly tasks)
 echo   status          - Show current system status and recent activity

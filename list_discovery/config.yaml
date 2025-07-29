@@ -6,7 +6,7 @@ monitored_urls:
   # Example county liquor license page
   - url: https://example-county.gov/licenses
     name: "Example County Liquor Licenses"
-  
+
   # Add more URLs here following this format:
   # - url: https://another-county.gov/business-licenses
   #   name: "Another County Business Licenses"
@@ -29,7 +29,7 @@ check_interval: 3600
 notifications:
   # Discord webhook URL (optional)
   discord_webhook: null
-  
+
   # Email notification settings
   email:
     enabled: false
@@ -39,17 +39,17 @@ notifications:
     password: ""  # Use app password for Gmail
     from_email: ""
     recipients: []
-    
+
 # Advanced settings
 advanced:
   # User agent for web requests
   user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-  
+
   # Request timeout in seconds
   request_timeout: 60
-  
+
   # Delay between requests to be respectful to servers
   request_delay: 2
-  
+
   # Maximum file size to download (in MB)
   max_file_size: 100

@@ -1,39 +1,39 @@
 # Universal Runner Hotkeys - PowerShell Module
 # ============================================
-# 
+#
 # This PowerShell module provides hotkey functions that can be imported
 # into your PowerShell profile for quick access to automation features.
 
 # Function to set up automation hotkeys
 function Initialize-AutomationHotkeys {
     Write-Host "🔥 Setting up Universal Runner hotkeys..." -ForegroundColor Cyan
-    
+
     # Define hotkey functions
-    function global:ur-quick { 
+    function global:ur-quick {
         param([string]$Site)
         if (-not $Site) {
             $Site = Read-Host "Enter site URL"
         }
         & "$PSScriptRoot\RunAutomation.bat" quick $Site
     }
-    
-    function global:ur-full { 
+
+    function global:ur-full {
         & "$PSScriptRoot\RunAutomation.bat" full
     }
-    
-    function global:ur-monitor { 
+
+    function global:ur-monitor {
         & "$PSScriptRoot\RunAutomation.bat" monitor
     }
-    
-    function global:ur-schedule { 
+
+    function global:ur-schedule {
         & "$PSScriptRoot\RunAutomation.bat" schedule
     }
-    
-    function global:ur-status { 
+
+    function global:ur-status {
         & "$PSScriptRoot\RunAutomation.bat" status
     }
-    
-    function global:ur-dashboard { 
+
+    function global:ur-dashboard {
         & "$PSScriptRoot\RunAutomation.bat" dashboard
         $dashboardPath = Join-Path $PSScriptRoot "output\dashboard.html"
         if (Test-Path $dashboardPath) {
@@ -43,19 +43,19 @@ function Initialize-AutomationHotkeys {
             }
         }
     }
-    
-    function global:ur-test { 
+
+    function global:ur-test {
         & "$PSScriptRoot\RunAutomation.bat" test
     }
-    
-    function global:ur-validate { 
+
+    function global:ur-validate {
         & "$PSScriptRoot\RunAutomation.bat" validate
     }
-    
-    function global:ur-setup { 
+
+    function global:ur-setup {
         & "$PSScriptRoot\RunAutomation.bat" setup
     }
-    
+
     function global:ur-help {
         Write-Host @"
 
@@ -83,14 +83,14 @@ Tip: Add these to your PowerShell profile for persistent access!
 
 "@ -ForegroundColor Green
     }
-    
+
     Write-Host "✅ Hotkeys installed! Type 'ur-help' for quick reference." -ForegroundColor Green
 }
 
 # Function to add hotkeys to PowerShell profile
 function Install-AutomationProfile {
     Write-Host "📝 Installing automation hotkeys to PowerShell profile..." -ForegroundColor Cyan
-    
+
     $profilePath = $PROFILE
     $automationScript = @"
 
@@ -102,7 +102,7 @@ if (Test-Path "$PSScriptRoot\AutomationHotkeys.ps1") {
 }
 
 "@
-    
+
     if (Test-Path $profilePath) {
         $existingContent = Get-Content $profilePath -Raw
         if ($existingContent -notlike "*Universal Runner Automation Hotkeys*") {
@@ -116,27 +116,27 @@ if (Test-Path "$PSScriptRoot\AutomationHotkeys.ps1") {
         Set-Content -Path $profilePath -Value $automationScript
         Write-Host "✅ Created PowerShell profile with hotkeys!" -ForegroundColor Green
     }
-    
+
     Write-Host "Restart PowerShell or run '. `$PROFILE' to activate hotkeys." -ForegroundColor Cyan
 }
 
 # Function to create desktop shortcuts
 function New-AutomationShortcuts {
     Write-Host "🖥️ Creating desktop shortcuts..." -ForegroundColor Cyan
-    
+
     $desktopPath = [Environment]::GetFolderPath("Desktop")
     $scriptDir = $PSScriptRoot
-    
+
     # Create VBS script for silent execution
     $vbsContent = @"
 Set WshShell = CreateObject("WScript.Shell")
 WshShell.Run chr(34) & "$scriptDir\RunAutomation.bat" & Chr(34) & " menu", 0
 Set WshShell = Nothing
 "@
-    
+
     $vbsPath = Join-Path $scriptDir "RunAutomation_Silent.vbs"
     Set-Content -Path $vbsPath -Value $vbsContent
-    
+
     # Create shortcut
     $shortcutPath = Join-Path $desktopPath "Universal Runner.lnk"
     $WshShell = New-Object -comObject WScript.Shell
@@ -146,32 +146,32 @@ Set WshShell = Nothing
     $Shortcut.WorkingDirectory = $scriptDir
     $Shortcut.Description = "Universal Project Runner - Phase 3 Automation"
     $Shortcut.Save()
-    
+
     Write-Host "✅ Desktop shortcut created: Universal Runner.lnk" -ForegroundColor Green
 }
 
 # Function to check automation status
 function Get-AutomationStatus {
     Write-Host "📊 Checking automation status..." -ForegroundColor Cyan
-    
+
     $logFile = Join-Path $PSScriptRoot "logs\automation\universal_runner.log"
     $configFile = Join-Path $PSScriptRoot "automation\config.yaml"
     $dashboardFile = Join-Path $PSScriptRoot "output\dashboard.html"
-    
+
     Write-Host "`n🔍 System Status:" -ForegroundColor Yellow
-    
+
     # Check configuration
     if (Test-Path $configFile) {
         Write-Host "  ✅ Configuration file exists" -ForegroundColor Green
     } else {
         Write-Host "  ❌ Configuration file missing" -ForegroundColor Red
     }
-    
+
     # Check logs
     if (Test-Path $logFile) {
         $logSize = (Get-Item $logFile).Length
         Write-Host "  ✅ Log file exists ($([math]::Round($logSize/1KB, 2)) KB)" -ForegroundColor Green
-        
+
         # Show recent activity
         $recentLogs = Get-Content $logFile -Tail 5 -ErrorAction SilentlyContinue
         if ($recentLogs) {
@@ -181,7 +181,7 @@ function Get-AutomationStatus {
     } else {
         Write-Host "  ⚠️ No log file found" -ForegroundColor Yellow
     }
-    
+
     # Check dashboard
     if (Test-Path $dashboardFile) {
         $dashboardAge = (Get-Date) - (Get-Item $dashboardFile).LastWriteTime
@@ -189,7 +189,7 @@ function Get-AutomationStatus {
     } else {
         Write-Host "  ⚠️ Dashboard not generated yet" -ForegroundColor Yellow
     }
-    
+
     # Check Python environment
     try {
         $pythonVersion = python --version 2>&1
@@ -197,7 +197,7 @@ function Get-AutomationStatus {
     } catch {
         Write-Host "  ❌ Python not available in PATH" -ForegroundColor Red
     }
-    
+
     Write-Host ""
 }
 
@@ -211,7 +211,7 @@ function Show-AutomationMenu {
 ====================================================
 
   [1] Quick Run               [6] Generate Dashboard
-  [2] Full Pipeline           [7] Test Notifications  
+  [2] Full Pipeline           [7] Test Notifications
   [3] Monitor Input           [8] Validate System
   [4] Start Scheduler         [9] Setup Environment
   [5] Show Status             [10] Install Hotkeys
@@ -219,11 +219,11 @@ function Show-AutomationMenu {
   [H] Help                    [Q] Quit
 
 "@ -ForegroundColor Cyan
-        
+
         $choice = Read-Host "Select option"
-        
+
         switch ($choice.ToUpper()) {
-            "1" { 
+            "1" {
                 $site = Read-Host "Enter site URL"
                 if ($site) { ur-quick $site }
             }
@@ -238,12 +238,12 @@ function Show-AutomationMenu {
             "10" { Install-AutomationProfile }
             "H" { ur-help; Read-Host "Press Enter to continue" }
             "Q" { return }
-            default { 
+            default {
                 Write-Host "Invalid option. Press Enter to continue..." -ForegroundColor Red
                 Read-Host
             }
         }
-        
+
         if ($choice -ne "H") {
             Write-Host "`nPress Enter to continue..." -ForegroundColor Gray
             Read-Host
