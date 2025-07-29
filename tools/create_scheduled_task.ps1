@@ -34,11 +34,13 @@ try {
     if ($Task) {
         Write-Host "✅ Task verification successful" -ForegroundColor Green
         Write-Host "   State: $($Task.State)" -ForegroundColor Yellow
-    } else {
+    }
+    else {
         Write-Host "❌ Task verification failed" -ForegroundColor Red
     }
 
-} catch {
+}
+catch {
     Write-Host "❌ Failed to create scheduled task: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }
