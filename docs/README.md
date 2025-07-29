@@ -73,7 +73,7 @@ Universal Recon is a comprehensive bar directory reconnaissance and automation t
 
 - Use `activate_venv.bat` (CMD) or `ActivateVenv.ps1` (PowerShell) to activate the Python environment.
 - For full dev setup: `RunDevelopment.bat` or `StartDevPowerShell.bat`.
-- To fix or recreate the venv: `fix_venv_activation.bat` and `InstallDependencies.bat`.
+- To validate or recreate the venv: `python validate_env_state.py` and `tools\VirtualEnvHelper.ps1`.
 
 #### Environment Variables
 
@@ -235,7 +235,7 @@ RunAutomation.bat dashboard
 
 #### Core Automation (`automation/`)
 - `universal_runner.py` - Main orchestration engine
-- `notifier.py` - Discord/Email notification system  
+- `notifier.py` - Discord/Email notification system
 - `dashboard.py` - Status dashboard generator
 - `pipeline_executor.py` - Pipeline execution with retry logic
 - `cli_shortcuts.py` - Command-line interface
@@ -257,7 +257,7 @@ pipeline:
   sites:
     - "your-target-site.com"
 
-## Setup notifications  
+## Setup notifications
 notifications:
   discord_webhook: "https://discord.com/api/webhooks/..."
   email:
@@ -277,7 +277,7 @@ schedules:
 
 #### Daily Operations
 - **02:00** - Automated scraping for all sites
-- **06:00** - Validation and health checks  
+- **06:00** - Validation and health checks
 - **Hourly** - Dashboard updates
 - **Continuous** - Input file monitoring
 
@@ -299,7 +299,7 @@ Load shortcuts: `. .\AutomationHotkeys.ps1`
 
 ```powershell
 ur-quick site.com    # Quick pipeline run
-ur-full             # Full pipeline  
+ur-full             # Full pipeline
 ur-dashboard        # Generate dashboard
 ur-status          # Show status
 ur-monitor         # Start monitoring
@@ -310,7 +310,7 @@ ur-help            # Show help
 
 The live dashboard (`output/dashboard.html`) shows:
 - ✅ Success/failure statistics
-- 📈 Success rate trending  
+- 📈 Success rate trending
 - 🌐 Individual site status
 - 📋 Recent activity log
 - 🔄 Auto-refresh every 5 minutes
@@ -323,7 +323,7 @@ The live dashboard (`output/dashboard.html`) shows:
 - Mobile push notifications
 - Instant delivery
 
-#### Email Integration  
+#### Email Integration
 - HTML formatted messages
 - Professional styling
 - Error logs attached
@@ -382,11 +382,11 @@ bar-directory-recon-1/
 
 ---
 
-**Phase 3 Automation Initiative**  
+**Phase 3 Automation Initiative**
 *Intelligent, scalable, hands-free bar directory reconnaissance*
 
-🔗 **Documentation**: See `PHASE3_AUTOMATION_DOCS.md` for complete details  
-🎬 **Demo**: Run `python automation_demo.py` for live demonstration  
+🔗 **Documentation**: See `PHASE3_AUTOMATION_DOCS.md` for complete details
+🎬 **Demo**: Run `python automation_demo.py` for live demonstration
 ⚙️ **Configuration**: Edit `automation/config.yaml` to customize
 
 
@@ -434,7 +434,7 @@ RunAutomation.bat dashboard
 
 #### Core Automation (`automation/`)
 - `universal_runner.py` - Main orchestration engine
-- `notifier.py` - Discord/Email notification system  
+- `notifier.py` - Discord/Email notification system
 - `dashboard.py` - Status dashboard generator
 - `pipeline_executor.py` - Pipeline execution with retry logic
 - `cli_shortcuts.py` - Command-line interface
@@ -456,7 +456,7 @@ pipeline:
   sites:
     - "your-target-site.com"
 
-## Setup notifications  
+## Setup notifications
 notifications:
   discord_webhook: "https://discord.com/api/webhooks/..."
   email:
@@ -476,7 +476,7 @@ schedules:
 
 #### Daily Operations
 - **02:00** - Automated scraping for all sites
-- **06:00** - Validation and health checks  
+- **06:00** - Validation and health checks
 - **Hourly** - Dashboard updates
 - **Continuous** - Input file monitoring
 
@@ -498,7 +498,7 @@ Load shortcuts: `. .\AutomationHotkeys.ps1`
 
 ```powershell
 ur-quick site.com    # Quick pipeline run
-ur-full             # Full pipeline  
+ur-full             # Full pipeline
 ur-dashboard        # Generate dashboard
 ur-status          # Show status
 ur-monitor         # Start monitoring
@@ -509,7 +509,7 @@ ur-help            # Show help
 
 The live dashboard (`output/dashboard.html`) shows:
 - ✅ Success/failure statistics
-- 📈 Success rate trending  
+- 📈 Success rate trending
 - 🌐 Individual site status
 - 📋 Recent activity log
 - 🔄 Auto-refresh every 5 minutes
@@ -522,7 +522,7 @@ The live dashboard (`output/dashboard.html`) shows:
 - Mobile push notifications
 - Instant delivery
 
-#### Email Integration  
+#### Email Integration
 - HTML formatted messages
 - Professional styling
 - Error logs attached
@@ -581,11 +581,11 @@ bar-directory-recon-1/
 
 ---
 
-**Phase 3 Automation Initiative**  
+**Phase 3 Automation Initiative**
 *Intelligent, scalable, hands-free bar directory reconnaissance*
 
-🔗 **Documentation**: See `PHASE3_AUTOMATION_DOCS.md` for complete details  
-🎬 **Demo**: Run `python automation_demo.py` for live demonstration  
+🔗 **Documentation**: See `PHASE3_AUTOMATION_DOCS.md` for complete details
+🎬 **Demo**: Run `python automation_demo.py` for live demonstration
 ⚙️ **Configuration**: Edit `automation/config.yaml` to customize
 
 
