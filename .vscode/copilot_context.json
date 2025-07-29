@@ -22,7 +22,7 @@
             "status": "active"
         },
         "ROG-LUCCI": {
-            "description": "ASUS Gaming Laptop", 
+            "description": "ASUS Gaming Laptop",
             "path_format": "OneDrive sync path",
             "venv": ".venv",
             "os": "Windows",

@@ -526,4 +526,3 @@ function Main {
 # Execute main function
 $success = Main
 exit $(if ($success) { 0 } else { 1 })
-

@@ -22,7 +22,7 @@ def test_live_scraping_limited() -> None:
     print("⚠️  This test will attempt real scraping with a 3-record limit")
     print("   to be respectful to target websites.")
     print()
-    
+
     try:
         # Test with minimal records and debug enabled
         output_file = scrape_realtor_directory(
@@ -31,19 +31,19 @@ def test_live_scraping_limited() -> None:
             use_selenium=True,
             test_mode=False  # Real live mode
         )
-        
+
         if output_file:
             print(f"\n✅ Live test successful: {output_file}")
-            
+
             # Read and display results
             import pandas as pd
             df = pd.read_csv(output_file)
             print(f"\n📊 Results ({len(df)} records):")
             print(df.to_string(index=False))
-            
+
         else:
             print("\n⚠️  Live test returned no file (likely fell back to test mode)")
-            
+
     except Exception as e:
         print(f"\n❌ Live test failed: {e}")
         print("   This is expected if sites are unavailable or block requests")

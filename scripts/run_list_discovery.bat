@@ -31,7 +31,7 @@ echo Select an option:
 echo.
 echo 1. 🔍 Check for new files (single run)
 echo 2. 👀 Start continuous monitoring
-echo 3. 📊 Show status and statistics  
+echo 3. 📊 Show status and statistics
 echo 4. ⚙️  Setup configuration
 echo 5. ➕ Add URL to monitor
 echo 6. ➖ Remove URL from monitoring

@@ -47,12 +47,12 @@ class SecurityFinding:
 
 class EnhancedSecretsScanner:
     """Enhanced secrets scanner with CI/CD integration."""
-    
+
     def __init__(self, fail_on_severity: SeverityLevel = SeverityLevel.HIGH):
         self.fail_on_severity = fail_on_severity
         self.findings: List[SecurityFinding] = []
         self.patterns = self._load_security_patterns()
-    
+
     def _load_security_patterns(self) -> Dict[str, Dict]:
         """Load security patterns with severity levels."""
         return {
@@ -82,7 +82,7 @@ class EnhancedSecretsScanner:
                 "severity": SeverityLevel.HIGH,
                 "description": "Discord Webhook URL"
             },
-            
+
             # Medium-severity patterns (warn but don't fail)
             "api_key_generic": {
                 "pattern": r"(?i)(api[_-]?key|apikey)\s*[:=]\s*['\"][a-z0-9]{32,}['\"]",
@@ -99,7 +99,7 @@ class EnhancedSecretsScanner:
                 "severity": SeverityLevel.MEDIUM,
                 "description": "JWT Token"
             },
-            
+
             # Low-severity patterns (informational)
             "email_address": {
                 "pattern": r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}",
@@ -112,38 +112,38 @@ class EnhancedSecretsScanner:
                 "description": "IP Address"
             }
         }
-    
+
     def scan_file(self, file_path: Path) -> List[SecurityFinding]:
         """Scan a single file for security issues."""
         if not file_path.is_file():
             return []
-        
+
         # Skip binary files and large files
         if file_path.suffix in ['.exe', '.dll', '.so', '.dylib', '.bin']:
             return []
-        
+
         try:
             content = file_path.read_text(encoding='utf-8', errors='ignore')
         except Exception:
             return []
-        
+
         findings = []
         lines = content.split('\n')
-        
+
         for line_num, line in enumerate(lines, 1):
             for pattern_name, pattern_info in self.patterns.items():
                 matches = re.finditer(pattern_info["pattern"], line, re.IGNORECASE)
-                
+
                 for match in matches:
                     # Skip if in comment or looks like example
                     if self._is_likely_false_positive(line, match.group()):
                         continue
-                    
+
                     # Get context (surrounding lines)
                     context_start = max(0, line_num - 3)
                     context_end = min(len(lines), line_num + 2)
                     context = '\n'.join(lines[context_start:context_end])
-                    
+
                     finding = SecurityFinding(
                         file_path=str(file_path),
                         line_number=line_num,
@@ -154,50 +154,50 @@ class EnhancedSecretsScanner:
                         context=context
                     )
                     findings.append(finding)
-        
+
         return findings
-    
+
     def _is_likely_false_positive(self, line: str, match: str) -> bool:
         """Check if a match is likely a false positive."""
         line_lower = line.lower()
-        
+
         # Skip comments
         if any(comment in line_lower for comment in ['#', '//', '/*', '--']):
             return True
-        
+
         # Skip examples and placeholders
         if any(placeholder in line_lower for placeholder in [
             'example', 'placeholder', 'your_', 'insert_', 'replace_',
             'todo', 'fixme', 'xxx', 'dummy'
         ]):
             return True
-        
+
         # Skip test files
         if any(test_indicator in line_lower for test_indicator in [
             'test_', 'mock_', 'fake_', 'sample_'
         ]):
             return True
-        
+
         return False
-    
+
     def _calculate_confidence(self, line: str, match: str) -> float:
         """Calculate confidence score for a finding."""
         confidence = 0.5  # Base confidence
-        
+
         # Higher confidence for longer matches
         if len(match) > 20:
             confidence += 0.2
-        
+
         # Lower confidence for test/example contexts
         if any(test_word in line.lower() for test_word in ['test', 'example', 'demo']):
             confidence -= 0.3
-        
+
         # Higher confidence for assignment patterns
         if any(assign in line for assign in ['=', ':']):
             confidence += 0.2
-        
+
         return max(0.0, min(1.0, confidence))
-    
+
     def scan_directory(self, directory: Path, exclude_patterns: Optional[List[str]] = None) -> List[SecurityFinding]:
         """Scan directory for security issues."""
         if exclude_patterns is None:
@@ -205,19 +205,19 @@ class EnhancedSecretsScanner:
                 '*.git*', '*.pyc', '*__pycache__*', '*.log', '*.tmp',
                 '*node_modules*', '*venv*', '*.env*', '*dist*', '*build*'
             ]
-        
+
         findings = []
-        
+
         for file_path in directory.rglob('*'):
             # Skip if matches exclude pattern
             if any(file_path.match(pattern) for pattern in exclude_patterns):
                 continue
-            
+
             file_findings = self.scan_file(file_path)
             findings.extend(file_findings)
-        
+
         return findings
-    
+
     def generate_report(self, output_format: str = "json") -> str:
         """Generate security scan report."""
         if output_format == "json":
@@ -226,7 +226,7 @@ class EnhancedSecretsScanner:
             return self._generate_sarif_report()
         else:
             return self._generate_text_report()
-    
+
     def _generate_json_report(self) -> str:
         """Generate JSON format report."""
         report = {
@@ -246,24 +246,24 @@ class EnhancedSecretsScanner:
             ]
         }
         return json.dumps(report, indent=2)
-    
+
     def _get_severity_breakdown(self) -> Dict[str, int]:
         """Get count of findings by severity."""
         breakdown = {level.value: 0 for level in SeverityLevel}
         for finding in self.findings:
             breakdown[finding.severity.value] += 1
         return breakdown
-    
+
     def should_fail_build(self) -> bool:
         """Determine if build should fail based on findings."""
         severity_order = [SeverityLevel.LOW, SeverityLevel.MEDIUM, SeverityLevel.HIGH, SeverityLevel.CRITICAL]
         fail_threshold = severity_order.index(self.fail_on_severity)
-        
+
         for finding in self.findings:
             finding_level = severity_order.index(finding.severity)
             if finding_level >= fail_threshold:
                 return True
-        
+
         return False
 
 
@@ -271,51 +271,51 @@ def main():
     """Main entry point for CI integration."""
     parser = argparse.ArgumentParser(description="Enhanced secrets scanner for CI/CD")
     parser.add_argument("--directory", type=Path, default=".", help="Directory to scan")
-    parser.add_argument("--severity", choices=["low", "medium", "high", "critical"], 
+    parser.add_argument("--severity", choices=["low", "medium", "high", "critical"],
                        default="high", help="Fail build on this severity or higher")
-    parser.add_argument("--output-format", choices=["json", "sarif", "text"], 
+    parser.add_argument("--output-format", choices=["json", "sarif", "text"],
                        default="json", help="Output format")
     parser.add_argument("--output-file", type=Path, help="Output file path")
-    parser.add_argument("--fail-on-found", action="store_true", 
+    parser.add_argument("--fail-on-found", action="store_true",
                        help="Exit with code 1 if high-severity findings found")
     parser.add_argument("--github-annotations", action="store_true",
                        help="Output GitHub Actions annotations")
-    
+
     args = parser.parse_args()
-    
+
     # Initialize scanner
     fail_on_severity = SeverityLevel(args.severity)
     scanner = EnhancedSecretsScanner(fail_on_severity)
-    
+
     # Perform scan
     print(f"🔍 Scanning {args.directory} for security issues...")
     findings = scanner.scan_directory(args.directory)
     scanner.findings = findings
-    
+
     # Generate report
     report = scanner.generate_report(args.output_format)
-    
+
     # Output report
     if args.output_file:
         args.output_file.write_text(report)
         print(f"📄 Report saved to {args.output_file}")
     else:
         print(report)
-    
+
     # GitHub Actions annotations
     if args.github_annotations:
         for finding in findings:
             severity_map = {
                 SeverityLevel.LOW: "notice",
-                SeverityLevel.MEDIUM: "warning", 
+                SeverityLevel.MEDIUM: "warning",
                 SeverityLevel.HIGH: "error",
                 SeverityLevel.CRITICAL: "error"
             }
             level = severity_map.get(finding.severity, "warning")
-            
+
             print(f"::{level} file={finding.file_path},line={finding.line_number}::"
                   f"{finding.pattern_name}: {scanner.patterns[finding.pattern_name]['description']}")
-    
+
     # Summary
     breakdown = scanner._get_severity_breakdown()
     print(f"\n📊 Scan Summary:")
@@ -323,7 +323,7 @@ def main():
     for severity, count in breakdown.items():
         if count > 0:
             print(f"   {severity.upper()}: {count}")
-    
+
     # Exit with appropriate code
     if args.fail_on_found and scanner.should_fail_build():
         print(f"\n❌ Build failed: Found {breakdown[args.severity]} or higher severity issues")
@@ -346,12 +346,12 @@ security:
   steps:
   - name: Checkout code
     uses: actions/checkout@v4
-  
+
   - name: Set up Python
     uses: actions/setup-python@v4
     with:
       python-version: "3.11"
-  
+
   - name: Run enhanced secrets scan
     run: |
       python tools/secrets_scan.py \
@@ -361,7 +361,7 @@ security:
         --output-file secrets-report.json \
         --fail-on-found \
         --github-annotations
-  
+
   - name: Upload security report
     uses: actions/upload-artifact@v3
     if: always()

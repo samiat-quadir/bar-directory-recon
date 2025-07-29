@@ -26,28 +26,28 @@ except ImportError as e:
 
 def interactive_mode() -> Dict[str, Any]:
     """Interactive configuration mode for realtor directory scraping."""
-    
+
     print("🏠 Realtor Directory Lead Automation - Phase 2")
     print("=" * 55)
-    
+
     # Choose scraping mode
     print("\n🔧 Scraping Mode:")
     print("1. Test Mode (simulated data)")
     print("2. Live Mode (real scraping)")
     mode_choice = input("Choose mode [1 or 2]: ").strip()
     test_mode = mode_choice != "2"
-    
+
     if test_mode:
         print("🧪 Using TEST MODE - will generate realistic simulated data")
     else:
         print("🔴 Using LIVE MODE - will attempt real scraping")
-    
+
     # Get output path
     default_output = "outputs/realtor_leads.csv"
     output_path = input(f"Output CSV path [{default_output}]: ").strip()
     if not output_path:
         output_path = default_output
-    
+
     # Get max records
     max_records_str = input("Maximum records to scrape [50]: ").strip()
     max_records = 50
@@ -56,12 +56,12 @@ def interactive_mode() -> Dict[str, Any]:
             max_records = int(max_records_str)
         except ValueError:
             print("⚠️  Invalid number, using 50")
-    
+
     # Technical options
     print("\n⚙️ Technical Options:")
     use_selenium = input("Use Selenium for dynamic content? [Y/n]: ").strip().lower() != 'n'
     debug_mode = input("Enable debug output? [y/N]: ").strip().lower() == 'y'
-    
+
     return {
         'output_path': output_path,
         'max_records': max_records,
@@ -80,7 +80,7 @@ def run_enhanced_scraper(config: Dict[str, Any]) -> Dict[str, Any]:
             use_selenium=config.get('use_selenium', True),
             test_mode=config.get('test_mode', False)
         )
-        
+
         if output_file:
             return {
                 'success': True,
@@ -88,7 +88,7 @@ def run_enhanced_scraper(config: Dict[str, Any]) -> Dict[str, Any]:
                 'output_path': output_file,
                 'mode': 'test' if config.get('test_mode') else 'live'
             }
-    
+
     return {
         'success': False,
         'error': 'Enhanced scraper not available',
@@ -97,7 +97,7 @@ def run_enhanced_scraper(config: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def main() -> None:
-    
+
     parser = argparse.ArgumentParser(
         description="Realtor Directory Lead Automation",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -109,54 +109,54 @@ Examples:
   python realtor_automation.py --schedule
         """
     )
-    
+
     parser.add_argument(
         "--interactive", "-i",
         action="store_true",
         help="Run in interactive mode with guided setup"
     )
-    
+
     parser.add_argument(
         "--output", "-o",
         help="Output CSV file path (default: outputs/realtor_leads.csv)"
     )
-    
+
     parser.add_argument(
         "--max-records", "-m",
         type=int,
         help="Maximum number of records to scrape"
     )
-    
+
     parser.add_argument(
         "--google-sheet-id", "-g",
         help="Google Sheets ID for uploading results"
     )
-    
+
     parser.add_argument(
         "--verbose", "-v",
         action="store_true",
         help="Enable verbose logging"
     )
-    
+
     parser.add_argument(
         "--schedule",
         action="store_true",
         help="Show scheduling setup instructions"
     )
-    
+
     parser.add_argument(
         "--test",
         action="store_true",
         help="Run a test scrape with limited records"
     )
-    
+
     args = parser.parse_args()
-    
+
     # Handle scheduling instructions
     if args.schedule:
         show_scheduling_instructions()
         return
-    
+
     # Handle test mode
     if args.test:
         print("🧪 Running Phase 2 test scrape...")
@@ -173,7 +173,7 @@ Examples:
         else:
             print(f"❌ Test failed: {result['error']}")
         return
-    
+
     # Interactive mode
     if args.interactive:
         config = interactive_mode()
@@ -187,7 +187,7 @@ Examples:
             'use_selenium': True
         }
         result = run_enhanced_scraper(config)
-    
+
     # Display results
     if result['success']:
         print("\n✅ Scraping completed successfully!")
@@ -201,7 +201,7 @@ Examples:
 
 def show_scheduling_instructions() -> None:
     """Display instructions for setting up scheduled automation."""
-    
+
     print("📅 Scheduling Setup Instructions")
     print("=" * 50)
     print()

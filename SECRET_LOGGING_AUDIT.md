@@ -6,7 +6,7 @@
 ```yaml
 # Primary secret environment variables used across the system:
 AUTOMATION_DISCORD_WEBHOOK: Discord webhook URL for notifications
-AUTOMATION_EMAIL_PASSWORD: SMTP email authentication password  
+AUTOMATION_EMAIL_PASSWORD: SMTP email authentication password
 AUTOMATION_EMAIL_USERNAME: SMTP email username
 AUTOMATION_GOOGLE_SHEETS_CREDENTIALS: Path to Google Sheets service account JSON
 LIST_DISCOVERY_API_KEY: API key for list discovery services (if needed)

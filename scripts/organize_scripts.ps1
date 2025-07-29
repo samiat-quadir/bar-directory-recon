@@ -44,7 +44,7 @@ $scriptActions = @(
     @{ Source = "UpdateVenvCrossDevice.bat"; Target = "scripts/update_venv_cross_device.bat"; Action = "MOVE" },
     @{ Source = "UpdateVenvScripts.bat"; Target = "scripts/update_venv_scripts.bat"; Action = "MOVE" },
     @{ Source = "ValidateCrossDeviceSetup.bat"; Target = "scripts/validate_cross_device_setup.bat"; Action = "MOVE" },
-    
+
     # PowerShell files to move
     @{ Source = "ActivateVenv.ps1"; Target = "scripts/activate_venv.ps1"; Action = "MOVE" },
     @{ Source = "AutomationHotkeys.ps1"; Target = "scripts/automation_hotkeys.ps1"; Action = "MOVE" },
@@ -101,20 +101,20 @@ if pyvenv_cfg.exists():
     print('Updating pyvenv.cfg for cross-device compatibility...')
     with open(pyvenv_cfg, 'r') as f:
         content = f.read()
-    
+
     # Update home path to current Python installation
     import sys
     python_home = str(Path(sys.executable).parent)
-    
+
     lines = content.split('\n')
     for i, line in enumerate(lines):
         if line.startswith('home = '):
             lines[i] = f'home = {python_home}'
             break
-    
+
     with open(pyvenv_cfg, 'w') as f:
         f.write('\n'.join(lines))
-    
+
     print('pyvenv.cfg updated successfully')
 "
 
@@ -127,10 +127,10 @@ $processedFiles = @()
 foreach ($action in $scriptActions) {
     $sourcePath = Join-Path $rootPath $action.Source
     $targetPath = Join-Path $rootPath $action.Target
-    
+
     if (Test-Path $sourcePath) {
         Write-Host "Processing: $($action.Source)" -ForegroundColor Yellow
-        
+
         try {
             switch ($action.Action) {
                 "MOVE" {
@@ -139,7 +139,7 @@ foreach ($action in $scriptActions) {
                     if (-not (Test-Path $targetDir)) {
                         New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
                     }
-                    
+
                     Move-Item $sourcePath $targetPath -Force
                     Write-Host "  Moved to: $($action.Target)" -ForegroundColor Green
                     $processedFiles += $action.Source

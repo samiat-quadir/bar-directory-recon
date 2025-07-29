@@ -89,7 +89,7 @@
 ```jsonc
 // Core Python Development
 "ms-python.debugpy",
-"ms-python.flake8", 
+"ms-python.flake8",
 "ms-python.mypy-type-checker",
 "ms-python.black-formatter",
 "ms-python.isort",
