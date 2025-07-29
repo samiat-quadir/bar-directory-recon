@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+﻿#!/usr/bin/env pwsh
 <#
 .SYNOPSIS
     Alienware Device Bootstrap Script for bar-directory-recon Project
@@ -52,12 +52,12 @@ function Write-StatusMessage {
     )
 
     $prefix = switch ($Type) {
-        "Success" { "✅" }
-        "Warning" { "⚠️ " }
-        "Error" { "❌" }
-        "Info" { "🔍" }
-        "Header" { "📋" }
-        default { "ℹ️ " }
+        "Success" { "" }
+        "Warning" { " " }
+        "Error" { "" }
+        "Info" { "" }
+        "Header" { "" }
+        default { " " }
     }
 
     Write-Host "$prefix $Message" -ForegroundColor $Colors[$Type]
@@ -411,14 +411,14 @@ $alienwareValidationOutput
 
 ## Bootstrap Summary
 
-- ✅ Repository cloned at tag $TagVersion
-- ✅ Python $RequiredPythonVersion virtual environment created
-- ✅ Dependencies installed from requirements files
-- ✅ Device-specific configuration created
-- ✅ Required directories created
-- ✅ External tools installed
-- ✅ Environment validation completed
-- ✅ Alienware-specific validation completed
+-  Repository cloned at tag $TagVersion
+-  Python $RequiredPythonVersion virtual environment created
+-  Dependencies installed from requirements files
+-  Device-specific configuration created
+-  Required directories created
+-  External tools installed
+-  Environment validation completed
+-  Alienware-specific validation completed
 
 ## Next Steps
 
@@ -455,15 +455,15 @@ $alienwareValidationOutput
 
 **Generated**: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 **Device**: $env:COMPUTERNAME
-**Status**: ⚠️ Validation script not found
+**Status**:  Validation script not found
 
 ## Bootstrap Summary
 
-- ✅ Repository cloned at tag $TagVersion
-- ✅ Python $RequiredPythonVersion virtual environment created
-- ✅ Dependencies installed
-- ✅ Configuration files created
-- ⚠️ Environment validation script not available
+-  Repository cloned at tag $TagVersion
+-  Python $RequiredPythonVersion virtual environment created
+-  Dependencies installed
+-  Configuration files created
+-  Environment validation script not available
 
 ## Manual Verification Required
 
@@ -526,3 +526,4 @@ function Main {
 # Execute main function
 $success = Main
 exit $(if ($success) { 0 } else { 1 })
+
