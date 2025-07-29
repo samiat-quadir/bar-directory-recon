@@ -338,5 +338,5 @@ This project is part of the bar-directory-recon system and follows the same lice
 
 ---
 
-**Last Updated**: June 30, 2025  
+**Last Updated**: June 30, 2025
 **Version**: 1.0.0

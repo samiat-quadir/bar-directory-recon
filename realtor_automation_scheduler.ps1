@@ -69,7 +69,7 @@ Add-Content -Path $LogFile -Value "[$Timestamp] Starting automation with mode: $
 try {
     # Run the Python script
     $Result = & python $PythonArgs 2>&1
-    
+
     if ($LASTEXITCODE -eq 0) {
         Write-Host "✅ Automation completed successfully"
         Add-Content -Path $LogFile -Value "[$Timestamp] SUCCESS: Automation completed"
@@ -101,7 +101,7 @@ function Get-PythonExecutable {
     if ($PythonPath) {
         return $PythonPath
     }
-    
+
     # Try to find Python in common locations
     $possiblePaths = @(
         (Get-Command python -ErrorAction SilentlyContinue).Path,
@@ -110,13 +110,13 @@ function Get-PythonExecutable {
         "C:\Python*\python.exe",
         ".venv\Scripts\python.exe"
     )
-    
+
     foreach ($path in $possiblePaths) {
         if ($path -and (Test-Path $path)) {
             return $path
         }
     }
-    
+
     throw "Python executable not found. Please specify -PythonPath parameter."
 }
 
@@ -124,53 +124,53 @@ function Get-ScriptPath {
     if ($ScriptPath) {
         return $ScriptPath
     }
-    
+
     $currentDir = Get-Location
     $scriptFile = Join-Path $currentDir "realtor_automation.py"
-    
+
     if (Test-Path $scriptFile) {
         return $scriptFile
     }
-    
+
     throw "realtor_automation.py not found. Please specify -ScriptPath parameter."
 }
 
 function Install-Task {
     Write-Host "🔧 Setting up Realtor Directory Automation Task..." -ForegroundColor Cyan
-    
+
     try {
         $pythonExe = Get-PythonExecutable
         $scriptPath = Get-ScriptPath
-        
+
         Write-Host "Python: $pythonExe" -ForegroundColor Gray
         Write-Host "Script: $scriptPath" -ForegroundColor Gray
         Write-Host "Output: $OutputPath" -ForegroundColor Gray
-        
+
         # Create the scheduled task action
         $action = New-ScheduledTaskAction -Execute $pythonExe -Argument "`"$scriptPath`" --output `"$OutputPath`" --verbose"
-        
+
         # Create the trigger (every Monday at 8:00 AM)
         $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At "8:00AM"
-        
+
         # Create the principal (run as current user)
         $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive
-        
+
         # Create task settings
         $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
-        
+
         # Register the task
         Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description $TaskDescription -Force
-        
+
         Write-Host "✅ Task '$TaskName' created successfully!" -ForegroundColor Green
         Write-Host "📅 Scheduled to run every Monday at 8:00 AM" -ForegroundColor Yellow
         Write-Host "📁 Output will be saved to: $OutputPath" -ForegroundColor Yellow
-        
+
         # Test the task
         Write-Host "`n🧪 Testing task configuration..." -ForegroundColor Cyan
         $task = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
         if ($task) {
             Write-Host "Task found and properly configured." -ForegroundColor Green
-            
+
             # Ask if user wants to run a test
             $response = Read-Host "Would you like to run a test execution now? (y/N)"
             if ($response -eq 'y' -or $response -eq 'Y') {
@@ -179,7 +179,7 @@ function Install-Task {
                 Write-Host "Test started. Check the logs directory for results." -ForegroundColor Yellow
             }
         }
-        
+
     } catch {
         Write-Host "❌ Error creating task: $($_.Exception.Message)" -ForegroundColor Red
         exit 1
@@ -188,7 +188,7 @@ function Install-Task {
 
 function Uninstall-Task {
     Write-Host "🗑️  Removing Realtor Directory Automation Task..." -ForegroundColor Cyan
-    
+
     try {
         $task = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
         if ($task) {
@@ -206,19 +206,19 @@ function Uninstall-Task {
 function Show-TaskStatus {
     Write-Host "📊 Realtor Directory Automation Task Status" -ForegroundColor Cyan
     Write-Host "=" * 50
-    
+
     try {
         $task = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
         if ($task) {
             Write-Host "✅ Task Status: $($task.State)" -ForegroundColor Green
-            
+
             # Get last run info
             $taskInfo = Get-ScheduledTaskInfo -TaskName $TaskName -ErrorAction SilentlyContinue
             if ($taskInfo) {
                 Write-Host "⏱️  Last Run: $($taskInfo.LastRunTime)" -ForegroundColor Gray
                 Write-Host "🔄 Last Result: $($taskInfo.LastTaskResult)" -ForegroundColor Gray
             }
-            
+
             # Show recent log entries
             $logFile = "logs\scheduler.log"
             if (Test-Path $logFile) {
@@ -227,7 +227,7 @@ function Show-TaskStatus {
                     Write-Host "  $_" -ForegroundColor Gray
                 }
             }
-            
+
         } else {
             Write-Host "❌ Task not found. Run with -Install to create it." -ForegroundColor Red
         }

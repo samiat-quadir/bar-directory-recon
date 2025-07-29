@@ -120,23 +120,23 @@ class FileSystemEventHandler:
     def on_modified(self, event) -> None:
         pass
         pass
-    
+
     def start(self):
         self.is_alive_flag = True
-    
+
     def stop(self):
         self.is_alive_flag = False
-    
+
     def join(self):
         pass
-    
+
     def is_alive(self):
         return self.is_alive_flag
 
 class FileSystemEventHandler:
     def on_created(self, event):
         pass
-    
+
     def on_modified(self, event):
         pass
 
@@ -194,7 +194,7 @@ class InputMonitor(FileSystemEventHandler):
                 logger.error(f"Failed to process {file_path}: {e}")
 
         self.pending_files.clear()
-            
+
             # Reset batch timer
 
 class UniversalRunner:

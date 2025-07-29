@@ -279,7 +279,7 @@ class EnhancedDashboardManager:
                 <h1>Universal Runner Dashboard</h1>
                 <p>Last updated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>
             </div>
-            
+
             <div class="stats">
                 <div class="stat-card">
                     <h3>{global_stats.get("total_runs", 0)}</h3>
@@ -294,7 +294,7 @@ class EnhancedDashboardManager:
                     <p>Failed</p>
                 </div>
             </div>
-            
+
             <div class="sites">
                 <h2>Sites Status</h2>
         """

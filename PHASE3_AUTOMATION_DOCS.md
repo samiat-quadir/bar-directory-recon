@@ -100,11 +100,11 @@ schedules:
   scraping:
     frequency: daily    # daily, weekly, hourly
     time: "02:00"      # 24-hour format
-  
+
   validation:
     frequency: daily
     time: "06:00"
-  
+
   export:
     frequency: weekly
     time: "23:00"
@@ -115,12 +115,12 @@ monitoring:
   input_directories:
     - "input/"         # Add directories to monitor
     - "snapshots/"
-  
+
   file_patterns:
     - "*.json"         # File types to process
     - "*.csv"
     - "*.html"
-  
+
   auto_process: true   # Automatically process new files
   batch_delay: 300     # Wait 5 minutes before processing batch
 
@@ -128,7 +128,7 @@ monitoring:
 notifications:
   # Discord webhook URL
   discord_webhook: "https://discord.com/api/webhooks/YOUR_WEBHOOK"
-  
+
   # Email settings
   email:
     enabled: true
@@ -144,12 +144,12 @@ pipeline:
   sites:
     - "example-bar.com"    # Add your target sites
     - "another-bar.com"
-  
+
   default_flags:
     - "--schema-matrix"    # Default pipeline flags
     - "--emit-status"
     - "--emit-drift-dashboard"
-  
+
   timeout: 3600           # 1 hour timeout per site
   retry_count: 3          # Retry failed runs 3 times
 ```
@@ -420,5 +420,5 @@ When reporting issues, include:
 
 ---
 
-**Universal Project Runner - Phase 3 Automation Initiative**  
+**Universal Project Runner - Phase 3 Automation Initiative**
 *Transforming bar directory reconnaissance through intelligent automation*

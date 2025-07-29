@@ -247,7 +247,7 @@ monitoring:
 notifications:
   # Use environment variable for security
   discord_webhook: "${AUTOMATION_DISCORD_WEBHOOK:}"
-  
+
   email:
     enabled: ${AUTOMATION_EMAIL_ENABLED:false}
     smtp_server: "${AUTOMATION_EMAIL_SMTP_SERVER:smtp.gmail.com}"
@@ -263,7 +263,7 @@ dashboard:
     enabled: ${AUTOMATION_GOOGLE_SHEETS_ENABLED:false}
     spreadsheet_id: "${AUTOMATION_GOOGLE_SHEETS_ID:}"
     credentials_path: "${AUTOMATION_GOOGLE_SHEETS_CREDENTIALS:}"
-  
+
   local_html:
     enabled: true
     output_path: "output/dashboard.html"
@@ -272,12 +272,12 @@ pipeline:
   sites:
     - "${AUTOMATION_SITE1:example-bar.com}"
     - "${AUTOMATION_SITE2:another-bar.com}"
-  
+
   default_flags:
     - "--schema-matrix"
     - "--emit-status"
     - "--emit-drift-dashboard"
-  
+
   timeout: ${AUTOMATION_PIPELINE_TIMEOUT:3600}
   retry_count: ${AUTOMATION_PIPELINE_RETRIES:3}
 """

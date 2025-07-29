@@ -14,7 +14,7 @@ The List Discovery Agent is an intelligent web monitoring system that automatica
 
 ### 📥 **Automatic Downloads**
 - Downloads new files to the input directory
-- Adds timestamps to prevent filename conflicts  
+- Adds timestamps to prevent filename conflicts
 - Integrates with existing pipeline automation
 - Validates file types before downloading
 
@@ -144,7 +144,7 @@ from list_discovery.agent import ListDiscoveryAgent
 async def run_list_discovery():
     agent = ListDiscoveryAgent()
     new_files = await agent.run_single_check()
-    
+
     if new_files:
         # Trigger main pipeline processing
         await run_main_pipeline()
