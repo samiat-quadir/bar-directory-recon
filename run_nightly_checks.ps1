@@ -35,13 +35,15 @@ function Test-PythonEnvironment {
             if ($LASTEXITCODE -eq 0) {
                 $Version = ($PackageInfo | Select-String "Version:").ToString().Split(":")[1].Trim()
                 Write-Log "Package $Package: $Version" "INFO"
-            } else {
+            }
+            else {
                 Write-Log "Package $Package: NOT FOUND" "ERROR"
             }
         }
 
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "Python environment test failed: $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -61,11 +63,13 @@ function Run-TestSuite {
         if ($TestExitCode -eq 0) {
             Write-Log "All tests passed successfully" "INFO"
             return $true
-        } else {
+        }
+        else {
             Write-Log "Some tests failed (exit code: $TestExitCode)" "ERROR"
             return $false
         }
-    } catch {
+    }
+    catch {
         Write-Log "Test suite execution failed: $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -84,15 +88,18 @@ function Run-SecurityScan {
             if ($ScanExitCode -eq 0) {
                 Write-Log "Security scan completed - no issues found" "INFO"
                 return $true
-            } else {
+            }
+            else {
                 Write-Log "Security scan found issues (exit code: $ScanExitCode)" "WARN"
                 return $false
             }
-        } else {
+        }
+        else {
             Write-Log "Security scan script not found, skipping..." "WARN"
             return $true
         }
-    } catch {
+    }
+    catch {
         Write-Log "Security scan failed: $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -103,10 +110,11 @@ function Run-LinternightlyChecks {
 
     try {
         # Run flake8
-        $FlakeOutput = & python -m flake8 --max-line-length=120 --ignore=E203,W503 . 2>&1
+        $FlakeOutput = & python -m flake8 --max-line-length=120 --ignore=E203, W503 . 2>&1
         if ($LASTEXITCODE -eq 0) {
             Write-Log "Flake8: PASSED" "INFO"
-        } else {
+        }
+        else {
             Write-Log "Flake8: FAILED" "ERROR"
             $FlakeOutput | ForEach-Object { Write-Log $_ "LINT" }
         }
@@ -115,13 +123,15 @@ function Run-LinternightlyChecks {
         $MypyOutput = & python -m mypy --config-file pyproject.toml . 2>&1
         if ($LASTEXITCODE -eq 0) {
             Write-Log "MyPy: PASSED" "INFO"
-        } else {
+        }
+        else {
             Write-Log "MyPy: FAILED" "ERROR"
             $MypyOutput | ForEach-Object { Write-Log $_ "TYPE" }
         }
 
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "Code quality checks failed: $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -136,7 +146,8 @@ function Check-GitStatus {
         if ($GitStatus) {
             Write-Log "Uncommitted changes detected:" "WARN"
             $GitStatus | ForEach-Object { Write-Log "  $_" "WARN" }
-        } else {
+        }
+        else {
             Write-Log "Git repository is clean" "INFO"
         }
 
@@ -156,7 +167,8 @@ function Check-GitStatus {
         }
 
         return $true
-    } catch {
+    }
+    catch {
         Write-Log "Git status check failed: $($_.Exception.Message)" "ERROR"
         return $false
     }
@@ -262,10 +274,10 @@ Set-Location $PSScriptRoot
 # Execute all checks
 $Results = @{
     PythonEnv = Test-PythonEnvironment
-    Tests = Run-TestSuite
-    Security = Run-SecurityScan
-    Quality = Run-LinternightlyChecks
-    Git = Check-GitStatus
+    Tests     = Run-TestSuite
+    Security  = Run-SecurityScan
+    Quality   = Run-LinternightlyChecks
+    Git       = Check-GitStatus
 }
 
 # Generate summary
@@ -286,7 +298,8 @@ Generate-HealthReport -Results $Results
 if (-not $Results.PythonEnv -or -not $Results.Tests) {
     Write-Log "Critical failures detected - exit code 1" "ERROR"
     exit 1
-} else {
+}
+else {
     Write-Log "Nightly checks completed successfully" "INFO"
     exit 0
 }

@@ -7,7 +7,8 @@ Write-Host "Applying Windows development environment tweaks..." -ForegroundColor
 try {
     Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
     Write-Host "✅ PowerShell execution policy set to RemoteSigned" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "❌ Failed to set PowerShell execution policy: $($_.Exception.Message)" -ForegroundColor Red
 }
 
@@ -19,7 +20,8 @@ try {
     }
     Set-ItemProperty -Path $regPath -Name "AllowDevelopmentWithoutDevLicense" -Value 1 -Type DWord
     Write-Host "✅ Windows Developer Mode enabled" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "❌ Failed to enable Developer Mode: $($_.Exception.Message)" -ForegroundColor Red
     Write-Host "   Note: This may require Administrator privileges" -ForegroundColor Yellow
 }
@@ -31,10 +33,12 @@ try {
         Write-Host "Enabling WSL (requires restart)..." -ForegroundColor Yellow
         Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
         Write-Host "✅ WSL enabled (restart required)" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "✅ WSL already enabled" -ForegroundColor Green
     }
-} catch {
+}
+catch {
     Write-Host "❌ Failed to check/enable WSL: $($_.Exception.Message)" -ForegroundColor Red
 }
 
@@ -43,7 +47,8 @@ try {
     git config --global core.autocrlf true
     git config --global core.safecrlf false
     Write-Host "✅ Git line ending configuration set for Windows" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "❌ Failed to configure Git: $($_.Exception.Message)" -ForegroundColor Red
 }
 
