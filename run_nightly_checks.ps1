@@ -34,10 +34,10 @@ function Test-PythonEnvironment {
             $PackageInfo = & python -m pip show $Package 2>&1
             if ($LASTEXITCODE -eq 0) {
                 $Version = ($PackageInfo | Select-String "Version:").ToString().Split(":")[1].Trim()
-                Write-Log "Package $Package: $Version" "INFO"
+                Write-Log "Package ${Package}: $Version" "INFO"
             }
             else {
-                Write-Log "Package $Package: NOT FOUND" "ERROR"
+                Write-Log "Package ${Package}: NOT FOUND" "ERROR"
             }
         }
 
