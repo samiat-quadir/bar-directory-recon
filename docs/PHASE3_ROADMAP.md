@@ -397,6 +397,11 @@ Building upon the solid foundation established in Phases 1-2, Phase 3 focuses on
 - **Dashboard Generator**: HTML status reports with metrics
 - **CLI Shortcuts**: Command-line interface with hotkeys
 - **Cross-Device Support**: Path resolution and device profiles
+  - **ASUS (ROG-LUCCI) Specific Notes**:
+    - Tree.exe workaround implemented (PowerShell Get-ChildItem alternative)
+    - Unicode character fixes for PowerShell scripts (em dash → hyphen)
+    - Full path requirements for system executables (WoW64 compatibility)
+    - Pre-commit hooks successfully installed and validated
 - **Configuration Management**: YAML-based configuration system
 
 ### 🔄 In Progress
