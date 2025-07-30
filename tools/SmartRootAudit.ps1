@@ -24,15 +24,20 @@
 [CmdletBinding()]
 param(
     [switch]$AutoFix,
-    [switch]$Preview
+    [switch]$Preview,
+    [switch]$WhatIf,
+    [string]$OutputDir
 )
 
 #region -- Helpers & bootstrap
 $ErrorActionPreference = 'Stop'
 
+# If WhatIf is specified, enable Preview mode
+if ($WhatIf) { $Preview = $true }
+
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Resolve-Path (Join-Path $here '..')
-$logsDir = Join-Path $repoRoot 'logs'
+$logsDir = if ($OutputDir) { $OutputDir } else { Join-Path $repoRoot 'logs' }
 if (-not (Test-Path $logsDir)) { New-Item -ItemType Directory -Path $logsDir | Out-Null }
 
 $timestamp = (Get-Date -Format 'yyyyMMdd_HHmmss')
@@ -54,13 +59,20 @@ function Write-MD {
     Add-Content -Path $mdReport -Value $text
 }
 
-Write-MD "# Smart Root Audit – $($report.RunDate)`n"
+Write-MD "# Smart Root Audit - $($report.RunDate)`n"
 #endregion
 
 #region 1 -- Directory Tree Snapshot
 function Get-TreeSnapshot {
     param([string]$BasePath)
-    $tree = & tree $BasePath /F | Out-String
+    # Use PowerShell Get-ChildItem as tree alternative
+    $items = Get-ChildItem -Path $BasePath -Recurse -Depth 2 |
+    ForEach-Object {
+        $relativePath = $_.FullName.Replace($BasePath, "")
+        $indent = "    " * (($relativePath.Split('\').Count - 1))
+        "$indent$($_.Name)"
+    }
+    $tree = ($items -join "`n") | Out-String
     return $tree
 }
 $treeText = Get-TreeSnapshot -BasePath $repoRoot
@@ -80,7 +92,7 @@ function Test-VirtualEnv {
 $virtualEnvInfo = Test-VirtualEnv
 Write-MD "## Virtual Environment\n* Exists: **$($virtualEnvInfo.Exists)** at `$($virtualEnvInfo.Path)`\n"
 if (-not $virtualEnvInfo.Exists -and $AutoFix) {
-    Write-Warning "Virtual environment not found – creating…"
+    Write-Warning "Virtual environment not found - creating..."
     if (-not $Preview) {
         python -m venv $virtualEnvInfo.Path
     }
@@ -93,7 +105,11 @@ function Test-VSCodeConfig {
     $vsRoot = Join-Path $repoRoot '.vscode'
     $settings = Join-Path $vsRoot 'settings.json'
     $launch = Join-Path $vsRoot 'launch.json'
-    $exts = (& code --list-extensions --show-versions) -join ', '
+    try {
+        $exts = (& code --list-extensions --show-versions 2>$null) -join ', '
+    } catch {
+        $exts = "VS Code command not found"
+    }
     return [pscustomobject]@{
         SettingsFile = Test-Path $settings
         LaunchFile   = Test-Path $launch
@@ -150,7 +166,16 @@ if ($AutoFix -and $report.Sections.LastLog.Preview -and -not $Preview) {
 #endregion
 
 #region 7 -- Hard-coded Path Scan
-$scanResult = & $repoRoot\tools\Scan_For_Hardcoded_Paths.ps1 -SummaryOnly 2>$null
+try {
+    $scanScript = Join-Path $repoRoot 'tools\Scan_For_Hardcoded_Paths.ps1'
+    if (Test-Path $scanScript) {
+        $scanResult = & powershell -NoProfile -File $scanScript -SummaryOnly 2>$null
+    } else {
+        $scanResult = "Scan script not found"
+    }
+} catch {
+    $scanResult = "Path scan failed: $($_.Exception.Message)"
+}
 Write-MD "## Hard-coded Path Scan\n```\n$scanResult\n```\n"
 $report.Sections.PathScan = $scanResult
 #endregion
@@ -162,8 +187,8 @@ if ($gitInfo.IsDirty) { $warnings += 'Uncommitted Git changes' }
 if ($report.Sections.LastLog.Preview) { $warnings += 'Last OneDriveAutomation run was preview' }
 $report.Warnings = $warnings
 
-Write-MD "## Summary\n* Warnings: **$($warnings.Count)** – $($warnings -join '; ')\n"
+Write-MD "## Summary\n* Warnings: **$($warnings.Count)** - $($warnings -join '; ')\n"
 $report | ConvertTo-Json -Depth 6 | Out-File $jsonReport -Encoding UTF8
 
-Write-Host ("Audit complete – report saved to {0}" -f $mdReport) -ForegroundColor Cyan
+Write-Host ("Audit complete - report saved to {0}" -f $mdReport) -ForegroundColor Cyan
 #endregion
