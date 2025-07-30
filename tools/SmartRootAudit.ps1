@@ -24,15 +24,20 @@
 [CmdletBinding()]
 param(
     [switch]$AutoFix,
-    [switch]$Preview
+    [switch]$Preview,
+    [switch]$WhatIf,
+    [string]$OutputDir
 )
 
 #region -- Helpers & bootstrap
 $ErrorActionPreference = 'Stop'
 
+# If WhatIf is specified, enable Preview mode
+if ($WhatIf) { $Preview = $true }
+
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Resolve-Path (Join-Path $here '..')
-$logsDir = Join-Path $repoRoot 'logs'
+$logsDir = if ($OutputDir) { $OutputDir } else { Join-Path $repoRoot 'logs' }
 if (-not (Test-Path $logsDir)) { New-Item -ItemType Directory -Path $logsDir | Out-Null }
 
 $timestamp = (Get-Date -Format 'yyyyMMdd_HHmmss')
@@ -100,7 +105,11 @@ function Test-VSCodeConfig {
     $vsRoot = Join-Path $repoRoot '.vscode'
     $settings = Join-Path $vsRoot 'settings.json'
     $launch = Join-Path $vsRoot 'launch.json'
-    $exts = (& code --list-extensions --show-versions) -join ', '
+    try {
+        $exts = (& code --list-extensions --show-versions 2>$null) -join ', '
+    } catch {
+        $exts = "VS Code command not found"
+    }
     return [pscustomobject]@{
         SettingsFile = Test-Path $settings
         LaunchFile   = Test-Path $launch
@@ -157,7 +166,16 @@ if ($AutoFix -and $report.Sections.LastLog.Preview -and -not $Preview) {
 #endregion
 
 #region 7 -- Hard-coded Path Scan
-$scanResult = & $repoRoot\tools\Scan_For_Hardcoded_Paths.ps1 -SummaryOnly 2>$null
+try {
+    $scanScript = Join-Path $repoRoot 'tools\Scan_For_Hardcoded_Paths.ps1'
+    if (Test-Path $scanScript) {
+        $scanResult = & powershell -NoProfile -File $scanScript -SummaryOnly 2>$null
+    } else {
+        $scanResult = "Scan script not found"
+    }
+} catch {
+    $scanResult = "Path scan failed: $($_.Exception.Message)"
+}
 Write-MD "## Hard-coded Path Scan\n```\n$scanResult\n```\n"
 $report.Sections.PathScan = $scanResult
 #endregion

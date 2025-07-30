@@ -131,3 +131,9 @@ Copilot Agent Summary.txt
 # 11 · Cross-Device Agent Communication
 ############################################################
 copilot_agent_relay.md
+copilot_agent_ACE_relay.md
+
+############################################################
+# 12 · Large Reports & Scans
+############################################################
+secrets_scan_report_*.json

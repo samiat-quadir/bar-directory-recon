@@ -120,7 +120,8 @@ function Get-ProjectRootPath {
     param (
         [string]$OneDrivePath = (Get-OneDrivePath),
         [string]$ProjectName = "bar-directory-recon",
-        [string]$SubPath = "Desktop\Local Py\Work Projects"
+        [string]$SubPath = "Desktop\Local Py\Work Projects",
+        [string]$DefaultPath = $null
     )
 
     # First try the expected path within OneDrive
