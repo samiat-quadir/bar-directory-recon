@@ -107,6 +107,7 @@ MASTER_IMPLEMENTATION_REPORT.md
 # 8 · Binary / large files
 ############################################################
 *.zip
+!alienware_bootstrap_bundle.zip  # Critical deployment artifact for ALI
 *.gz
 *.tar
 *.rar
