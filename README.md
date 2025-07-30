@@ -41,7 +41,8 @@ Universal Recon is a comprehensive bar directory reconnaissance and automation t
 
 For setting up this project on a fresh Alienware device to match the ASUS golden image configuration:
 
-📦 **Download Bootstrap Bundle**: [`alienware_bootstrap_bundle.zip`](./alienware_bootstrap_bundle.zip) *(70KB - Updated July 26, 2025)*
+📦 **Download Bootstrap Bundle**: [`alienware_bootstrap_bundle.zip`](./alienware_bootstrap_bundle.zip) *(27.4KB - Updated July 30, 2025)*
+**SHA256**: `2999b1ac6dc9d94045778fee902c2f484b65c3514caa737f9e033c2cff626b85`
 
 **Quick Setup (Windows)**:
 ```powershell
@@ -76,13 +77,14 @@ chmod +x bootstrap_alienware.sh
 - ✅ Configures automation framework
 - ✅ Sets up cross-device compatibility
 
-**Bundle Contents** *(7 files, 70KB total)*:
+**Bundle Contents** *(8 files, 27.4KB total)*:
 - `bootstrap_alienware.ps1` - PowerShell bootstrap script (529 lines)
 - `bootstrap_alienware.sh` - Bash bootstrap script (523 lines)
 - `.env.template` - Environment variables template
-- `device_profile-Alienware.json` - Device-specific configuration
+- `config/device_profile-Alienware.json` - Device-specific configuration
 - `validate_alienware_bootstrap.py` - Bootstrap validation script
 - `validate_env_state.py` - Environment validation script
+- `alienware_playbook.ps1` - Complete automation playbook (675 lines)
 - `ENV_READY_REPORT.md` - Current environment status report
 
 **Documentation**:
