@@ -41,7 +41,7 @@ twilio>=8.7.0  # Optional for SMS notifications
 
 # Automation Dependencies
 schedule>=1.2.0
-watchdog>=3.0.0
+watchdog>=6.0.0,<7.0.0
 
 # Azure Integration
 azure-storage-blob>=12.17.0

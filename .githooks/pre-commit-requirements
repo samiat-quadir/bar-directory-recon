@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+"""
+Pre-commit hook to validate requirements files before committing.
+
+This hook prevents committing requirements files with known problematic dependencies.
+"""
+
+import sys
+import subprocess
+from pathlib import Path
+
+
+def main() -> int:
+    """Run requirements validation as a pre-commit hook."""
+
+    # Get the project root
+    project_root = Path(__file__).parent.parent
+    validation_script = project_root / "tools" / "validate_requirements.py"
+
+    if not validation_script.exists():
+        print("❌ Requirements validation script not found!")
+        return 1
+
+    print("🔍 Running requirements validation...")
+
+    try:
+        # Run the validation script
+        result = subprocess.run(
+            [sys.executable, str(validation_script)], capture_output=True, text=True, cwd=project_root
+        )
+
+        # Print the output
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr, file=sys.stderr)
+
+        if result.returncode != 0:
+            print("\n❌ Requirements validation failed!")
+            print("💡 Fix the issues above or run: python tools/validate_requirements.py --fix")
+            return 1
+
+        print("✅ Requirements validation passed!")
+        return 0
+
+    except Exception as e:
+        print(f"❌ Error running requirements validation: {e}")
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
