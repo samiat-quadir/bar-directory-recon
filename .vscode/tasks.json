@@ -34,6 +34,37 @@
             }
         },
         {
+            "label": "Validate Requirements",
+            "type": "shell",
+            "command": "validate_requirements.bat",
+            "group": "test",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "Fix Requirements",
+            "type": "shell",
+            "command": "validate_requirements.bat",
+            "args": [
+                "--fix"
+            ],
+            "group": "test",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
             "label": "Type Check: mypy",
             "type": "shell",
             "command": "${command:python.interpreterPath}",

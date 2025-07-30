@@ -54,13 +54,20 @@ function Write-MD {
     Add-Content -Path $mdReport -Value $text
 }
 
-Write-MD "# Smart Root Audit – $($report.RunDate)`n"
+Write-MD "# Smart Root Audit - $($report.RunDate)`n"
 #endregion
 
 #region 1 -- Directory Tree Snapshot
 function Get-TreeSnapshot {
     param([string]$BasePath)
-    $tree = & tree $BasePath /F | Out-String
+    # Use PowerShell Get-ChildItem as tree alternative
+    $items = Get-ChildItem -Path $BasePath -Recurse -Depth 2 |
+    ForEach-Object {
+        $relativePath = $_.FullName.Replace($BasePath, "")
+        $indent = "    " * (($relativePath.Split('\').Count - 1))
+        "$indent$($_.Name)"
+    }
+    $tree = ($items -join "`n") | Out-String
     return $tree
 }
 $treeText = Get-TreeSnapshot -BasePath $repoRoot
@@ -80,7 +87,7 @@ function Test-VirtualEnv {
 $virtualEnvInfo = Test-VirtualEnv
 Write-MD "## Virtual Environment\n* Exists: **$($virtualEnvInfo.Exists)** at `$($virtualEnvInfo.Path)`\n"
 if (-not $virtualEnvInfo.Exists -and $AutoFix) {
-    Write-Warning "Virtual environment not found – creating…"
+    Write-Warning "Virtual environment not found - creating..."
     if (-not $Preview) {
         python -m venv $virtualEnvInfo.Path
     }
@@ -162,8 +169,8 @@ if ($gitInfo.IsDirty) { $warnings += 'Uncommitted Git changes' }
 if ($report.Sections.LastLog.Preview) { $warnings += 'Last OneDriveAutomation run was preview' }
 $report.Warnings = $warnings
 
-Write-MD "## Summary\n* Warnings: **$($warnings.Count)** – $($warnings -join '; ')\n"
+Write-MD "## Summary\n* Warnings: **$($warnings.Count)** - $($warnings -join '; ')\n"
 $report | ConvertTo-Json -Depth 6 | Out-File $jsonReport -Encoding UTF8
 
-Write-Host ("Audit complete – report saved to {0}" -f $mdReport) -ForegroundColor Cyan
+Write-Host ("Audit complete - report saved to {0}" -f $mdReport) -ForegroundColor Cyan
 #endregion

@@ -126,3 +126,8 @@ chromedriver*.exe
 *=======*
 *>>>>>>>*
 Copilot Agent Summary.txt
+
+############################################################
+# 11 · Cross-Device Agent Communication
+############################################################
+copilot_agent_relay.md
