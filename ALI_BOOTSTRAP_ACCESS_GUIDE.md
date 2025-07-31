@@ -6,26 +6,27 @@ The Alienware bootstrap bundle has been finalized and is now accessible through 
 
 ### 📦 **Access the Bootstrap Bundle**
 
-**Repository Branch**: `feature/bootstrap-bundle-finalization`
+**Repository Branch**: `main` (merged from feature branch)
 **Bundle File**: `alienware_bootstrap_bundle.zip`
 **Size**: 28,020 bytes (27.4 KB)
 **SHA256**: `2999b1ac6dc9d94045778fee902c2f484b65c3514caa737f9e033c2cff626b85`
+**Release Tag**: `v2.0-cross-device`
 
 ### 🔄 **How to Access**
 
-#### Option 1: Clone the Feature Branch
+#### Option 1: Clone the Main Branch
 ```bash
 git clone https://github.com/samiat-quadir/bar-directory-recon.git
 cd bar-directory-recon
-git checkout feature/bootstrap-bundle-finalization
+# Bootstrap bundle is now on main branch
 ```
 
-#### Option 2: Download Specific Branch
+#### Option 2: Download Specific Tag
 ```bash
 # If you already have the repo
 git fetch origin
-git checkout feature/bootstrap-bundle-finalization
-git pull origin feature/bootstrap-bundle-finalization
+git checkout v2.0-cross-device
+# Or simply use main branch: git checkout main
 ```
 
 ### 📋 **Bundle Contents (8 Files)**
