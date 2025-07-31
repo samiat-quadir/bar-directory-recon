@@ -107,6 +107,7 @@ MASTER_IMPLEMENTATION_REPORT.md
 # 8 · Binary / large files
 ############################################################
 *.zip
+!alienware_bootstrap_bundle.zip  # Critical deployment artifact for ALI
 *.gz
 *.tar
 *.rar
@@ -126,3 +127,14 @@ chromedriver*.exe
 *=======*
 *>>>>>>>*
 Copilot Agent Summary.txt
+
+############################################################
+# 11 · Cross-Device Agent Communication
+############################################################
+copilot_agent_relay.md
+copilot_agent_ACE_relay.md
+
+############################################################
+# 12 · Large Reports & Scans
+############################################################
+secrets_scan_report_*.json
