@@ -107,6 +107,7 @@ MASTER_IMPLEMENTATION_REPORT.md
 # 8 · Binary / large files
 ############################################################
 *.zip
+!alienware_bootstrap_bundle.zip  # Critical deployment artifact for ALI
 *.gz
 *.tar
 *.rar
@@ -132,7 +133,10 @@ Copilot Agent Summary.txt
 ############################################################
 copilot_agent_relay.md
 copilot_agent_ACE_relay.md
+<<<<<<< HEAD
 ALI_RELAY_REPORT.md
+=======
+>>>>>>> aa2532545dd62893b6aec79798755e3a4788af14
 
 ############################################################
 # 12 · Large Reports & Scans
