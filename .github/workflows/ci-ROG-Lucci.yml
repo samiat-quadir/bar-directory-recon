@@ -65,9 +65,17 @@ jobs:
             **/*.log
             **/*.json
 
-      # (Optional) Publish to PyPI on main branch
-      - name: Build and Publish to PyPI
+      # Build package for validation (without publishing)
+      - name: Build Package for Validation
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          pip install build
+          python -m build --outdir dist/ .
+          echo "Package built successfully for validation"
+
+      # Only publish to PyPI on release tags (not on regular pushes)
+      - name: Publish to PyPI
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
         env:
           PYPI_USERNAME: __token__
           PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
