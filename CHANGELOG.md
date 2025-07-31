@@ -1,5 +1,38 @@
 # Changelog
 
+## [v2.0-cross-device] - 2025-07-30
+
+### Added
+
+- **🎯 Alienware Bootstrap Bundle** - Complete deployment package for cross-device parity
+  - **Bootstrap Bundle**: `alienware_bootstrap_bundle.zip` (27.4KB, 8 files) for immediate deployment
+  - **PowerShell Script**: `bootstrap_alienware.ps1` (529 lines) for Windows deployment
+  - **Bash Script**: `bootstrap_alienware.sh` (523 lines) for Linux/macOS deployment
+  - **Environment Templates**: `.env.template` with Alienware-specific configuration
+  - **Device Profile**: `config/device_profile-Alienware.json` for device-specific settings
+  - **Validation Tools**: `validate_env_state.py` and `validate_alienware_bootstrap.py`
+  - **Automation Playbook**: `alienware_playbook.ps1` (675 lines) for end-to-end setup
+  - **Access Guide**: `ALI_BOOTSTRAP_ACCESS_GUIDE.md` with deployment instructions
+
+- **🤝 Cross-Device Parity Achievements**
+  - **95%+ Environment Parity**: Verified compatibility between ASUS and Alienware platforms
+  - **Unified PowerShell Scripts**: Combined Unicode fixes (ACE) with 64-bit handling (ALI)
+  - **Cross-Platform Validation**: Audit reports from both `audits/ace/` and `audits/ali/`
+  - **Git LFS Support**: Proper handling of bootstrap bundle as deployment artifact
+  - **Protected Branch Workflow**: Feature branch deployment to bypass main branch protection
+
+### Fixed
+
+- **Git Repository Access**: Resolved protected branch issues with feature branch workflow
+- **Merge Conflicts**: Combined ALI and ACE enhancements in `.gitignore` and documentation
+- **Bootstrap Bundle Tracking**: Added exception in `.gitignore` for critical deployment artifacts
+
+### Changed
+
+- **Release Tagging**: Updated to `v2.0-cross-device` reflecting complete cross-device integration
+- **Documentation**: Enhanced PHASE3_ROADMAP.md with comprehensive cross-device notes
+- **Branch Management**: Implemented proper feature branch workflow for protected main branch
+
 ## [Unreleased]
 
 ### Added
