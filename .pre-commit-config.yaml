@@ -9,3 +9,42 @@ repos:
     -   id: check-yaml
     -   id: check-added-large-files
         args: ['--maxkb=1000']
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: check-ast
+
+-   repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+    -   id: black
+        language_version: python3
+        exclude: ^(.*\.(zip|gz|tar|rar|7z|pdf|png|jpg|jpeg|gif|bin))$
+
+-   repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+    -   id: isort
+        args: ["--profile", "black"]
+        exclude: ^(.*\.(zip|gz|tar|rar|7z|pdf|png|jpg|jpeg|gif|bin))$
+
+-   repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+    -   id: flake8
+        args: ['--max-line-length=127', '--extend-ignore=E203,W503']
+        exclude: ^(.*\.(zip|gz|tar|rar|7z|pdf|png|jpg|jpeg|gif|bin))$
+
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+    -   id: mypy
+        args: [--ignore-missing-imports, --no-strict-optional]
+        exclude: ^(.*\.(zip|gz|tar|rar|7z|pdf|png|jpg|jpeg|gif|bin)|tests/)$
+        additional_dependencies: [types-requests, types-PyYAML]
+
+-   repo: https://github.com/PyCQA/bandit
+    rev: 1.8.5
+    hooks:
+    -   id: bandit
+        args: ['-r', '-x', 'tests/']
+        exclude: ^(.*\.(zip|gz|tar|rar|7z|pdf|png|jpg|jpeg|gif|bin))$
