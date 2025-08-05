@@ -3,8 +3,6 @@ Plugin: ml_labeler | Shared | Opt-in | v1.0
 Purpose: Label structured text fields (e.g. names, firms, bar numbers)
 """
 
-import re
-
 from bs4 import BeautifulSoup
 from lxml import etree
 
@@ -24,7 +22,7 @@ def apply(driver, context="root"):
     results = []
     url = driver.current_url
 
-    for el in soup.find_all(text=True):
+    for el in soup.find_all(string=True):
         txt = el.strip()
         if not txt or len(txt) > 100:
             continue
