@@ -138,3 +138,8 @@ copilot_agent_ACE_relay.md
 # 12 · Large Reports & Scans
 ############################################################
 secrets_scan_report_*.json
+
+# Google OAuth secrets - DO NOT COMMIT
+.env.google
+client_secret_*.json
+**/client_secret_*.json
