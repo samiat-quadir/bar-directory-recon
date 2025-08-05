@@ -1,5 +1,22 @@
 # Changelog
 
+## [v3.0] — TBD
+
+### Planned
+
+- Advanced automation & scalability features
+- Enterprise SLA monitoring and alerting
+- Multi-region deployment capabilities
+- Enhanced plugin architecture
+
+## [v2.0-cross-device] - 2025-08-05
+
+### Added
+
+- **Cross-Device Parity Completion**: Finalized branch cleanup, CI consolidation, and audit fixes
+- **ACE Device Integration**: Successfully replicated Phase 2 close-out steps on ASUS device
+- **Branch Management**: Cleaned up stale feature branches (ali-audit-fixes, improve-nightly-checks, fix-whitespace-ali)
+
 ## [v2.0-cross-device] - 2025-07-30
 
 ### Added
