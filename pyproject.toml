@@ -66,15 +66,33 @@ show_error_codes = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q --cov=src"
+addopts = "--cov=src --cov=universal_recon --cov-report=term-missing"
 testpaths = [
     "src/tests",
     "universal_recon/tests"
+]
+markers = [
+    "analytics: mark test as related to analytics modules"
 ]
 
 [tool.coverage.run]
 source = ["src", "universal_recon"]
 omit = [
     "src/tests/*",
-    "universal_recon/tests/*"
+    "universal_recon/tests/*",
+    "*/__pycache__/*",
+    "*/test_*",
+    "conftest.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:"
 ]

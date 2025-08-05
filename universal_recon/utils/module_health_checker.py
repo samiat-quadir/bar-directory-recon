@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # universal_recon/utils/module_health_checker.py
 
 import importlib
@@ -135,5 +134,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-=======
->>>>>>> origin/main
