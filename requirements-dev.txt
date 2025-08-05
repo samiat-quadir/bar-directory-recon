@@ -1,0 +1,17 @@
+# Development Dependencies - Testing, Linting, Code Quality
+# Generated automatically as part of Phase 2->3 preparation
+# =========================================================
+
+# Include all production dependencies
+-r requirements.txt
+
+# Development and Testing Tools
+# -----------------------------
+pytest==8.3.6
+pytest-cov==6.0.0
+mypy==1.13.1
+black>=23.9.1
+isort>=5.12.0
+flake8>=6.1.0
+pre-commit>=3.5.0
+bandit>=1.7.5
