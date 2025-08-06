@@ -4,12 +4,12 @@ Hallandale Property Processing Pipeline
 Complete pipeline for processing Hallandale property list PDF and enriching data.
 """
 
-import sys
-import os
-import logging
 import argparse
+import logging
+import os
+import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Add src directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
@@ -47,6 +47,9 @@ class HallandalePipeline:
 
         logging.basicConfig(
             level=logging.INFO,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
+=======
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[
                 logging.FileHandler(log_file),
@@ -151,56 +154,59 @@ class HallandalePipeline:
     def _create_excel_export(self, csv_file: str) -> Dict[str, Any]:
         """Create Excel export with multiple sheets."""
         import pandas as pd
+=======
         try:
             df = pd.read_csv(csv_file)
 
             # Create Excel file with multiple sheets
             excel_file = self.output_dir / "hallandale_properties_complete.xlsx"
 
-            with pd.ExcelWriter(excel_file, engine='openpyxl') as writer:
+            with pd.ExcelWriter(excel_file, engine="openpyxl") as writer:
                 # Main data sheet
-                df.to_excel(writer, sheet_name='All Properties', index=False)
+                df.to_excel(writer, sheet_name="All Properties", index=False)
 
                 # Priority properties sheet
-                priority_df = df[df['priority_flag'] == True]
-                priority_df.to_excel(writer, sheet_name='Priority Properties', index=False)
+                priority_df = df[df["priority_flag"] == True]
+                priority_df.to_excel(writer, sheet_name="Priority Properties", index=False)
 
                 # Corporate entities sheet
-                corporate_df = df[df['is_corporate'] == True]
-                corporate_df.to_excel(writer, sheet_name='Corporate Entities', index=False)
+                corporate_df = df[df["is_corporate"] == True]
+                corporate_df.to_excel(writer, sheet_name="Corporate Entities", index=False)
 
                 # Missing contact info sheet
-                missing_contact_df = df[(df['owner_email'].isna() | (df['owner_email'] == '')) &
-                                      (df['owner_phone'].isna() | (df['owner_phone'] == ''))]
-                missing_contact_df.to_excel(writer, sheet_name='Missing Contact Info', index=False)
+                missing_contact_df = df[
+                    (df["owner_email"].isna() | (df["owner_email"] == ""))
+                    & (df["owner_phone"].isna() | (df["owner_phone"] == ""))
+                ]
+                missing_contact_df.to_excel(writer, sheet_name="Missing Contact Info", index=False)
 
                 # Summary statistics sheet
                 summary_data = {
-                    'Metric': [
-                        'Total Properties',
-                        'Properties with Email',
-                        'Properties with Phone',
-                        'Priority Properties',
-                        'Corporate Entities',
-                        'Individual Owners',
-                        'Average Quality Score',
-                        'High Quality Records (80+)',
-                        'Needs Manual Review (<50)'
+                    "Metric": [
+                        "Total Properties",
+                        "Properties with Email",
+                        "Properties with Phone",
+                        "Priority Properties",
+                        "Corporate Entities",
+                        "Individual Owners",
+                        "Average Quality Score",
+                        "High Quality Records (80+)",
+                        "Needs Manual Review (<50)",
                     ],
-                    'Count': [
+                    "Count": [
                         len(df),
-                        len(df[df['owner_email'].notna() & (df['owner_email'] != '')]),
-                        len(df[df['owner_phone'].notna() & (df['owner_phone'] != '')]),
-                        len(df[df['priority_flag'] == True]),
-                        len(df[df['is_corporate'] == True]),
-                        len(df[df['is_corporate'] == False]),
-                        round(df['data_quality_score'].mean(), 1),
-                        len(df[df['data_quality_score'] >= 80]),
-                        len(df[df['data_quality_score'] < 50])
-                    ]
+                        len(df[df["owner_email"].notna() & (df["owner_email"] != "")]),
+                        len(df[df["owner_phone"].notna() & (df["owner_phone"] != "")]),
+                        len(df[df["priority_flag"] == True]),
+                        len(df[df["is_corporate"] == True]),
+                        len(df[df["is_corporate"] == False]),
+                        round(df["data_quality_score"].mean(), 1),
+                        len(df[df["data_quality_score"] >= 80]),
+                        len(df[df["data_quality_score"] < 50]),
+                    ],
                 }
                 summary_df = pd.DataFrame(summary_data)
-                summary_df.to_excel(writer, sheet_name='Summary Statistics', index=False)
+                summary_df.to_excel(writer, sheet_name="Summary Statistics", index=False)
 
             self.logger.info(f"Excel export created with {len(df)} records")
 
@@ -208,9 +214,12 @@ class HallandalePipeline:
                 "status": "success",
                 "output_file": str(excel_file),
                 "sheets_created": [
-                    "All Properties", "Priority Properties", "Corporate Entities",
-                    "Missing Contact Info", "Summary Statistics"
-                ]
+                    "All Properties",
+                    "Priority Properties",
+                    "Corporate Entities",
+                    "Missing Contact Info",
+                    "Summary Statistics",
+                ],
             }
 
         except Exception as e:
@@ -230,7 +239,7 @@ class HallandalePipeline:
             return {
                 "status": "success",
                 "message": "Upload simulated - configure Google Sheets API credentials",
-                "sheet_url": "https://docs.google.com/spreadsheets/d/simulated_upload"
+                "sheet_url": "https://docs.google.com/spreadsheets/d/simulated_upload",
             }
 
         except Exception as e:
@@ -242,7 +251,7 @@ class HallandalePipeline:
         try:
             report_file = self.output_dir / "hallandale_pipeline_report.txt"
 
-            with open(report_file, 'w') as f:
+            with open(report_file, "w") as f:
                 f.write("HALLANDALE PROPERTY PROCESSING PIPELINE REPORT\n")
                 f.write("=" * 60 + "\n\n")
 
@@ -289,6 +298,15 @@ class HallandalePipeline:
         except Exception as e:
             self.logger.error(f"Error generating final report: {e}")
 
+
+def main() -> int:
+    """Main entry point for the pipeline."""
+    parser = argparse.ArgumentParser(description="Hallandale Property Processing Pipeline")
+    parser.add_argument("pdf_path", help="Path to the Hallandale property list PDF file")
+    parser.add_argument("--output-dir", default="outputs/hallandale", help="Output directory for processed files")
+    parser.add_argument("--export", action="store_true", help="Export to Google Sheets (requires API credentials)")
+=======
+
 def main():
     """Main entry point for the pipeline."""
     parser = argparse.ArgumentParser(description="Hallandale Property Processing Pipeline")
@@ -297,6 +315,7 @@ def main():
                        help="Output directory for processed files")
     parser.add_argument("--export", action="store_true",
                        help="Export to Google Sheets (requires API credentials)")
+
 
     args = parser.parse_args()
 
@@ -322,11 +341,14 @@ def main():
 
     if results.get("errors"):
         print(f"\nERRORS/WARNINGS ({len(results['errors'])}):")
-        for error in results['errors']:
+        for error in results["errors"]:
             print(f"  - {error}")
 
     print("\nProcessing complete. Check the output directory for all generated files.")
 
+    # Return success code (0) or error code (1) based on pipeline status
+    return 0 if results["pipeline_status"] == "success" else 1
+=======
 # Call main when script is executed directly
 if __name__ == "__main__":
     main()
