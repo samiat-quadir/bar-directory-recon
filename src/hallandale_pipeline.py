@@ -49,6 +49,12 @@ class HallandalePipeline:
             level=logging.INFO,
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
+=======
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(log_file),
+                logging.StreamHandler()
+            ]
         )
 
         self.logger = logging.getLogger(__name__)
@@ -148,7 +154,7 @@ class HallandalePipeline:
     def _create_excel_export(self, csv_file: str) -> Dict[str, Any]:
         """Create Excel export with multiple sheets."""
         import pandas as pd
-
+=======
         try:
             df = pd.read_csv(csv_file)
 
@@ -299,6 +305,17 @@ def main() -> int:
     parser.add_argument("pdf_path", help="Path to the Hallandale property list PDF file")
     parser.add_argument("--output-dir", default="outputs/hallandale", help="Output directory for processed files")
     parser.add_argument("--export", action="store_true", help="Export to Google Sheets (requires API credentials)")
+=======
+
+def main():
+    """Main entry point for the pipeline."""
+    parser = argparse.ArgumentParser(description="Hallandale Property Processing Pipeline")
+    parser.add_argument("pdf_path", help="Path to the Hallandale property list PDF file")
+    parser.add_argument("--output-dir", default="outputs/hallandale",
+                       help="Output directory for processed files")
+    parser.add_argument("--export", action="store_true",
+                       help="Export to Google Sheets (requires API credentials)")
+
 
     args = parser.parse_args()
 
@@ -331,8 +348,7 @@ def main() -> int:
 
     # Return success code (0) or error code (1) based on pipeline status
     return 0 if results["pipeline_status"] == "success" else 1
-
-
+=======
 # Call main when script is executed directly
 if __name__ == "__main__":
     main()
