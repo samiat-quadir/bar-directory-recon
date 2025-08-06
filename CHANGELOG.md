@@ -1,4 +1,36 @@
 # Changelog
+=======
+
+## [2.1.0] - 2025-08-05 - Phase 2 Close-out (Alienware)
+
+### Added
+- **Consolidated Python dependencies**: Single `requirements.txt` with pinned versions for production
+- **Development requirements**: Separate `requirements-dev.txt` for development tools
+- **Architecture documentation**: Comprehensive `docs/architecture.md` explaining src/ vs universal_recon/ structure
+- **Enhanced CI/CD pipeline**: Matrix-driven GitHub Actions workflow with multiple Python versions
+- **Advanced pre-commit hooks**: Added black, isort, flake8, and mypy for code quality
+- **Phase 3 roadmap**: Detailed planning document for production readiness and scalability
+
+### Changed
+- **Requirements management**: Moved from loose version ranges to pinned dependencies
+- **Pre-commit configuration**: Enhanced with comprehensive code quality tools
+- **GitHub workflows**: Consolidated multiple workflow files into single matrix-driven CI
+
+### Removed
+- **Legacy requirement files**: Deleted `requirements-core.txt`, `requirements-optional.txt`, `requirements-frozen.txt`
+- **Redundant workflows**: Removed duplicate and device-specific GitHub Actions files
+- **Unpinned dependencies**: Eliminated version range specifications in favor of exact pins
+
+### Security
+- **Secrets scanning**: Implemented comprehensive credential detection and removal
+- **Environment variable migration**: Replaced hard-coded secrets with env-var references
+- **Security verification**: Added automated security scanning to CI pipeline
+
+### Infrastructure
+- **Cross-device parity**: Achieved consistent development environment across Alienware and ASUS
+- **Streamlined tooling**: Reduced tools/ directory to essential utilities with clear documentation
+- **Quality assurance**: Implemented comprehensive testing and linting pipeline
+=======
 
 ## [v3.0] — TBD
 
