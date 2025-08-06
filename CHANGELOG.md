@@ -1,5 +1,5 @@
 # Changelog
-
+=======
 
 ## [2.1.0] - 2025-08-05 - Phase 2 Close-out (Alienware)
 
@@ -31,6 +31,7 @@
 - **Streamlined tooling**: Reduced tools/ directory to essential utilities with clear documentation
 - **Quality assurance**: Implemented comprehensive testing and linting pipeline
 =======
+
 ## [v3.0] — TBD
 
 ### Planned
