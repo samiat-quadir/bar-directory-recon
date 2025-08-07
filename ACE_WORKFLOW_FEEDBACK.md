@@ -27,7 +27,17 @@
 - **Impact**: Push operations fail with authentication errors
 - **Recommendation for ACE**: Add credential caching or token-based authentication setup
 
+
+### **Issue 4: Protected Branch Policy** 🚨 **CRITICAL**
+- **Problem**: `remote: error: GH006: Protected branch update failed for refs/heads/main. Changes must be made through a pull request.`
+- **Root Cause**: Main branch has protection rules requiring PR workflow
+- **Impact**: All direct pushes to main branch are blocked
+- **Recommendation for ACE**: **Auto-detect protected branches and create feature branches instead**
+
+### **Issue 5: Force Push Safety Concerns**
+=======
 ### **Issue 4: Force Push Safety Concerns**
+
 - **Problem**: Scripts use `--force-with-lease` but can still be destructive
 - **Root Cause**: No verification of what will be overwritten
 - **Impact**: Risk of losing work without proper backups
