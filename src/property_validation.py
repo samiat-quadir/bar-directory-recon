@@ -34,6 +34,7 @@ class PropertyValidation:
         self.phone_pattern = re.compile(
             r"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$"
         )
+
         self.folio_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}-\d{4}$")
 
     def _setup_logging(self) -> None:
@@ -344,11 +345,11 @@ class PropertyValidation:
         try:
             dns.resolver.resolve(domain, "MX")
             return True
-        except:
+        except Exception:
             try:
                 dns.resolver.resolve(domain, "A")
                 return True
-            except:
+            except Exception:
                 return False
 
     def _verify_email_smtp(self, email: str) -> bool:
@@ -553,23 +554,49 @@ class PropertyValidation:
                 f.write("VALIDATION STATISTICS:\n")
                 f.write("-" * 30 + "\n")
                 f.write(f"Total Properties Processed: {stats['total_properties']}\n")
-                f.write(
-                    f"Properties with Valid Emails: {stats['valid_emails']} ({stats['valid_emails']/stats['total_properties']*100:.1f}%)\n"
+
+                valid_email_pct = (
+                    stats["valid_emails"] / stats["total_properties"] * 100
                 )
                 f.write(
-                    f"Properties with Verified Emails: {stats['verified_emails']} ({stats['verified_emails']/stats['total_properties']*100:.1f}%)\n"
+                    f"Properties with Valid Emails: {stats['valid_emails']} "
+                    f"({valid_email_pct:.1f}%)\n"
+                )
+                verified_email_pct = (
+                    stats["verified_emails"] / stats["total_properties"] * 100
                 )
                 f.write(
-                    f"Properties with Valid Phones: {stats['valid_phones']} ({stats['valid_phones']/stats['total_properties']*100:.1f}%)\n"
+                    f"Properties with Verified Emails: {stats['verified_emails']} "
+                    f"({verified_email_pct:.1f}%)\n"
+                )
+                valid_phone_pct = (
+                    stats["valid_phones"] / stats["total_properties"] * 100
                 )
                 f.write(
-                    f"Properties with Valid Addresses: {stats['valid_addresses']} ({stats['valid_addresses']/stats['total_properties']*100:.1f}%)\n"
+                    f"Properties with Valid Phones: {stats['valid_phones']} "
+                    f"({valid_phone_pct:.1f}%)\n"
+                )
+                valid_address_pct = (
+                    stats["valid_addresses"] / stats["total_properties"] * 100
                 )
                 f.write(
-                    f"Priority Properties: {stats['priority_properties']} ({stats['priority_properties']/stats['total_properties']*100:.1f}%)\n"
+                    f"Properties with Valid Addresses: {stats['valid_addresses']} "
+                    f"({valid_address_pct:.1f}%)\n"
+                )
+                priority_pct = (
+                    stats["priority_properties"] / stats["total_properties"] * 100
                 )
                 f.write(
-                    f"Complete Records: {stats['complete_records']} ({stats['complete_records']/stats['total_properties']*100:.1f}%)\n\n"
+                    f"Priority Properties: {stats['priority_properties']} "
+                    f"({priority_pct:.1f}%)\n"
+                )
+                complete_pct = (
+                    stats["complete_records"] / stats["total_properties"] * 100
+                )
+                f.write(
+                    f"Complete Records: {stats['complete_records']} "
+                    f"({complete_pct:.1f}%)\n\n"
+
                 )
 
                 if stats["validation_errors"]:

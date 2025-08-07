@@ -1,23 +1,27 @@
 #!/usr/bin/env python3
 """
-Hallandale Property Processing Pipeline
-Complete pipeline for processing Hallandale property list PDF and enriching data.
+Fixed Hallandale Property Processing Pipeline
 """
+
 
 import argparse
 import logging
 import os
 import sys
 from pathlib import Path
+
 from typing import Any, Dict
 
 # Add src directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
+
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor
 from property_enrichment import PropertyEnrichment
 from property_validation import PropertyValidation
+
+sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 # Set flag for Google Sheets integration (currently disabled)
 GOOGLE_SHEETS_AVAILABLE = False
