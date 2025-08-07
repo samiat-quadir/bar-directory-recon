@@ -5,12 +5,12 @@ Complete pipeline for processing Hallandale property list PDF and
 enriching data.
 """
 
-import sys
-import os
-import logging
 import argparse
+import logging
+import os
+import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor
@@ -25,7 +25,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__)))
 from pdf_processor import HallandalePropertyProcessor
 from property_enrichment import PropertyEnrichment
 from property_validation import PropertyValidation
-
 
 # Set flag for Google Sheets integration (currently disabled)
 GOOGLE_SHEETS_AVAILABLE = False
