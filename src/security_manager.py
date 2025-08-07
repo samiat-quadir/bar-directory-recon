@@ -78,12 +78,12 @@ replacing environment variable-based credential storage.
 """
 import logging
 import os
-from typing import Optional, Dict, Any
 from functools import lru_cache
+from typing import Any, Dict, Optional
 
 try:
+    from azure.identity import ClientSecretCredential, DefaultAzureCredential
     from azure.keyvault.secrets import SecretClient
-    from azure.identity import DefaultAzureCredential, ClientSecretCredential
     AZURE_AVAILABLE = True
 except ImportError:
     AZURE_AVAILABLE = False

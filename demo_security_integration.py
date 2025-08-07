@@ -252,7 +252,9 @@ Azure Key Vault Integration Demo
 Demonstrates the secure credential management implementation.
 """
 import os
+
 from src.security_manager import SecurityManager, get_security_manager
+
 
 def demonstrate_keyvault_integration() -> None:
     """Demonstrate the Azure Key Vault integration functionality."""
