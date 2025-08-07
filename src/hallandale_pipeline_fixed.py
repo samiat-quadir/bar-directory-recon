@@ -3,18 +3,10 @@
 Fixed Hallandale Property Processing Pipeline
 """
 
-
-import argparse
 import logging
 import os
 import sys
 from pathlib import Path
-
-from typing import Any, Dict
-
-# Add src directory to Python path
-sys.path.append(os.path.join(os.path.dirname(__file__)))
-
 
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor

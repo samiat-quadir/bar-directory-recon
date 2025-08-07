@@ -14,11 +14,8 @@ from unittest.mock import Mock, patch
 import pytest
 
 # Import our SecurityManager
-try:
-    from src.security_manager import SecurityManager, get_secret, get_security_manager
-except Exception as e:
-    import pytest
-    pytest.skip("Cannot import from src.security_manager: file is missing or corrupted. Fix src/security_manager.py before running tests.", allow_module_level=True)
+from src.security_manager import SecurityManager, get_secret, get_security_manager
+
 
 class TestSecurityManager:
     """Test suite for SecurityManager class."""
