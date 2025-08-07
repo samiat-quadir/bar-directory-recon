@@ -3,7 +3,7 @@
   "device": "ASUS",
   "security_manager_status": "SecurityManager(mode=Environment Variables, healthy=False)",
   "health_check": {
-    "azure_available": false,
+    "azure_available": true,
     "keyvault_configured": false,
     "client_initialized": false,
     "connection_healthy": false,
