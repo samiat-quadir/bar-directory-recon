@@ -6,7 +6,8 @@ Unified pagination handling for directory scraping.
 
 import logging
 import time
-from typing import Optional, Dict, Any, Generator
+from typing import Any, Dict, Generator, Optional
+
 from selenium.webdriver.common.by import By
 
 logger = logging.getLogger(__name__)
@@ -19,81 +20,84 @@ class PaginationManager:
         """Initialize pagination manager."""
         self.driver_manager = driver_manager
         self.config = config
-        self.max_pages = config.get('max_pages', 10)
-        self.page_delay = config.get('page_delay', 3.0)
+        self.max_pages = config.get("max_pages", 10)
+        self.page_delay = config.get("page_delay", 3.0)
         self.current_page = 1
 
         # Common pagination selectors
-        self.pagination_selectors = config.get('pagination_selectors', {
-            'next_button': [
-                'a[aria-label*="Next"]',
-                'button[aria-label*="Next"]',
-                '.next-page',
-                '.pagination-next',
-                '[data-action="next"]',
-                'a:contains("Next")',
-                'button:contains("Next")',
-                '.btn-next',
-                '.page-next'
-            ],
-            'load_more': [
-                'button:contains("Load More")',
-                'button:contains("Show More")',
-                '.load-more',
-                '.show-more',
-                '[data-action="load-more"]',
-                '.btn-load-more',
-                '.pagination-load-more'
-            ],
-            'page_numbers': [
-                '.pagination a',
-                '.page-numbers a',
-                '.pager a',
-                '[data-page]'
-            ]
-        })
+        self.pagination_selectors = config.get(
+            "pagination_selectors",
+            {
+                "next_button": [
+                    'a[aria-label*="Next"]',
+                    'button[aria-label*="Next"]',
+                    ".next-page",
+                    ".pagination-next",
+                    '[data-action="next"]',
+                    'a:contains("Next")',
+                    'button:contains("Next")',
+                    ".btn-next",
+                    ".page-next",
+                ],
+                "load_more": [
+                    'button:contains("Load More")',
+                    'button:contains("Show More")',
+                    ".load-more",
+                    ".show-more",
+                    '[data-action="load-more"]',
+                    ".btn-load-more",
+                    ".pagination-load-more",
+                ],
+                "page_numbers": [
+                    ".pagination a",
+                    ".page-numbers a",
+                    ".pager a",
+                    "[data-page]",
+                ],
+            },
+        )
 
     def detect_pagination_type(self) -> str:
         """Detect the type of pagination on current page."""
         driver = self.driver_manager.driver
 
         # Check for load more button
-        for selector in self.pagination_selectors['load_more']:
+        for selector in self.pagination_selectors["load_more"]:
             try:
                 elements = driver.find_elements(By.CSS_SELECTOR, selector)
                 if elements and any(el.is_displayed() for el in elements):
                     logger.info(f"Detected load more pagination: {selector}")
-                    return 'load_more'
+                    return "load_more"
             except Exception:
                 continue
 
         # Check for next button
-        for selector in self.pagination_selectors['next_button']:
+        for selector in self.pagination_selectors["next_button"]:
             try:
                 elements = driver.find_elements(By.CSS_SELECTOR, selector)
                 if elements and any(el.is_displayed() for el in elements):
                     logger.info(f"Detected next button pagination: {selector}")
-                    return 'next_button'
+                    return "next_button"
             except Exception:
                 continue
 
         # Check for page numbers
-        for selector in self.pagination_selectors['page_numbers']:
+        for selector in self.pagination_selectors["page_numbers"]:
             try:
                 elements = driver.find_elements(By.CSS_SELECTOR, selector)
                 if len(elements) > 1:  # Multiple page links
                     logger.info(f"Detected numbered pagination: {selector}")
-                    return 'page_numbers'
+                    return "page_numbers"
             except Exception:
                 continue
 
         # Check for infinite scroll
         if self._has_infinite_scroll():
             logger.info("Detected infinite scroll pagination")
-            return 'infinite_scroll'
+            return "infinite_scroll"
 
         logger.info("No pagination detected")
-        return 'none'
+        return "none"
 
     def _has_infinite_scroll(self) -> bool:
         """Check if page has infinite scroll."""
@@ -118,7 +122,7 @@ class PaginationManager:
         """Generator that yields page numbers while paginating through all pages."""
         pagination_type = self.detect_pagination_type()
 
-        if pagination_type == 'none':
+        if pagination_type == "none":
             yield 1
             return
 
@@ -127,13 +131,13 @@ class PaginationManager:
         # Yield first page
         yield 1
 
-        if pagination_type == 'load_more':
+        if pagination_type == "load_more":
             yield from self._paginate_load_more()
-        elif pagination_type == 'next_button':
+        elif pagination_type == "next_button":
             yield from self._paginate_next_button()
-        elif pagination_type == 'page_numbers':
+        elif pagination_type == "page_numbers":
             yield from self._paginate_page_numbers()
-        elif pagination_type == 'infinite_scroll':
+        elif pagination_type == "infinite_scroll":
             yield from self._paginate_infinite_scroll()
 
     def _paginate_load_more(self) -> Generator[int, None, None]:
@@ -144,7 +148,7 @@ class PaginationManager:
             load_more_clicked = False
 
             # Try each load more selector
-            for selector in self.pagination_selectors['load_more']:
+            for selector in self.pagination_selectors["load_more"]:
                 if self.driver_manager.click_element(selector, timeout=5):
                     load_more_clicked = True
                     break
@@ -168,7 +172,7 @@ class PaginationManager:
             next_clicked = False
 
             # Try each next button selector
-            for selector in self.pagination_selectors['next_button']:
+            for selector in self.pagination_selectors["next_button"]:
                 if self.driver_manager.click_element(selector, timeout=5):
                     next_clicked = True
                     break
@@ -194,13 +198,14 @@ class PaginationManager:
             next_page = page_count + 1
             page_found = False
 
-            for selector in self.pagination_selectors['page_numbers']:
+            for selector in self.pagination_selectors["page_numbers"]:
                 try:
                     page_links = driver.find_elements(By.CSS_SELECTOR, selector)
 
                     for link in page_links:
-                        if (link.text.strip() == str(next_page) or
-                            link.get_attribute('data-page') == str(next_page)):
+                        if link.text.strip() == str(next_page) or link.get_attribute(
+                            "data-page"
+                        ) == str(next_page):
                             link.click()
                             page_found = True
                             break
@@ -255,13 +260,14 @@ class PaginationManager:
             driver = self.driver_manager.driver
 
             # Try to find and click the specific page number
-            for selector in self.pagination_selectors['page_numbers']:
+            for selector in self.pagination_selectors["page_numbers"]:
                 try:
                     page_links = driver.find_elements(By.CSS_SELECTOR, selector)
 
                     for link in page_links:
-                        if (link.text.strip() == str(page_number) or
-                            link.get_attribute('data-page') == str(page_number)):
+                        if link.text.strip() == str(page_number) or link.get_attribute(
+                            "data-page"
+                        ) == str(page_number):
                             link.click()
                             time.sleep(self.page_delay)
                             self.current_page = page_number
@@ -286,11 +292,11 @@ class PaginationManager:
 
             # Look for pagination info text
             pagination_info_selectors = [
-                '.pagination-info',
-                '.page-info',
-                '.results-info',
+                ".pagination-info",
+                ".page-info",
+                ".results-info",
                 '[class*="total"]',
-                '[class*="count"]'
+                '[class*="count"]',
             ]
 
             for selector in pagination_info_selectors:
@@ -300,10 +306,11 @@ class PaginationManager:
                         text = element.text
                         # Look for patterns like "Page 1 of 10" or "1-20 of 200"
                         import re
+
                         patterns = [
-                            r'Page \d+ of (\d+)',
-                            r'of (\d+) pages',
-                            r'(\d+) pages total'
+                            r"Page \d+ of (\d+)",
+                            r"of (\d+) pages",
+                            r"(\d+) pages total",
                         ]
 
                         for pattern in patterns:
@@ -317,7 +324,7 @@ class PaginationManager:
                     continue
 
             # Try to count page number links
-            for selector in self.pagination_selectors['page_numbers']:
+            for selector in self.pagination_selectors["page_numbers"]:
                 try:
                     page_links = driver.find_elements(By.CSS_SELECTOR, selector)
                     if page_links:

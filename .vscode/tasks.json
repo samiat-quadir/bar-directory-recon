@@ -368,6 +368,59 @@
                 "clear": true
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Autonomous Code Format",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "scripts/format_code.py"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Autonomous Git Commit",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "scripts/auto_commit.py",
+                "Autonomous commit: Update security implementation"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Quick Environment Setup",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "scripts/quick_setup.py"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Safe Format and Commit",
+            "dependsOn": [
+                "Autonomous Code Format",
+                "Autonomous Git Commit"
+            ],
+            "dependsOrder": "sequence",
+            "group": "build",
+            "problemMatcher": []
         }
     ]
 }

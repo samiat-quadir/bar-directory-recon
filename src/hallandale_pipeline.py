@@ -74,7 +74,10 @@ class HallandalePipeline:
             pdf_result = self.pdf_processor.process_pdf(pdf_path)
 
             if not pdf_result.get("success", False):
-                error_msg = f"PDF processing failed: " f"{pdf_result.get('message', 'Unknown error')}"
+                error_msg = (
+                    f"PDF processing failed: "
+                    f"{pdf_result.get('message', 'Unknown error')}"
+                )
                 self.logger.error(error_msg)
                 results["errors"].append(error_msg)
                 results["pipeline_status"] = "failed"
@@ -82,11 +85,15 @@ class HallandalePipeline:
 
             results["steps_completed"].append("pdf_processing")
             results["pdf_result"] = pdf_result
-            self.logger.info(f"PDF processed successfully: {pdf_result['properties_count']} properties extracted")
+            self.logger.info(
+                f"PDF processed successfully: {pdf_result['properties_count']} properties extracted"
+            )
 
             # Step 2: Enrich properties
             self.logger.info("Step 2: Enriching property data")
-            enrichment_result = self.enricher.enrich_properties(pdf_result["output_file"])
+            enrichment_result = self.enricher.enrich_properties(
+                pdf_result["output_file"]
+            )
 
             if not enrichment_result.get("success", False):
                 error_msg = f"Property enrichment failed: {enrichment_result.get('message', 'Unknown error')}"
@@ -97,16 +104,22 @@ class HallandalePipeline:
 
             results["steps_completed"].append("property_enrichment")
             results["enrichment_result"] = enrichment_result
-            self.logger.info(f"Properties enriched successfully: {enrichment_result['enriched_count']} records")
+            self.logger.info(
+                f"Properties enriched successfully: {enrichment_result['enriched_count']} records"
+            )
 
             # Step 3: Generate enrichment summary
             self.logger.info("Step 3: Generating enrichment summary")
-            summary = self.enricher.generate_summary_report(enrichment_result["output_file"])
+            summary = self.enricher.generate_summary_report(
+                enrichment_result["output_file"]
+            )
             results["enrichment_summary"] = summary
 
             # Step 4: Validate property data
             self.logger.info("Step 4: Validating property data")
-            validation_result = self.validator.validate_properties(enrichment_result["output_file"])
+            validation_result = self.validator.validate_properties(
+                enrichment_result["output_file"]
+            )
 
             if not validation_result.get("success", False):
                 error_msg = f"Property validation failed: {validation_result.get('message', 'Unknown error')}"
@@ -124,7 +137,9 @@ class HallandalePipeline:
             if GOOGLE_SHEETS_AVAILABLE:
                 # Step 6: Upload to Google Sheets (if configured)
                 self.logger.info("Step 6: Uploading to Google Sheets")
-                sheets_result = self._upload_to_google_sheets(enrichment_result["output_file"])
+                sheets_result = self._upload_to_google_sheets(
+                    enrichment_result["output_file"]
+                )
                 results["google_sheets_result"] = sheets_result
                 if sheets_result.get("success", False):
                     results["steps_completed"].append("google_sheets_upload")
@@ -176,7 +191,9 @@ class HallandalePipeline:
         """Upload results to Google Sheets."""
         try:
             # Placeholder for Google Sheets integration
-            self.logger.info("Google Sheets upload simulated (requires API credentials setup)")
+            self.logger.info(
+                "Google Sheets upload simulated (requires API credentials setup)"
+            )
             return {
                 "success": True,
                 "message": "Upload simulated - Google Sheets integration not configured",
@@ -197,8 +214,12 @@ class HallandalePipeline:
                 f.write("HALLANDALE PROPERTY PROCESSING PIPELINE REPORT\n")
                 f.write("=" * 50 + "\n\n")
 
-                f.write(f"Pipeline Status: {results.get('pipeline_status', 'Unknown')}\n")
-                f.write(f"Steps Completed: {', '.join(results.get('steps_completed', []))}\n")
+                f.write(
+                    f"Pipeline Status: {results.get('pipeline_status', 'Unknown')}\n"
+                )
+                f.write(
+                    f"Steps Completed: {', '.join(results.get('steps_completed', []))}\n"
+                )
 
                 if results.get("errors"):
                     f.write(f"\nErrors: {len(results['errors'])}\n")
@@ -225,7 +246,9 @@ class HallandalePipeline:
 
 def main() -> None:
     """Main function for command-line usage."""
-    parser = argparse.ArgumentParser(description="Hallandale Property Processing Pipeline")
+    parser = argparse.ArgumentParser(
+        description="Hallandale Property Processing Pipeline"
+    )
     parser.add_argument("pdf_file", help="Path to the PDF file to process")
     parser.add_argument(
         "--output-dir",

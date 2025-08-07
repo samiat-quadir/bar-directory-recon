@@ -4,15 +4,16 @@ PDF Processor for Hallandale Property List
 Extracts property data from PDF files using multiple extraction methods.
 """
 
-import os
-import pandas as pd
 import logging
-from typing import Dict, List, Any, Optional
-from pathlib import Path
 import re
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import pandas as pd
 
 try:
     import pdfplumber
+
     PDF_PLUMBER_AVAILABLE = True
 except ImportError:
     PDF_PLUMBER_AVAILABLE = False
@@ -20,6 +21,7 @@ except ImportError:
 
 try:
     import PyPDF2
+
     PYPDF2_AVAILABLE = True
 except ImportError:
     PYPDF2_AVAILABLE = False
@@ -27,6 +29,7 @@ except ImportError:
 
 try:
     import tabula
+
     TABULA_AVAILABLE = True
 except ImportError:
     TABULA_AVAILABLE = False
@@ -49,11 +52,11 @@ class HallandalePropertyProcessor:
         """Setup logging configuration."""
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             handlers=[
                 logging.FileHandler(self.output_dir / "pdf_processing.log"),
-                logging.StreamHandler()
-            ]
+                logging.StreamHandler(),
+            ],
         )
 
     def process_pdf(self, pdf_path: str) -> Dict[str, Any]:
@@ -99,7 +102,7 @@ class HallandalePropertyProcessor:
                 "status": "success",
                 "properties_count": len(properties),
                 "output_file": str(output_file),
-                "extraction_method": self._get_extraction_method_used()
+                "extraction_method": self._get_extraction_method_used(),
             }
 
         except Exception as e:
@@ -144,7 +147,7 @@ class HallandalePropertyProcessor:
         """Extract data using tabula-py."""
         try:
             # Use tabula to extract tables
-            tables = tabula.read_pdf(pdf_path, pages='all', multiple_tables=True)
+            tables = tabula.read_pdf(pdf_path, pages="all", multiple_tables=True)
 
             properties = []
             for table in tables:
@@ -164,11 +167,13 @@ class HallandalePropertyProcessor:
         """Extract data using PyPDF2."""
         try:
             properties = []
-            with open(pdf_path, 'rb') as file:
+            with open(pdf_path, "rb") as file:
                 pdf_reader = PyPDF2.PdfReader(file)
 
                 for page_num, page in enumerate(pdf_reader.pages):
-                    logger.info(f"Processing page {page_num + 1}/{len(pdf_reader.pages)}")
+                    logger.info(
+                        f"Processing page {page_num + 1}/{len(pdf_reader.pages)}"
+                    )
 
                     text = page.extract_text()
                     if text:
@@ -192,7 +197,7 @@ class HallandalePropertyProcessor:
                 "year_built": self._clean_text(row[3]) if len(row) > 3 else "",
                 "folio_number": self._clean_text(row[4]) if len(row) > 4 else "",
                 "inspection_due": self._clean_text(row[5]) if len(row) > 5 else "",
-                "notes": self._clean_text(row[6]) if len(row) > 6 else ""
+                "notes": self._clean_text(row[6]) if len(row) > 6 else "",
             }
 
             return prop if prop["property_address"] else None
@@ -211,7 +216,7 @@ class HallandalePropertyProcessor:
                 "mailing": "mailing_address",
                 "year": "year_built",
                 "folio": "folio_number",
-                "inspection": "inspection_due"
+                "inspection": "inspection_due",
             }
 
             prop = {}
@@ -237,7 +242,7 @@ class HallandalePropertyProcessor:
         """Parse text content for property information."""
         try:
             properties = []
-            lines = text.split('\n')
+            lines = text.split("\n")
 
             for line in lines:
                 line = line.strip()
@@ -256,7 +261,7 @@ class HallandalePropertyProcessor:
                             "year_built": parts[3] if len(parts) > 3 else "",
                             "folio_number": parts[4] if len(parts) > 4 else "",
                             "inspection_due": parts[5] if len(parts) > 5 else "",
-                            "notes": parts[6] if len(parts) > 6 else ""
+                            "notes": parts[6] if len(parts) > 6 else "",
                         }
                         properties.append(prop)
 
@@ -270,9 +275,9 @@ class HallandalePropertyProcessor:
         """Check if a line contains an address."""
         # Look for common address patterns
         address_patterns = [
-            r'\d+\s+[A-Z][a-z]+\s+(St|Ave|Rd|Blvd|Dr|Ct|Ln|Way)',
-            r'\d+\s+[NSEW][EW]?\s+\d+',
-            r'Hallandale|Hollywood|Miami|FL'
+            r"\d+\s+[A-Z][a-z]+\s+(St|Ave|Rd|Blvd|Dr|Ct|Ln|Way)",
+            r"\d+\s+[NSEW][EW]?\s+\d+",
+            r"Hallandale|Hollywood|Miami|FL",
         ]
 
         for pattern in address_patterns:
@@ -284,7 +289,7 @@ class HallandalePropertyProcessor:
     def _split_line_into_parts(self, line: str) -> List[str]:
         """Split a line into property data parts."""
         # Try different splitting strategies
-        delimiters = ['\t', '  ', ',', '|']
+        delimiters = ["\t", "  ", ",", "|"]
 
         for delimiter in delimiters:
             parts = line.split(delimiter)
@@ -302,15 +307,17 @@ class HallandalePropertyProcessor:
         text = str(text).strip()
 
         # Remove extra whitespace
-        text = re.sub(r'\s+', ' ', text)
+        text = re.sub(r"\s+", " ", text)
 
         # Remove null values
-        if text.lower() in ['null', 'none', 'n/a', 'na', '']:
+        if text.lower() in ["null", "none", "n/a", "na", ""]:
             return ""
 
         return text
 
-    def _standardize_properties(self, properties: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _standardize_properties(
+        self, properties: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         """Standardize property data format."""
         standardized = []
 
@@ -323,7 +330,7 @@ class HallandalePropertyProcessor:
                 "year_built": prop.get("year_built", ""),
                 "folio_number": prop.get("folio_number", ""),
                 "inspection_due": prop.get("inspection_due", ""),
-                "notes": prop.get("notes", "")
+                "notes": prop.get("notes", ""),
             }
 
             # Standardize address format
@@ -349,15 +356,15 @@ class HallandalePropertyProcessor:
 
         # Common abbreviations
         abbreviations = {
-            'STREET': 'ST',
-            'AVENUE': 'AVE',
-            'BOULEVARD': 'BLVD',
-            'DRIVE': 'DR',
-            'COURT': 'CT',
-            'LANE': 'LN',
-            'ROAD': 'RD',
-            'PLACE': 'PL',
-            'CIRCLE': 'CIR'
+            "STREET": "ST",
+            "AVENUE": "AVE",
+            "BOULEVARD": "BLVD",
+            "DRIVE": "DR",
+            "COURT": "CT",
+            "LANE": "LN",
+            "ROAD": "RD",
+            "PLACE": "PL",
+            "CIRCLE": "CIR",
         }
 
         for full, abbrev in abbreviations.items():
@@ -368,13 +375,15 @@ class HallandalePropertyProcessor:
     def _standardize_year(self, year: str) -> str:
         """Standardize year format."""
         # Extract 4-digit year
-        year_match = re.search(r'\b(19|20)\d{2}\b', year)
+        year_match = re.search(r"\b(19|20)\d{2}\b", year)
         if year_match:
             return year_match.group(0)
 
         return year
 
-    def _deduplicate_properties(self, properties: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _deduplicate_properties(
+        self, properties: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         """Remove duplicate properties."""
         seen_addresses = set()
         unique_properties = []
@@ -393,11 +402,26 @@ class HallandalePropertyProcessor:
 
         sample_properties = []
         base_addresses = [
-            "123 SE 3rd Ave", "456 NE 1st St", "789 SW 5th Ter", "321 NW 2nd Ct",
-            "654 SE 4th Ave", "987 NE 6th St", "147 SW 1st Ave", "258 NW 3rd St",
-            "369 SE 2nd Ave", "741 NE 4th St", "852 SW 3rd Ave", "963 NW 1st St",
-            "159 SE 5th Ave", "357 NE 2nd St", "486 SW 4th Ave", "624 NW 5th St",
-            "791 SE 1st Ave", "135 NE 3rd St", "246 SW 2nd Ave", "468 NW 4th St"
+            "123 SE 3rd Ave",
+            "456 NE 1st St",
+            "789 SW 5th Ter",
+            "321 NW 2nd Ct",
+            "654 SE 4th Ave",
+            "987 NE 6th St",
+            "147 SW 1st Ave",
+            "258 NW 3rd St",
+            "369 SE 2nd Ave",
+            "741 NE 4th St",
+            "852 SW 3rd Ave",
+            "963 NW 1st St",
+            "159 SE 5th Ave",
+            "357 NE 2nd St",
+            "486 SW 4th Ave",
+            "624 NW 5th St",
+            "791 SE 1st Ave",
+            "135 NE 3rd St",
+            "246 SW 2nd Ave",
+            "468 NW 4th St",
         ]
 
         for i, base_addr in enumerate(base_addresses, 1):
@@ -408,7 +432,7 @@ class HallandalePropertyProcessor:
                 "year_built": str(1980 + (i % 15)),
                 "folio_number": f"5142-35-01-{i:04d}",
                 "inspection_due": "2024-08-15" if i % 5 == 0 else "",
-                "notes": "Priority inspection" if i % 5 == 0 else ""
+                "notes": "Priority inspection" if i % 5 == 0 else "",
             }
             sample_properties.append(prop)
 

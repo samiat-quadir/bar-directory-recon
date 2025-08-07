@@ -127,12 +127,12 @@ class SecurityManager:
                 self.logger.info(
                     "Initializing SecurityManager with service principal auth"
                 )
-                credential: Union[
-                    ClientSecretCredential, DefaultAzureCredential
-                ] = ClientSecretCredential(
-                    tenant_id=str(tenant_id),
-                    client_id=str(client_id),
-                    client_secret=str(client_secret),
+                credential: Union[ClientSecretCredential, DefaultAzureCredential] = (
+                    ClientSecretCredential(
+                        tenant_id=str(tenant_id),
+                        client_id=str(client_id),
+                        client_secret=str(client_secret),
+                    )
                 )
             else:
                 self.logger.info(

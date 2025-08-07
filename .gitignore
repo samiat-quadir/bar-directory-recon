@@ -40,7 +40,7 @@ dist/
 pip-wheel-metadata/
 
 ############################################################
-# 4 · Tool caches & coverage
+# 4 · Tool caches & coverage & logs
 ############################################################
 .pytest_cache/
 .coverage
@@ -48,6 +48,19 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 .isort.cfg.bak
+.pre-commit-cache/
+
+# Logs and temporary files
+logs/
+*.log
+*.tmp
+*_temp.py
+*_backup.py
+security_report_*.json
+
+# Formatting artifacts
+.black.cache
+.autoflake.cache
 *.isorted
 
 ############################################################

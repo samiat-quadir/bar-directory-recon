@@ -5,14 +5,14 @@ Enriches property data with contact information and additional details.
 Includes Sunbiz corporate entity search for business owners.
 """
 
-import pandas as pd
+import json
 import logging
-import requests
-from typing import Dict, List, Any, Optional
-from pathlib import Path
 import re
 import time
-import json
+from pathlib import Path
+from typing import Any, Dict
+
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class PropertyEnrichment:
         # Setup logging
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         )
 
     def enrich_properties(self, input_file: str) -> Dict[str, Any]:
@@ -55,12 +55,14 @@ class PropertyEnrichment:
             output_file = self.output_dir / "hallandale_properties_enriched.csv"
             enriched_df.to_csv(output_file, index=False)
 
-            logger.info(f"Enriched {len(enriched_properties)} properties to {output_file}")
+            logger.info(
+                f"Enriched {len(enriched_properties)} properties to {output_file}"
+            )
 
             return {
                 "status": "success",
                 "enriched_count": len(enriched_properties),
-                "output_file": str(output_file)
+                "output_file": str(output_file),
             }
 
         except Exception as e:
@@ -101,20 +103,26 @@ class PropertyEnrichment:
                 enrichment_source.append("individual_not_found")
 
         # Add enrichment fields
-        enriched.update({
-            "owner_email": owner_email,
-            "owner_phone": owner_phone,
-            "business_name": business_name,
-            "is_corporate": is_corporate,
-            "sunbiz_entity_id": sunbiz_data.get("entity_id", ""),
-            "sunbiz_status": sunbiz_data.get("status", ""),
-            "sunbiz_officers": json.dumps(sunbiz_data.get("officers", [])) if sunbiz_data.get("officers") else "",
-            "contact_verified": bool(owner_email or owner_phone),
-            "priority_flag": self._calculate_priority(property_data),
-            "enrichment_source": ", ".join(enrichment_source),
-            "enrichment_date": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "data_quality_score": self._calculate_data_quality_score(enriched)
-        })
+        enriched.update(
+            {
+                "owner_email": owner_email,
+                "owner_phone": owner_phone,
+                "business_name": business_name,
+                "is_corporate": is_corporate,
+                "sunbiz_entity_id": sunbiz_data.get("entity_id", ""),
+                "sunbiz_status": sunbiz_data.get("status", ""),
+                "sunbiz_officers": (
+                    json.dumps(sunbiz_data.get("officers", []))
+                    if sunbiz_data.get("officers")
+                    else ""
+                ),
+                "contact_verified": bool(owner_email or owner_phone),
+                "priority_flag": self._calculate_priority(property_data),
+                "enrichment_source": ", ".join(enrichment_source),
+                "enrichment_date": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "data_quality_score": self._calculate_data_quality_score(enriched),
+            }
+        )
 
         return enriched
 
@@ -124,9 +132,24 @@ class PropertyEnrichment:
             return False
 
         corporate_indicators = [
-            "LLC", "INC", "CORP", "CO", "COMPANY", "TRUST", "PARTNERSHIP",
-            "LP", "LLP", "PLLC", "CORPORATION", "LIMITED", "ENTERPRISES",
-            "GROUP", "HOLDINGS", "INVESTMENTS", "PROPERTIES", "REALTY"
+            "LLC",
+            "INC",
+            "CORP",
+            "CO",
+            "COMPANY",
+            "TRUST",
+            "PARTNERSHIP",
+            "LP",
+            "LLP",
+            "PLLC",
+            "CORPORATION",
+            "LIMITED",
+            "ENTERPRISES",
+            "GROUP",
+            "HOLDINGS",
+            "INVESTMENTS",
+            "PROPERTIES",
+            "REALTY",
         ]
 
         owner_upper = str(owner_name).upper()
@@ -160,17 +183,20 @@ class PropertyEnrichment:
                         {
                             "name": f"{clean_name} Manager",
                             "title": "Registered Agent",
-                            "address": "123 Business Blvd, Miami, FL 33101"
+                            "address": "123 Business Blvd, Miami, FL 33101",
                         }
                     ],
                     "registered_address": "123 Business Blvd, Miami, FL 33101",
-                    "search_date": pd.Timestamp.now().strftime("%Y-%m-%d")
+                    "search_date": pd.Timestamp.now().strftime("%Y-%m-%d"),
                 }
                 logger.info(f"Found Sunbiz entity: {entity_data['entity_id']}")
                 return entity_data
             else:
                 logger.info(f"No Sunbiz entity found for: {business_name}")
-                return {"found": False, "search_date": pd.Timestamp.now().strftime("%Y-%m-%d")}
+                return {
+                    "found": False,
+                    "search_date": pd.Timestamp.now().strftime("%Y-%m-%d"),
+                }
 
         except Exception as e:
             logger.error(f"Error searching Sunbiz for {business_name}: {e}")
@@ -189,7 +215,7 @@ class PropertyEnrichment:
 
     def _generate_corporate_email(self, business_name: str) -> str:
         """Generate realistic corporate email based on business name."""
-        clean_name = re.sub(r'[^a-zA-Z0-9]', '', business_name.lower())
+        clean_name = re.sub(r"[^a-zA-Z0-9]", "", business_name.lower())
         domains = ["gmail.com", "yahoo.com", "outlook.com", "company.com"]
         domain = domains[hash(clean_name) % len(domains)]
         return f"info@{clean_name[:10]}.{domain}"
@@ -197,6 +223,7 @@ class PropertyEnrichment:
     def _generate_corporate_phone(self) -> str:
         """Generate realistic corporate phone number."""
         import random
+
         area_codes = ["305", "954", "561", "786", "321"]
         area_code = random.choice(area_codes)
         exchange = f"{random.randint(200, 999)}"
@@ -223,7 +250,7 @@ class PropertyEnrichment:
                     email_patterns = [
                         f"{first_name}.{last_name}@gmail.com",
                         f"{first_name}{last_name}@yahoo.com",
-                        f"{first_name[0]}{last_name}@outlook.com"
+                        f"{first_name[0]}{last_name}@outlook.com",
                     ]
                     return email_patterns[hash(str(owner_name)) % len(email_patterns)]
 
@@ -254,25 +281,16 @@ class PropertyEnrichment:
     def _calculate_data_quality_score(self, property_data: Dict[str, Any]) -> float:
         """Calculate a data quality score for the property record."""
         score = 0.0
-        max_score = 100.0
 
         # Required fields scoring
-        required_fields = {
-            "property_address": 20,
-            "owner_name": 15,
-            "folio_number": 10
-        }
+        required_fields = {"property_address": 20, "owner_name": 15, "folio_number": 10}
 
         for field, points in required_fields.items():
             if property_data.get(field, "").strip():
                 score += points
 
         # Contact information scoring
-        contact_fields = {
-            "owner_email": 15,
-            "owner_phone": 15,
-            "mailing_address": 10
-        }
+        contact_fields = {"owner_email": 15, "owner_phone": 15, "mailing_address": 10}
 
         for field, points in contact_fields.items():
             if property_data.get(field, "").strip():
@@ -305,7 +323,11 @@ class PropertyEnrichment:
 
         # Check inspection due date
         inspection_due = property_data.get("inspection_due", "")
-        if inspection_due and not pd.isna(inspection_due) and str(inspection_due).strip():
+        if (
+            inspection_due
+            and not pd.isna(inspection_due)
+            and str(inspection_due).strip()
+        ):
             priority_factors.append("inspection_due")
 
         # Check year built (buildings from 1980-1990 flagged as priority for inspection)
@@ -322,15 +344,21 @@ class PropertyEnrichment:
         notes = property_data.get("notes", "")
         if notes and not pd.isna(notes):
             notes_str = str(notes).lower()
-            if any(keyword in notes_str for keyword in ["priority", "urgent", "violation", "code"]):
+            if any(
+                keyword in notes_str
+                for keyword in ["priority", "urgent", "violation", "code"]
+            ):
                 priority_factors.append("notes_priority")
 
         # Missing contact information makes it priority
         owner_email = property_data.get("owner_email", "")
         owner_phone = property_data.get("owner_phone", "")
 
-        if ((not owner_email or pd.isna(owner_email) or str(owner_email).strip() == "") and
-            (not owner_phone or pd.isna(owner_phone) or str(owner_phone).strip() == "")):
+        if (
+            not owner_email or pd.isna(owner_email) or str(owner_email).strip() == ""
+        ) and (
+            not owner_phone or pd.isna(owner_phone) or str(owner_phone).strip() == ""
+        ):
             priority_factors.append("missing_contact")
 
         return len(priority_factors) > 0
@@ -342,21 +370,25 @@ class PropertyEnrichment:
 
             # Calculate statistics
             total_records = len(df)
-            records_with_email = len(df[df['owner_email'].notna() & (df['owner_email'] != "")])
-            records_with_phone = len(df[df['owner_phone'].notna() & (df['owner_phone'] != "")])
-            priority_records = len(df[df['priority_flag'] == True])
-            corporate_entities = len(df[df['is_corporate'] == True])
+            records_with_email = len(
+                df[df["owner_email"].notna() & (df["owner_email"] != "")]
+            )
+            records_with_phone = len(
+                df[df["owner_phone"].notna() & (df["owner_phone"] != "")]
+            )
+            priority_records = len(df[df["priority_flag"] == True])
+            corporate_entities = len(df[df["is_corporate"] == True])
             individual_owners = total_records - corporate_entities
 
             # Data quality analysis
-            avg_quality_score = df['data_quality_score'].mean()
-            high_quality_records = len(df[df['data_quality_score'] >= 80])
-            needs_manual_review = len(df[df['data_quality_score'] < 50])
+            avg_quality_score = df["data_quality_score"].mean()
+            high_quality_records = len(df[df["data_quality_score"] >= 80])
+            needs_manual_review = len(df[df["data_quality_score"] < 50])
 
             # Enrichment source breakdown
             source_counts = {}
-            for sources in df['enrichment_source'].dropna():
-                for source in sources.split(', '):
+            for sources in df["enrichment_source"].dropna():
+                for source in sources.split(", "):
                     source_counts[source] = source_counts.get(source, 0) + 1
 
             summary = {
@@ -372,37 +404,60 @@ class PropertyEnrichment:
                 "needs_manual_review": needs_manual_review,
                 "enrichment_sources": source_counts,
                 "success_rates": {
-                    "email_enrichment": round((records_with_email / total_records) * 100, 1),
-                    "phone_enrichment": round((records_with_phone / total_records) * 100, 1),
+                    "email_enrichment": round(
+                        (records_with_email / total_records) * 100, 1
+                    ),
+                    "phone_enrichment": round(
+                        (records_with_phone / total_records) * 100, 1
+                    ),
                     "contact_enrichment": round(
-                        ((records_with_email + records_with_phone) / (total_records * 2)) * 100, 1
-                    )
-                }
+                        (
+                            (records_with_email + records_with_phone)
+                            / (total_records * 2)
+                        )
+                        * 100,
+                        1,
+                    ),
+                },
             }
 
             # Save summary report
             summary_file = self.output_dir / "hallandale_processing_summary.txt"
-            with open(summary_file, 'w') as f:
+            with open(summary_file, "w") as f:
                 f.write("HALLANDALE PROPERTY ENRICHMENT SUMMARY REPORT\n")
                 f.write("=" * 50 + "\n\n")
                 f.write(f"Processing Date: {summary['processing_date']}\n\n")
                 f.write("RECORD COUNTS:\n")
-                f.write(f"  Total Records Processed: {summary['total_records_processed']}\n")
+                f.write(
+                    f"  Total Records Processed: {summary['total_records_processed']}\n"
+                )
                 f.write(f"  Records with Email: {summary['records_with_emails']}\n")
                 f.write(f"  Records with Phone: {summary['records_with_phones']}\n")
                 f.write(f"  Priority Records: {summary['priority_records']}\n")
                 f.write(f"  Corporate Entities: {summary['corporate_entities']}\n")
                 f.write(f"  Individual Owners: {summary['individual_owners']}\n\n")
                 f.write("DATA QUALITY:\n")
-                f.write(f"  Average Quality Score: {summary['average_data_quality_score']}/100\n")
-                f.write(f"  High Quality Records (80+): {summary['high_quality_records']}\n")
-                f.write(f"  Needs Manual Review (<50): {summary['needs_manual_review']}\n\n")
+                f.write(
+                    f"  Average Quality Score: {summary['average_data_quality_score']}/100\n"
+                )
+                f.write(
+                    f"  High Quality Records (80+): {summary['high_quality_records']}\n"
+                )
+                f.write(
+                    f"  Needs Manual Review (<50): {summary['needs_manual_review']}\n\n"
+                )
                 f.write("SUCCESS RATES:\n")
-                f.write(f"  Email Enrichment: {summary['success_rates']['email_enrichment']}%\n")
-                f.write(f"  Phone Enrichment: {summary['success_rates']['phone_enrichment']}%\n")
-                f.write(f"  Overall Contact Enrichment: {summary['success_rates']['contact_enrichment']}%\n\n")
+                f.write(
+                    f"  Email Enrichment: {summary['success_rates']['email_enrichment']}%\n"
+                )
+                f.write(
+                    f"  Phone Enrichment: {summary['success_rates']['phone_enrichment']}%\n"
+                )
+                f.write(
+                    f"  Overall Contact Enrichment: {summary['success_rates']['contact_enrichment']}%\n\n"
+                )
                 f.write("ENRICHMENT SOURCES:\n")
-                for source, count in summary['enrichment_sources'].items():
+                for source, count in summary["enrichment_sources"].items():
                     f.write(f"  {source}: {count} records\n")
 
             logger.info(f"Summary report saved to {summary_file}")
@@ -418,7 +473,9 @@ if __name__ == "__main__":
 
     # Process the raw property data
     logger.info("Starting property enrichment process")
-    result = enricher.enrich_properties("outputs/hallandale/hallandale_properties_raw.csv")
+    result = enricher.enrich_properties(
+        "outputs/hallandale/hallandale_properties_raw.csv"
+    )
     print(f"Enrichment result: {result}")
 
     if result.get("status") == "success":
@@ -429,4 +486,6 @@ if __name__ == "__main__":
         print(f"  Records with emails: {summary.get('records_with_emails', 0)}")
         print(f"  Records with phones: {summary.get('records_with_phones', 0)}")
         print(f"  Priority records: {summary.get('priority_records', 0)}")
-        print(f"  Average quality score: {summary.get('average_data_quality_score', 0)}")
+        print(
+            f"  Average quality score: {summary.get('average_data_quality_score', 0)}"
+        )
