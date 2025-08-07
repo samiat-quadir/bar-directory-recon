@@ -11,9 +11,13 @@ from property_validation import PropertyValidation
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 =======
 
+# Import pipeline modules
+from pdf_processor import HallandalePropertyProcessor
+from property_enrichment import PropertyEnrichment
+from property_validation import PropertyValidation
+
 # Add src directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
-
 
 # Set flag for Google Sheets integration (currently disabled)
 GOOGLE_SHEETS_AVAILABLE = False
@@ -190,21 +194,6 @@ class HallandalePipeline:
             return {
                 "success": True,
                 "message": "Upload simulated - Google Sheets integration not configured",
-            }
-        except Exception as e:
-            self.logger.error(f"Google Sheets upload failed: {e}")
-            return {"success": False, "message": f"Google Sheets upload failed: {e}"}
-
-            self.logger.info(
-                "Google Sheets upload simulated (requires API credentials setup)"
-            )
-            return {
-                "success": True,
-                "message": "Upload simulated - Google Sheets integration not configured",
-            self.logger.info("Google Sheets upload simulated (requires API credentials setup)")
-            return {
-                "success": True,
-                "message": "Upload simulated - Google Sheets integration not configured"
 
             }
         except Exception as e:
@@ -212,8 +201,12 @@ class HallandalePipeline:
             return {
                 "success": False,
                 "message": f"Google Sheets upload failed: {e}",
+            }
 
-    def _generate_final_report(self, results: Dict[str, Any]) -> Dict[str, Any]:
+    def _generate_final_report(
+        self, results: Dict[str, Any]
+    ) -> Dict[str, Any]:
+
         """Generate comprehensive final report."""
         try:
             report_file = self.output_dir / "pipeline_report.txt"
@@ -233,9 +226,6 @@ class HallandalePipeline:
                     f.write(f"\nErrors: {len(results['errors'])}\n")
                     for error in results["errors"]:
                         f.write(f"  - {error}\n")
-
-                # Add detailed results for each step
-                for step in results.get("steps_completed", []):
 
                 # Add detailed results for each step
                 for step in results.get("steps_completed", []):
@@ -270,12 +260,7 @@ def main() -> None:
         help="Output directory for results",
     )
     parser.add_argument(
-
         "--export", action="store_true", help="Export results to Excel and CSV"
-    )
-        "--export",
-        action="store_true",
-        help="Export results to Excel and CSV",
     )
 
 
