@@ -1,7 +1,6 @@
 from hallandale_pipeline import HallandalePipeline  # type: ignore
 
 
-
 def test_pipeline_nonexistent_pdf(tmp_path) -> None:
     # Using a non-existent PDF should cause pipeline to fail early
     output_dir = tmp_path / "out"
