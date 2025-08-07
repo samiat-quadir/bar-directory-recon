@@ -358,6 +358,7 @@ class DataHunter:
             msg = MIMEMultipart()
             msg["From"] = email_config["username"]
             msg["To"] = ", ".join(email_config["to_emails"])
+
             msg["Subject"] = "Data Hunter: New Property Lists Discovered"
 
             body = f"{message}\n\nNew files:\n"

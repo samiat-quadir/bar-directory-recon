@@ -35,7 +35,11 @@ repos:
     hooks:
       - id: mypy
         additional_dependencies: [types-requests, types-PyYAML]
+
         exclude: ^(archive/|.*test.*\.py$|tools/|scripts/|src/hallandale_pipeline\.py$)
+
+        exclude: ^(archive/|.*test.*\.py$|tools/|scripts/)
+
         args: ["--ignore-missing-imports", "--allow-untyped-defs"]
 
   # Add autoflake to remove unused imports automatically

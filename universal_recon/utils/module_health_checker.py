@@ -2,16 +2,17 @@
 
 import importlib
 import importlib.util
+import json
 import os
 import sys
 import time
+from datetime import datetime, timedelta
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 HTML_PATH = "output/module_health_report.html"
-
 
 MODULES_TO_CHECK = {
     "universal_recon.plugin_loader": None,
@@ -61,6 +62,8 @@ def build_html_report(
         fn_text = (
             "All OK" if not missing_funcs else f"Missing: {', '.join(missing_funcs)}"
         )
+
+        
         rows.append(
             f"<tr><td>{mod}</td><td style='color:{color}'>{emoji}</td><td>{fn_text}</td></tr>"
         )
@@ -71,6 +74,7 @@ def build_html_report(
         rows.append(
             f"<tr><td>{path}</td><td style='color:{color}'>{emoji}</td>"
             f"<td>{status}</td></tr>"
+
         )
     for warning in staleness_warnings:
         rows.append(

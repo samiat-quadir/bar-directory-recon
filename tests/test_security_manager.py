@@ -20,7 +20,6 @@ except Exception as e:
     import pytest
     pytest.skip("Cannot import from src.security_manager: file is missing or corrupted. Fix src/security_manager.py before running tests.", allow_module_level=True)
 
-
 class TestSecurityManager:
     """Test suite for SecurityManager class."""
 

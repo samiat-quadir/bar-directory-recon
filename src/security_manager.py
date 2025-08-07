@@ -45,8 +45,10 @@ with graceful fallback to environment va            "host        return {
             ),
             "password": self.get_secret(
                 "database-password", "DATABASE_PASSWORD"
+
 This module provides secure credential management using Azure Key Vault,
 with graceful fallback to environment variables for development scenarios.
+
 
 Mirrors the implementation from ALI (Alienware) with ASUS-specific adaptations.
 
@@ -81,6 +83,7 @@ import logging
 import os
 import logging
 import os
+
 from functools import lru_cache
 from typing import Any, Dict, Optional
 
@@ -196,13 +199,11 @@ class SecurityManager:
     ) -> Optional[str]:
         """
         Retrieve secret from Azure Key Vault with environment variable fallback.
-=======
     Centralized security credential management using Azure Key Vault.
 
     Provides secure retrieval of sensitive credentials with fallback support
     for development environments.
     """
-
         Args:
             secret_name: Name of the secret in Key Vault.
             fallback_env_var: Environment variable to use if Key Vault is unavailable.
@@ -210,6 +211,7 @@ class SecurityManager:
         Returns:
             The secret value as a string, or None if not found.
         """
+
     def __init__(self, keyvault_url: Optional[str] = None):
         """
         Initialize the SecurityManager.
@@ -537,7 +539,9 @@ if __name__ == "__main__":
             'keyvault_configured': bool(self.keyvault_url),
             'client_initialized': bool(self.client),
             'fallback_mode': self.fallback_mode,
+
             'timestamp': time.time()
+
         }
 
         if self.client:
