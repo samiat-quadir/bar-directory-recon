@@ -72,6 +72,77 @@ class GitWorkflow:
         success, _ = self.run_command(commit_cmd, "Committing changes")
         return success
 
+    def smart_push(self) -> bool:
+        """Smart push that handles conflicts using advanced workflow."""
+        try:
+            # Try using the advanced git workflow script if available
+            advanced_script = self.workspace_path / "scripts" / "advanced_git.py"
+            if advanced_script.exists():
+                print("[*] Using advanced git workflow...")
+                subprocess.run(
+                    [sys.executable, str(advanced_script)],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    cwd=self.workspace_path,
+                )
+                print("[+] Advanced git workflow successful")
+                return True
+        except subprocess.CalledProcessError:
+            print("[!] Advanced workflow failed, trying basic push...")
+
+        try:
+            # Try normal push first
+            subprocess.run(
+                ["git", "push"],
+                check=True,
+                capture_output=True,
+                text=True,
+                cwd=self.workspace_path,
+            )
+            print("[+] Push successful")
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"[!] Push failed: {e}")
+
+            # Try push with upstream
+            try:
+                success, branch_output = self.run_command(
+                    ["git", "branch", "--show-current"], "Getting current branch"
+                )
+                if success and branch_output.strip():
+                    branch = branch_output.strip()
+                    subprocess.run(
+                        ["git", "push", "-u", "origin", branch],
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                        cwd=self.workspace_path,
+                    )
+                    print("[+] Push with upstream successful")
+                    return True
+            except subprocess.CalledProcessError as e2:
+                print(f"[-] Push with upstream also failed: {e2}")
+                print("[!] Manual intervention may be required")
+                print("    Try: python scripts/advanced_git.py --force")
+                print("    Or: git pull --rebase origin [branch]")
+                return False
+
+        return False
+
+    def autonomous_commit_and_push(self, message: Optional[str] = None) -> bool:
+        """Perform autonomous commit and push workflow."""
+        print("[*] Starting autonomous commit and push workflow...")
+
+        # 1. First do the commit workflow
+        if not self.autonomous_commit(message):
+            print("[-] Commit failed, skipping push")
+            return False
+
+        # 2. Then push the changes
+        print("[*] Starting push workflow...")
+        return self.smart_push()
+
     def autonomous_commit(self, message: Optional[str] = None) -> bool:
         """Perform autonomous commit workflow."""
         print("[*] Starting autonomous commit workflow...")
@@ -108,19 +179,36 @@ class GitWorkflow:
 
 def main():
     """Main function for autonomous git workflow."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Autonomous Git Workflow")
+    parser.add_argument(
+        "--push", action="store_true", help="Also push after committing"
+    )
+    parser.add_argument(
+        "--push-only", action="store_true", help="Only push, don't commit"
+    )
+    parser.add_argument("--message", "-m", help="Commit message")
+
+    args = parser.parse_args()
+
     workspace = Path.cwd()
     git_workflow = GitWorkflow(workspace)
 
-    # Get commit message from command line or use default
-    commit_message = None
-    if len(sys.argv) > 1:
-        commit_message = " ".join(sys.argv[1:])
-
-    success = git_workflow.autonomous_commit(commit_message)
+    if args.push_only:
+        # Only push
+        success = git_workflow.smart_push()
+    elif args.push:
+        # Commit and push
+        success = git_workflow.autonomous_commit_and_push(args.message)
+    else:
+        # Only commit (original behavior)
+        success = git_workflow.autonomous_commit(args.message)
 
     if success:
         print("\n[+] All operations completed successfully!")
-        print("[*] You can review the commit with: git log --oneline -5")
+        if not args.push_only:
+            print("[*] You can review the commit with: git log --oneline -5")
     else:
         print("\n[-] Some operations failed. Please check the output above.")
         sys.exit(1)
