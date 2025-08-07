@@ -203,6 +203,13 @@ class SecurityManager:
     for development environments.
     """
 
+        Args:
+            secret_name: Name of the secret in Key Vault.
+            fallback_env_var: Environment variable to use if Key Vault is unavailable.
+
+        Returns:
+            The secret value as a string, or None if not found.
+        """
     def __init__(self, keyvault_url: Optional[str] = None):
         """
         Initialize the SecurityManager.
