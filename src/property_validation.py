@@ -34,7 +34,6 @@ class PropertyValidation:
         self.phone_pattern = re.compile(
             r"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$"
         )
-
         self.folio_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}-\d{4}$")
 
     def _setup_logging(self) -> None:
@@ -554,7 +553,6 @@ class PropertyValidation:
                 f.write("VALIDATION STATISTICS:\n")
                 f.write("-" * 30 + "\n")
                 f.write(f"Total Properties Processed: {stats['total_properties']}\n")
-
                 valid_email_pct = (
                     stats["valid_emails"] / stats["total_properties"] * 100
                 )
@@ -596,7 +594,6 @@ class PropertyValidation:
                 f.write(
                     f"Complete Records: {stats['complete_records']} "
                     f"({complete_pct:.1f}%)\n\n"
-
                 )
 
                 if stats["validation_errors"]:
