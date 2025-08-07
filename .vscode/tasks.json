@@ -480,6 +480,47 @@
                 "reveal": "always",
                 "panel": "new"
             }
+        },
+        {
+            "label": "Fix Branch Tracking (Prevent Publish Branch Prompt)",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "scripts/setup_branch_tracking.py",
+                "--current"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Fix All Branch Tracking",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "scripts/setup_branch_tracking.py",
+                "--all"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Enhanced Git Workflow (No More Manual Merges)",
+            "type": "shell",
+            "command": "scripts\\manual_git_fix.bat",
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
         }
     ]
 }
