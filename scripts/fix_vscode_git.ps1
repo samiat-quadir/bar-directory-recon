@@ -17,21 +17,23 @@ Write-Host "[*] Current branch: $currentBranch" -ForegroundColor White
 $remoteExists = git ls-remote --heads origin $currentBranch 2>$null
 if ($remoteExists) {
     Write-Host "[+] Remote branch exists" -ForegroundColor Green
-    
+
     # Check if upstream tracking is set
     $upstream = git config --get "branch.$currentBranch.remote" 2>$null
     if ($upstream -eq "origin") {
         Write-Host "[+] Upstream tracking already configured" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "[!] Setting up upstream tracking..." -ForegroundColor Yellow
         git branch --set-upstream-to=origin/$currentBranch $currentBranch
         if ($LASTEXITCODE -eq 0) {
             Write-Host "[+] Upstream tracking configured successfully!" -ForegroundColor Green
         }
     }
-} else {
+}
+else {
     Write-Host "[!] Remote branch doesn't exist - creating it..." -ForegroundColor Yellow
-    
+
     # Add and commit any changes first
     $status = git status --porcelain
     if ($status) {
@@ -39,12 +41,13 @@ if ($remoteExists) {
         git add .
         git commit -m "Auto-commit: Setup branch tracking and prevent VS Code publish prompts"
     }
-    
+
     # Create remote branch with upstream tracking
     git push -u origin $currentBranch
     if ($LASTEXITCODE -eq 0) {
         Write-Host "[+] Remote branch created with upstream tracking!" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "[-] Failed to create remote branch" -ForegroundColor Red
         exit 1
     }
@@ -64,7 +67,8 @@ $trackingBranch = git config --get "branch.$currentBranch.merge"
 if ($trackingBranch) {
     Write-Host "[+] Tracking branch: $trackingBranch" -ForegroundColor Green
     Write-Host "[+] Setup verified successfully!" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "[!] Warning: Tracking may not be fully configured" -ForegroundColor Yellow
 }
 

@@ -1,7 +1,7 @@
 # 🚀 VS Code Git Workflow - No More Manual Interventions!
 
 ## 📋 **The Problem You Were Facing**
-- VS Code prompting "Publish Branch" 
+- VS Code prompting "Publish Branch"
 - Having to manually create pull requests
 - Manual merging in GitHub web interface
 - Recurring git push conflicts
@@ -52,7 +52,7 @@ Press `Ctrl+Shift+P` > `Tasks: Run Task` and choose:
 4. ✅ Branch published with proper tracking, no prompts!
 
 #### **For EXISTING Branches:**
-1. Make your changes  
+1. Make your changes
 2. Use VS Code Source Control panel OR
 3. Run: `python scripts\auto_commit.py --push`
 4. ✅ No more manual interventions needed!
@@ -100,7 +100,7 @@ powershell -ExecutionPolicy Bypass -File scripts\fix_vscode_git.ps1
 #### **Before (Your Current Experience):**
 - ❌ VS Code: "Publish Branch" prompt
 - ❌ Manual pull request creation
-- ❌ Manual merging in GitHub web interface  
+- ❌ Manual merging in GitHub web interface
 - ❌ Push conflicts requiring manual resolution
 
 #### **After (With These Tools):**
@@ -114,7 +114,7 @@ The core issue was missing **upstream tracking** (`git push -u origin branch`). 
 
 ### 💡 **Pro Tips**
 1. **Always use** `scripts\manual_git_fix.bat` for new branches
-2. **Set up tracking once** with `setup_branch_tracking.py --all` 
+2. **Set up tracking once** with `setup_branch_tracking.py --all`
 3. **Use VS Code tasks** for consistent workflow
 4. **Commit frequently** - our tools handle the complexity
 
