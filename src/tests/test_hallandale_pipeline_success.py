@@ -1,5 +1,5 @@
-import os
 from hallandale_pipeline import HallandalePipeline  # type: ignore
+
 
 def test_pipeline_success(tmp_path, monkeypatch):
     # Setup pipeline with temporary output directory
@@ -13,31 +13,46 @@ def test_pipeline_success(tmp_path, monkeypatch):
     dummy_excel = str(tmp_path / "report.xlsx")
 
     # Monkeypatch processing steps
-    monkeypatch.setattr(pipeline.pdf_processor, "process_pdf", lambda path: {
-        "status": "success",
-        "properties_count": 5,
-        "output_file": dummy_csv
-    })
-    monkeypatch.setattr(pipeline.enricher, "enrich_properties", lambda path: {
-        "status": "success",
-        "enriched_count": 5,
-        "output_file": dummy_enriched
-    })
-    monkeypatch.setattr(pipeline.enricher, "generate_summary_report", lambda path: {
-        "total_records_processed": 5,
-        "records_with_emails": 2,
-        "records_with_phones": 3,
-        "priority_records": 1,
-        "corporate_entities": 1,
-        "individual_owners": 4,
-        "average_data_quality_score": 92,
-        "needs_manual_review": 1
-    })
-    monkeypatch.setattr(pipeline.validator, "validate_properties", lambda path: {"status": "success"})
-    monkeypatch.setattr(pipeline, "_create_excel_export", lambda path: {
-        "status": "success",
-        "output_file": dummy_excel
-    })
+    monkeypatch.setattr(
+        pipeline.pdf_processor,
+        "process_pdf",
+        lambda path: {
+            "status": "success",
+            "properties_count": 5,
+            "output_file": dummy_csv,
+        },
+    )
+    monkeypatch.setattr(
+        pipeline.enricher,
+        "enrich_properties",
+        lambda path: {
+            "status": "success",
+            "enriched_count": 5,
+            "output_file": dummy_enriched,
+        },
+    )
+    monkeypatch.setattr(
+        pipeline.enricher,
+        "generate_summary_report",
+        lambda path: {
+            "total_records_processed": 5,
+            "records_with_emails": 2,
+            "records_with_phones": 3,
+            "priority_records": 1,
+            "corporate_entities": 1,
+            "individual_owners": 4,
+            "average_data_quality_score": 92,
+            "needs_manual_review": 1,
+        },
+    )
+    monkeypatch.setattr(
+        pipeline.validator, "validate_properties", lambda path: {"status": "success"}
+    )
+    monkeypatch.setattr(
+        pipeline,
+        "_create_excel_export",
+        lambda path: {"status": "success", "output_file": dummy_excel},
+    )
 
     # Run the pipeline
     results = pipeline.run_full_pipeline(dummy_pdf)

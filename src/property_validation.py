@@ -4,16 +4,15 @@ Property Validation Module
 Validates property data and contact information with comprehensive checks.
 """
 
-import pandas as pd
 import logging
-from typing import Dict, List, Any, Optional, Tuple
-from pathlib import Path
 import re
 import smtplib
-from email.mime.text import MIMEText
-from datetime import datetime, timedelta
-import socket
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict
+
 import dns.resolver
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -30,20 +29,23 @@ class PropertyValidation:
 
         # Validation patterns
         self.email_pattern = re.compile(
-            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         )
-        self.phone_pattern = re.compile(r'^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$')
-        self.folio_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}-\d{4}$')
+        self.phone_pattern = re.compile(
+            r"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$"
+        )
+
+        self.folio_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}-\d{4}$")
 
     def _setup_logging(self) -> None:
         """Setup logging configuration."""
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             handlers=[
                 logging.FileHandler(self.output_dir / "validation.log"),
-                logging.StreamHandler()
-            ]
+                logging.StreamHandler(),
+            ],
         )
 
     def validate_properties(self, input_file: str) -> Dict[str, Any]:
@@ -67,7 +69,7 @@ class PropertyValidation:
                 "valid_addresses": 0,
                 "priority_properties": 0,
                 "complete_records": 0,
-                "validation_errors": []
+                "validation_errors": [],
             }
 
             # Validate each property
@@ -82,9 +84,7 @@ class PropertyValidation:
 
                 except Exception as e:
                     logger.error(f"Error validating property {idx}: {e}")
-                    validation_stats["validation_errors"].append(
-                        f"Row {idx}: {str(e)}"
-                    )
+                    validation_stats["validation_errors"].append(f"Row {idx}: {str(e)}")
 
             # Create validated DataFrame
             validated_df = pd.DataFrame(validated_properties)
@@ -110,14 +110,16 @@ class PropertyValidation:
                 "output_file": str(output_file),
                 "excel_file": str(excel_file),
                 "summary_file": str(summary_file),
-                "stats": validation_stats
+                "stats": validation_stats,
             }
 
         except Exception as e:
             logger.error(f"Error validating properties: {e}")
             return {"status": "error", "message": str(e)}
 
-    def _validate_single_property(self, property_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_single_property(
+        self, property_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Validate a single property record."""
         validated = property_data.copy()
 
@@ -167,7 +169,7 @@ class PropertyValidation:
             "email_format_valid": False,
             "email_domain_valid": False,
             "email_verified": False,
-            "email_validation_notes": []
+            "email_validation_notes": [],
         }
 
         if not email:
@@ -184,7 +186,7 @@ class PropertyValidation:
 
         # Domain validation
         try:
-            domain = email.split('@')[1]
+            domain = email.split("@")[1]
             result["email_domain_valid"] = self._validate_domain(domain)
             if result["email_domain_valid"]:
                 result["email_validation_notes"].append("Domain is valid")
@@ -205,8 +207,7 @@ class PropertyValidation:
 
         # Overall email validity
         result["email_valid"] = (
-            result["email_format_valid"] and
-            result["email_domain_valid"]
+            result["email_format_valid"] and result["email_domain_valid"]
         )
 
         return result
@@ -218,7 +219,7 @@ class PropertyValidation:
             "phone_format_valid": False,
             "phone_area_code_valid": False,
             "phone_type": "",
-            "phone_validation_notes": []
+            "phone_validation_notes": [],
         }
 
         if not phone:
@@ -226,31 +227,50 @@ class PropertyValidation:
             return result
 
         # Clean phone number
-        phone_clean = re.sub(r'[^\d]', '', phone)
+        phone_clean = re.sub(r"[^\d]", "", phone)
 
         # Format validation
         if len(phone_clean) == 10:
             result["phone_format_valid"] = True
             result["phone_validation_notes"].append("Phone format is valid")
         else:
-            result["phone_validation_notes"].append(f"Invalid phone length: {len(phone_clean)}")
+            result["phone_validation_notes"].append(
+                f"Invalid phone length: {len(phone_clean)}"
+            )
             return result
 
         # Area code validation
         area_code = phone_clean[:3]
         florida_area_codes = [
-            '239', '305', '321', '352', '386', '407', '561', '727', '754', '772',
-            '786', '813', '850', '863', '904', '941', '954'
+            "239",
+            "305",
+            "321",
+            "352",
+            "386",
+            "407",
+            "561",
+            "727",
+            "754",
+            "772",
+            "786",
+            "813",
+            "850",
+            "863",
+            "904",
+            "941",
+            "954",
         ]
 
         if area_code in florida_area_codes:
             result["phone_area_code_valid"] = True
             result["phone_validation_notes"].append("Florida area code detected")
         else:
-            result["phone_validation_notes"].append(f"Non-Florida area code: {area_code}")
+            result["phone_validation_notes"].append(
+                f"Non-Florida area code: {area_code}"
+            )
 
         # Phone type detection
-        if area_code in ['954', '754']:  # Broward County
+        if area_code in ["954", "754"]:  # Broward County
             result["phone_type"] = "local"
         elif area_code in florida_area_codes:
             result["phone_type"] = "florida"
@@ -270,7 +290,7 @@ class PropertyValidation:
             "address_city_valid": False,
             "address_state_valid": False,
             "address_zip_valid": False,
-            "address_validation_notes": []
+            "address_validation_notes": [],
         }
 
         if not address:
@@ -286,7 +306,11 @@ class PropertyValidation:
 
         # City validation
         hallandale_indicators = [
-            'hallandale', 'hollywood', 'aventura', 'sunny isles', 'bal harbour'
+            "hallandale",
+            "hollywood",
+            "aventura",
+            "sunny isles",
+            "bal harbour",
         ]
 
         address_lower = address.lower()
@@ -297,20 +321,21 @@ class PropertyValidation:
                 break
 
         # State validation
-        if 'fl' in address_lower or 'florida' in address_lower:
+        if "fl" in address_lower or "florida" in address_lower:
             result["address_state_valid"] = True
             result["address_validation_notes"].append("Florida state detected")
 
         # ZIP code validation
-        zip_match = re.search(r'\b33\d{3}\b', address)
+        zip_match = re.search(r"\b33\d{3}\b", address)
         if zip_match:
             result["address_zip_valid"] = True
-            result["address_validation_notes"].append(f"Valid ZIP code: {zip_match.group()}")
+            result["address_validation_notes"].append(
+                f"Valid ZIP code: {zip_match.group()}"
+            )
 
         # Overall address validity
-        result["address_valid"] = (
-            result["address_format_valid"] and
-            (result["address_city_valid"] or result["address_state_valid"])
+        result["address_valid"] = result["address_format_valid"] and (
+            result["address_city_valid"] or result["address_state_valid"]
         )
 
         return result
@@ -318,29 +343,29 @@ class PropertyValidation:
     def _validate_domain(self, domain: str) -> bool:
         """Validate email domain using DNS lookup."""
         try:
-            dns.resolver.resolve(domain, 'MX')
+            dns.resolver.resolve(domain, "MX")
             return True
-        except:
+        except Exception:
             try:
-                dns.resolver.resolve(domain, 'A')
+                dns.resolver.resolve(domain, "A")
                 return True
-            except:
+            except Exception:
                 return False
 
     def _verify_email_smtp(self, email: str) -> bool:
         """Verify email using SMTP (basic check)."""
         try:
-            domain = email.split('@')[1]
+            domain = email.split("@")[1]
 
             # Get MX record
-            mx_records = dns.resolver.resolve(domain, 'MX')
-            mx_record = str(mx_records[0]).split(' ')[1]
+            mx_records = dns.resolver.resolve(domain, "MX")
+            mx_record = str(mx_records[0]).split(" ")[1]
 
             # Connect to SMTP server
             server = smtplib.SMTP(timeout=10)
             server.connect(mx_record)
             server.helo()
-            server.mail('test@example.com')
+            server.mail("test@example.com")
             code, message = server.rcpt(email)
             server.quit()
 
@@ -355,14 +380,14 @@ class PropertyValidation:
             return False
 
         # Basic folio pattern check
-        return bool(re.match(r'^\d{4}-\d{2}-\d{2}-\d{4}$', folio))
+        return bool(re.match(r"^\d{4}-\d{2}-\d{2}-\d{4}$", folio))
 
     def _validate_dates(self, inspection_due: str) -> Dict[str, Any]:
         """Validate date fields."""
         result = {
             "inspection_due_valid": False,
             "inspection_due_upcoming": False,
-            "days_until_inspection": None
+            "days_until_inspection": None,
         }
 
         if not inspection_due:
@@ -422,12 +447,18 @@ class PropertyValidation:
     def _calculate_completeness(self, property_data: Dict[str, Any]) -> float:
         """Calculate completeness score."""
         required_fields = [
-            "property_address", "owner_name", "mailing_address",
-            "year_built", "folio_number", "owner_email", "owner_phone"
+            "property_address",
+            "owner_name",
+            "mailing_address",
+            "year_built",
+            "folio_number",
+            "owner_email",
+            "owner_phone",
         ]
 
-        filled_fields = sum(1 for field in required_fields
-                          if property_data.get(field, "").strip())
+        filled_fields = sum(
+            1 for field in required_fields if property_data.get(field, "").strip()
+        )
 
         return (filled_fields / len(required_fields)) * 100
 
@@ -438,7 +469,7 @@ class PropertyValidation:
             ("phone_valid", 25),
             ("address_valid", 25),
             ("folio_valid", 10),
-            ("inspection_due_valid", 15)
+            ("inspection_due_valid", 15),
         ]
 
         total_score = 0
@@ -448,7 +479,9 @@ class PropertyValidation:
 
         return total_score
 
-    def _update_validation_stats(self, validated_prop: Dict[str, Any], stats: Dict[str, Any]) -> None:
+    def _update_validation_stats(
+        self, validated_prop: Dict[str, Any], stats: Dict[str, Any]
+    ) -> None:
         """Update validation statistics."""
         if validated_prop.get("email_valid"):
             stats["valid_emails"] += 1
@@ -466,36 +499,38 @@ class PropertyValidation:
     def _create_excel_export(self, df: pd.DataFrame, excel_file: Path) -> None:
         """Create Excel export with formatting."""
         try:
-            with pd.ExcelWriter(excel_file, engine='openpyxl') as writer:
+            with pd.ExcelWriter(excel_file, engine="openpyxl") as writer:
                 # Main data sheet
-                df.to_excel(writer, sheet_name='Properties', index=False)
+                df.to_excel(writer, sheet_name="Properties", index=False)
 
                 # Priority properties sheet
-                priority_df = df[df['priority_flag'] == True]
-                priority_df.to_excel(writer, sheet_name='Priority Properties', index=False)
+                priority_df = df[df["priority_flag"] == True]
+                priority_df.to_excel(
+                    writer, sheet_name="Priority Properties", index=False
+                )
 
                 # Summary statistics sheet
                 summary_data = {
-                    'Metric': [
-                        'Total Properties',
-                        'Valid Emails',
-                        'Valid Phones',
-                        'Valid Addresses',
-                        'Priority Properties',
-                        'Complete Records'
+                    "Metric": [
+                        "Total Properties",
+                        "Valid Emails",
+                        "Valid Phones",
+                        "Valid Addresses",
+                        "Priority Properties",
+                        "Complete Records",
                     ],
-                    'Count': [
+                    "Count": [
                         len(df),
-                        len(df[df['email_valid'] == True]),
-                        len(df[df['phone_valid'] == True]),
-                        len(df[df['address_valid'] == True]),
-                        len(df[df['priority_flag'] == True]),
-                        len(df[df['completeness_score'] >= 80])
-                    ]
+                        len(df[df["email_valid"] == True]),
+                        len(df[df["phone_valid"] == True]),
+                        len(df[df["address_valid"] == True]),
+                        len(df[df["priority_flag"] == True]),
+                        len(df[df["completeness_score"] >= 80]),
+                    ],
                 }
 
                 summary_df = pd.DataFrame(summary_data)
-                summary_df.to_excel(writer, sheet_name='Summary', index=False)
+                summary_df.to_excel(writer, sheet_name="Summary", index=False)
 
             logger.info(f"Excel export created: {excel_file}")
 
@@ -507,27 +542,67 @@ class PropertyValidation:
         summary_file = self.output_dir / "hallandale_processing_summary.txt"
 
         try:
-            with open(summary_file, 'w') as f:
+            with open(summary_file, "w") as f:
                 f.write("HALLANDALE PROPERTY VALIDATION SUMMARY\n")
                 f.write("=" * 50 + "\n\n")
 
-                f.write(f"Processing Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write(
+                    f"Processing Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+                )
                 f.write(f"Output File: {output_file}\n\n")
 
                 f.write("VALIDATION STATISTICS:\n")
                 f.write("-" * 30 + "\n")
                 f.write(f"Total Properties Processed: {stats['total_properties']}\n")
-                f.write(f"Properties with Valid Emails: {stats['valid_emails']} ({stats['valid_emails']/stats['total_properties']*100:.1f}%)\n")
-                f.write(f"Properties with Verified Emails: {stats['verified_emails']} ({stats['verified_emails']/stats['total_properties']*100:.1f}%)\n")
-                f.write(f"Properties with Valid Phones: {stats['valid_phones']} ({stats['valid_phones']/stats['total_properties']*100:.1f}%)\n")
-                f.write(f"Properties with Valid Addresses: {stats['valid_addresses']} ({stats['valid_addresses']/stats['total_properties']*100:.1f}%)\n")
-                f.write(f"Priority Properties: {stats['priority_properties']} ({stats['priority_properties']/stats['total_properties']*100:.1f}%)\n")
-                f.write(f"Complete Records: {stats['complete_records']} ({stats['complete_records']/stats['total_properties']*100:.1f}%)\n\n")
 
-                if stats['validation_errors']:
+                valid_email_pct = (
+                    stats["valid_emails"] / stats["total_properties"] * 100
+                )
+                f.write(
+                    f"Properties with Valid Emails: {stats['valid_emails']} "
+                    f"({valid_email_pct:.1f}%)\n"
+                )
+                verified_email_pct = (
+                    stats["verified_emails"] / stats["total_properties"] * 100
+                )
+                f.write(
+                    f"Properties with Verified Emails: {stats['verified_emails']} "
+                    f"({verified_email_pct:.1f}%)\n"
+                )
+                valid_phone_pct = (
+                    stats["valid_phones"] / stats["total_properties"] * 100
+                )
+                f.write(
+                    f"Properties with Valid Phones: {stats['valid_phones']} "
+                    f"({valid_phone_pct:.1f}%)\n"
+                )
+                valid_address_pct = (
+                    stats["valid_addresses"] / stats["total_properties"] * 100
+                )
+                f.write(
+                    f"Properties with Valid Addresses: {stats['valid_addresses']} "
+                    f"({valid_address_pct:.1f}%)\n"
+                )
+                priority_pct = (
+                    stats["priority_properties"] / stats["total_properties"] * 100
+                )
+                f.write(
+                    f"Priority Properties: {stats['priority_properties']} "
+                    f"({priority_pct:.1f}%)\n"
+                )
+                complete_pct = (
+                    stats["complete_records"] / stats["total_properties"] * 100
+                )
+                f.write(
+                    f"Complete Records: {stats['complete_records']} "
+                    f"({complete_pct:.1f}%)\n\n"
+
+                )
+
+                if stats["validation_errors"]:
                     f.write("VALIDATION ERRORS:\n")
                     f.write("-" * 30 + "\n")
-                    for error in stats['validation_errors']:
+                    for error in stats["validation_errors"]:
                         f.write(f"- {error}\n")
                     f.write("\n")
 
@@ -547,5 +622,7 @@ class PropertyValidation:
 
 if __name__ == "__main__":
     validator = PropertyValidation()
-    result = validator.validate_properties("outputs/hallandale/hallandale_properties_enriched.csv")
+    result = validator.validate_properties(
+        "outputs/hallandale/hallandale_properties_enriched.csv"
+    )
     print(f"Validation result: {result}")

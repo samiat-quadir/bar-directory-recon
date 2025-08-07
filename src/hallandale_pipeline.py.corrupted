@@ -4,12 +4,12 @@ Hallandale Property Processing Pipeline
 Complete pipeline for processing Hallandale property list PDF and enriching data.
 """
 
-import sys
-import os
-import logging
 import argparse
+import logging
+import os
+import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Add src directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
