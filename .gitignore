@@ -40,7 +40,7 @@ dist/
 pip-wheel-metadata/
 
 ############################################################
-# 4 · Tool caches & coverage
+# 4 · Tool caches & coverage & logs
 ############################################################
 .pytest_cache/
 .coverage
@@ -48,6 +48,19 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 .isort.cfg.bak
+.pre-commit-cache/
+
+# Logs and temporary files
+logs/
+*.log
+*.tmp
+*_temp.py
+*_backup.py
+security_report_*.json
+
+# Formatting artifacts
+.black.cache
+.autoflake.cache
 *.isorted
 
 ############################################################
@@ -141,4 +154,8 @@ ALI_RELAY_REPORT.md
 secrets_scan_report_*.json
 
 # smoke-test 2025-07-29T16:36:28
-final_security_check.json 
+<<<<<<< HEAD
+final_security_check.json
+=======
+final_security_check.json
+>>>>>>> 9ed87c0dabca1c97758d795f5c1da96cd2f2cb1e

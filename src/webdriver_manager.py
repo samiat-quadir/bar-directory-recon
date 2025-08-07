@@ -7,14 +7,16 @@ Unified WebDriver setup and management for all scraping operations.
 import logging
 import os
 import time
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
+
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.webdriver.support.ui import WebDriverWait
+
 from webdriver_manager.chrome import ChromeDriverManager
 
 logger = logging.getLogger(__name__)
@@ -27,11 +29,13 @@ class WebDriverManager:
         """Initialize WebDriver manager with configuration."""
         self.config = config
         self.driver: Optional[webdriver.Chrome] = None
-        self.default_timeout = config.get('timeout', 30)
-        self.headless = config.get('headless', True)
-        self.user_agent = config.get('user_agent',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-            '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+        self.default_timeout = config.get("timeout", 30)
+        self.headless = config.get("headless", True)
+        self.user_agent = config.get(
+            "user_agent",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        )
 
     def setup_driver(self) -> webdriver.Chrome:
         """Setup Chrome WebDriver with optimal configuration."""
@@ -49,14 +53,20 @@ class WebDriverManager:
 
             # Anti-detection options
             chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-            chrome_options.add_experimental_option('useAutomationExtension', False)
+            chrome_options.add_experimental_option(
+                "excludeSwitches", ["enable-automation"]
+            )
+            chrome_options.add_experimental_option("useAutomationExtension", False)
 
             # Performance optimization
             chrome_options.add_argument("--disable-extensions")
             chrome_options.add_argument("--disable-plugins")
             chrome_options.add_argument("--disable-images")
-            chrome_options.add_argument("--disable-javascript") if self.config.get('disable_js', False) else None
+            (
+                chrome_options.add_argument("--disable-javascript")
+                if self.config.get("disable_js", False)
+                else None
+            )
 
             # Memory management
             chrome_options.add_argument("--memory-pressure-off")
@@ -102,7 +112,9 @@ class WebDriverManager:
                 WebDriverWait(self.driver, self.default_timeout).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, wait_for_element))
                 )
-                logger.info(f"Successfully loaded page with element: {wait_for_element}")
+                logger.info(
+                    f"Successfully loaded page with element: {wait_for_element}"
+                )
             else:
                 # Wait for body to load
                 WebDriverWait(self.driver, self.default_timeout).until(
@@ -163,12 +175,18 @@ class WebDriverManager:
                 logger.error("WebDriver not initialized")
                 return
 
-            last_height = self.driver.execute_script("return document.body.scrollHeight")
+            last_height = self.driver.execute_script(
+                "return document.body.scrollHeight"
+            )
 
             while True:
-                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                self.driver.execute_script(
+                    "window.scrollTo(0, document.body.scrollHeight);"
+                )
                 time.sleep(pause_time)
-                new_height = self.driver.execute_script("return document.body.scrollHeight")
+                new_height = self.driver.execute_script(
+                    "return document.body.scrollHeight"
+                )
                 if new_height == last_height:
                     break
                 last_height = new_height
@@ -261,6 +279,11 @@ class WebDriverManager:
         """Context manager entry."""
         return self
 
-    def __exit__(self, exc_type: Optional[type], exc_val: Optional[Exception], exc_tb: Optional[Any]) -> None:
+    def __exit__(
+        self,
+        exc_type: Optional[type],
+        exc_val: Optional[Exception],
+        exc_tb: Optional[Any],
+    ) -> None:
         """Context manager exit."""
         self.quit()

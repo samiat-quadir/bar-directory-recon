@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
 """
-Hallandale Property Processing Pipeline
-Complete pipeline for processing Hallandale property list PDF and enriching data.
+Fixed Hallandale Property Processing Pipeline
 """
 
-import argparse
 import logging
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict
 
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor
 from property_enrichment import PropertyEnrichment
 from property_validation import PropertyValidation
 
-# Add src directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 # Set flag for Google Sheets integration (currently disabled)
@@ -193,14 +189,9 @@ class HallandalePipeline:
             }
         except Exception as e:
             self.logger.error(f"Google Sheets upload failed: {e}")
-            return {
-                "success": False,
-                "message": f"Google Sheets upload failed: {e}",
-            }
+            return {"success": False, "message": f"Google Sheets upload failed: {e}"}
 
-    def _generate_final_report(
-        self, results: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _generate_final_report(self, results: Dict[str, Any]) -> Dict[str, Any]:
         """Generate comprehensive final report."""
         try:
             report_file = self.output_dir / "pipeline_report.txt"
@@ -233,10 +224,7 @@ class HallandalePipeline:
 
         except Exception as e:
             self.logger.error(f"Error generating final report: {e}")
-            return {
-                "success": False,
-                "message": f"Report generation failed: {e}",
-            }
+            return {"success": False, "message": f"Report generation failed: {e}"}
 
 
 def main() -> None:
