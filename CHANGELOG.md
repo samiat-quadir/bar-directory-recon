@@ -1,4 +1,86 @@
 # Changelog
+=======
+
+## [2.1.0] - 2025-08-05 - Phase 2 Close-out (Alienware)
+
+### Added
+- **Consolidated Python dependencies**: Single `requirements.txt` with pinned versions for production
+- **Development requirements**: Separate `requirements-dev.txt` for development tools
+- **Architecture documentation**: Comprehensive `docs/architecture.md` explaining src/ vs universal_recon/ structure
+- **Enhanced CI/CD pipeline**: Matrix-driven GitHub Actions workflow with multiple Python versions
+- **Advanced pre-commit hooks**: Added black, isort, flake8, and mypy for code quality
+- **Phase 3 roadmap**: Detailed planning document for production readiness and scalability
+
+### Changed
+- **Requirements management**: Moved from loose version ranges to pinned dependencies
+- **Pre-commit configuration**: Enhanced with comprehensive code quality tools
+- **GitHub workflows**: Consolidated multiple workflow files into single matrix-driven CI
+
+### Removed
+- **Legacy requirement files**: Deleted `requirements-core.txt`, `requirements-optional.txt`, `requirements-frozen.txt`
+- **Redundant workflows**: Removed duplicate and device-specific GitHub Actions files
+- **Unpinned dependencies**: Eliminated version range specifications in favor of exact pins
+
+### Security
+- **Secrets scanning**: Implemented comprehensive credential detection and removal
+- **Environment variable migration**: Replaced hard-coded secrets with env-var references
+- **Security verification**: Added automated security scanning to CI pipeline
+
+### Infrastructure
+- **Cross-device parity**: Achieved consistent development environment across Alienware and ASUS
+- **Streamlined tooling**: Reduced tools/ directory to essential utilities with clear documentation
+- **Quality assurance**: Implemented comprehensive testing and linting pipeline
+=======
+
+## [v3.0] — TBD
+
+### Planned
+
+- Advanced automation & scalability features
+- Enterprise SLA monitoring and alerting
+- Multi-region deployment capabilities
+- Enhanced plugin architecture
+
+## [v2.0-cross-device] - 2025-08-05
+
+### Added
+
+- **Cross-Device Parity Completion**: Finalized branch cleanup, CI consolidation, and audit fixes
+- **ACE Device Integration**: Successfully replicated Phase 2 close-out steps on ASUS device
+- **Branch Management**: Cleaned up stale feature branches (ali-audit-fixes, improve-nightly-checks, fix-whitespace-ali)
+
+## [v2.0-cross-device] - 2025-07-30
+
+### Added
+
+- **🎯 Alienware Bootstrap Bundle** - Complete deployment package for cross-device parity
+  - **Bootstrap Bundle**: `alienware_bootstrap_bundle.zip` (27.4KB, 8 files) for immediate deployment
+  - **PowerShell Script**: `bootstrap_alienware.ps1` (529 lines) for Windows deployment
+  - **Bash Script**: `bootstrap_alienware.sh` (523 lines) for Linux/macOS deployment
+  - **Environment Templates**: `.env.template` with Alienware-specific configuration
+  - **Device Profile**: `config/device_profile-Alienware.json` for device-specific settings
+  - **Validation Tools**: `validate_env_state.py` and `validate_alienware_bootstrap.py`
+  - **Automation Playbook**: `alienware_playbook.ps1` (675 lines) for end-to-end setup
+  - **Access Guide**: `ALI_BOOTSTRAP_ACCESS_GUIDE.md` with deployment instructions
+
+- **🤝 Cross-Device Parity Achievements**
+  - **95%+ Environment Parity**: Verified compatibility between ASUS and Alienware platforms
+  - **Unified PowerShell Scripts**: Combined Unicode fixes (ACE) with 64-bit handling (ALI)
+  - **Cross-Platform Validation**: Audit reports from both `audits/ace/` and `audits/ali/`
+  - **Git LFS Support**: Proper handling of bootstrap bundle as deployment artifact
+  - **Protected Branch Workflow**: Feature branch deployment to bypass main branch protection
+
+### Fixed
+
+- **Git Repository Access**: Resolved protected branch issues with feature branch workflow
+- **Merge Conflicts**: Combined ALI and ACE enhancements in `.gitignore` and documentation
+- **Bootstrap Bundle Tracking**: Added exception in `.gitignore` for critical deployment artifacts
+
+### Changed
+
+- **Release Tagging**: Updated to `v2.0-cross-device` reflecting complete cross-device integration
+- **Documentation**: Enhanced PHASE3_ROADMAP.md with comprehensive cross-device notes
+- **Branch Management**: Implemented proper feature branch workflow for protected main branch
 
 ## [Unreleased]
 
