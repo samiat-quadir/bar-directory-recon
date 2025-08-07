@@ -14,7 +14,7 @@ authors = [
 ]
 
 [tool.black]
-line-length = 120
+line-length = 88
 target-version = ["py311"]
 include = '\.pyi?$'
 exclude = '''
@@ -31,11 +31,11 @@ multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
-line_length = 120
+line_length = 88
 skip = [".venv311", "merge_conflicts_backup", ".temp_conflicts"]
 
 [tool.ruff]
-line-length = 120
+line-length = 88
 target-version = "py311"
 extend-select = ["E", "F"]
 exclude = [

@@ -3,7 +3,48 @@
 Security Manager for Azure Key Vault Integration
 
 This module provides secure credential management using Azure Key Vault
-with graceful fallback to environment variables for development scenarios.
+with graceful fallback to environment va            "host        return {
+              return {
+            "e        # Test a simple secret retrieval if possible
+        if self._connection_healthy:
+            try:
+                test_result = self.get_secret(
+                    "test-connection", "TEST_CONNECTION"
+                )
+                status["test_retrieval"] = (
+                    "success" if test_result is not None else "no_secret"
+                )
+            except Exception as e:
+                status["test_retrieval"] = f"failed: {e}"nt_api_key": self.get_secret(
+                "enrichment-api-key", "ENRICHMENT_API_KEY"
+            ),
+            "geocoding_api_key": self.get_secret(
+                "geocoding-api-key", "GEOCODING_API_KEY"
+            ),
+            "webhook_secret": self.get_secret(
+                "webhook-secret", "WEBHOOK_SECRET"
+            ),
+        } "smtp_server": self.get_secret(
+                "email-smtp-server", "EMAIL_SMTP_SERVER"
+            ),
+            "smtp_port": self.get_secret(
+                "email-smtp-port", "EMAIL_SMTP_PORT"
+            )
+            or "587",
+            "username": self.get_secret("email-username", "EMAIL_USERNAME"),
+            "password": self.get_secret("email-password", "EMAIL_PASSWORD"),
+            "from_address": self.get_secret(
+                "email-from-address", "EMAIL_FROM_ADDRESS"
+            ),
+        }.get_secret("database-host", "DATABASE_HOST"),
+            "port": self.get_secret("database-port", "DATABASE_PORT") or "5432",
+            "name": self.get_secret("database-name", "DATABASE_NAME"),
+            "username": self.get_secret(
+                "database-username", "DATABASE_USERNAME"
+            ),
+            "password": self.get_secret(
+                "database-password", "DATABASE_PASSWORD"
+            ),es for development scenarios.
 
 Mirrors the implementation from ALI (Alienware) with ASUS-specific adaptations.
 
@@ -11,20 +52,22 @@ Author: ACE (ASUS Device)
 Date: August 6, 2025
 """
 
-import os
-import logging
-from typing import Optional, Dict, Any, Union
-from functools import lru_cache
 import json
+import logging
+import os
+from functools import lru_cache
+from typing import Any, Dict, Optional, Union
 
 try:
+    from azure.identity import ClientSecretCredential, DefaultAzureCredential
     from azure.keyvault.secrets import SecretClient
-    from azure.identity import DefaultAzureCredential, ClientSecretCredential
 
     AZURE_AVAILABLE = True
 except ImportError:
     AZURE_AVAILABLE = False
-    logging.warning("Azure SDK not available. Falling back to environment variables only.")
+    logging.warning(
+        "Azure SDK not available. Falling back to environment variables only."
+    )
 
 
 class SecurityManager:
@@ -46,7 +89,8 @@ class SecurityManager:
         Initialize SecurityManager with Azure Key Vault integration.
 
         Args:
-            keyvault_url: Azure Key Vault URL (e.g., https://vault.vault.azure.net/)
+            keyvault_url: Azure Key Vault URL
+                (e.g., https://vault.vault.azure.net/)
             tenant_id: Azure tenant ID for service principal auth
             client_id: Azure client ID for service principal auth
             client_secret: Azure client secret for service principal auth
@@ -59,29 +103,46 @@ class SecurityManager:
         if AZURE_AVAILABLE and self.keyvault_url:
             self._initialize_azure_client(tenant_id, client_id, client_secret)
         else:
-            self.logger.info("Using environment variable fallback for credential management")
+            self.logger.info(
+                "Using environment variable fallback for credential management"
+            )
 
     def _initialize_azure_client(
-        self, tenant_id: Optional[str], client_id: Optional[str], client_secret: Optional[str]
+        self,
+        tenant_id: Optional[str],
+        client_id: Optional[str],
+        client_secret: Optional[str],
     ) -> None:
         """Initialize Azure Key Vault client with authentication."""
         try:
             # Ensure keyvault_url is available
             if not self.keyvault_url:
-                self.logger.error("Key Vault URL is required for Azure client initialization")
+                self.logger.error(
+                    "Key Vault URL is required for Azure client initialization"
+                )
                 return
 
             # Try service principal authentication first
             if all([tenant_id, client_id, client_secret]):
-                self.logger.info("Initializing SecurityManager with service principal authentication")
-                credential: Union[ClientSecretCredential, DefaultAzureCredential] = ClientSecretCredential(
-                    tenant_id=str(tenant_id), client_id=str(client_id), client_secret=str(client_secret)
+                self.logger.info(
+                    "Initializing SecurityManager with service principal auth"
+                )
+                credential: Union[
+                    ClientSecretCredential, DefaultAzureCredential
+                ] = ClientSecretCredential(
+                    tenant_id=str(tenant_id),
+                    client_id=str(client_id),
+                    client_secret=str(client_secret),
                 )
             else:
-                self.logger.info("Initializing SecurityManager with default credential chain")
+                self.logger.info(
+                    "Initializing SecurityManager with default credential chain"
+                )
                 credential = DefaultAzureCredential()
 
-            self.client = SecretClient(vault_url=self.keyvault_url, credential=credential)
+            self.client = SecretClient(
+                vault_url=self.keyvault_url, credential=credential
+            )
 
             # Test connection
             self._test_connection()
@@ -107,7 +168,9 @@ class SecurityManager:
             return False
 
     @lru_cache(maxsize=128)
-    def get_secret(self, secret_name: str, fallback_env_var: Optional[str] = None) -> Optional[str]:
+    def get_secret(
+        self, secret_name: str, fallback_env_var: Optional[str] = None
+    ) -> Optional[str]:
         """
         Retrieve secret from Azure Key Vault with environment variable fallback.
 
@@ -122,20 +185,30 @@ class SecurityManager:
         if self.client and self._connection_healthy:
             try:
                 secret = self.client.get_secret(secret_name)
-                self.logger.debug(f"Retrieved secret '{secret_name}' from Azure Key Vault")
+                self.logger.debug(
+                    f"Retrieved secret '{secret_name}' from Azure Key Vault"
+                )
                 return secret.value
             except Exception as e:
-                self.logger.warning(f"Failed to retrieve secret '{secret_name}' from Key Vault: {e}")
+                self.logger.warning(
+                    f"Failed to retrieve secret '{secret_name}' from Key Vault: {e}"
+                )
 
         # Fallback to environment variable
         env_var = fallback_env_var or self._convert_secret_name_to_env_var(secret_name)
         value = os.getenv(env_var)
 
         if value:
-            self.logger.debug(f"Retrieved secret '{secret_name}' from environment variable '{env_var}'")
+            self.logger.debug(
+                f"Retrieved secret '{secret_name}' from environment "
+                f"variable '{env_var}'"
+            )
             return value
 
-        self.logger.warning(f"Secret '{secret_name}' not found in Key Vault or environment variables")
+        self.logger.warning(
+            f"Secret '{secret_name}' not found in Key Vault or "
+            f"environment variables"
+        )
         return None
 
     def _convert_secret_name_to_env_var(self, secret_name: str) -> str:
@@ -169,8 +242,12 @@ class SecurityManager:
     def get_api_config(self) -> Dict[str, Any]:
         """Get API configuration from secrets."""
         return {
-            "enrichment_api_key": self.get_secret("enrichment-api-key", "ENRICHMENT_API_KEY"),
-            "geocoding_api_key": self.get_secret("geocoding-api-key", "GEOCODING_API_KEY"),
+            "enrichment_api_key": self.get_secret(
+                "enrichment-api-key", "ENRICHMENT_API_KEY"
+            ),
+            "geocoding_api_key": self.get_secret(
+                "geocoding-api-key", "GEOCODING_API_KEY"
+            ),
             "webhook_secret": self.get_secret("webhook-secret", "WEBHOOK_SECRET"),
         }
 
@@ -193,7 +270,9 @@ class SecurityManager:
         if self._connection_healthy:
             try:
                 test_result = self.get_secret("test-connection", "TEST_CONNECTION")
-                status["test_retrieval"] = "success" if test_result is not None else "no_secret"
+                status["test_retrieval"] = (
+                    "success" if test_result is not None else "no_secret"
+                )
             except Exception as e:
                 status["test_retrieval"] = f"failed: {e}"
 
@@ -201,7 +280,9 @@ class SecurityManager:
 
     def __repr__(self) -> str:
         """String representation of SecurityManager."""
-        mode = "Azure Key Vault" if self._connection_healthy else "Environment Variables"
+        mode = (
+            "Azure Key Vault" if self._connection_healthy else "Environment Variables"
+        )
         return f"SecurityManager(mode={mode}, healthy={self._connection_healthy})"
 
 
@@ -221,7 +302,9 @@ def get_security_manager(**kwargs: Any) -> SecurityManager:
     return _security_manager
 
 
-def get_secret(secret_name: str, fallback_env_var: Optional[str] = None) -> Optional[str]:
+def get_secret(
+    secret_name: str, fallback_env_var: Optional[str] = None
+) -> Optional[str]:
     """
     Convenience function to get a secret using the global SecurityManager.
 

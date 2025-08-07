@@ -8,16 +8,16 @@ Author: ACE (ASUS Device)
 Date: August 6, 2025
 """
 
-import os
-import logging
 import json
+import logging
+import os
 from pathlib import Path
 
 # Import our SecurityManager
-from src.security_manager import SecurityManager, get_security_manager, get_secret
+from src.security_manager import SecurityManager, get_secret, get_security_manager
 
 
-def setup_demo_environment():
+def setup_demo_environment() -> dict:
     """Set up demo environment variables for testing."""
     demo_vars = {
         "DATABASE_HOST": "asus-db-server.local",
@@ -56,7 +56,7 @@ def demonstrate_security_manager():
     # Health check
     print("\n2. Performing health check...")
     health = manager.health_check()
-    print(f"   Health Status:")
+    print("   Health Status:")
     for key, value in health.items():
         status_icon = "✅" if value else "❌"
         print(f"   {status_icon} {key}: {value}")
@@ -106,12 +106,18 @@ def demonstrate_global_functions():
     # Test singleton pattern
     manager1 = get_security_manager()
     manager2 = get_security_manager()
-    singleton_status = "✅ Singleton working" if manager1 is manager2 else "❌ Singleton failed"
+    singleton_status = (
+        "✅ Singleton working" if manager1 is manager2 else "❌ Singleton failed"
+    )
     print(f"   {singleton_status}")
 
     # Test convenience secret retrieval
     secret_value = get_secret("test-connection", "TEST_CONNECTION")
-    convenience_status = "✅ Convenience function working" if secret_value else "❌ Convenience function failed"
+    convenience_status = (
+        "✅ Convenience function working"
+        if secret_value
+        else "❌ Convenience function failed"
+    )
     print(f"   {convenience_status}: {secret_value}")
 
 
@@ -125,9 +131,9 @@ def demonstrate_caching():
     manager.get_secret.cache_clear()
 
     # Make some calls
-    secret1 = manager.get_secret("database-host", "DATABASE_HOST")
-    secret2 = manager.get_secret("database-host", "DATABASE_HOST")  # Should be cached
-    secret3 = manager.get_secret("email-username", "EMAIL_USERNAME")
+    manager.get_secret("database-host", "DATABASE_HOST")
+    manager.get_secret("database-host", "DATABASE_HOST")  # Should be cached
+    manager.get_secret("email-username", "EMAIL_USERNAME")
 
     # Check cache info
     cache_info = manager.get_secret.cache_info()
@@ -135,7 +141,7 @@ def demonstrate_caching():
     print(f"   ✅ Cache hits: {cache_info.hits}, misses: {cache_info.misses}")
 
 
-def demonstrate_azure_simulation():
+def demonstrate_azure_simulation() -> None:
     """Simulate Azure Key Vault scenarios (without real Azure)."""
     print("\n7. Simulating Azure Key Vault scenarios...")
 
@@ -149,7 +155,7 @@ def demonstrate_azure_simulation():
     print(f"   {fallback_status}: Falls back to environment variables")
 
 
-def generate_security_report():
+def generate_security_report() -> dict:
     """Generate a security configuration report."""
     print("\n8. Generating security configuration report...")
 
@@ -177,9 +183,12 @@ def generate_security_report():
     return report
 
 
-def main():
+def main() -> None:
     """Main demo function."""
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
 
     print("🚀 ASUS Security Integration Demo")
     print("Mirroring ALI's proven security architecture")
@@ -194,14 +203,14 @@ def main():
         demonstrate_global_functions()
         demonstrate_caching()
         demonstrate_azure_simulation()
-        report = generate_security_report()
+        generate_security_report()
 
         print("\n🎉 ASUS Security Integration Demo Complete!")
         print("=" * 60)
         print(f"✅ SecurityManager functioning in {manager.__repr__()}")
         print(f"✅ All {len(demo_vars)} demo configurations working")
         print(f"✅ Cache performance: {manager.get_secret.cache_info()}")
-        print(f"✅ Security report generated")
+        print("✅ Security report generated")
 
         print("\n🔄 Cross-Device Validation Ready:")
         print("   ASUS implementation mirrors ALI's architecture")
@@ -213,7 +222,7 @@ def main():
 
     finally:
         # Clean up demo environment variables
-        demo_vars = [
+        demo_var_keys = [
             "DATABASE_HOST",
             "DATABASE_PORT",
             "DATABASE_NAME",
@@ -229,7 +238,7 @@ def main():
             "WEBHOOK_SECRET",
             "TEST_CONNECTION",
         ]
-        for var in demo_vars:
+        for var in demo_var_keys:
             os.environ.pop(var, None)
         print("\n🧹 Demo environment cleaned up")
 

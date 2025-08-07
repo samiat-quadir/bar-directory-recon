@@ -9,11 +9,12 @@ Date: August 6, 2025
 """
 
 import os
+from unittest.mock import Mock, patch
+
 import pytest
-from unittest.mock import patch, Mock
 
 # Import our SecurityManager
-from src.security_manager import SecurityManager, get_security_manager, get_secret
+from src.security_manager import SecurityManager, get_secret, get_security_manager
 
 
 class TestSecurityManager:
@@ -60,11 +61,18 @@ class TestSecurityManager:
 
         with patch("src.security_manager.AZURE_AVAILABLE", True):
             manager = SecurityManager(
-                keyvault_url=test_url, tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
+                keyvault_url=test_url,
+                tenant_id=tenant_id,
+                client_id=client_id,
+                client_secret=client_secret,
             )
 
-        mock_credential.assert_called_once_with(tenant_id=tenant_id, client_id=client_id, client_secret=client_secret)
-        mock_client.assert_called_once_with(vault_url=test_url, credential=mock_credential_instance)
+        mock_credential.assert_called_once_with(
+            tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
+        )
+        mock_client.assert_called_once_with(
+            vault_url=test_url, credential=mock_credential_instance
+        )
         assert manager._connection_healthy
 
     @patch("src.security_manager.SecretClient")
@@ -84,7 +92,9 @@ class TestSecurityManager:
             manager = SecurityManager(keyvault_url=test_url)
 
         mock_credential.assert_called_once()
-        mock_client.assert_called_once_with(vault_url=test_url, credential=mock_credential_instance)
+        mock_client.assert_called_once_with(
+            vault_url=test_url, credential=mock_credential_instance
+        )
         assert manager._connection_healthy
 
     @patch("src.security_manager.SecretClient")
@@ -106,9 +116,15 @@ class TestSecurityManager:
         manager = SecurityManager()
 
         assert manager._convert_secret_name_to_env_var("api-key") == "API_KEY"
-        assert manager._convert_secret_name_to_env_var("database-password") == "DATABASE_PASSWORD"
+        assert (
+            manager._convert_secret_name_to_env_var("database-password")
+            == "DATABASE_PASSWORD"
+        )
         assert manager._convert_secret_name_to_env_var("test secret") == "TEST_SECRET"
-        assert manager._convert_secret_name_to_env_var("complex-name-with-spaces") == "COMPLEX_NAME_WITH_SPACES"
+        assert (
+            manager._convert_secret_name_to_env_var("complex-name-with-spaces")
+            == "COMPLEX_NAME_WITH_SPACES"
+        )
 
     def test_get_secret_fallback_env_var(self):
         """Test getting secret from environment variable fallback."""
