@@ -537,7 +537,7 @@ if __name__ == "__main__":
             'keyvault_configured': bool(self.keyvault_url),
             'client_initialized': bool(self.client),
             'fallback_mode': self.fallback_mode,
-            'timestamp': logging.time.time()
+            'timestamp': time.time()
         }
 
         if self.client:
