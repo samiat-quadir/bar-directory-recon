@@ -45,7 +45,8 @@ with graceful fallback to environment va            "host        return {
             ),
             "password": self.get_secret(
                 "database-password", "DATABASE_PASSWORD"
-            ),es for development scenarios.
+This module provides secure credential management using Azure Key Vault,
+with graceful fallback to environment variables for development scenarios.
 
 Mirrors the implementation from ALI (Alienware) with ASUS-specific adaptations.
 
