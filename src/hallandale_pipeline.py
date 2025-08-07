@@ -1,22 +1,32 @@
+#!/usr/bin/env python3
+"""
+Fixed Hallandale Property Processing Pipeline
+"""
+
+<<<<<<< HEAD
+=======
+
+import argparse
+>>>>>>> bb5d018b6bfae92afa27861f7702aaba0c51c08f
 import logging
 import os
 import sys
 from pathlib import Path
-
-# Import pipeline modules
-from pdf_processor import HallandalePropertyProcessor
-from property_enrichment import PropertyEnrichment
-from property_validation import PropertyValidation
-
-sys.path.append(os.path.join(os.path.dirname(__file__)))
+<<<<<<< HEAD
 =======
 
+from typing import Any, Dict
+
+# Add src directory to Python path
+sys.path.append(os.path.join(os.path.dirname(__file__)))
+>>>>>>> bb5d018b6bfae92afa27861f7702aaba0c51c08f
+
+
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor
 from property_enrichment import PropertyEnrichment
 from property_validation import PropertyValidation
 
-# Add src directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 # Set flag for Google Sheets integration (currently disabled)
@@ -49,9 +59,7 @@ class HallandalePipeline:
 
         logging.basicConfig(
             level=logging.INFO,
-
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-
             handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
         )
 
@@ -72,7 +80,6 @@ class HallandalePipeline:
             pdf_result = self.pdf_processor.process_pdf(pdf_path)
 
             if not pdf_result.get("success", False):
-
                 error_msg = f"PDF processing failed: {pdf_result.get('message', 'Unknown error')}"
                 self.logger.error(error_msg)
                 results["errors"].append(error_msg)
@@ -87,7 +94,6 @@ class HallandalePipeline:
 
             # Step 2: Enrich properties
             self.logger.info("Step 2: Enriching property data")
-
             enrichment_result = self.enricher.enrich_properties(
                 pdf_result["output_file"]
             )
@@ -159,7 +165,6 @@ class HallandalePipeline:
             }
             return results
 
-
     def _export_final_results(self, results: Dict[str, Any]) -> Dict[str, Any]:
         """Export final results to Excel and CSV."""
         try:
@@ -180,6 +185,7 @@ class HallandalePipeline:
                 "export_files": export_files,
                 "message": f"Results exported to {len(export_files)} files",
             }
+
         except Exception as e:
             self.logger.error(f"Excel export failed: {e}")
             return {"success": False, "message": f"Export failed: {e}"}
@@ -194,24 +200,17 @@ class HallandalePipeline:
             return {
                 "success": True,
                 "message": "Upload simulated - Google Sheets integration not configured",
-
             }
         except Exception as e:
             self.logger.error(f"Google Sheets upload failed: {e}")
-            return {
-                "success": False,
-                "message": f"Google Sheets upload failed: {e}",
-            }
+            return {"success": False, "message": f"Google Sheets upload failed: {e}"}
 
-    def _generate_final_report(
-        self, results: Dict[str, Any]
-    ) -> Dict[str, Any]:
-
+    def _generate_final_report(self, results: Dict[str, Any]) -> Dict[str, Any]:
         """Generate comprehensive final report."""
         try:
             report_file = self.output_dir / "pipeline_report.txt"
 
-            with open(report_file, 'w') as f:
+            with open(report_file, "w") as f:
                 f.write("HALLANDALE PROPERTY PROCESSING PIPELINE REPORT\n")
                 f.write("=" * 50 + "\n\n")
 
@@ -229,7 +228,6 @@ class HallandalePipeline:
 
                 # Add detailed results for each step
                 for step in results.get("steps_completed", []):
-
                     f.write(f"\n{step.upper()} RESULTS:\n")
                     step_result = results.get(f"{step}_result", {})
                     for key, value in step_result.items():
@@ -240,11 +238,6 @@ class HallandalePipeline:
 
         except Exception as e:
             self.logger.error(f"Error generating final report: {e}")
-            return {
-                "success": False,
-                "message": f"Report generation failed: {e}",
-            }
-
             return {"success": False, "message": f"Report generation failed: {e}"}
 
 
@@ -263,7 +256,6 @@ def main() -> None:
         "--export", action="store_true", help="Export results to Excel and CSV"
     )
 
-
     args = parser.parse_args()
 
     # Initialize and run pipeline
@@ -277,10 +269,6 @@ def main() -> None:
     if results.get("errors"):
         print(f"Errors: {len(results['errors'])}")
         for error in results["errors"]:
-
-    if results.get('errors'):
-        print(f"Errors: {len(results['errors'])}")
-        for error in results['errors']:
             print(f"  - {error}")
 
 
