@@ -42,5 +42,5 @@ tqdm==4.67.1
 # Networking
 certifi==2024.12.14
 charset-normalizer==3.4.1
-idna==3.10
+idna>=3.6,<4
 urllib3==2.3.0
