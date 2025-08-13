@@ -34,7 +34,22 @@ def maybe_local_fastpath(cmd: str) -> str | None:
         return payload
     if me == "ROG-LUCCI" and cmd.strip().startswith("ssh ") and " rog-lucci " in cmd:
         payload = cmd.split('"', 2)[1] if '"' in cmd else None
-        return payload
+    # Get local machine names from env or config, fallback to defaults
+    local_machines_env = os.environ.get("LOCAL_MACHINES")
+    if local_machines_env:
+        local_machines = [name.strip().upper() for name in local_machines_env.split(",") if name.strip()]
+    else:
+        # Try to get from config, fallback to hardcoded
+        local_machines = []
+        if isinstance(CFG, dict) and "local_machines" in CFG:
+            local_machines = [name.strip().upper() for name in CFG["local_machines"]]
+        if not local_machines:
+            local_machines = ["MOTHERSHIP", "ROG-LUCCI"]
+    me = os.environ.get("COMPUTERNAME", "").upper()
+    for machine in local_machines:
+        if me == machine and cmd.strip().startswith("ssh ") and f" {machine.lower()} " in cmd:
+            payload = cmd.split('"', 2)[1] if '"' in cmd else None
+            return payload
     return None
 
 
