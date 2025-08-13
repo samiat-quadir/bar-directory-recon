@@ -1,0 +1,6 @@
+ Volume in drive C is OS
+ Volume Serial Number is 90F7-2F8F
+
+ Directory of c:\Code\bar-directory-recon
+
+File Not Found

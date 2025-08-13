@@ -1,0 +1,33 @@
+ Volume in drive C is OS
+ Volume Serial Number is 90F7-2F8F
+
+ Directory of c:\Code\bar-directory-recon
+
+08/07/2025  05:21 PM             2,350 vscode_insiders_extensions.txt
+08/07/2025  05:20 PM                28 vscode_insiders_keybindings_status.txt
+08/07/2025  04:28 PM             1,331 vscode_insiders_settings.json
+08/07/2025  05:21 PM                41 vscode_insiders_snippets_status.txt
+08/07/2025  05:22 PM                44 vscode_insiders_version.txt
+
+ Directory of c:\Code\bar-directory-recon
+
+08/07/2025  05:22 PM                74 python_interpreter_info.txt
+
+ Directory of c:\Code\bar-directory-recon
+
+08/07/2025  05:22 PM                24 git_user_info.txt
+
+ Directory of c:\Code\bar-directory-recon
+
+08/07/2025  05:22 PM               125 copilot_agent_config_check.txt
+08/07/2025  05:22 PM             1,510 onedrive_check.txt
+
+ Directory of c:\Code\bar-directory-recon
+
+08/07/2025  05:22 PM             1,510 onedrive_check.txt
+
+ Directory of c:\Code\bar-directory-recon
+
+08/07/2025  05:23 PM             5,320 ASUS_Device_Sync_Report.md
+              11 File(s)         12,357 bytes
+               0 Dir(s)  714,525,425,664 bytes free
