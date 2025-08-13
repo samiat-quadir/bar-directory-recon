@@ -1,0 +1,18 @@
+{
+    "python.defaultInterpreterPath": "C:\\Code\\bar-directory-recon\\.venv\\Scripts\\python.exe",
+    "task.allowAutomaticTasks": "on",
+    "editor.formatOnSave": true,
+    "files.autoSave": "onFocusChange",
+    "files.hotExit": "onExitAndWindowClose",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "github.copilot.enable": {
+        "*": true
+    },
+    "github.copilot.chat.agent.terminal.autoExecute": true,
+    "github.copilot.chat.agent.terminal.autoConfirm": true,
+    // Safe autonomy toggles (matching Ace's feel without overreaching):
+    "github.copilot.chat.agent.experimental.reduceInterruptions": true,
+    "git.autofetch": true,
+    "git.confirmSync": false
+}

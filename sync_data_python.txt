@@ -1,0 +1,2 @@
+Python interpreter: C:\Code\bar-directory-recon\.venv\Scripts\python.exe
+Python interpreter: C:\Program Files\Python313\python.exe

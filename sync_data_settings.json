@@ -1,0 +1,5 @@
+{
+    "git.autofetch": true,
+    "python.defaultInterpreterPath": "c:\\Program Files\\Python313\\python.exe",
+    "dev.containers.executeInWSL": true
+}
