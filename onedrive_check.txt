@@ -1,0 +1,32 @@
+ Volume in drive C is OS
+ Volume Serial Number is 90F7-2F8F
+
+ Directory of C:\Users\samqu\OneDrive - Digital Age Marketing Group
+
+08/04/2025  09:30 PM    <DIR>          .
+08/07/2025  03:28 PM    <DIR>          ..
+01/09/2025  12:31 PM    <DIR>          Agreements
+06/23/2025  08:25 PM            17,904 Antonio Group SEO Templates.docx
+12/21/2024  02:04 AM    <DIR>          Apps
+05/15/2025  07:15 PM    <DIR>          Archives
+12/21/2024  02:04 AM    <DIR>          Attachments
+01/16/2025  11:23 PM    <DIR>          Bar_Association_Projects
+05/15/2025  06:30 PM    <DIR>          Configs
+07/08/2025  03:09 PM    <DIR>          Desktop
+05/15/2025  07:15 PM    <DIR>          Docs
+08/07/2025  01:05 PM    <DIR>          Documents
+12/21/2024  02:04 AM    <DIR>          Excel Blast Lists
+05/15/2025  07:15 PM    <DIR>          Images
+05/15/2025  07:15 PM    <DIR>          Logs
+06/12/2025  08:31 PM    <DIR>          My things copy
+12/21/2024  02:05 AM    <DIR>          OfficeMobile
+05/15/2025  06:30 PM    <DIR>          OneDriveAuditReports
+05/15/2025  07:15 PM    <DIR>          Other
+08/04/2025  09:31 PM    <DIR>          Pictures
+05/15/2025  07:15 PM    <DIR>          Projects
+12/21/2024  02:04 AM    <DIR>          Scans
+05/15/2025  07:15 PM    <DIR>          Scripts
+06/23/2025  06:53 PM    <DIR>          Templates
+06/23/2025  06:52 PM    <DIR>          Word Blast temps
+               1 File(s)         17,904 bytes
+              24 Dir(s)  714,533,986,304 bytes free

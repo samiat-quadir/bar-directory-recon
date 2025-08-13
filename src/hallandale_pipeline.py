@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
 
-Hallandale Property Processing Pipeline
-Complete pipeline for processing Hallandale property list PDF and enriching data.
-
-"""
 
 
 import argparse
@@ -15,9 +10,9 @@ from pathlib import Path
 
 
 
+
 # Add src directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
-
 
 
 # Import pipeline modules
@@ -25,6 +20,7 @@ from pdf_processor import HallandalePropertyProcessor  # noqa: E402
 from property_enrichment import PropertyEnrichment  # noqa: E402
 from property_validation import PropertyValidation  # noqa: E402
 
+sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 # Set flag for Google Sheets integration (currently disabled)
 GOOGLE_SHEETS_AVAILABLE = False
@@ -56,12 +52,8 @@ class HallandalePipeline:
 
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler(log_file),
-                logging.StreamHandler()
-            ]
-        )
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
 
         self.logger = logging.getLogger(__name__)
         self.logger.info("STARTING HALLANDALE PROPERTY PROCESSING PIPELINE")
@@ -92,8 +84,9 @@ class HallandalePipeline:
 
             # Step 2: Enrich properties
             self.logger.info("Step 2: Enriching property data")
-            enrichment_result = self.enricher.enrich_properties(pdf_result["output_file"])
-
+            enrichment_result = self.enricher.enrich_properties(
+                pdf_result["output_file"]
+            )
 
             if not enrichment_result.get("success", False):
                 error_msg = f"Property enrichment failed: {enrichment_result.get('message', 'Unknown error')}"
@@ -193,14 +186,11 @@ class HallandalePipeline:
             self.logger.info("Google Sheets upload simulated (requires API credentials setup)")
             return {
                 "success": True,
-                "message": "Upload simulated - Google Sheets integration not configured"
+                "message": "Upload simulated - Google Sheets integration not configured",
             }
         except Exception as e:
             self.logger.error(f"Google Sheets upload failed: {e}")
-            return {
-                "success": False,
-                "message": f"Google Sheets upload failed: {e}"
-            }
+            return {"success": False, "message": f"Google Sheets upload failed: {e}"}
 
 
     def _generate_final_report(self, results: Dict[str, Any]) -> Dict[str, Any]:
@@ -220,7 +210,7 @@ class HallandalePipeline:
                         f.write(f"  - {error}\n")
 
                 # Add detailed results for each step
-                for step in results.get('steps_completed', []):
+                for step in results.get("steps_completed", []):
 
                     f.write(f"\n{step.upper()} RESULTS:\n")
                     step_result = results.get(f"{step}_result", {})
@@ -252,7 +242,6 @@ def main() -> None:
     parser.add_argument("--export", action="store_true",
                        help="Export results to Excel and CSV")
 
-
     args = parser.parse_args()
 
     # Initialize and run pipeline
@@ -263,10 +252,9 @@ def main() -> None:
     print(f"\nPipeline Status: {results['pipeline_status']}")
     print(f"Steps Completed: {len(results.get('steps_completed', []))}")
 
-    if results.get('errors'):
+    if results.get("errors"):
         print(f"Errors: {len(results['errors'])}")
-        for error in results['errors']:
-
+        for error in results["errors"]:
             print(f"  - {error}")
 
 

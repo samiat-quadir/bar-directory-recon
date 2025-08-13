@@ -1,0 +1,121 @@
+.venv/
+|-- .gitignore
+|-- Include/
+|   +-- site/
+|       +-- python3.13/
+|-- Lib/
+|   |-- python3.2/
+|   |   +-- site-packages/
+|   +-- site-packages/
+|       |-- 30fcd23745efe32ce681__mypyc.cp313-win_amd64.pyd
+|       |-- 91844386ccf7a24691a0__mypyc.cp313-win_amd64.pyd
+|       |-- LICENSE
+|       |-- MarkupSafe-3.0.2.dist-info/
+|       |-- PIL/
+|       |-- PyJWT-2.10.1.dist-info/
+|       |-- PyPDF2/
+|       |-- PySocks-1.7.1.dist-info/
+|       |-- PyWin32.chm
+|       |-- PyYAML-6.0.2.dist-info/
+|       |-- README.md
+|       |-- README.rst
+|       |-- __pycache__/
+|       |-- _black_version.py
+|       +-- _cffi_backend.cp313-win_amd64.pyd
+|-- Scripts/
+|   |-- Activate.ps1
+|   |-- __pycache__/
+|   |   |-- dumppdf.cpython-313.pyc
+|   |   |-- pdf2txt.cpython-313.pyc
+|   |   |-- pywin32_postinstall.cpython-313.pyc
+|   |   +-- pywin32_testall.cpython-313.pyc
+|   |-- activate
+|   |-- activate.bat
+|   |-- activate.fish
+|   |-- alembic.exe
+|   |-- apprise.exe
+|   |-- autoflake.exe
+|   |-- bandit-baseline.exe
+|   |-- bandit-config-generator.exe
+|   |-- bandit.exe
+|   |-- black.exe
+|   |-- blackd.exe
+|   |-- coolname.exe
+|   |-- coverage-3.13.exe
+|   |-- coverage.exe
+|   |-- coverage3.exe
+|   |-- dateparser-download.exe
+|   |-- deactivate.bat
+|   |-- distro.exe
+|   |-- dmypy.exe
+|   |-- dotenv.exe
+|   |-- dumppdf.py
+|   |-- email_validator.exe
+|   |-- f2py.exe
+|   |-- fastapi.exe
+|   |-- flake8.exe
+|   |-- google-oauthlib-tool.exe
+|   |-- griffe.exe
+|   |-- httpx.exe
+|   |-- identify-cli.exe
+|   |-- isort-identify-imports.exe
+|   |-- isort.exe
+|   |-- jsondiff
+|   |-- jsonpatch
+|   |-- jsonpointer
+|   |-- jsonschema.exe
+|   |-- mako-render.exe
+|   |-- markdown-it.exe
+|   |-- markdown_py.exe
+|   |-- mypy.exe
+|   |-- mypyc.exe
+|   |-- nodeenv.exe
+|   |-- normalizer.exe
+|   |-- numpy-config.exe
+|   |-- pbr.exe
+|   |-- pdf2txt.py
+|   |-- pdfplumber.exe
+|   |-- pip.exe
+|   |-- pip3.13.exe
+|   |-- pip3.exe
+|   |-- playwright.exe
+|   |-- pre-commit.exe
+|   |-- prefect.exe
+|   |-- py.test.exe
+|   |-- pycodestyle.exe
+|   |-- pyflakes.exe
+|   |-- pygmentize.exe
+|   |-- pypdfium2.exe
+|   |-- pyrsa-decrypt.exe
+|   |-- pyrsa-encrypt.exe
+|   |-- pyrsa-keygen.exe
+|   |-- pyrsa-priv2pub.exe
+|   |-- pyrsa-sign.exe
+|   |-- pyrsa-verify.exe
+|   |-- pysemver.exe
+|   |-- pytesseract.exe
+|   |-- pytest.exe
+|   |-- python.exe
+|   |-- pythonw.exe
+|   |-- pywin32_postinstall.exe
+|   |-- pywin32_postinstall.py
+|   |-- pywin32_testall.exe
+|   |-- pywin32_testall.py
+|   |-- slugify.exe
+|   |-- stubgen.exe
+|   |-- stubtest.exe
+|   |-- tqdm.exe
+|   |-- typer.exe
+|   |-- uv.exe
+|   |-- uvicorn.exe
+|   |-- uvw.exe
+|   |-- uvx.exe
+|   |-- virtualenv.exe
+|   |-- watchmedo.exe
+|   |-- websockets.exe
+|   +-- wsdump.exe
+|-- pyvenv.cfg
+|-- share/
+|   +-- man/
+|       +-- man1/
++-- venv_structure.txt
