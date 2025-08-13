@@ -1,6 +1,10 @@
 # Development dependencies - include production requirements
 -r requirements.txt
 
+# File watching (conditional by Python version) - redundant but explicit for dev
+watchdog>=4,<7; python_version < "3.13"
+watchfiles>=0.20; python_version >= "3.13"
+
 # Development and testing tools
 black==23.9.1
 isort==5.12.0

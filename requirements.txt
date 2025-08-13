@@ -30,6 +30,7 @@ schedule==1.2.2
 # watchdog 7.0.0 not available for Python 3.13 yet; pin to 6.0.0
 watchdog==6.0.0
 
+
 # Selenium for web automation
 selenium==4.27.1
 
@@ -41,6 +42,7 @@ tqdm==4.67.1
 # Networking
 certifi==2024.12.14
 charset-normalizer==3.4.1
+
 # idna 3.12 not yet available for Python 3.13 on this index; pin to latest available (3.10)
 idna==3.10
 urllib3==2.3.0

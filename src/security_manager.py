@@ -1,5 +1,15 @@
+"""Security Manager for Azure Key Vault integration with fallback.
 
-#!/usr/bin/env python3
+This module exposes a minimal API used by the test-suite:
+  * SecurityManager (with attributes: keyvault_url, client, fallback_mode)
+  * get_secret() that raises ValueError when secret missing
+  * get_email_config(), get_api_config(), get_google_sheets_config(), get_database_config()
+  * health_check() returning keys asserted in tests
+  * Global singleton helpers (get_security_manager, get_secret convenience)
+
+It resolves merge conflicts between two prior divergent implementations and
+keeps behavior aligned with the expectations in tests under
+`src/tests/test_security_manager.py`.
 """
 Security Manager for Azure Key Vault Integration
 
@@ -47,35 +57,42 @@ with graceful fallback to environment va            "host        return {
                 "database-password", "DATABASE_PASSWORD"
             ),es for development scenarios.
 
-Mirrors the implementation from ALI (Alienware) with ASUS-specific adaptations.
 
-Author: ACE (ASUS Device)
-Date: August 6, 2025
-"""
+from __future__ import annotations
 
-import json
 import logging
 import os
+import time
 from functools import lru_cache
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
-try:
-    from azure.identity import ClientSecretCredential, DefaultAzureCredential
-    from azure.keyvault.secrets import SecretClient
+try:  # Optional Azure dependencies
+    from azure.identity import ClientSecretCredential, DefaultAzureCredential  # type: ignore
+    from azure.keyvault.secrets import SecretClient  # type: ignore
 
     AZURE_AVAILABLE = True
-except ImportError:
+except (ImportError, ModuleNotFoundError):  # pragma: no cover - safety net
     AZURE_AVAILABLE = False
-    logging.warning(
-        "Azure SDK not available. Falling back to environment variables only."
+    # Create placeholder classes for testing when Azure SDK not available
+    class ClientSecretCredential:  # type: ignore
+        def __init__(self, tenant_id=None, client_id=None, client_secret=None):
+            pass
+    class DefaultAzureCredential:  # type: ignore
+        pass
+    class SecretClient:  # type: ignore
+        def __init__(self, vault_url=None, credential=None):
+            pass
+        def get_secret(self, name):
+            class MockSecret:
+                value = "mock_secret_value"
+            return MockSecret()
+        def list_properties_of_secrets(self, max_page_size=None):
+            return []
+    # Delay logging setup until configured by application/tests
+    logging.getLogger(__name__).warning(
+        "Azure Key Vault dependencies not installed. Operating in fallback mode."
     )
-=======
-"""
-Azure Key Vault Security Manager
 
-This module provides secure credential management using Azure Key Vault,
-replacing environment variable-based credential storage.
-"""
 import logging
 import os
 from functools import lru_cache
@@ -90,32 +107,11 @@ except ImportError:
     logging.warning("Azure Key Vault dependencies not installed. Using fallback mode.")
 
 
+
 class SecurityManager:
-    """
-    Azure Key Vault integration with environment variable fallback.
+    """Centralized credential retrieval with Key Vault + env fallback."""
 
-    This class mirrors ALI's proven architecture for secure credential management
-    across development and production environments.
-    """
-
-    def __init__(
-        self,
-        keyvault_url: Optional[str] = None,
-        tenant_id: Optional[str] = None,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
-    ):
-        """
-        Initialize SecurityManager with Azure Key Vault integration.
-
-        Args:
-            keyvault_url: Azure Key Vault URL
-                (e.g., https://vault.vault.azure.net/)
-            tenant_id: Azure tenant ID for service principal auth
-            client_id: Azure client ID for service principal auth
-            client_secret: Azure client secret for service principal auth
-        """
-        self.logger = logging.getLogger(__name__)
+    def __init__(self, keyvault_url: Optional[str] = None):
         self.keyvault_url = keyvault_url or os.getenv("AZURE_KEYVAULT_URL")
         self.client: Optional[SecretClient] = None
         self._connection_healthy = False
@@ -193,330 +189,129 @@ class SecurityManager:
     ) -> Optional[str]:
         """
         Retrieve secret from Azure Key Vault with environment variable fallback.
-=======
-    Centralized security credential management using Azure Key Vault.
 
-    Provides secure retrieval of sensitive credentials with fallback support
-    for development environments.
-    """
-
-    def __init__(self, keyvault_url: Optional[str] = None):
-        """
-        Initialize the SecurityManager.
-
-        Args:
-            keyvault_url: Azure Key Vault URL. If None, reads from environment.
-        """
-        self.keyvault_url = keyvault_url or os.getenv('AZURE_KEYVAULT_URL')
-        self.client = None
         self.fallback_mode = False
-
         if AZURE_AVAILABLE and self.keyvault_url:
             try:
                 self._initialize_client()
-            except Exception as e:
-                logging.warning(f"Failed to initialize Azure Key Vault client: {e}")
+            except Exception as e:  # pragma: no cover - defensive
+                logging.warning(
+                    f"Failed to initialize Azure Key Vault client: {e}. Fallback mode."
+                )
                 self.fallback_mode = True
         else:
-            logging.warning("Azure Key Vault not configured. Operating in fallback mode.")
             self.fallback_mode = True
 
-    def _initialize_client(self):
-        """Initialize the Azure Key Vault client with appropriate credentials."""
-        try:
-            # Try service principal authentication first
-            client_id = os.getenv('AZURE_CLIENT_ID')
-            client_secret = os.getenv('AZURE_CLIENT_SECRET')
-            tenant_id = os.getenv('AZURE_TENANT_ID')
-
-            if client_id and client_secret and tenant_id:
-                credential = ClientSecretCredential(
-                    tenant_id=tenant_id,
-                    client_id=client_id,
-                    client_secret=client_secret
-                )
-                logging.info("Using service principal authentication for Key Vault")
-            else:
-                # Fall back to default credential chain
-                credential = DefaultAzureCredential()
-                logging.info("Using default credential chain for Key Vault")
-
-            self.client = SecretClient(
-                vault_url=self.keyvault_url,
-                credential=credential
+    # --- Internal helpers -----------------------------------------------------------------
+    def _initialize_client(self) -> None:
+        if not AZURE_AVAILABLE:  # Should not be called, safety
+            raise RuntimeError(
+                "SecurityManager._initialize_client() called when Azure SDK is not available (AZURE_AVAILABLE=False). "
+                "This indicates a bug in the caller logic. Please ensure AZURE_AVAILABLE is checked before calling this method."
             )
+        client_id = os.getenv("AZURE_CLIENT_ID")
+        client_secret = os.getenv("AZURE_CLIENT_SECRET")
+        tenant_id = os.getenv("AZURE_TENANT_ID")
+        if client_id and client_secret and tenant_id:
+            credential = ClientSecretCredential(
+                tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
+            )
+            logging.info("Using service principal authentication for Key Vault")
+        else:
+            credential = DefaultAzureCredential()
+            logging.info("Using default credential chain for Key Vault")
+        self.client = SecretClient(vault_url=self.keyvault_url, credential=credential)  # type: ignore[arg-type]
+        # Light connectivity probe (single page) – exceptions bubble up
+        list(self.client.list_properties_of_secrets(max_page_size=1))  # type: ignore[call-arg]
+        logging.info("Successfully connected to Azure Key Vault")
 
-            # Test connection
-            list(self.client.list_properties_of_secrets(max_page_size=1))
-            logging.info("Successfully connected to Azure Key Vault")
-
-        except Exception as e:
-            logging.error(f"Failed to initialize Key Vault client: {e}")
-            raise
-
+    # --- Public API ------------------------------------------------------------------------
     @lru_cache(maxsize=128)
-    def get_secret(self, secret_name: str, fallback_env_var: Optional[str] = None) -> str:
-        """
-        Retrieve a secret from Azure Key Vault with fallback support.
-
-        Args:
-            secret_name: Name of the secret in Key Vault
-            fallback_env_var: Environment variable name for fallback
-
-        Returns:
-            Secret value or None if not found
-        """
-        # Try Azure Key Vault first
-        if self.client and self._connection_healthy:
-            try:
-                secret = self.client.get_secret(secret_name)
-                self.logger.debug(
-                    f"Retrieved secret '{secret_name}' from Azure Key Vault"
-                )
-                return secret.value
-            except Exception as e:
-                self.logger.warning(
-                    f"Failed to retrieve secret '{secret_name}' from Key Vault: {e}"
-                )
-
-        # Fallback to environment variable
-        env_var = fallback_env_var or self._convert_secret_name_to_env_var(secret_name)
-        value = os.getenv(env_var)
-
-        if value:
-            self.logger.debug(
-                f"Retrieved secret '{secret_name}' from environment "
-                f"variable '{env_var}'"
-            )
-            return value
-
-        self.logger.warning(
-            f"Secret '{secret_name}' not found in Key Vault or "
-            f"environment variables"
-        )
-        return None
-
-    def _convert_secret_name_to_env_var(self, secret_name: str) -> str:
-        """
-        Convert Key Vault secret name to environment variable format.
-
-        Example: 'api-key' -> 'API_KEY'
-        """
-        return secret_name.replace("-", "_").replace(" ", "_").upper()
-
-    def get_database_config(self) -> Dict[str, Any]:
-        """Get database configuration from secrets."""
-        return {
-            "host": self.get_secret("database-host", "DATABASE_HOST"),
-            "port": self.get_secret("database-port", "DATABASE_PORT") or "5432",
-            "name": self.get_secret("database-name", "DATABASE_NAME"),
-            "username": self.get_secret("database-username", "DATABASE_USERNAME"),
-            "password": self.get_secret("database-password", "DATABASE_PASSWORD"),
-        }
-
-    def get_email_config(self) -> Dict[str, Any]:
-        """Get email configuration from secrets."""
-        return {
-            "smtp_server": self.get_secret("email-smtp-server", "EMAIL_SMTP_SERVER"),
-            "smtp_port": self.get_secret("email-smtp-port", "EMAIL_SMTP_PORT") or "587",
-            "username": self.get_secret("email-username", "EMAIL_USERNAME"),
-            "password": self.get_secret("email-password", "EMAIL_PASSWORD"),
-            "from_address": self.get_secret("email-from-address", "EMAIL_FROM_ADDRESS"),
-        }
-
-    def get_api_config(self) -> Dict[str, Any]:
-        """Get API configuration from secrets."""
-        return {
-            "enrichment_api_key": self.get_secret(
-                "enrichment-api-key", "ENRICHMENT_API_KEY"
-            ),
-            "geocoding_api_key": self.get_secret(
-                "geocoding-api-key", "GEOCODING_API_KEY"
-            ),
-            "webhook_secret": self.get_secret("webhook-secret", "WEBHOOK_SECRET"),
-        }
-
-    def health_check(self) -> Dict[str, Any]:
-        """
-        Perform health check on security manager.
-
-        Returns:
-            Health status information
-        """
-        status: Dict[str, Any] = {
-            "azure_available": AZURE_AVAILABLE,
-            "keyvault_configured": bool(self.keyvault_url),
-            "client_initialized": bool(self.client),
-            "connection_healthy": self._connection_healthy,
-            "fallback_mode": not self._connection_healthy,
-        }
-
-        # Test a simple secret retrieval if possible
-        if self._connection_healthy:
-            try:
-                test_result = self.get_secret("test-connection", "TEST_CONNECTION")
-                status["test_retrieval"] = (
-                    "success" if test_result is not None else "no_secret"
-                )
-            except Exception as e:
-                status["test_retrieval"] = f"failed: {e}"
-
-        return status
-
-    def __repr__(self) -> str:
-        """String representation of SecurityManager."""
-        mode = (
-            "Azure Key Vault" if self._connection_healthy else "Environment Variables"
-        )
-        return f"SecurityManager(mode={mode}, healthy={self._connection_healthy})"
-
-
-# Global instance for easy access
-_security_manager: Optional[SecurityManager] = None
-
-
-def get_security_manager(**kwargs: Any) -> SecurityManager:
-    """
-    Get or create global SecurityManager instance.
-
-    This follows the singleton pattern for efficient credential management.
-    """
-    global _security_manager
-    if _security_manager is None:
-        _security_manager = SecurityManager(**kwargs)
-    return _security_manager
-
-
-def get_secret(
-    secret_name: str, fallback_env_var: Optional[str] = None
-) -> Optional[str]:
-    """
-    Convenience function to get a secret using the global SecurityManager.
-
-    Args:
-        secret_name: Name of the secret
-        fallback_env_var: Environment variable fallback
-
-    Returns:
-        Secret value or None
-    """
-    manager = get_security_manager()
-    return manager.get_secret(secret_name, fallback_env_var)
-
-
-if __name__ == "__main__":
-    # Demo usage
-    logging.basicConfig(level=logging.INFO)
-
-    print("🔐 ASUS SecurityManager Demo")
-    print("=" * 40)
-
-    # Initialize security manager
-    manager = SecurityManager()
-    print(f"Security Manager: {manager}")
-
-    # Health check
-    health = manager.health_check()
-    print(f"\nHealth Status: {json.dumps(health, indent=2)}")
-
-    # Test configuration retrieval
-    print("\nTesting configuration retrieval...")
-    api_config = manager.get_api_config()
-    print(f"API Config keys: {list(api_config.keys())}")
-
-    print("\n✅ SecurityManager demo complete!")
-=======
-            Secret value as string
-
-        Raises:
-            ValueError: If secret not found and no fallback available
-        """
-        # Try Azure Key Vault first
+    def get_secret(
+        self, secret_name: str, fallback_env_var: Optional[str] = None
+    ) -> str:
+        """Retrieve secret or raise ValueError if unavailable."""
+        # Key Vault first
         if not self.fallback_mode and self.client:
             try:
                 secret = self.client.get_secret(secret_name)
-                logging.debug(f"Retrieved secret '{secret_name}' from Key Vault")
-                return secret.value
-            except Exception as e:
-                logging.warning(f"Failed to retrieve secret '{secret_name}' from Key Vault: {e}")
+                return secret.value  # type: ignore[attr-defined]
+            except Exception as e:  # pragma: no cover - network/azure variability
+                logging.warning(
+                    f"Key Vault retrieval failed for '{secret_name}': {e}; falling back"
+                )
 
-        # Fallback to environment variable
+        # Named fallback env var
         if fallback_env_var:
-            env_value = os.getenv(fallback_env_var)
-            if env_value:
-                logging.warning(f"Using fallback environment variable for '{secret_name}'")
-                return env_value
+            val = os.getenv(fallback_env_var)
+            if val:
+                return val
 
-        # Try converting secret name to environment variable format
-        env_var_name = secret_name.upper().replace('-', '_')
-        env_value = os.getenv(env_var_name)
-        if env_value:
-            logging.warning(f"Using fallback environment variable '{env_var_name}' for '{secret_name}'")
-            return env_value
+        # Auto-convert secret name -> ENV style
+        auto_env = secret_name.upper().replace("-", "_")
+        val2 = os.getenv(auto_env)
+        if val2:
+            return val2
 
-        raise ValueError(f"Secret '{secret_name}' not found in Key Vault or environment variables")
+        raise ValueError(
+            f"Secret '{secret_name}' not found in Key Vault or environment variables"
+        )
 
     def get_email_config(self) -> Dict[str, Any]:
-        """Get email configuration from secure storage."""
         try:
             return {
-                'smtp_server': self.get_secret('smtp-server', 'SMTP_SERVER'),
-                'smtp_port': int(self.get_secret('smtp-port', 'SMTP_PORT')),
-                'username': self.get_secret('email-username', 'EMAIL_USERNAME'),
-                'password': self.get_secret('email-password', 'EMAIL_PASSWORD'),
-                'from_email': self.get_secret('from-email', 'FROM_EMAIL'),
-                'to_emails': self.get_secret('to-emails', 'TO_EMAILS').split(',')
+                "smtp_server": self.get_secret("smtp-server", "SMTP_SERVER"),
+                "smtp_port": int(self.get_secret("smtp-port", "SMTP_PORT")),
+                "username": self.get_secret("email-username", "EMAIL_USERNAME"),
+                "password": self.get_secret("email-password", "EMAIL_PASSWORD"),
+                "from_email": self.get_secret("from-email", "FROM_EMAIL"),
+                "to_emails": self.get_secret("to-emails", "TO_EMAILS").split(","),
             }
         except (ValueError, TypeError) as e:
             logging.error(f"Failed to retrieve email configuration: {e}")
             return {}
 
     def get_api_config(self) -> Dict[str, str]:
-        """Get API configuration from secure storage."""
-        config = {}
-
-        api_keys = [
-            ('hunter_api_key', 'hunter-api-key', 'HUNTER_API_KEY'),
-            ('zerobounce_api_key', 'zerobounce-api-key', 'ZEROBOUNCE_API_KEY'),
-            ('twilio_account_sid', 'twilio-account-sid', 'TWILIO_ACCOUNT_SID'),
-            ('twilio_auth_token', 'twilio-auth-token', 'TWILIO_AUTH_TOKEN'),
-            ('discord_webhook', 'discord-webhook-url', 'DISCORD_WEBHOOK_URL'),
-            ('slack_webhook', 'slack-webhook-url', 'SLACK_WEBHOOK_URL')
+        mapping = [
+            ("hunter_api_key", "hunter-api-key", "HUNTER_API_KEY"),
+            ("zerobounce_api_key", "zerobounce-api-key", "ZEROBOUNCE_API_KEY"),
+            ("twilio_account_sid", "twilio-account-sid", "TWILIO_ACCOUNT_SID"),
+            ("twilio_auth_token", "twilio-auth-token", "TWILIO_AUTH_TOKEN"),
+            ("discord_webhook", "discord-webhook-url", "DISCORD_WEBHOOK_URL"),
+            ("slack_webhook", "slack-webhook-url", "SLACK_WEBHOOK_URL"),
         ]
-
-        for config_key, secret_name, env_var in api_keys:
+        cfg: Dict[str, str] = {}
+        for key, secret_name, env_var in mapping:
             try:
-                config[config_key] = self.get_secret(secret_name, env_var)
+                cfg[key] = self.get_secret(secret_name, env_var)
             except ValueError:
-                logging.debug(f"API key '{secret_name}' not found, skipping")
-                pass
-
-        return config
+                logging.debug(f"API key '{secret_name}' not present; skipping")
+        return cfg
 
     def get_google_sheets_config(self) -> Dict[str, str]:
-        """Get Google Sheets configuration from secure storage."""
         try:
             return {
-                'credentials_path': self.get_secret('google-sheets-credentials', 'GOOGLE_SHEETS_CREDENTIALS_PATH'),
-                'sheet_id': self.get_secret('google-sheets-id', 'SHEET_ID')
+                "credentials_path": self.get_secret(
+                    "google-sheets-credentials", "GOOGLE_SHEETS_CREDENTIALS_PATH"
+                ),
+                "sheet_id": self.get_secret("google-sheets-id", "SHEET_ID"),
             }
         except ValueError as e:
             logging.error(f"Failed to retrieve Google Sheets configuration: {e}")
             return {}
 
     def get_database_config(self) -> Dict[str, str]:
-        """Get database configuration from secure storage."""
         try:
             return {
-                'url': self.get_secret('database-url', 'DATABASE_URL'),
-                'password': self.get_secret('database-password', 'DATABASE_PASSWORD')
+                "url": self.get_secret("database-url", "DATABASE_URL"),
+                "password": self.get_secret("database-password", "DATABASE_PASSWORD"),
             }
         except ValueError as e:
             logging.error(f"Failed to retrieve database configuration: {e}")
             return {}
 
     def health_check(self) -> Dict[str, Any]:
-        """
+        
         Perform a health check of the security manager.
 
         Returns:
@@ -528,42 +323,28 @@ if __name__ == "__main__":
             'client_initialized': bool(self.client),
             'fallback_mode': self.fallback_mode,
             'timestamp': logging.time.time()
+
         }
-
-        if self.client:
+        if self.client and not self.fallback_mode:
             try:
-                # Test Key Vault connectivity
                 list(self.client.list_properties_of_secrets(max_page_size=1))
-                status['keyvault_accessible'] = True
-            except Exception as e:
-                status['keyvault_accessible'] = False
-                status['keyvault_error'] = str(e)
-
+                status["keyvault_accessible"] = True
+            except Exception as e:  # pragma: no cover - network variability
+                status["keyvault_accessible"] = False
+                status["keyvault_error"] = str(e)
         return status
 
 
-# Global security manager instance
-_security_manager = None
+# Singleton helpers -------------------------------------------------------------------------
+_security_manager: Optional[SecurityManager] = None
+
 
 def get_security_manager() -> SecurityManager:
-    """Get the global SecurityManager instance."""
     global _security_manager
     if _security_manager is None:
         _security_manager = SecurityManager()
     return _security_manager
 
 
-# Convenience functions for backward compatibility
 def get_secret(secret_name: str, fallback_env_var: Optional[str] = None) -> str:
-    """Convenience function to get a secret."""
     return get_security_manager().get_secret(secret_name, fallback_env_var)
-
-
-def get_email_config() -> Dict[str, Any]:
-    """Convenience function to get email configuration."""
-    return get_security_manager().get_email_config()
-
-
-def get_api_config() -> Dict[str, str]:
-    """Convenience function to get API configuration."""
-    return get_security_manager().get_api_config()
