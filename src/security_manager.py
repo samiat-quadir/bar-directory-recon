@@ -68,7 +68,10 @@ class SecurityManager:
     # --- Internal helpers -----------------------------------------------------------------
     def _initialize_client(self) -> None:
         if not AZURE_AVAILABLE:  # Should not be called, safety
-            raise RuntimeError("Azure SDK not available")
+            raise RuntimeError(
+                "SecurityManager._initialize_client() called when Azure SDK is not available (AZURE_AVAILABLE=False). "
+                "This indicates a bug in the caller logic. Please ensure AZURE_AVAILABLE is checked before calling this method."
+            )
         client_id = os.getenv("AZURE_CLIENT_ID")
         client_secret = os.getenv("AZURE_CLIENT_SECRET")
         tenant_id = os.getenv("AZURE_TENANT_ID")
