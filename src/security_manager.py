@@ -25,7 +25,7 @@ try:  # Optional Azure dependencies
     from azure.keyvault.secrets import SecretClient  # type: ignore
 
     AZURE_AVAILABLE = True
-except Exception:  # pragma: no cover - safety net
+except (ImportError, ModuleNotFoundError):  # pragma: no cover - safety net
     AZURE_AVAILABLE = False
     # Create placeholder classes for testing when Azure SDK not available
     class ClientSecretCredential:  # type: ignore
