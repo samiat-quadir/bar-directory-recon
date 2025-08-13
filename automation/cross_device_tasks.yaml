@@ -1,0 +1,29 @@
+tasks:
+  run_tests_on_asus:
+    command: "ssh rog-lucci \"cmd /c ^\"cd /d C:\\Code\\bar-directory-recon && .\\.venv\\Scripts\\pytest.exe -q^\"\""
+  run_tests_on_alienware:
+    command: "cmd /c \"cd /d C:\\Code\\bar-directory-recon && .\\.venv\\Scripts\\pytest.exe -q\""
+  sync_logs_from_asus:
+    command: "scp -o IdentitiesOnly=yes rog-lucci:/Code/bar-directory-recon/logs/*.log C:/Code/bar-directory-recon/logs/"
+  sync_logs_from_alienware:
+    command: "scp -o IdentitiesOnly=yes mothership:/Code/bar-directory-recon/logs/*.log C:/Code/bar-directory-recon/logs/"
+  echo_test:
+    command: "echo Local echo test: cross-device runner operational"
+  echo_local_time_alienware:
+    command: "cmd /c \"echo %COMPUTERNAME% & time /t\""
+  echo_local_time_asus:
+    command: "ssh rog-lucci \"cmd /c ^\"echo %COMPUTERNAME% & time /t^\"\""
+  verify_python_on_alienware:
+    command: "cmd /c \"cd /d C:\\Code\\bar-directory-recon && .\\.venv\\Scripts\\python.exe --version\""
+  verify_python_on_asus:
+    command: "ssh rog-lucci \"cmd /c ^\"cd /d C:\\Code\\bar-directory-recon && .\\.venv\\Scripts\\python.exe --version^\"\""
+workflows:
+  quick_validation:
+    - echo_local_time_alienware
+    - echo_local_time_asus
+    - verify_python_on_alienware
+    - verify_python_on_asus
+    - run_tests_on_alienware
+  full_sync_and_test:
+    - run_tests_on_asus
+    - run_tests_on_alienware
