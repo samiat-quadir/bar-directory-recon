@@ -1,0 +1,13 @@
+.vscode/
+|-- AutoDeviceDetectionTask.ps1
+|-- README_AUTOMATION.md
+|-- ScheduleDailyCrossDeviceHealthCheck.ps1
+|-- copilot_context.json
+|-- copilot_profile.ps1
+|-- extensions.json
+|-- for-win/
+|-- launch.json
+|-- settings.json
+|-- startup-ROG-Lucci.ps1
+|-- startup.ps1
++-- tasks.json
