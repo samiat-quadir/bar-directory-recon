@@ -47,7 +47,6 @@ except Exception:  # pragma: no cover - safety net
         "Azure Key Vault dependencies not installed. Operating in fallback mode."
     )
 
-
 class SecurityManager:
     """Centralized credential retrieval with Key Vault + env fallback."""
 

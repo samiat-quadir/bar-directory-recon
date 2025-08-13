@@ -480,6 +480,35 @@
                 "reveal": "always",
                 "panel": "new"
             }
+        },
+        {
+            "label": "🚀 Bulletproof Git Workflow (Solves Ali's Issues)",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "scripts/bulletproof_git.py",
+                "--auto"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "⚙️ Setup Bulletproof Git Environment (One-Time)",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "scripts/setup_bulletproof_git.py"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
         }
     ]
 }
