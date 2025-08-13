@@ -10,13 +10,21 @@ tasks:
   echo_test:
     command: "echo Local echo test: cross-device runner operational"
   echo_local_time_alienware:
-    command: "cmd /c \"echo %COMPUTERNAME% & time /t\""
+    command: 'cmd /c "echo %COMPUTERNAME% & time /t"'
   echo_local_time_asus:
-    command: "ssh rog-lucci \"cmd /c ^\"echo %COMPUTERNAME% & time /t^\"\""
+    command: 'ssh rog-lucci "cmd /c ^"echo %COMPUTERNAME% & time /t^""'
   verify_python_on_alienware:
     command: "cmd /c \"cd /d C:\\Code\\bar-directory-recon && .\\.venv\\Scripts\\python.exe --version\""
   verify_python_on_asus:
     command: "ssh rog-lucci \"cmd /c ^\"cd /d C:\\Code\\bar-directory-recon && .\\.venv\\Scripts\\python.exe --version^\"\""
+  ensure_sshd_alienware:
+    command: "cmd /c \"powershell -NoProfile -ExecutionPolicy Bypass -File C:\\Code\\bar-directory-recon\\tools\\EnsureSshd.ps1\""
+  ensure_sshd_asus:
+    command: "ssh rog-lucci \"powershell -NoProfile -ExecutionPolicy Bypass -File C:\\Code\\bar-directory-recon\\tools\\EnsureSshd.ps1\""
+  harden_keys_alienware:
+    command: "cmd /c \"powershell -NoProfile -ExecutionPolicy Bypass -File C:\\Code\\bar-directory-recon\\tools\\Harden-AdminAuthKeys.ps1\""
+  harden_keys_asus:
+    command: "ssh rog-lucci \"powershell -NoProfile -ExecutionPolicy Bypass -File C:\\Code\\bar-directory-recon\\tools\\Harden-AdminAuthKeys.ps1\""
 workflows:
   quick_validation:
     - echo_local_time_alienware
@@ -26,4 +34,14 @@ workflows:
     - run_tests_on_alienware
   full_sync_and_test:
     - run_tests_on_asus
+    - run_tests_on_alienware
+  infra_fix_and_validate:
+    - ensure_sshd_alienware
+    - harden_keys_alienware
+    - ensure_sshd_asus
+    - harden_keys_asus
+    - echo_local_time_alienware
+    - echo_local_time_asus
+    - verify_python_on_alienware
+    - verify_python_on_asus
     - run_tests_on_alienware
