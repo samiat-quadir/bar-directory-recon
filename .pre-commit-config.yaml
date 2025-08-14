@@ -54,3 +54,10 @@ repos:
             "--remove-unused-variables",
             "--in-place",
           ]
+
+  # Add detect-secrets for secrets scanning
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
