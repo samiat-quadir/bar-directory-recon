@@ -1,26 +1,23 @@
 #!/usr/bin/env python3
+"""
+Hallandale Property Processing Pipeline
+Complete pipeline for processing Hallandale property list PDF and enriching data.
+"""
 
-
-
-import argparse
-import logging
-import os
 import sys
+import os
+import logging
+import argparse
 from pathlib import Path
-
-
-
+from typing import Dict, Any
 
 # Add src directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
-
 
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor  # noqa: E402
 from property_enrichment import PropertyEnrichment  # noqa: E402
 from property_validation import PropertyValidation  # noqa: E402
-
-sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 # Set flag for Google Sheets integration (currently disabled)
 GOOGLE_SHEETS_AVAILABLE = False
@@ -52,8 +49,12 @@ class HallandalePipeline:
 
         logging.basicConfig(
             level=logging.INFO,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(log_file),
+                logging.StreamHandler()
+            ]
+        )
 
         self.logger = logging.getLogger(__name__)
         self.logger.info("STARTING HALLANDALE PROPERTY PROCESSING PIPELINE")
@@ -84,9 +85,7 @@ class HallandalePipeline:
 
             # Step 2: Enrich properties
             self.logger.info("Step 2: Enriching property data")
-            enrichment_result = self.enricher.enrich_properties(
-                pdf_result["output_file"]
-            )
+            enrichment_result = self.enricher.enrich_properties(pdf_result["output_file"])
 
             if not enrichment_result.get("success", False):
                 error_msg = f"Property enrichment failed: {enrichment_result.get('message', 'Unknown error')}"
@@ -125,7 +124,6 @@ class HallandalePipeline:
                 # Step 6: Upload to Google Sheets (if configured)
                 self.logger.info("Step 6: Uploading to Google Sheets")
                 sheets_result = self._upload_to_google_sheets(enrichment_result["output_file"])
-
                 results["google_sheets_result"] = sheets_result
                 if sheets_result.get("success", False):
                     results["steps_completed"].append("google_sheets_upload")
@@ -145,7 +143,6 @@ class HallandalePipeline:
                 "pipeline_status": "failed",
                 "error": error_msg,
                 "errors": [error_msg]
-
             }
             return results
 
@@ -168,7 +165,6 @@ class HallandalePipeline:
                 "success": True,
                 "export_files": export_files,
                 "message": f"Results exported to {len(export_files)} files"
-
             }
 
         except Exception as e:
@@ -178,7 +174,6 @@ class HallandalePipeline:
                 "message": f"Export failed: {e}"
             }
 
-
     def _upload_to_google_sheets(self, data_file: str) -> Dict[str, Any]:
         """Upload results to Google Sheets."""
         try:
@@ -186,21 +181,24 @@ class HallandalePipeline:
             self.logger.info("Google Sheets upload simulated (requires API credentials setup)")
             return {
                 "success": True,
-                "message": "Upload simulated - Google Sheets integration not configured",
+                "message": "Upload simulated - Google Sheets integration not configured"
             }
         except Exception as e:
             self.logger.error(f"Google Sheets upload failed: {e}")
-            return {"success": False, "message": f"Google Sheets upload failed: {e}"}
-
+            return {
+                "success": False,
+                "message": f"Google Sheets upload failed: {e}"
+            }
 
     def _generate_final_report(self, results: Dict[str, Any]) -> Dict[str, Any]:
         """Generate comprehensive final report."""
         try:
             report_file = self.output_dir / "pipeline_report.txt"
 
-            with open(report_file, "w") as f:
+            with open(report_file, 'w') as f:
                 f.write("HALLANDALE PROPERTY PROCESSING PIPELINE REPORT\n")
                 f.write("=" * 50 + "\n\n")
+
                 f.write(f"Pipeline Status: {results.get('pipeline_status', 'Unknown')}\n")
                 f.write(f"Steps Completed: {', '.join(results.get('steps_completed', []))}\n")
 
@@ -210,8 +208,7 @@ class HallandalePipeline:
                         f.write(f"  - {error}\n")
 
                 # Add detailed results for each step
-                for step in results.get("steps_completed", []):
-
+                for step in results.get('steps_completed', []):
                     f.write(f"\n{step.upper()} RESULTS:\n")
                     step_result = results.get(f"{step}_result", {})
                     for key, value in step_result.items():
@@ -252,9 +249,9 @@ def main() -> None:
     print(f"\nPipeline Status: {results['pipeline_status']}")
     print(f"Steps Completed: {len(results.get('steps_completed', []))}")
 
-    if results.get("errors"):
+    if results.get('errors'):
         print(f"Errors: {len(results['errors'])}")
-        for error in results["errors"]:
+        for error in results['errors']:
             print(f"  - {error}")
 
 
