@@ -1,14 +1,3 @@
-"""Utility to run predefined cross-device tasks.
-
-Enhancements over original minimal version:
- - Argparse interface (list tasks, dry-run, verbose)
- - Ensures IdentitiesOnly for ssh/scp commands
- - Optional retry with -vvv for SSH auth diagnostics
- - Streams output and returns non-zero on failure without stack trace noise
- - Provides guidance if Permission denied (publickey) occurs
-"""
-
-from __future__ import annotations
 import argparse
 import json
 import os
@@ -16,217 +5,142 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Optional
 
 import yaml
 
-TASKS_FILE = Path("automation/cross_device_tasks.yaml")
+CFG = yaml.safe_load(
+    Path("automation/cross_device_tasks.yaml").read_text(encoding="utf-8")
+)
 
 
-def load_tasks() -> Dict[str, Any]:
-    if not TASKS_FILE.exists():
-        print(f"[ERROR] Tasks file not found: {TASKS_FILE}")
-        sys.exit(2)
-    try:
-        cfg = yaml.safe_load(TASKS_FILE.read_text(encoding="utf-8")) or {}
-    except yaml.YAMLError as e:
-        print("[ERROR] Failed to parse YAML:", e)
-        sys.exit(2)
-    return cfg.get("tasks", {})
-
-
-KEEPALIVE_OPTS = [
-    "-o", "IdentitiesOnly=yes",
-    "-o", "ServerAliveInterval=30",
-    "-o", "ServerAliveCountMax=4",
-    "-o", "ConnectTimeout=10",
-    "-o", "Compression=yes",
-]
-
-
-def normalize_command(raw: str, identity_file: str | None = None) -> str:
-    cmd = raw.strip()
-    if cmd.startswith("ssh "):
-        # If user already provided any of our keepalive flags, skip injecting duplicates.
-        if not any(flag in cmd for flag in ["ServerAliveInterval", "ServerAliveCountMax", "ConnectTimeout"]):
-            # Use simple string replacement to avoid shlex issues with Windows escaping
-            rest = cmd[4:]  # Everything after "ssh "
-            opts_str = " ".join(KEEPALIVE_OPTS)
-            cmd = f"ssh {opts_str} {rest}"
-        elif "IdentitiesOnly" not in cmd:
-            cmd = cmd.replace("ssh ", "ssh -o IdentitiesOnly=yes ", 1)
-
-        # Inject identity file if specified and not already present
-        if identity_file and " -i " not in cmd:
-            # Insert -i option after ssh and existing options but before hostname
-            parts = cmd.split(" ", 1)
-            if len(parts) == 2:
-                ssh_part = parts[0]  # "ssh"
-                rest_part = parts[1]  # everything else
-                # Find where hostname starts (after all -o options)
-                tokens = rest_part.split()
-                insert_pos = 0
-                for i, token in enumerate(tokens):
-                    if token.startswith("-o") or token.startswith("-i") or token.startswith("-v"):
-                        if token == "-o" and i + 1 < len(tokens):
-                            insert_pos = i + 2  # Skip -o and its value
-                        else:
-                            insert_pos = i + 1
-                    else:
-                        break
-                tokens.insert(insert_pos, "-i")
-                tokens.insert(insert_pos + 1, identity_file)
-                cmd = f"{ssh_part} {' '.join(tokens)}"
-
-    elif cmd.startswith("scp "):
-        if "IdentitiesOnly" not in cmd:
-            rest = cmd[4:]  # Everything after "scp "
-            cmd = f"scp -o IdentitiesOnly=yes {rest}"
-
-        # Inject identity file for scp as well
-        if identity_file and " -i " not in cmd:
-            parts = cmd.split(" ", 1)
-            if len(parts) == 2:
-                scp_part = parts[0]  # "scp"
-                rest_part = parts[1]  # everything else
-                tokens = rest_part.split()
-                insert_pos = 0
-                for i, token in enumerate(tokens):
-                    if token.startswith("-o") or token.startswith("-i"):
-                        if token == "-o" and i + 1 < len(tokens):
-                            insert_pos = i + 2
-                        else:
-                            insert_pos = i + 1
-                    else:
-                        break
-                tokens.insert(insert_pos, "-i")
-                tokens.insert(insert_pos + 1, identity_file)
-                cmd = f"{scp_part} {' '.join(tokens)}"
+def ensure_identity_opts(cmd: str) -> str:
+    for proto in ("ssh ", "scp "):
+        if proto in cmd and "-o IdentitiesOnly=" not in cmd:
+            cmd = cmd.replace(proto, f"{proto}-o IdentitiesOnly=yes ", 1)
+        if proto in cmd and "-o ServerAliveInterval=" not in cmd:
+            cmd = cmd.replace(
+                proto,
+                f"{proto}-o ServerAliveInterval=30 -o ServerAliveCountMax=4 -o ConnectTimeout=10 ",
+                1,
+            )
     return cmd
 
 
-def run_command(
-    cmd: str,
-    retry_verbose: bool = False,
-    timeout: int | None = None,
-    capture: bool = False,
-) -> tuple[int, str, str, float]:
-    start = time.time()
-    print(f"[INFO] Executing: {cmd}")
-    proc = subprocess.Popen(
-        cmd,
-        shell=True,
-        stdout=subprocess.PIPE if capture else None,
-        stderr=subprocess.PIPE if capture else None,
-        text=True,
-    )
+def maybe_local_fastpath(cmd: str) -> str | None:
+    me = os.environ.get("COMPUTERNAME", "").upper()
+    if me == "MOTHERSHIP" and cmd.strip().startswith("ssh ") and " mothership " in cmd:
+        payload = cmd.split('"', 2)[1] if '"' in cmd else None
+        return payload
+    if me == "ROG-LUCCI" and cmd.strip().startswith("ssh ") and " rog-lucci " in cmd:
+        payload = cmd.split('"', 2)[1] if '"' in cmd else None
+        return payload
+    return None
+
+
+def run_one(name, cmd, verbose=False, timeout=None, identity_file=None):
+    cmd = ensure_identity_opts(cmd)
+    if identity_file and ("ssh " in cmd or "scp " in cmd) and " -i " not in cmd:
+        parts = cmd.split(" ", 1)
+        cmd = parts[0] + f" -i {identity_file} " + parts[1]
+    local = maybe_local_fastpath(cmd)
+    real = local or cmd
+    if verbose:
+        print("[RUN]", name, "=>", real)
     try:
-        stdout, stderr = proc.communicate(timeout=timeout)
+        cp = subprocess.run(real, shell=True, timeout=timeout)
+        return cp.returncode
     except subprocess.TimeoutExpired:
-        proc.kill()
-        return 124, "", "[TIMEOUT] Command exceeded timeout", time.time() - start
-    rc = proc.returncode
-    if rc != 0 and retry_verbose and cmd.startswith("ssh ") and " -vvv " not in cmd:
-        print("[WARN] Command failed. Retrying with SSH verbose (-vvv) for diagnostics...")
-        verbose_cmd = cmd.replace("ssh ", "ssh -vvv ", 1)
-        v_proc = subprocess.Popen(
-            verbose_cmd,
-            shell=True,
-            stdout=subprocess.PIPE if capture else None,
-            stderr=subprocess.PIPE if capture else None,
-            text=True,
-        )
-        v_out, v_err = v_proc.communicate()
-        stdout = (stdout or "") + ("\n" + v_out if v_out else "")
-        stderr = (stderr or "") + ("\n" + v_err if v_err else "")
-        rc = v_proc.returncode
-    if rc == 255 and "ssh" in cmd and stderr is not None:
-        stderr += (
-            "\n[HINT] SSH return code 255 often indicates auth/network issues.\n"
-            "Verify key in remote authorized_keys; test: ssh -o IdentitiesOnly=yes <host> 'echo ok'\n"
-            "Use --retry-verbose for negotiation logs."
-        )
-    return rc, stdout or "", stderr or "", time.time() - start
+        print("[TIMEOUT]", name)
+        return 124
 
 
-def main(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(description="Run cross-device automation tasks")
-    parser.add_argument("task", nargs="?", help="Task name to run (omit with --list)")
-    parser.add_argument("--list", action="store_true", help="List available tasks")
-    parser.add_argument("--dry-run", action="store_true", help="Show command without executing")
-    parser.add_argument("--retry-verbose", action="store_true", help="Retry failing SSH with -vvv")
-    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON result")
-    parser.add_argument("--timeout", type=int, help="Timeout (seconds) for command execution")
-    parser.add_argument("--verbose", action="store_true", help="Verbose diagnostics (does not imply SSH -vvv)")
-    parser.add_argument("--identity-file", type=str, help="Override SSH identity file (path to private key)")
-    args = parser.parse_args(argv)
+ap = argparse.ArgumentParser(description="Cross-device task/workflow runner")
+ap.add_argument("target", nargs="?", help="task or workflow name")
+ap.add_argument("--list", action="store_true", help="List tasks")
+ap.add_argument("--list-workflows", action="store_true", help="List workflows")
+ap.add_argument("--dry-run", action="store_true", help="Show commands only")
+ap.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+ap.add_argument("--json", action="store_true", help="Emit JSON summary")
+ap.add_argument("--timeout", type=int, default=None, help="Per-command timeout")
+ap.add_argument("--retries", type=int, default=0, help="Retries for failures")
+ap.add_argument("--retry-delay", type=int, default=3, help="Seconds between retries")
+ap.add_argument("--identity-file", default=None, help="Explicit SSH identity file")
+ap.add_argument("--log-file", dest="log_file", default=None, help="Append plain-text log output to this file")
+args = ap.parse_args()
 
-    tasks = load_tasks()
-    if args.list:
-        print("Available tasks:")
-        for name in sorted(tasks):
-            print(" -", name)
-        return 0
-    if not args.task:
-        parser.print_help()
-        return 1
-    if args.task not in tasks:
-        print(f"[ERROR] Unknown task '{args.task}'. Use --list to view tasks.")
-        return 1
-    raw_cmd = tasks[args.task]["command"]
 
-    # Fast-path: If command targets self via ssh (rog-lucci) and we are on that host, execute locally.
-    hostname = os.environ.get("COMPUTERNAME", "").lower()
-    if hostname and "rog-lucci" in hostname and raw_cmd.startswith("ssh rog-lucci "):
-        # Extract inner remote command (after first space following host)
-        try:
-            # More careful parsing to preserve Windows command structure
-            parts = raw_cmd.split(" ", 2)
-            if len(parts) >= 3:
-                inner = parts[2]
-                # Remove outer quotes but preserve inner structure
-                if inner.startswith('"') and inner.endswith('"'):
-                    inner = inner[1:-1]
-                # For Windows cmd commands, ensure proper escaping is preserved
-                raw_cmd = inner.replace('^"', '"').replace('^^', '^')
-                if args.verbose:
-                    print(f"[FAST-PATH] Executing task locally: {raw_cmd}")
-        except (IndexError, AttributeError):
-            pass
+def _log(line: str, *, lf_path: Optional[str]):
+    print(line)
+    if not lf_path:
+        return
+    try:
+        log_path = Path(lf_path)
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(line + "\n")
+    except Exception:
+        # best-effort logging
+        pass
 
-    cmd = normalize_command(raw_cmd, args.identity_file)
-    if args.dry_run:
-        print(f"[DRY-RUN] {cmd}")
-        return 0
-    rc, out, err, elapsed = run_command(
-        cmd,
-        retry_verbose=args.retry_verbose,
-        timeout=args.timeout,
-        capture=args.json,
+tasks = CFG.get("tasks", {})
+flows = CFG.get("workflows", {})
+if args.list:
+    print("Tasks:", ", ".join(sorted(tasks.keys())))
+    sys.exit(0)
+if args.list_workflows:
+    print("Workflows:", ", ".join(sorted(flows.keys())))
+    sys.exit(0)
+if not args.target:
+    print(
+        "Usage: python run_cross_device_task.py <task|workflow> [--list --list-workflows]"
     )
-    if args.json:
-        payload = {
-            "task": args.task,
-            "command": cmd,
-            "return_code": rc,
-            "elapsed_sec": round(elapsed, 3),
-            "stdout": out,
-            "stderr": err,
-            "host": hostname,
-            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        }
-        print(json.dumps(payload, indent=2))
+    sys.exit(1)
+
+items = []
+if args.target in tasks:
+    items = [args.target]
+elif args.target in flows:
+    items = flows[args.target]
+else:
+    print("Unknown target:", args.target)
+    sys.exit(2)
+
+results = []
+for name in items:
+    cmd = tasks[name]["command"]
+    if args.dry_run:
+        _log(f"[DRY-RUN] {name} => {ensure_identity_opts(cmd)}", lf_path=args.log_file)
+        rc = 0
     else:
-        if out:
-            print(out.rstrip())
-        if err:
-            print(err.rstrip())
-        if rc == 0:
-            print(f"[SUCCESS] Task completed in {elapsed:.2f}s.")
-        else:
-            print(f"[FAIL] Task exited with code {rc} after {elapsed:.2f}s.")
-    return rc
+        attempts = args.retries + 1
+        rc = 1  # pessimistic default
+        for i in range(attempts):
+            _log(f"[EXEC] {name} attempt {i+1}/{attempts}", lf_path=args.log_file)
+            rc = run_one(
+                name,
+                cmd,
+                verbose=args.verbose,
+                timeout=args.timeout,
+                identity_file=args.identity_file,
+            )
+            if rc == 0:
+                _log(f"[OK] {name}", lf_path=args.log_file)
+                break
+            if i < attempts - 1:
+                _log(
+                    f"[RETRY] {name} rc={rc}, sleeping {args.retry_delay}s…",
+                    lf_path=args.log_file,
+                )
+                time.sleep(args.retry_delay)
+            else:
+                _log(f"[FAIL] {name} rc={rc}", lf_path=args.log_file)
+    results.append((name, rc))
+if args.json:
+    summary = {"results": [{"name": n, "rc": rc} for n, rc in results]}
+    _log(json.dumps(summary, indent=2), lf_path=args.log_file)
+    if not args.log_file:  # already printed if log_file present
+        pass
 
-
-if __name__ == "__main__":  # pragma: no cover
-    sys.exit(main(sys.argv[1:]))
+# exit non-zero if any failed
+sys.exit(max(rc for _, rc in results))
