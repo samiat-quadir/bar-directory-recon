@@ -44,7 +44,7 @@ jobs:
 
       - name: Run Tests and Coverage
         run: |
-          pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=5
+          pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=35
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
