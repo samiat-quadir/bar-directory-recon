@@ -115,18 +115,18 @@ RUN echo '#!/bin/bash\nexec /usr/bin/google-chrome --no-sandbox --disable-dev-sh
 
 # Create startup script for development environment
 RUN echo '#!/bin/bash\n\
-echo "🚀 Bar Directory Recon Development Environment"\n\
-echo "Python: $(python --version)"\n\
-echo "Chrome: $(google-chrome --version)"\n\
-echo "Node.js: $(node --version)"\n\
-echo "Docker Compose: $(docker-compose --version)"\n\
-echo ""\n\
-echo "📁 Workspace: /workspaces/bar-directory-recon"\n\
-echo "🔧 Available tools: pytest, black, flake8, mypy, pre-commit"\n\
-echo "🌐 Browser: Chrome (with --no-sandbox for container)"\n\
-echo "📊 Monitoring: Prometheus (9090), Grafana (3000)"\n\
-echo ""\n\
-' > /usr/local/bin/dev-welcome && chmod +x /usr/local/bin/dev-welcome
+    echo "🚀 Bar Directory Recon Development Environment"\n\
+    echo "Python: $(python --version)"\n\
+    echo "Chrome: $(google-chrome --version)"\n\
+    echo "Node.js: $(node --version)"\n\
+    echo "Docker Compose: $(docker-compose --version)"\n\
+    echo ""\n\
+    echo "📁 Workspace: /workspaces/bar-directory-recon"\n\
+    echo "🔧 Available tools: pytest, black, flake8, mypy, pre-commit"\n\
+    echo "🌐 Browser: Chrome (with --no-sandbox for container)"\n\
+    echo "📊 Monitoring: Prometheus (9090), Grafana (3000)"\n\
+    echo ""\n\
+    ' > /usr/local/bin/dev-welcome && chmod +x /usr/local/bin/dev-welcome
 
 # Set working directory
 WORKDIR /workspaces/bar-directory-recon
