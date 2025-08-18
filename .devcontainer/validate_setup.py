@@ -145,19 +145,19 @@ def check_browser_setup():
     # Check Selenium WebDriver
     try:
         from selenium.webdriver.chrome.options import Options
-        
+
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
-        
+
         # Quick test
         print("✅ Selenium WebDriver options configured")
         selenium_ok = True
     except Exception as e:
         print(f"❌ Selenium setup issue: {e}")
         selenium_ok = False
-    
+
     return chrome_ok and selenium_ok
 
 
@@ -194,8 +194,16 @@ def check_ports_and_services():
     expected_ports = [3000, 5432, 8000, 8080, 9090, 9182]
 
     print("Expected port forwards:")
+    port_names = {
+        3000: 'Grafana',
+        5432: 'PostgreSQL',
+        8000: 'App Metrics',
+        8080: 'cAdvisor',
+        9090: 'Prometheus',
+        9182: 'Windows Exporter'
+    }
     for port in expected_ports:
-        print(f"  - {port}: {'Grafana' if port == 3000 else 'PostgreSQL' if port == 5432 else 'App Metrics' if port == 8000 else 'cAdvisor' if port == 8080 else 'Prometheus' if port == 9090 else 'Windows Exporter'}")
+        print(f"  - {port}: {port_names.get(port, 'Unknown Service')}")
 
     print("✅ Port forwarding configured in devcontainer.json")
     return True
