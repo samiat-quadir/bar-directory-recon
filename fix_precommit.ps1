@@ -12,8 +12,8 @@ if (Test-Path $cacheDir) {
     try {
         # Stop any running processes that might lock the directories
         Get-Process | Where-Object { $_.Path -like "*pre-commit*" -or $_.Path -like "*python*" } |
-            Where-Object { $_.MainModule.FileName -like "*pre-commit*" } |
-            Stop-Process -Force -ErrorAction SilentlyContinue
+        Where-Object { $_.MainModule.FileName -like "*pre-commit*" } |
+        Stop-Process -Force -ErrorAction SilentlyContinue
 
         # Use robocopy to remove the directory (handles locked files better)
         Write-Host "🗑️  Removing corrupted cache using robocopy..." -ForegroundColor Yellow
@@ -26,7 +26,8 @@ if (Test-Path $cacheDir) {
         Write-Host "⚠️  Cache removal failed: $($_.Exception.Message)" -ForegroundColor Red
         Write-Host "💡 Will use --no-verify for commits" -ForegroundColor Yellow
     }
-} else {
+}
+else {
     Write-Host "✅ No pre-commit cache found - clean state" -ForegroundColor Green
 }
 
@@ -42,11 +43,13 @@ try {
         pre-commit install --install-hooks 2>$null
         if ($LASTEXITCODE -eq 0) {
             Write-Host "✅ Pre-commit hooks installed successfully" -ForegroundColor Green
-        } else {
+        }
+        else {
             Write-Host "⚠️  Pre-commit hook installation failed - use --no-verify" -ForegroundColor Yellow
         }
     }
-} catch {
+}
+catch {
     Write-Host "❌ Pre-commit not available: $($_.Exception.Message)" -ForegroundColor Red
 }
 
