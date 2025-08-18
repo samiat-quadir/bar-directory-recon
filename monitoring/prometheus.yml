@@ -1,4 +1,4 @@
-global: { scrape_interval: 15s }
+﻿global: { scrape_interval: 15s }
 scrape_configs:
 - job_name: 'windows_ace'
   static_configs: [{ targets: ['host.docker.internal:9182'] }]
