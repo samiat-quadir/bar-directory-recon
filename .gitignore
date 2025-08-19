@@ -7,6 +7,7 @@
 Thumbs.db
 desktop.ini
 
+
 ############################################################
 # 2 · Editor / IDE artefacts
 ############################################################
@@ -62,6 +63,7 @@ security_report_*.json
 .black.cache
 .autoflake.cache
 *.isorted
+
 
 ############################################################
 # 5 · Logs, data, screenshots, backups
@@ -137,6 +139,7 @@ chromedriver*.exe
 ############################################################
 # 10 · Merge-conflict artefacts (removed if committed)
 ############################################################
+
 *<<<<<<<*
 *=======*
 *>>>>>>>*
@@ -155,3 +158,4 @@ ALI_RELAY_REPORT.md
 secrets_scan_report_*.json
 
 # smoke-test 2025-07-29T16:36:28
+

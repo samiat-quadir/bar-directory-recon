@@ -96,6 +96,7 @@ Remove-Item .git/hooks/pre-commit -Force -ErrorAction SilentlyContinue
 This provides:
 - ✅ No more blocking git commit errors
 - ✅ Normal development workflow restored
+
 - ✅ Code quality maintained through alternatives
 - ✅ Option to re-enable pre-commit later if desired
 

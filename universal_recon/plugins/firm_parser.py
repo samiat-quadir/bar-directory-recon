@@ -47,7 +47,13 @@ class FirmParserPlugin:
 
         Args:
             record: Raw firm record dictionary
-
+    
+    def transform(self, record: Dict[str, Any]) -> Dict[str, Any]:
+        """Transform raw firm record to standardized format.
+        
+        Args:
+            record: Raw firm record dictionary
+            
         Returns:
             Transformed record with standardized fields
         """
@@ -66,6 +72,7 @@ class FirmParserPlugin:
 
         Args:
             record: Transformed firm record
+
 
         Returns:
             True if record is valid, False otherwise

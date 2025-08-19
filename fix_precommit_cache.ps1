@@ -40,6 +40,7 @@ try {
     Write-Host "✅ Permissions updated" -ForegroundColor Green
 }
 catch {
+
     Write-Host "⚠️ Permission update had issues, continuing..." -ForegroundColor Yellow
 }
 
@@ -54,6 +55,7 @@ try {
     }
 }
 catch {
+
     Write-Host "⚠️ Removal had issues, but cache should be cleared" -ForegroundColor Yellow
 }
 
@@ -68,6 +70,7 @@ try {
     }
 }
 catch {
+
     Write-Host "⚠️ Pre-commit install had issues - may need manual reinstall" -ForegroundColor Yellow
 }
 
@@ -76,3 +79,4 @@ Write-Host "🎉 Pre-commit cache fix complete!" -ForegroundColor Green
 Write-Host "You can now run git commits normally" -ForegroundColor White
 Write-Host ""
 Write-Host "If issues persist, run: git commit --no-verify" -ForegroundColor Cyan
+

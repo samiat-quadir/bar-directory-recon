@@ -1,0 +1,28 @@
+﻿{
+  "id": null,
+  "uid": "bdr-nodes",
+  "title": "BDR - Nodes",
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Nodes UP",
+      "targets": [
+        {
+          "expr": "sum(up{job=~\"windows_.*\"})"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU Busy %",
+      "targets": [
+        {
+          "expr": "100 - (avg by (instance)(irate(windows_cpu_time_total{mode=\"idle\"}[5m]))*100)"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1
+}

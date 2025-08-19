@@ -15,13 +15,13 @@ Write-Host "========================================" -ForegroundColor Cyan
 # Function to safely remove directory with multiple methods
 function Remove-DirectorySafely {
     param([string]$Path)
-
     if (-not (Test-Path $Path)) {
         Write-Verbose "Directory $Path does not exist"
         return $true
     }
 
     Write-Host "🗑️ Removing directory: $Path" -ForegroundColor Yellow
+
 
     # Method 1: Standard PowerShell removal
     try {
@@ -75,6 +75,7 @@ Write-Host "🛑 Stopping processes that might lock cache files..." -ForegroundC
 $processesToStop = @("python", "git", "pre-commit", "code")
 foreach ($processName in $processesToStop) {
     Get-Process -Name $processName -ErrorAction SilentlyContinue |
+
     Where-Object { $_.MainModule.FileName -like "*python*" -or $_.MainModule.FileName -like "*git*" -or $_.MainModule.FileName -like "*pre-commit*" } |
     Stop-Process -Force -ErrorAction SilentlyContinue
 }
@@ -103,6 +104,7 @@ try {
 
     # Install latest version
     & pip install pre-commit --upgrade 2>$null
+
 
     $version = & pre-commit --version 2>$null
     if ($version) {
@@ -183,4 +185,3 @@ if ($Verbose) {
     else {
         Write-Host "✅ Cache directory completely removed" -ForegroundColor Green
     }
-}
