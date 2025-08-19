@@ -126,6 +126,7 @@ MASTER_IMPLEMENTATION_REPORT.md
 *.rar
 *.7z
 chromedriver*.exe
+.devcontainer/Oracle_JDK-24/  # Oracle JDK installation
 
 ############################################################
 # 9 · Git internals (safety net)

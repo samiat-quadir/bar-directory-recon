@@ -29,7 +29,8 @@ Write-Host "🔓 Taking ownership of cache files..." -ForegroundColor Yellow
 try {
     & takeown /f $cacheDir /r /d y 2>$null | Out-Null
     Write-Host "✅ Ownership acquired" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "⚠️ Takeown had issues, continuing..." -ForegroundColor Yellow
 }
 
@@ -37,7 +38,8 @@ Write-Host "🔑 Setting full permissions..." -ForegroundColor Yellow
 try {
     & icacls $cacheDir /grant "$env:USERNAME`:F" /t 2>$null | Out-Null
     Write-Host "✅ Permissions updated" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "⚠️ Permission update had issues, continuing..." -ForegroundColor Yellow
 }
 
@@ -46,10 +48,12 @@ try {
     Remove-Item $cacheDir -Recurse -Force -ErrorAction SilentlyContinue
     if (-not (Test-Path $cacheDir)) {
         Write-Host "✅ Cache successfully cleared" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "⚠️ Some files may still remain (this is usually OK)" -ForegroundColor Yellow
     }
-} catch {
+}
+catch {
     Write-Host "⚠️ Removal had issues, but cache should be cleared" -ForegroundColor Yellow
 }
 
@@ -58,10 +62,12 @@ try {
     if (Get-Command "pre-commit" -ErrorAction SilentlyContinue) {
         & pre-commit install 2>$null
         Write-Host "✅ Pre-commit re-installed" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "⚠️ Pre-commit command not found - install manually if needed" -ForegroundColor Yellow
     }
-} catch {
+}
+catch {
     Write-Host "⚠️ Pre-commit install had issues - may need manual reinstall" -ForegroundColor Yellow
 }
 
