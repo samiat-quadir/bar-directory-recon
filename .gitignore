@@ -1,6 +1,7 @@
 ############################################################
 # 1 · Operating-system cruft
 ############################################################
+
 # macOS
 .DS_Store
 # Windows
@@ -63,11 +64,13 @@ security_report_*.json
 .autoflake.cache
 *.isorted
 
+
 ############################################################
 # 5 · Logs, data, screenshots, backups
 ############################################################
 logs/
 *.log
+
 *_errors.log
 screenshots/
 data/
@@ -83,6 +86,7 @@ src/backups/archives/
 ############################################################
 # 6 · Device-specific or secret config
 ############################################################
+
 # generic env / secrets
 *.env
 .env*
@@ -137,6 +141,7 @@ chromedriver*.exe
 ############################################################
 # 10 · Merge-conflict artefacts (removed if committed)
 ############################################################
+
 *<<<<<<<*
 *=======*
 *>>>>>>>*
@@ -155,3 +160,4 @@ ALI_RELAY_REPORT.md
 secrets_scan_report_*.json
 
 # smoke-test 2025-07-29T16:36:28
+

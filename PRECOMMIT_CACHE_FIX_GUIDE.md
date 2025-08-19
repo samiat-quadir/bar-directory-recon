@@ -6,6 +6,7 @@ Pre-commit hooks can fail with "InvalidManifestError" due to Windows permission 
 ## Error Pattern
 ```
 InvalidManifestError:
+
 =====> C:\Users\[user]\.cache\pre-commit\repo[id]\.pre-commit-hooks.yaml is not a file
 ```
 

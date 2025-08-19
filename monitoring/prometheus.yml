@@ -4,3 +4,4 @@ scrape_configs:
   static_configs: [{ targets: ['rog-lucci:9182'] }]
 - job_name: 'windows_ali'
   static_configs: [{ targets: ['localhost:9182'] }]
+
