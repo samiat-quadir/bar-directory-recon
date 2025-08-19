@@ -1,22 +1,10 @@
-﻿services:
+version: "3.8"
+services:
   prometheus:
     image: prom/prometheus:latest
     ports: ["9090:9090"]
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./rules.yml:/etc/prometheus/rules.yml:ro
-      - prom-data:/prometheus
-    restart: unless-stopped
+    volumes: ["./prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
   grafana:
     image: grafana/grafana-oss:latest
     ports: ["3000:3000"]
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
-    restart: unless-stopped
 
-volumes:
-  prom-data:
-  grafana-data:

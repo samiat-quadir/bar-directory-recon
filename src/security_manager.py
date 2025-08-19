@@ -99,7 +99,8 @@ class SecurityManager:
                 return secret.value  # type: ignore[attr-defined]
             except Exception as e:  # pragma: no cover - network/azure variability
                 logging.warning(
-                    f"Key Vault retrieval failed for '{secret_name}': {e}; falling back"
+                    f"Key Vault retrieval failed: {e}; falling back"
+
                 )
 
         # Named fallback env var
