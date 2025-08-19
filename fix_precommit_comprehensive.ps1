@@ -15,14 +15,14 @@ Write-Host "========================================" -ForegroundColor Cyan
 # Function to safely remove directory with multiple methods
 function Remove-DirectorySafely {
     param([string]$Path)
-    
+
     if (-not (Test-Path $Path)) {
         Write-Verbose "Directory $Path does not exist"
         return $true
     }
-    
+
     Write-Host "🗑️ Removing directory: $Path" -ForegroundColor Yellow
-    
+
     # Method 1: Standard PowerShell removal
     try {
         Remove-Item $Path -Recurse -Force -ErrorAction Stop
@@ -32,7 +32,7 @@ function Remove-DirectorySafely {
     catch {
         Write-Verbose "PowerShell removal failed: $($_.Exception.Message)"
     }
-    
+
     # Method 2: Take ownership and set permissions
     try {
         & takeown /f $Path /r /d y 2>$null | Out-Null
@@ -44,19 +44,19 @@ function Remove-DirectorySafely {
     catch {
         Write-Verbose "Ownership method failed: $($_.Exception.Message)"
     }
-    
+
     # Method 3: Robocopy mirror with empty directory
     try {
         $emptyDir = "$env:TEMP\empty_$(Get-Random)"
         New-Item -ItemType Directory -Path $emptyDir -Force | Out-Null
-        
+
         # Use robocopy to mirror empty directory (effectively deleting everything)
         $robocopyResult = & robocopy $emptyDir $Path /mir /r:0 /w:0 /np /nfl /ndl 2>$null
-        
+
         # Clean up
         Remove-Item $emptyDir -Force -ErrorAction SilentlyContinue
         Remove-Item $Path -Recurse -Force -ErrorAction SilentlyContinue
-        
+
         if (-not (Test-Path $Path)) {
             Write-Host "✅ Removed using robocopy mirror method" -ForegroundColor Green
             return $true
@@ -65,7 +65,7 @@ function Remove-DirectorySafely {
     catch {
         Write-Verbose "Robocopy method failed: $($_.Exception.Message)"
     }
-    
+
     Write-Host "⚠️ Could not completely remove $Path - some files may persist" -ForegroundColor Yellow
     return $false
 }
@@ -74,7 +74,7 @@ function Remove-DirectorySafely {
 Write-Host "🛑 Stopping processes that might lock cache files..." -ForegroundColor Yellow
 $processesToStop = @("python", "git", "pre-commit", "code")
 foreach ($processName in $processesToStop) {
-    Get-Process -Name $processName -ErrorAction SilentlyContinue | 
+    Get-Process -Name $processName -ErrorAction SilentlyContinue |
     Where-Object { $_.MainModule.FileName -like "*python*" -or $_.MainModule.FileName -like "*git*" -or $_.MainModule.FileName -like "*pre-commit*" } |
     Stop-Process -Force -ErrorAction SilentlyContinue
 }
@@ -100,10 +100,10 @@ Write-Host "📦 Reinstalling pre-commit..." -ForegroundColor Yellow
 try {
     # Uninstall current version
     & pip uninstall pre-commit -y 2>$null
-    
+
     # Install latest version
     & pip install pre-commit --upgrade 2>$null
-    
+
     $version = & pre-commit --version 2>$null
     if ($version) {
         Write-Host "✅ Pre-commit reinstalled: $version" -ForegroundColor Green
