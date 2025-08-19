@@ -100,7 +100,6 @@ class SecurityManager:
             except Exception as e:  # pragma: no cover - network/azure variability
                 logging.warning(
                     f"Key Vault retrieval failed: {e}; falling back"
-
                 )
 
         # Named fallback env var

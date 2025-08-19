@@ -22,3 +22,4 @@ def test_firm_plugin_contract_smoke(monkeypatch):
         if P.validate(transformed):
             outs.append(transformed)
     assert outs and isinstance(outs[0], dict)
+

@@ -1,12 +1,12 @@
 ############################################################
 # 1 · Operating-system cruft
 ############################################################
-
 # macOS
 .DS_Store
 # Windows
 Thumbs.db
 desktop.ini
+
 
 ############################################################
 # 2 · Editor / IDE artefacts
@@ -70,7 +70,6 @@ security_report_*.json
 ############################################################
 logs/
 *.log
-
 *_errors.log
 screenshots/
 data/
@@ -86,7 +85,6 @@ src/backups/archives/
 ############################################################
 # 6 · Device-specific or secret config
 ############################################################
-
 # generic env / secrets
 *.env
 .env*
