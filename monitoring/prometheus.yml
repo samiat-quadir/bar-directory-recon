@@ -1,6 +1,16 @@
-﻿global: { scrape_interval: 15s }
+ï»¿global: { scrape_interval: 15s }
+
+rule_files:
+  - "rules.yml"
+  - "rules/bdr.rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
+
 scrape_configs:
-- job_name: 'windows_ace'
-  static_configs: [{ targets: ['host.docker.internal:9182'] }]
-- job_name: 'windows_ali'
-  static_configs: [{ targets: ['100.121.228.16:9182'] }]
+  - job_name: "windows_ace"
+    static_configs: [{ targets: ["host.docker.internal:9182"] }]
+  - job_name: "windows_ali"
+    static_configs: [{ targets: ["100.121.228.16:9182"] }]

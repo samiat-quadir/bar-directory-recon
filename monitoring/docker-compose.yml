@@ -17,6 +17,15 @@
       - ./grafana/provisioning:/etc/grafana/provisioning
     restart: unless-stopped
 
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: monitoring-alertmanager-1
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/config.yml:/etc/alertmanager/alertmanager.yml:ro
+    restart: unless-stopped
+
 volumes:
   prom-data:
   grafana-data:
