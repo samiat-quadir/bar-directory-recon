@@ -7,6 +7,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from typing import Dict, Any
 
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor
