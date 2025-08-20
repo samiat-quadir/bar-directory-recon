@@ -1,5 +1,7 @@
 name: verify-scripts
 on: [push]
+permissions:
+  contents: read
 jobs:
   lint-yaml:
     runs-on: ubuntu-latest
