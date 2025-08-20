@@ -22,16 +22,15 @@ def test_imports() -> bool:
         _ = BeautifulSoup
         from selenium import webdriver
         _ = webdriver
+    except Exception as e:
+        print(f"❌ Dependency import error: {e}")
+        return False
+
     try:
         # Test project imports
         sys.path.insert(0, str(Path(__file__).parent))
         from universal_recon.plugins.realtor_directory_plugin import scrape_realtor_directory
         _ = scrape_realtor_directory
-        print("✅ Realtor plugin imported successfully")
-    try:
-        # Test project imports
-        sys.path.insert(0, str(Path(__file__).parent))
-        from universal_recon.plugins.realtor_directory_plugin import scrape_realtor_directory
         print("✅ Realtor plugin imported successfully")
     except ImportError as e:
         print(f"❌ Plugin import error: {e}")
