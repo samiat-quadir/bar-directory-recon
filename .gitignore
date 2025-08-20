@@ -7,7 +7,6 @@
 Thumbs.db
 desktop.ini
 
-
 ############################################################
 # 2 · Editor / IDE artefacts
 ############################################################
@@ -63,7 +62,6 @@ security_report_*.json
 .black.cache
 .autoflake.cache
 *.isorted
-
 
 ############################################################
 # 5 · Logs, data, screenshots, backups
@@ -128,7 +126,6 @@ MASTER_IMPLEMENTATION_REPORT.md
 *.rar
 *.7z
 chromedriver*.exe
-.devcontainer/Oracle_JDK-24/  # Oracle JDK installation
 
 ############################################################
 # 9 · Git internals (safety net)
@@ -139,7 +136,6 @@ chromedriver*.exe
 ############################################################
 # 10 · Merge-conflict artefacts (removed if committed)
 ############################################################
-
 *<<<<<<<*
 *=======*
 *>>>>>>>*
@@ -158,4 +154,3 @@ ALI_RELAY_REPORT.md
 secrets_scan_report_*.json
 
 # smoke-test 2025-07-29T16:36:28
-

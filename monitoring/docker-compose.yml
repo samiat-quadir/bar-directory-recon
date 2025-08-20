@@ -7,4 +7,3 @@ services:
   grafana:
     image: grafana/grafana-oss:latest
     ports: ["3000:3000"]
-
