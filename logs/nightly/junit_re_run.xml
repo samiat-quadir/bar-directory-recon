@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="10" failures="0" skipped="0" tests="10" time="1.338" timestamp="2025-08-20T17:18:53.015440-04:00" hostname="Mothership"><testcase classname="" name="src.tests.test_core_modules" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Code\bar-directory-recon\src\tests\test_core_modules.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\tests\test_core_modules.py:10: in &lt;module&gt;
+    from src.config_loader import ConfigLoader, ScrapingConfig
+src\config_loader.py:11: in &lt;module&gt;
+    import yaml
+E   ModuleNotFoundError: No module named 'yaml'</error></testcase><testcase classname="" name="src.tests.test_hallandale_pipeline" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Code\bar-directory-recon\src\tests\test_hallandale_pipeline.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\tests\test_hallandale_pipeline.py:1: in &lt;module&gt;
+    from hallandale_pipeline import HallandalePipeline  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\hallandale_pipeline.py:18: in &lt;module&gt;
+    from pdf_processor import HallandalePropertyProcessor  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\pdf_processor.py:12: in &lt;module&gt;
+    import pandas as pd
+E   ModuleNotFoundError: No module named 'pandas'</error></testcase><testcase classname="" name="src.tests.test_hallandale_pipeline_success" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Code\bar-directory-recon\src\tests\test_hallandale_pipeline_success.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\tests\test_hallandale_pipeline_success.py:1: in &lt;module&gt;
+    from hallandale_pipeline import HallandalePipeline  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\hallandale_pipeline.py:18: in &lt;module&gt;
+    from pdf_processor import HallandalePropertyProcessor  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\pdf_processor.py:12: in &lt;module&gt;
+    import pandas as pd
+E   ModuleNotFoundError: No module named 'pandas'</error></testcase><testcase classname="" name="test_data_hunter" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Code\bar-directory-recon\test_data_hunter.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test_data_hunter.py:14: in &lt;module&gt;
+    from data_hunter import DataHunter
+src\data_hunter.py:17: in &lt;module&gt;
+    import requests
+E   ModuleNotFoundError: No module named 'requests'</error></testcase><testcase classname="" name="test_hallandale_pipeline" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Code\bar-directory-recon\test_hallandale_pipeline.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test_hallandale_pipeline.py:7: in &lt;module&gt;
+    import pandas as pd
+E   ModuleNotFoundError: No module named 'pandas'</error></testcase><testcase classname="" name="test_live_scraping" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Code\bar-directory-recon\test_live_scraping.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test_live_scraping.py:15: in &lt;module&gt;
+    from tools.realtor_directory_scraper import scrape_realtor_directory  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ImportError: cannot import name 'scrape_realtor_directory' from 'tools.realtor_directory_scraper' (C:\Code\bar-directory-recon\tools\realtor_directory_scraper.py)</error></testcase><testcase classname="" name="test_realtor_system" time="0.000"><error message="collection failure">.venv-ci\Lib\site-packages\_pytest\python.py:498: in importtestmodule
+    mod = import_path(
+.venv-ci\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+&lt;frozen importlib._bootstrap&gt;:1331: in _find_and_load_unlocked
+    ???
+&lt;frozen importlib._bootstrap&gt;:935: in _load_unlocked
+    ???
+.venv-ci\Lib\site-packages\_pytest\assertion\rewrite.py:177: in exec_module
+    source_stat, co = _rewrite_test(fn, self.config)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv-ci\Lib\site-packages\_pytest\assertion\rewrite.py:357: in _rewrite_test
+    tree = ast.parse(source, filename=strfn)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\ProgramData\miniconda3\Lib\ast.py:50: in parse
+    return compile(source, filename, mode, flags,
+E     File "C:\Code\bar-directory-recon\test_realtor_system.py", line 25
+E       try:
+E       ^^^
+E   SyntaxError: expected 'except' or 'finally' block</error></testcase><testcase classname="" name="tests.test_security_manager" time="0.000"><error message="collection failure">import file mismatch:
+imported module 'test_security_manager' has this __file__ attribute:
+  C:\Code\bar-directory-recon\src\tests\test_security_manager.py
+which is not the same as the test file we want to collect:
+  C:\Code\bar-directory-recon\tests\test_security_manager.py
+HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules</error></testcase><testcase classname="" name="universal_recon.tests.plugins.test_ml_labeler" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Code\bar-directory-recon\universal_recon\tests\plugins\test_ml_labeler.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+universal_recon\tests\plugins\test_ml_labeler.py:3: in &lt;module&gt;
+    from universal_recon.plugins import ml_labeler
+universal_recon\plugins\ml_labeler.py:6: in &lt;module&gt;
+    from bs4 import BeautifulSoup
+E   ModuleNotFoundError: No module named 'bs4'</error></testcase><testcase classname="" name="universal_recon.tests.plugins.test_social_link_parser" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Code\bar-directory-recon\universal_recon\tests\plugins\test_social_link_parser.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+universal_recon\tests\plugins\test_social_link_parser.py:3: in &lt;module&gt;
+    from universal_recon.plugins import social_link_parser
+universal_recon\plugins\social_link_parser.py:5: in &lt;module&gt;
+    from bs4 import BeautifulSoup
+E   ModuleNotFoundError: No module named 'bs4'</error></testcase></testsuite></testsuites>
