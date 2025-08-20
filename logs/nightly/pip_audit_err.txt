@@ -1,0 +1,1 @@
+C:\Code\bar-directory-recon\.venv-ci\Scripts\python.exe: No module named pip_audit
