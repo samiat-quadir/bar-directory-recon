@@ -14,3 +14,13 @@ def parse_firm_data(driver: Any, context: Any) -> Dict[str, Any]:
         Dictionary containing parsed firm data
     """
     return {}
+
+
+class FirmParserPlugin:
+    """Minimal plugin shim used by tests to validate plugin loading/contract."""
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def parse(self, driver: Any, context: Any) -> Dict[str, Any]:
+        return parse_firm_data(driver, context)

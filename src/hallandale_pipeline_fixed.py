@@ -3,10 +3,12 @@
 Fixed Hallandale Property Processing Pipeline
 """
 
+import argparse
 import logging
 import os
 import sys
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor

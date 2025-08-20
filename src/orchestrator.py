@@ -12,12 +12,12 @@ from typing import Any, Dict, List, Optional, Union
 
 import pandas as pd
 
-from .config_loader import ConfigLoader
-from .data_extractor import DataExtractor
-from .logger import create_logger
-from .pagination_manager import PaginationManager
-from .unified_schema import SchemaMapper
-from .webdriver_manager import WebDriverManager
+from config_loader import ConfigLoader
+from data_extractor import DataExtractor
+from logger import create_logger
+from pagination_manager import PaginationManager
+from unified_schema import SchemaMapper
+from webdriver_manager import WebDriverManager
 
 # Google Sheets API scopes
 GOOGLE_SHEETS_SCOPES = [

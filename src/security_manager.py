@@ -68,8 +68,8 @@ class SecurityManager:
 
     # --- Internal helpers -----------------------------------------------------------------
     def _initialize_client(self) -> None:
-        if not AZURE_AVAILABLE:  # Should not be called, safety
-            raise RuntimeError("Azure SDK not available")
+        # Use the module-level names ClientSecretCredential / DefaultAzureCredential
+        # so tests that patch src.security_manager.ClientSecretCredential can intercept.
         client_id = os.getenv("AZURE_CLIENT_ID")
         client_secret = os.getenv("AZURE_CLIENT_SECRET")
         tenant_id = os.getenv("AZURE_TENANT_ID")
