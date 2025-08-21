@@ -1,0 +1,5 @@
+2025-03-22 18:06:32,881 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-22 18:06:33,711 - INFO - \u2705 HTML Email sent successfully.
+2025-03-22 18:21:07,701 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-03-22 18:21:08,486 - INFO - \u2705 HTML Email sent successfully.
+2025-03-22 18:21:08,487 - ERROR - \u274c Unexpected error: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
