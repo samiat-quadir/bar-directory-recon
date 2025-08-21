@@ -1,4 +1,5 @@
-ï»¿global: { scrape_interval: 15s }
+global:
+  scrape_interval: 15s
 
 rule_files:
   - "rules.yml"
