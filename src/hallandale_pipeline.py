@@ -60,6 +60,29 @@ class HallandalePipeline:
         self.logger.info("STARTING HALLANDALE PROPERTY PROCESSING PIPELINE")
         self.logger.info("=" * 60)
 
+    def _is_success(self, result: Dict[str, Any]) -> bool:
+        """Normalize different success/result shapes used across the codebase and tests.
+
+        Accepts either {'success': True} or {'status': 'success'} or truthy status values.
+        """
+        if not isinstance(result, dict):
+            return False
+        # Explicit boolean 'success' key wins
+        if result.get("success") is True:
+            return True
+        # Accept 'status' forms like 'success', 'ok', True
+        status = result.get("status")
+        if status is True:
+            return True
+        if isinstance(status, str) and status.lower() in ("success", "ok", "true"):
+            return True
+        # Some legacy/result shapes omit status but include expected keys
+        if result.get("properties_count") and result.get("output_file"):
+            return True
+        if result.get("enriched_count") and result.get("output_file"):
+            return True
+        return False
+
     def run_pipeline(self, pdf_path: str) -> Dict[str, Any]:
         """Run the complete Hallandale processing pipeline."""
         try:
@@ -72,8 +95,10 @@ class HallandalePipeline:
             self.logger.info("Step 1: Processing PDF file")
             pdf_result = self.pdf_processor.process_pdf(pdf_path)
 
-            if not pdf_result.get("success", False):
-                error_msg = f"PDF processing failed: {pdf_result.get('message', 'Unknown error')}"
+            if not self._is_success(pdf_result):
+                error_msg = (
+                    f"PDF processing failed: {pdf_result.get('message', pdf_result.get('status', 'Unknown error'))}"
+                )
                 self.logger.error(error_msg)
                 results["errors"].append(error_msg)
                 results["pipeline_status"] = "failed"
@@ -87,8 +112,16 @@ class HallandalePipeline:
             self.logger.info("Step 2: Enriching property data")
             enrichment_result = self.enricher.enrich_properties(pdf_result["output_file"])
 
-            if not enrichment_result.get("success", False):
-                error_msg = f"Property enrichment failed: {enrichment_result.get('message', 'Unknown error')}"
+            if not self._is_success(enrichment_result):
+                error_msg = (
+                    "Property enrichment failed: "
+                    + str(
+                        enrichment_result.get(
+                            "message",
+                            enrichment_result.get("status", "Unknown error"),
+                        )
+                    )
+                )
                 self.logger.error(error_msg)
                 results["errors"].append(error_msg)
                 results["pipeline_status"] = "failed"
@@ -107,8 +140,16 @@ class HallandalePipeline:
             self.logger.info("Step 4: Validating property data")
             validation_result = self.validator.validate_properties(enrichment_result["output_file"])
 
-            if not validation_result.get("success", False):
-                error_msg = f"Property validation failed: {validation_result.get('message', 'Unknown error')}"
+            if not self._is_success(validation_result):
+                error_msg = (
+                    "Property validation failed: "
+                    + str(
+                        validation_result.get(
+                            "message",
+                            validation_result.get("status", "Unknown error"),
+                        )
+                    )
+                )
                 self.logger.error(error_msg)
                 results["errors"].append(error_msg)
 
@@ -132,7 +173,7 @@ class HallandalePipeline:
             final_report = self._generate_final_report(results)
             results["final_report"] = final_report
 
-            results["pipeline_status"] = "completed"
+            results["pipeline_status"] = "success"
             self.logger.info("Pipeline completed successfully!")
             return results
 
@@ -153,9 +194,12 @@ class HallandalePipeline:
 
             # Export enriched data to Excel
             if "enrichment_result" in results:
-                excel_file = self.output_dir / "final_results.xlsx"
-                # Simulate Excel export (actual implementation would use pandas)
-                export_files.append(str(excel_file))
+                # Prefer explicit _create_excel_export implementation (tests may monkeypatch this)
+                excel_result = self._create_excel_export(results["enrichment_result"].get("output_file"))
+                results["excel_result"] = excel_result
+                if self._is_success(excel_result):
+                    results.setdefault("steps_completed", []).append("excel_export")
+                    export_files.append(str(excel_result.get("output_file", self.output_dir / "final_results.xlsx")))
 
             # Export to CSV
             csv_file = self.output_dir / "final_results.csv"
