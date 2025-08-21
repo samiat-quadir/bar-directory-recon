@@ -118,3 +118,4 @@ secrets_scan_report_*.json
 .env
 *.task.xml
 monitoring/grafana/provisioning/**/json/*.bak
+

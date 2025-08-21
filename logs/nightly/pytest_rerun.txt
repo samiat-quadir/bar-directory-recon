@@ -1,0 +1,170 @@
+
+=================================== ERRORS ====================================
+_______________ ERROR collecting src/tests/test_core_modules.py _______________
+ImportError while importing test module 'C:\Code\bar-directory-recon\src\tests\test_core_modules.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\tests\test_core_modules.py:10: in <module>
+    from src.config_loader import ConfigLoader, ScrapingConfig
+src\config_loader.py:11: in <module>
+    import yaml
+E   ModuleNotFoundError: No module named 'yaml'
+___________ ERROR collecting src/tests/test_hallandale_pipeline.py ____________
+ImportError while importing test module 'C:\Code\bar-directory-recon\src\tests\test_hallandale_pipeline.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\tests\test_hallandale_pipeline.py:1: in <module>
+    from hallandale_pipeline import HallandalePipeline  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\hallandale_pipeline.py:18: in <module>
+    from pdf_processor import HallandalePropertyProcessor  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\pdf_processor.py:12: in <module>
+    import pandas as pd
+E   ModuleNotFoundError: No module named 'pandas'
+_______ ERROR collecting src/tests/test_hallandale_pipeline_success.py ________
+ImportError while importing test module 'C:\Code\bar-directory-recon\src\tests\test_hallandale_pipeline_success.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\tests\test_hallandale_pipeline_success.py:1: in <module>
+    from hallandale_pipeline import HallandalePipeline  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\hallandale_pipeline.py:18: in <module>
+    from pdf_processor import HallandalePropertyProcessor  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\pdf_processor.py:12: in <module>
+    import pandas as pd
+E   ModuleNotFoundError: No module named 'pandas'
+____________________ ERROR collecting test_data_hunter.py _____________________
+ImportError while importing test module 'C:\Code\bar-directory-recon\test_data_hunter.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test_data_hunter.py:14: in <module>
+    from data_hunter import DataHunter
+src\data_hunter.py:17: in <module>
+    import requests
+E   ModuleNotFoundError: No module named 'requests'
+________________ ERROR collecting test_hallandale_pipeline.py _________________
+ImportError while importing test module 'C:\Code\bar-directory-recon\test_hallandale_pipeline.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test_hallandale_pipeline.py:7: in <module>
+    import pandas as pd
+E   ModuleNotFoundError: No module named 'pandas'
+___________________ ERROR collecting test_live_scraping.py ____________________
+ImportError while importing test module 'C:\Code\bar-directory-recon\test_live_scraping.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test_live_scraping.py:15: in <module>
+    from tools.realtor_directory_scraper import scrape_realtor_directory  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ImportError: cannot import name 'scrape_realtor_directory' from 'tools.realtor_directory_scraper' (C:\Code\bar-directory-recon\tools\realtor_directory_scraper.py)
+___________________ ERROR collecting test_realtor_system.py ___________________
+.venv-ci\Lib\site-packages\_pytest\python.py:498: in importtestmodule
+    mod = import_path(
+.venv-ci\Lib\site-packages\_pytest\pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+.venv-ci\Lib\site-packages\_pytest\assertion\rewrite.py:177: in exec_module
+    source_stat, co = _rewrite_test(fn, self.config)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv-ci\Lib\site-packages\_pytest\assertion\rewrite.py:357: in _rewrite_test
+    tree = ast.parse(source, filename=strfn)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\ProgramData\miniconda3\Lib\ast.py:50: in parse
+    return compile(source, filename, mode, flags,
+E     File "C:\Code\bar-directory-recon\test_realtor_system.py", line 25
+E       try:
+E       ^^^
+E   SyntaxError: expected 'except' or 'finally' block
+_______________ ERROR collecting tests/test_security_manager.py _______________
+import file mismatch:
+imported module 'test_security_manager' has this __file__ attribute:
+  C:\Code\bar-directory-recon\src\tests\test_security_manager.py
+which is not the same as the test file we want to collect:
+  C:\Code\bar-directory-recon\tests\test_security_manager.py
+HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules
+______ ERROR collecting universal_recon/tests/plugins/test_ml_labeler.py ______
+ImportError while importing test module 'C:\Code\bar-directory-recon\universal_recon\tests\plugins\test_ml_labeler.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+universal_recon\tests\plugins\test_ml_labeler.py:3: in <module>
+    from universal_recon.plugins import ml_labeler
+universal_recon\plugins\ml_labeler.py:6: in <module>
+    from bs4 import BeautifulSoup
+E   ModuleNotFoundError: No module named 'bs4'
+__ ERROR collecting universal_recon/tests/plugins/test_social_link_parser.py __
+ImportError while importing test module 'C:\Code\bar-directory-recon\universal_recon\tests\plugins\test_social_link_parser.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\ProgramData\miniconda3\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+universal_recon\tests\plugins\test_social_link_parser.py:3: in <module>
+    from universal_recon.plugins import social_link_parser
+universal_recon\plugins\social_link_parser.py:5: in <module>
+    from bs4 import BeautifulSoup
+E   ModuleNotFoundError: No module named 'bs4'
+============================== warnings summary ===============================
+universal_recon\tests\analytics\test_plugin_usage_diff.py:14
+  C:\Code\bar-directory-recon\universal_recon\tests\analytics\test_plugin_usage_diff.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.analytics - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.analytics
+
+universal_recon\tests\analytics\test_risk_overlay_emitter.py:18
+  C:\Code\bar-directory-recon\universal_recon\tests\analytics\test_risk_overlay_emitter.py:18: PytestUnknownMarkWarning: Unknown pytest.mark.analytics - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.analytics
+
+.venv-ci\Lib\site-packages\_pytest\cacheprovider.py:475
+  C:\Code\bar-directory-recon\.venv-ci\Lib\site-packages\_pytest\cacheprovider.py:475: PytestCacheWarning: could not create cache path C:\Code\bar-directory-recon\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'C:\\Code\\bar-directory-recon\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+.venv-ci\Lib\site-packages\_pytest\cacheprovider.py:429
+  C:\Code\bar-directory-recon\.venv-ci\Lib\site-packages\_pytest\cacheprovider.py:429: PytestCacheWarning: could not create cache path C:\Code\bar-directory-recon\.pytest_cache\v\cache\lastfailed: [WinError 5] Access is denied: 'C:\\Code\\bar-directory-recon\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: C:\Code\bar-directory-recon\logs\nightly\junit_re_run.xml -
+=========================== short test summary info ===========================
+ERROR src/tests/test_core_modules.py
+ERROR src/tests/test_hallandale_pipeline.py
+ERROR src/tests/test_hallandale_pipeline_success.py
+ERROR test_data_hunter.py
+ERROR test_hallandale_pipeline.py
+ERROR test_live_scraping.py
+ERROR test_realtor_system.py
+ERROR tests/test_security_manager.py
+ERROR universal_recon/tests/plugins/test_ml_labeler.py
+ERROR universal_recon/tests/plugins/test_social_link_parser.py
+!!!!!!!!!!!!!!!!!! Interrupted: 10 errors during collection !!!!!!!!!!!!!!!!!!!
+2 deselected, 4 warnings, 10 errors in 1.47s

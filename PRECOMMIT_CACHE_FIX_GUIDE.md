@@ -5,7 +5,8 @@ Pre-commit hooks can fail with "InvalidManifestError" due to Windows permission 
 
 ## Error Pattern
 ```
-InvalidManifestError: 
+InvalidManifestError:
+
 =====> C:\Users\[user]\.cache\pre-commit\repo[id]\.pre-commit-hooks.yaml is not a file
 ```
 
@@ -39,7 +40,7 @@ git commit --no-verify -m "Your message"
 
 ## When to Use Each Option
 - **Automated Script**: Regular development workflow
-- **Manual Commands**: When script fails or debugging needed  
+- **Manual Commands**: When script fails or debugging needed
 - **--no-verify**: Emergency commits when hooks are broken
 - **Clean Reinstall**: When corruption is persistent
 

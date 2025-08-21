@@ -1,12 +1,9 @@
+
 services:
   prometheus:
     image: prom/prometheus:latest
     ports: ["9090:9090"]
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./rules.yml:/etc/prometheus/rules.yml:ro
-      - prom-data:/prometheus
-    restart: unless-stopped
+    volumes: ["./prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
   grafana:
     image: grafana/grafana-oss:latest
     ports: ["3000:3000"]
@@ -29,3 +26,4 @@ services:
 volumes:
   prom-data:
   grafana-data:
+
