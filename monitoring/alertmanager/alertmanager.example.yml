@@ -3,26 +3,26 @@
 # (alertmanager.local.yml is git-ignored to prevent committing secrets)
 
 global:
-  smtp_smarthost: 'localhost:1025'  # Use MailHog or similar for testing
+  smtp_smarthost: "localhost:1025" # Use MailHog or similar for testing
 
 route:
-  group_by: ['alertname']
+  group_by: ["alertname"]
   group_wait: 10s
   group_interval: 10s
   repeat_interval: 1h
-  receiver: 'dev-webhook'
+  receiver: "dev-webhook"
 
 receivers:
-  - name: 'dev-webhook'
+  - name: "dev-webhook"
     webhook_configs:
-      - url: 'http://host.docker.internal:5001/alerts'
+      - url: "http://host.docker.internal:5001/alerts"
         send_resolved: true
 
-  - name: 'dev-email'
+  - name: "dev-email"
     email_configs:
-      - to: 'dev@localhost'
-        from: 'alertmanager@localhost'
-        subject: '[DEV] {{ .GroupLabels.alertname }}'
+      - to: "dev@localhost"
+        from: "alertmanager@localhost"
+        subject: "[DEV] {{ .GroupLabels.alertname }}"
         body: |
           {{ range .Alerts }}
           Alert: {{ .Annotations.summary }}
@@ -31,7 +31,7 @@ receivers:
 
 inhibit_rules:
   - source_match:
-      severity: 'critical'
+      severity: "critical"
     target_match:
-      severity: 'warning'
-    equal: ['alertname', 'instance']
+      severity: "warning"
+    equal: ["alertname", "instance"]
