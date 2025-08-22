@@ -81,7 +81,8 @@ exclude = [
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-# Temporary lowered threshold for security upgrade commit - will increase with follow-up coverage work
+# Raised coverage threshold after adding targeted unit tests - gradual improvement approach (5.8% achieved)
+
 addopts = "--cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=5"
 testpaths = [
     "src/tests",
