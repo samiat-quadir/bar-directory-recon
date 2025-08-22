@@ -1,0 +1,13 @@
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\build_output.txt
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\coverage_after_fast.xml
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\coverage_report_after_fast.txt
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\INDEX.txt
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\mutmut_run.txt
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\pip_audit.json
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\pip_licenses.json
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\pipdeptree.json
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\pytest_fuzz_shortrun.txt
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\radon_cc.txt
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\radon_mi.txt
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\twine_check.txt
+C:\Code\bar-directory-recon\logs\nightly\20250822_002917\vulture.txt

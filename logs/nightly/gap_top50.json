@@ -1,0 +1,104 @@
+[
+  {
+    "file": "data_hunter.py",
+    "covered": 0,
+    "total": 268,
+    "gap": 1.0
+  },
+  {
+    "file": "ut_bar.py",
+    "covered": 0,
+    "total": 188,
+    "gap": 1.0
+  },
+  {
+    "file": "notification_agent.py",
+    "covered": 0,
+    "total": 169,
+    "gap": 1.0
+  },
+  {
+    "file": "security_audit.py",
+    "covered": 0,
+    "total": 165,
+    "gap": 1.0
+  },
+  {
+    "file": "hallandale_pipeline.py",
+    "covered": 0,
+    "total": 162,
+    "gap": 1.0
+  },
+  {
+    "file": "security_manager.py",
+    "covered": 0,
+    "total": 88,
+    "gap": 1.0
+  },
+  {
+    "file": "webdriver_manager.py",
+    "covered": 12,
+    "total": 177,
+    "gap": 0.9322033898305084
+  },
+  {
+    "file": "data_extractor.py",
+    "covered": 21,
+    "total": 272,
+    "gap": 0.9227941176470589
+  },
+  {
+    "file": "pagination_manager.py",
+    "covered": 17,
+    "total": 204,
+    "gap": 0.9166666666666666
+  },
+  {
+    "file": "property_validation.py",
+    "covered": 27,
+    "total": 286,
+    "gap": 0.9055944055944056
+  },
+  {
+    "file": "property_enrichment.py",
+    "covered": 23,
+    "total": 211,
+    "gap": 0.8909952606635071
+  },
+  {
+    "file": "orchestrator.py",
+    "covered": 35,
+    "total": 277,
+    "gap": 0.8736462093862816
+  },
+  {
+    "file": "hallandale_pipeline_fixed.py",
+    "covered": 19,
+    "total": 140,
+    "gap": 0.8642857142857143
+  },
+  {
+    "file": "pdf_processor.py",
+    "covered": 40,
+    "total": 220,
+    "gap": 0.8181818181818181
+  },
+  {
+    "file": "logger.py",
+    "covered": 31,
+    "total": 165,
+    "gap": 0.8121212121212121
+  },
+  {
+    "file": "config_loader.py",
+    "covered": 31,
+    "total": 120,
+    "gap": 0.7416666666666667
+  },
+  {
+    "file": "unified_schema.py",
+    "covered": 43,
+    "total": 153,
+    "gap": 0.7189542483660131
+  }
+]

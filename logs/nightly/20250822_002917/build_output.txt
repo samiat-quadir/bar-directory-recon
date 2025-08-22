@@ -1,0 +1,179 @@
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=45
+  - wheel
+* Getting build dependencies for sdist...
+running egg_info
+creating src\bar_directory_recon.egg-info
+writing src\bar_directory_recon.egg-info\PKG-INFO
+writing dependency_links to src\bar_directory_recon.egg-info\dependency_links.txt
+writing top-level names to src\bar_directory_recon.egg-info\top_level.txt
+writing manifest file 'src\bar_directory_recon.egg-info\SOURCES.txt'
+reading manifest file 'src\bar_directory_recon.egg-info\SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src\bar_directory_recon.egg-info\SOURCES.txt'
+* Building sdist...
+running sdist
+running egg_info
+writing src\bar_directory_recon.egg-info\PKG-INFO
+writing dependency_links to src\bar_directory_recon.egg-info\dependency_links.txt
+writing top-level names to src\bar_directory_recon.egg-info\top_level.txt
+reading manifest file 'src\bar_directory_recon.egg-info\SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src\bar_directory_recon.egg-info\SOURCES.txt'
+running check
+creating bar_directory_recon-0.1.3.dev0
+creating bar_directory_recon-0.1.3.dev0\src
+creating bar_directory_recon-0.1.3.dev0\src\bar_directory_recon.egg-info
+creating bar_directory_recon-0.1.3.dev0\src\tests
+creating bar_directory_recon-0.1.3.dev0\tests
+copying files to bar_directory_recon-0.1.3.dev0...
+copying LICENSE -> bar_directory_recon-0.1.3.dev0
+copying README.md -> bar_directory_recon-0.1.3.dev0
+copying pyproject.toml -> bar_directory_recon-0.1.3.dev0
+copying setup.cfg -> bar_directory_recon-0.1.3.dev0
+copying src\__init__.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\config_loader.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\data_extractor.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\data_hunter.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\hallandale_pipeline.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\hallandale_pipeline_fixed.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\logger.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\notification_agent.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\orchestrator.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\pagination_manager.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\pdf_processor.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\property_enrichment.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\property_validation.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\security_audit.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\security_manager.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\unified_schema.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\ut_bar.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\webdriver_manager.py -> bar_directory_recon-0.1.3.dev0\src
+copying src\bar_directory_recon.egg-info\PKG-INFO -> bar_directory_recon-0.1.3.dev0\src\bar_directory_recon.egg-info
+copying src\bar_directory_recon.egg-info\SOURCES.txt -> bar_directory_recon-0.1.3.dev0\src\bar_directory_recon.egg-info
+copying src\bar_directory_recon.egg-info\dependency_links.txt -> bar_directory_recon-0.1.3.dev0\src\bar_directory_recon.egg-info
+copying src\bar_directory_recon.egg-info\top_level.txt -> bar_directory_recon-0.1.3.dev0\src\bar_directory_recon.egg-info
+copying src\tests\conftest.py -> bar_directory_recon-0.1.3.dev0\src\tests
+copying src\tests\test_core_modules.py -> bar_directory_recon-0.1.3.dev0\src\tests
+copying src\tests\test_hallandale_pipeline.py -> bar_directory_recon-0.1.3.dev0\src\tests
+copying src\tests\test_hallandale_pipeline_success.py -> bar_directory_recon-0.1.3.dev0\src\tests
+copying src\tests\test_security_manager.py -> bar_directory_recon-0.1.3.dev0\src\tests
+copying tests\test_security_manager_local.py -> bar_directory_recon-0.1.3.dev0\tests
+copying tests\test_security_upgrade_coverage.py -> bar_directory_recon-0.1.3.dev0\tests
+copying src\bar_directory_recon.egg-info\SOURCES.txt -> bar_directory_recon-0.1.3.dev0\src\bar_directory_recon.egg-info
+Writing bar_directory_recon-0.1.3.dev0\setup.cfg
+Creating tar archive
+removing 'bar_directory_recon-0.1.3.dev0' (and everything under it)
+* Building wheel from sdist
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=45
+  - wheel
+* Getting build dependencies for wheel...
+running egg_info
+writing src\bar_directory_recon.egg-info\PKG-INFO
+writing dependency_links to src\bar_directory_recon.egg-info\dependency_links.txt
+writing top-level names to src\bar_directory_recon.egg-info\top_level.txt
+reading manifest file 'src\bar_directory_recon.egg-info\SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src\bar_directory_recon.egg-info\SOURCES.txt'
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build\lib
+copying src\config_loader.py -> build\lib
+copying src\data_extractor.py -> build\lib
+copying src\data_hunter.py -> build\lib
+copying src\hallandale_pipeline.py -> build\lib
+copying src\hallandale_pipeline_fixed.py -> build\lib
+copying src\logger.py -> build\lib
+copying src\notification_agent.py -> build\lib
+copying src\orchestrator.py -> build\lib
+copying src\pagination_manager.py -> build\lib
+copying src\pdf_processor.py -> build\lib
+copying src\property_enrichment.py -> build\lib
+copying src\property_validation.py -> build\lib
+copying src\security_audit.py -> build\lib
+copying src\security_manager.py -> build\lib
+copying src\unified_schema.py -> build\lib
+copying src\ut_bar.py -> build\lib
+copying src\webdriver_manager.py -> build\lib
+copying src\__init__.py -> build\lib
+creating build\lib\tests
+copying src\tests\conftest.py -> build\lib\tests
+copying src\tests\test_core_modules.py -> build\lib\tests
+copying src\tests\test_hallandale_pipeline.py -> build\lib\tests
+copying src\tests\test_hallandale_pipeline_success.py -> build\lib\tests
+copying src\tests\test_security_manager.py -> build\lib\tests
+running egg_info
+writing src\bar_directory_recon.egg-info\PKG-INFO
+writing dependency_links to src\bar_directory_recon.egg-info\dependency_links.txt
+writing top-level names to src\bar_directory_recon.egg-info\top_level.txt
+reading manifest file 'src\bar_directory_recon.egg-info\SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src\bar_directory_recon.egg-info\SOURCES.txt'
+installing to build\bdist.win-amd64\wheel
+running install
+running install_lib
+creating build\bdist.win-amd64\wheel
+copying build\lib\config_loader.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\data_extractor.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\data_hunter.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\hallandale_pipeline.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\hallandale_pipeline_fixed.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\logger.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\notification_agent.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\orchestrator.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\pagination_manager.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\pdf_processor.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\property_enrichment.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\property_validation.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\security_audit.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\security_manager.py -> build\bdist.win-amd64\wheel\.
+creating build\bdist.win-amd64\wheel\tests
+copying build\lib\tests\conftest.py -> build\bdist.win-amd64\wheel\.\tests
+copying build\lib\tests\test_core_modules.py -> build\bdist.win-amd64\wheel\.\tests
+copying build\lib\tests\test_hallandale_pipeline.py -> build\bdist.win-amd64\wheel\.\tests
+copying build\lib\tests\test_hallandale_pipeline_success.py -> build\bdist.win-amd64\wheel\.\tests
+copying build\lib\tests\test_security_manager.py -> build\bdist.win-amd64\wheel\.\tests
+copying build\lib\unified_schema.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\ut_bar.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\webdriver_manager.py -> build\bdist.win-amd64\wheel\.
+copying build\lib\__init__.py -> build\bdist.win-amd64\wheel\.
+running install_egg_info
+Copying src\bar_directory_recon.egg-info to build\bdist.win-amd64\wheel\.\bar_directory_recon-0.1.3.dev0-py3.13.egg-info
+running install_scripts
+creating build\bdist.win-amd64\wheel\bar_directory_recon-0.1.3.dev0.dist-info\WHEEL
+creating 'C:\Code\bar-directory-recon\dist\.tmp-ycblnloj\bar_directory_recon-0.1.3.dev0-py3-none-any.whl' and adding 'build\bdist.win-amd64\wheel' to it
+adding '__init__.py'
+adding 'config_loader.py'
+adding 'data_extractor.py'
+adding 'data_hunter.py'
+adding 'hallandale_pipeline.py'
+adding 'hallandale_pipeline_fixed.py'
+adding 'logger.py'
+adding 'notification_agent.py'
+adding 'orchestrator.py'
+adding 'pagination_manager.py'
+adding 'pdf_processor.py'
+adding 'property_enrichment.py'
+adding 'property_validation.py'
+adding 'security_audit.py'
+adding 'security_manager.py'
+adding 'unified_schema.py'
+adding 'ut_bar.py'
+adding 'webdriver_manager.py'
+adding 'bar_directory_recon-0.1.3.dev0.dist-info/licenses/LICENSE'
+adding 'tests/conftest.py'
+adding 'tests/test_core_modules.py'
+adding 'tests/test_hallandale_pipeline.py'
+adding 'tests/test_hallandale_pipeline_success.py'
+adding 'tests/test_security_manager.py'
+adding 'bar_directory_recon-0.1.3.dev0.dist-info/METADATA'
+adding 'bar_directory_recon-0.1.3.dev0.dist-info/WHEEL'
+adding 'bar_directory_recon-0.1.3.dev0.dist-info/top_level.txt'
+adding 'bar_directory_recon-0.1.3.dev0.dist-info/RECORD'
+removing build\bdist.win-amd64\wheel
+Successfully built bar_directory_recon-0.1.3.dev0.tar.gz and bar_directory_recon-0.1.3.dev0-py3-none-any.whl

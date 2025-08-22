@@ -1,0 +1,7 @@
+
+=================================== ERRORS ====================================
+___ ERROR collecting universal_recon/tests/fuzz/test_fuzz_data_extractor.py ___
+Using pytest.skip outside of a test will skip the entire module. If that's your intention, pass `allow_module_level=True`. If you want to skip a specific test or an entire class, use the @pytest.mark.skip or @pytest.mark.skipif decorators.
+=========================== short test summary info ===========================
+ERROR universal_recon/tests/fuzz/test_fuzz_data_extractor.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
