@@ -1,7 +1,0 @@
-...................                                                      [100%]
-============================== warnings summary ===============================
-.venv-ci\Lib\site-packages\_pytest\cacheprovider.py:475
-  C:\Code\bar-directory-recon\.venv-ci\Lib\site-packages\_pytest\cacheprovider.py:475: PytestCacheWarning: could not create cache path C:\Code\bar-directory-recon\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'C:\\Code\\bar-directory-recon\\.pytest_cache\\v\\cache'
-    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
-
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
