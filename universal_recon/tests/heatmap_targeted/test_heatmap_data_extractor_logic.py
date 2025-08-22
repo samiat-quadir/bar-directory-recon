@@ -1,6 +1,6 @@
 import importlib
 import pytest
-
+import urllib.parse
 
 def test_data_extractor_import():
     """Test that data_extractor can be imported and has main components"""
@@ -38,7 +38,20 @@ def test_extract_basic():
 
         assert out is not None
         s = str(out)
-        assert "Acme" in s and ("x.com" in s or "https://x.com/u" in s)
+        # Robust hostname check
+        assert "Acme" in s
+        url_value = None
+        if isinstance(out, dict):
+            url_value = out.get("url")
+        elif hasattr(out, "url"):
+            url_value = getattr(out, "url")
+        if url_value:
+            parsed = urllib.parse.urlparse(url_value)
+            # Accept if host is exactly x.com
+            assert parsed.hostname == "x.com"
+        else:
+            # Fallback to check that expected strings are in 's'
+            assert ("x.com" in s or "https://x.com/u" in s)
 
     except Exception:
         # Graceful degradation
