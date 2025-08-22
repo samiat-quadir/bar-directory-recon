@@ -18,7 +18,7 @@ def test_predict_score_preserves_record_structure():
     result = predict_score(records)
     assert isinstance(result, list)
     assert len(result) == len(records)
-    
+
     # Check that original fields are preserved
     for i, record in enumerate(result):
         assert "type" in record
@@ -34,3 +34,4 @@ def test_predict_score_adds_predicted_scores():
     assert isinstance(result, list)
     assert len(result) == 1
     # Should have some kind of score prediction logic applied
+

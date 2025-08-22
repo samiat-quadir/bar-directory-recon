@@ -17,3 +17,4 @@ def test_get_logger_with_different_names():
     logger2 = get_logger("test2")
     assert logger1 is not None
     assert logger2 is not None
+                  

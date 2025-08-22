@@ -9,7 +9,7 @@ def test_social_link_parser_empty_html():
     mock_driver = Mock()
     mock_driver.page_source = "<html><body></body></html>"
     mock_driver.current_url = "http://test.com"
-    
+
     result = apply(mock_driver, "test_context")
     assert isinstance(result, list)
     assert result == []
@@ -20,7 +20,7 @@ def test_social_link_parser_detects_linkedin():
     mock_driver = Mock()
     mock_driver.page_source = '<html><body><a href="https://linkedin.com/in/testuser">LinkedIn</a></body></html>'
     mock_driver.current_url = "http://test.com"
-    
+
     result = apply(mock_driver, "test_context")
     assert len(result) == 1
     assert result[0]["type"] == "social"
@@ -33,7 +33,7 @@ def test_social_link_parser_detects_twitter():
     mock_driver = Mock()
     mock_driver.page_source = '<html><body><a href="https://twitter.com/testuser">Twitter</a></body></html>'
     mock_driver.current_url = "http://test.com"
-    
+
     result = apply(mock_driver, "test_context")
     assert len(result) == 1
     assert result[0]["type"] == "social"
@@ -46,6 +46,6 @@ def test_social_link_parser_ignores_twitter_share():
     mock_driver = Mock()
     mock_driver.page_source = '<html><body><a href="https://twitter.com/share">Share</a></body></html>'
     mock_driver.current_url = "http://test.com"
-    
+
     result = apply(mock_driver, "test_context")
     assert result == []

@@ -1,3 +1,17 @@
+
+
+=================================== ERRORS ====================================
+_ ERROR collecting universal_recon/tests/targeted/test_social_link_parser.py __
+import file mismatch:
+imported module 'test_social_link_parser' has this __file__ attribute:
+  C:\Code\bar-directory-recon\universal_recon\tests\plugins\test_social_link_parser.py
+which is not the same as the test file we want to collect:
+  C:\Code\bar-directory-recon\universal_recon\tests\targeted\test_social_link_parser.py
+HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules
+=========================== short test summary info ===========================
+ERROR universal_recon/tests/targeted/test_social_link_parser.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+=======
 ============================= test session starts =============================
 platform win32 -- Python 3.13.6, pytest-8.4.1, pluggy-1.6.0
 rootdir: C:\Code\bar-directory-recon
@@ -96,3 +110,4 @@ Coverage XML written to file logs/nightly/coverage_after.xml
 =========================== short test summary info ===========================
 FAILED universal_recon/tests/targeted/test_plugin_loader.py::test_load_plugins_by_type_unknown_plugin_safe
 ================== 1 failed, 19 passed, 2 warnings in 0.84s ===================
+

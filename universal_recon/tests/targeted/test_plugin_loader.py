@@ -27,3 +27,4 @@ def test_load_plugins_by_type_unknown_plugin_safe():
         result = load_plugins_by_type("test")
         # Should return empty list when module can't be imported
         assert result == []
+
