@@ -27,6 +27,7 @@ def smart_commit(message):
     for f in files_to_add:
         subprocess.run(["git", "add", f], capture_output=True)
 
+
     result = subprocess.run(["git", "commit", "-m", message], capture_output=True, text=True)
     print(f"✅ {message}" if result.returncode == 0 else f"❌ Failed")
     return result.returncode == 0
