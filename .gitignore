@@ -125,3 +125,15 @@ secrets_scan_report_*.json
 *.task.xml
 monitoring/grafana/provisioning/**/json/*.bak
 
+# Additional cleanup patterns from audit
+*.bak
+archive/
+.coverage*
+htmlcov/
+.pytest_cache/
+__pycache__/
+*_copy.py
+*_backup.py
+*_temp.py
+temp_*/
+
