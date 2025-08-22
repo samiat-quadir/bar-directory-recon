@@ -18,11 +18,11 @@ def test_config_loader_has_functions():
         m = importlib.import_module("config_loader")
     except ImportError:
         pytest.skip("config_loader module not available")
-    
+
     # Check for ConfigLoader class
     has_class = hasattr(m, "ConfigLoader")
     assert has_class, "ConfigLoader class not found"
-    
+
     # Try to instantiate ConfigLoader
     if has_class:
         try:

@@ -22,7 +22,7 @@ def test_data_extractor_has_functions():
     # Check for DataExtractor class
     has_class = hasattr(m, "DataExtractor")
     assert has_class, "DataExtractor class not found"
-    
+
     # Try to check the class
     if has_class:
         try:

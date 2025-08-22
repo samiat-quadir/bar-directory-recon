@@ -22,9 +22,9 @@ def test_logger_has_functions():
     # Check for create_logger function and ScrapingLogger class
     has_create = hasattr(m, "create_logger")
     has_class = hasattr(m, "ScrapingLogger")
-    
+
     assert has_create or has_class, "No logger function or class found"
-    
+
     # Test create_logger if available
     if has_create:
         try:
