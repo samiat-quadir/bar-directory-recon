@@ -97,6 +97,9 @@ settings_*.json
 .env.work
 .env.asus
 
+# Dev-only Alertmanager override (do not commit)
+monitoring/alertmanager/alertmanager.local.yml
+
 ############################################################
 # 7 · One-off project artefacts
 ############################################################

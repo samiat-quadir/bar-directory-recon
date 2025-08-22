@@ -1,0 +1,3 @@
+/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe store: line 1: /mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe: No such file or directory
+branch 'chore/coverage-nightly-20250820-1757' set up to track 'origin/chore/coverage-nightly-20250820-1757'.
+Everything up-to-date

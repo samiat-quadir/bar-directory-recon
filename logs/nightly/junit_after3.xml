@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="4" failures="1" skipped="3" tests="100" time="7.051" timestamp="2025-08-20T18:35:50.504472-04:00" hostname="Mothership"><testcase classname="src.tests.test_core_modules.TestConfigLoader" name="test_config_loader_init" time="0.001" /><testcase classname="src.tests.test_core_modules.TestConfigLoader" name="test_load_config_from_json_file" time="0.003" /><testcase classname="src.tests.test_core_modules.TestConfigLoader" name="test_config_file_not_found" time="0.001" /><testcase classname="src.tests.test_core_modules.TestDataExtractor" name="test_data_extractor_init" time="0.001" /><testcase classname="src.tests.test_core_modules.TestDataExtractor" name="test_contact_patterns" time="0.001" /><testcase classname="src.tests.test_core_modules.TestDataExtractor" name="test_website_pattern" time="0.001" /><testcase classname="src.tests.test_core_modules.TestUnifiedSchema" name="test_unified_record_creation" time="0.001" /><testcase classname="src.tests.test_core_modules.TestUnifiedSchema" name="test_unified_record_defaults" time="0.001" /><testcase classname="src.tests.test_core_modules.TestUnifiedSchema" name="test_unified_record_with_lists" time="0.001" /><testcase classname="src.tests.test_core_modules.TestUnifiedSchema" name="test_unified_record_timestamps" time="0.001" /><testcase classname="src.tests.test_hallandale_pipeline" name="test_pipeline_nonexistent_pdf" time="0.002"><error message="failed on setup with &quot;PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'&quot;">path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+onexc = functools.partial(&lt;function on_rm_rf_error at 0x000001AAB889D300&gt;, start_path=WindowsPath('//?/C:/Code/bar-directory-recon/logs/pytest_basetemp'))
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+&gt;           os.rmdir(path)
+E           PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+
+C:\ProgramData\miniconda3\Lib\shutil.py:631: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+ignore_errors = False, onerror = None
+
+    def rmtree(path, ignore_errors=False, onerror=None, *, onexc=None, dir_fd=None):
+        """Recursively delete a directory tree.
+    
+        If dir_fd is not None, it should be a file descriptor open to a directory;
+        path will then be relative to that directory.
+        dir_fd may not be implemented on your platform.
+        If it is unavailable, using it will raise a NotImplementedError.
+    
+        If ignore_errors is set, errors are ignored; otherwise, if onexc or
+        onerror is set, it is called to handle the error with arguments (func,
+        path, exc_info) where func is platform and implementation dependent;
+        path is the argument to that function that caused it to fail; and
+        the value of exc_info describes the exception. For onexc it is the
+        exception instance, and for onerror it is a tuple as returned by
+        sys.exc_info().  If ignore_errors is false and both onexc and
+        onerror are None, the exception is reraised.
+    
+        onerror is deprecated and only remains for backwards compatibility.
+        If both onerror and onexc are set, onerror is ignored and onexc is used.
+        """
+    
+        sys.audit("shutil.rmtree", path, dir_fd)
+        if ignore_errors:
+            def onexc(*args):
+                pass
+        elif onerror is None and onexc is None:
+            def onexc(*args):
+                raise
+        elif onexc is None:
+            if onerror is None:
+                def onexc(*args):
+                    raise
+            else:
+                # delegate to onerror
+                def onexc(*args):
+                    func, path, exc = args
+                    if exc is None:
+                        exc_info = None, None, None
+                    else:
+                        exc_info = type(exc), exc, exc.__traceback__
+                    return onerror(func, path, exc_info)
+    
+        if _use_fd_functions:
+            # While the unsafe rmtree works fine on bytes, the fd based does not.
+            if isinstance(path, bytes):
+                path = os.fsdecode(path)
+            stack = [(os.lstat, dir_fd, path, None)]
+            try:
+                while stack:
+                    _rmtree_safe_fd(stack, onexc)
+            finally:
+                # Close any file descriptors still on the stack.
+                while stack:
+                    func, fd, path, entry = stack.pop()
+                    if func is not os.close:
+                        continue
+                    try:
+                        os.close(fd)
+                    except OSError as err:
+                        onexc(os.close, path, err)
+        else:
+            if dir_fd is not None:
+                raise NotImplementedError("dir_fd unavailable on this platform")
+            try:
+                st = os.lstat(path)
+            except OSError as err:
+                onexc(os.lstat, path, err)
+                return
+            try:
+                if _rmtree_islink(st):
+                    # symlinks to directories are forbidden, see bug #1669
+                    raise OSError("Cannot call rmtree on a symbolic link")
+            except OSError as err:
+                onexc(os.path.islink, path, err)
+                # can't continue even if onexc hook returns
+                return
+&gt;           return _rmtree_unsafe(path, onexc)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+C:\ProgramData\miniconda3\Lib\shutil.py:790: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+onexc = functools.partial(&lt;function on_rm_rf_error at 0x000001AAB889D300&gt;, start_path=WindowsPath('//?/C:/Code/bar-directory-recon/logs/pytest_basetemp'))
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+            os.rmdir(path)
+        except FileNotFoundError:
+            pass
+        except OSError as err:
+&gt;           onexc(os.rmdir, path, err)
+E           PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+
+C:\ProgramData\miniconda3\Lib\shutil.py:635: PermissionError</error></testcase><testcase classname="src.tests.test_hallandale_pipeline_success" name="test_pipeline_success" time="0.001"><error message="failed on setup with &quot;PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'&quot;">path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+onexc = functools.partial(&lt;function on_rm_rf_error at 0x000001AAB889D300&gt;, start_path=WindowsPath('//?/C:/Code/bar-directory-recon/logs/pytest_basetemp'))
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+&gt;           os.rmdir(path)
+E           PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+
+C:\ProgramData\miniconda3\Lib\shutil.py:631: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+ignore_errors = False, onerror = None
+
+    def rmtree(path, ignore_errors=False, onerror=None, *, onexc=None, dir_fd=None):
+        """Recursively delete a directory tree.
+    
+        If dir_fd is not None, it should be a file descriptor open to a directory;
+        path will then be relative to that directory.
+        dir_fd may not be implemented on your platform.
+        If it is unavailable, using it will raise a NotImplementedError.
+    
+        If ignore_errors is set, errors are ignored; otherwise, if onexc or
+        onerror is set, it is called to handle the error with arguments (func,
+        path, exc_info) where func is platform and implementation dependent;
+        path is the argument to that function that caused it to fail; and
+        the value of exc_info describes the exception. For onexc it is the
+        exception instance, and for onerror it is a tuple as returned by
+        sys.exc_info().  If ignore_errors is false and both onexc and
+        onerror are None, the exception is reraised.
+    
+        onerror is deprecated and only remains for backwards compatibility.
+        If both onerror and onexc are set, onerror is ignored and onexc is used.
+        """
+    
+        sys.audit("shutil.rmtree", path, dir_fd)
+        if ignore_errors:
+            def onexc(*args):
+                pass
+        elif onerror is None and onexc is None:
+            def onexc(*args):
+                raise
+        elif onexc is None:
+            if onerror is None:
+                def onexc(*args):
+                    raise
+            else:
+                # delegate to onerror
+                def onexc(*args):
+                    func, path, exc = args
+                    if exc is None:
+                        exc_info = None, None, None
+                    else:
+                        exc_info = type(exc), exc, exc.__traceback__
+                    return onerror(func, path, exc_info)
+    
+        if _use_fd_functions:
+            # While the unsafe rmtree works fine on bytes, the fd based does not.
+            if isinstance(path, bytes):
+                path = os.fsdecode(path)
+            stack = [(os.lstat, dir_fd, path, None)]
+            try:
+                while stack:
+                    _rmtree_safe_fd(stack, onexc)
+            finally:
+                # Close any file descriptors still on the stack.
+                while stack:
+                    func, fd, path, entry = stack.pop()
+                    if func is not os.close:
+                        continue
+                    try:
+                        os.close(fd)
+                    except OSError as err:
+                        onexc(os.close, path, err)
+        else:
+            if dir_fd is not None:
+                raise NotImplementedError("dir_fd unavailable on this platform")
+            try:
+                st = os.lstat(path)
+            except OSError as err:
+                onexc(os.lstat, path, err)
+                return
+            try:
+                if _rmtree_islink(st):
+                    # symlinks to directories are forbidden, see bug #1669
+                    raise OSError("Cannot call rmtree on a symbolic link")
+            except OSError as err:
+                onexc(os.path.islink, path, err)
+                # can't continue even if onexc hook returns
+                return
+&gt;           return _rmtree_unsafe(path, onexc)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+C:\ProgramData\miniconda3\Lib\shutil.py:790: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+onexc = functools.partial(&lt;function on_rm_rf_error at 0x000001AAB889D300&gt;, start_path=WindowsPath('//?/C:/Code/bar-directory-recon/logs/pytest_basetemp'))
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+            os.rmdir(path)
+        except FileNotFoundError:
+            pass
+        except OSError as err:
+&gt;           onexc(os.rmdir, path, err)
+E           PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+
+C:\ProgramData\miniconda3\Lib\shutil.py:635: PermissionError</error></testcase><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_init_without_keyvault_url" time="0.002" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_init_with_keyvault_url_no_azure" time="0.001"><failure message="assert False is True&#10; +  where False = &lt;src.security_manager.SecurityManager object at 0x000001AAEAD7B890&gt;.fallback_mode">self = &lt;test_security_manager.TestSecurityManager object at 0x000001AAEAAD6350&gt;
+
+    def test_init_with_keyvault_url_no_azure(self):
+        """Test initialization with Key Vault URL but no Azure libraries."""
+        with patch('src.security_manager.AZURE_AVAILABLE', False):
+            manager = SecurityManager(keyvault_url="https://test.vault.azure.net/")
+&gt;           assert manager.fallback_mode is True
+E           assert False is True
+E            +  where False = &lt;src.security_manager.SecurityManager object at 0x000001AAEAD7B890&gt;.fallback_mode
+
+src\tests\test_security_manager.py:24: AssertionError</failure></testcase><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_init_with_service_principal" time="0.003" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_init_with_default_credential" time="0.002" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_secret_from_keyvault" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_secret_fallback_env_var" time="0.002" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_secret_auto_env_var" time="0.002" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_secret_not_found" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_email_config" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_email_config_error" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_api_config" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_api_config_partial" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_google_sheets_config" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_get_database_config" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_health_check_fallback_mode" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_health_check_keyvault_accessible" time="0.001" /><testcase classname="src.tests.test_security_manager.TestSecurityManager" name="test_health_check_keyvault_error" time="0.001" /><testcase classname="src.tests.test_security_manager.TestGlobalFunctions" name="test_get_security_manager_singleton" time="0.001" /><testcase classname="src.tests.test_security_manager.TestGlobalFunctions" name="test_get_secret_convenience" time="0.001" /><testcase classname="test_data_hunter" name="test_discovery" time="4.256" /><testcase classname="test_framework" name="test_imports" time="0.004" /><testcase classname="test_framework" name="test_basic_functionality" time="0.006" /><testcase classname="test_framework" name="test_config_validation" time="0.001" /><testcase classname="test_google_sheets" name="test_cli_arguments" time="0.008" /><testcase classname="test_google_sheets" name="test_logs_directory" time="0.002" /><testcase classname="test_plugin_architecture" name="test_plugin_architecture" time="0.024" /><testcase classname="test_plugin_architecture_fixed" name="test_plugin_architecture" time="0.024" /><testcase classname="test_realtor_system" name="test_imports" time="0.003"><skipped type="pytest.skip" message="Plugin import failed: No module named 'webdriver_manager.chrome'; 'webdriver_manager' is not a package">C:\Code\bar-directory-recon\test_realtor_system.py:36: Plugin import failed: No module named 'webdriver_manager.chrome'; 'webdriver_manager' is not a package</skipped></testcase><testcase classname="test_realtor_system" name="test_directories" time="0.001" /><testcase classname="test_realtor_system" name="test_files" time="0.001" /><testcase classname="test_realtor_system" name="test_plugin_registry" time="0.001" /><testcase classname="test_system" name="test_plugin_registry" time="0.001" /><testcase classname="test_system" name="test_new_plugins" time="0.010" /><testcase classname="test_system" name="test_universal_automation" time="0.011" /><testcase classname="test_system" name="test_lead_scoring" time="0.005" /><testcase classname="test_system" name="test_google_sheets_utils" time="0.001" /><testcase classname="test_system" name="test_file_structure" time="0.001" /><testcase classname="tests.test_security_manager_local" name="test_placeholder" time="0.001" /><testcase classname="universal_recon.tests.analytics.test_plugin_usage_diff.TestPluginUsageDiff" name="test_cli_plugin_diff" time="0.013" /><testcase classname="universal_recon.tests.analytics.test_plugin_usage_diff.TestPluginUsageDiff" name="test_load_plugins_with_invalid_json" time="0.003" /><testcase classname="universal_recon.tests.analytics.test_plugin_usage_diff.TestPluginUsageDiff" name="test_load_plugins_with_missing_file" time="0.001" /><testcase classname="universal_recon.tests.analytics.test_plugin_usage_diff.TestPluginUsageDiff" name="test_load_plugins_with_valid_json" time="0.002" /><testcase classname="universal_recon.tests.analytics.test_plugin_usage_diff" name="test_load_plugins" time="0.001" /><testcase classname="universal_recon.tests.analytics.test_plugin_usage_diff" name="test_load_plugins_missing_file" time="0.001" /><testcase classname="universal_recon.tests.analytics.test_risk_overlay_emitter.TestRiskOverlayEmitter" name="test_basic_risk" time="0.002" /><testcase classname="universal_recon.tests.analytics.test_risk_overlay_emitter.TestRiskOverlayEmitter" name="test_calculate_risk_level" time="0.002" /><testcase classname="universal_recon.tests.analytics.test_risk_overlay_emitter.TestRiskOverlayEmitter" name="test_emit_risk_overlay" time="0.004" /><testcase classname="universal_recon.tests.analytics.test_risk_overlay_emitter.TestRiskOverlayEmitter" name="test_export_json_file" time="0.004" /><testcase classname="universal_recon.tests.analytics.test_risk_overlay_emitter.TestRiskOverlayEmitter" name="test_load_validator_tiers" time="0.003" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_01" name="test_import_01" time="0.003" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_02" name="test_import_02" time="0.002" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_03" name="test_import_03" time="0.001" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_04" name="test_import_04" time="0.001" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_05" name="test_import_05" time="0.002" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_06" name="test_import_06" time="0.002" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_07" name="test_import_07" time="0.004" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_08" name="test_import_08" time="0.003" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_09" name="test_import_09" time="0.014" /><testcase classname="universal_recon.tests.auto_smoke.test_auto_10" name="test_import_10" time="0.001" /><testcase classname="universal_recon.tests.infrastructure.test_chromedriver" name="test_chromedriver" time="0.001"><skipped type="pytest.skip" message="ChromeDriver test skipped - version mismatch detected">C:\Code\bar-directory-recon\universal_recon\tests\infrastructure\test_chromedriver.py:6: ChromeDriver test skipped - version mismatch detected</skipped></testcase><testcase classname="universal_recon.tests.infrastructure.test_network_connectivity" name="test_external_api_connectivity" time="0.000"><skipped type="pytest.skip" message="Network connectivity test - skipped in CI environment">C:\Code\bar-directory-recon\universal_recon\tests\infrastructure\test_network_connectivity.py:6: Network connectivity test - skipped in CI environment</skipped></testcase><testcase classname="universal_recon.tests.plugins.test_firm_parser.TestFirmParserPlugin" name="test_plugin_output_soft_mode" time="0.001" /><testcase classname="universal_recon.tests.plugins.test_firm_parser.TestFirmParserPlugin" name="test_plugin_output_strict_mode" time="0.001" /><testcase classname="universal_recon.tests.plugins.test_firm_parser" name="test_parse_firm_data" time="0.001" /><testcase classname="universal_recon.tests.plugins.test_firm_plugin" name="test_firm_plugin_loads" time="0.001" /><testcase classname="universal_recon.tests.plugins.test_firm_plugin" name="test_firm_plugin_contract_smoke" time="0.001" /><testcase classname="universal_recon.tests.plugins.test_loader" name="test_plugin_loader_lists_plugins" time="0.001" /><testcase classname="universal_recon.tests.plugins.test_ml_labeler.TestMLLabelerPlugin" name="test_plugin_output_soft_mode" time="0.003" /><testcase classname="universal_recon.tests.plugins.test_ml_labeler.TestMLLabelerPlugin" name="test_plugin_output_strict_mode" time="0.002" /><testcase classname="universal_recon.tests.plugins.test_social_link_parser.TestSocialLinkParser" name="test_social_links_soft_mode" time="0.002" /><testcase classname="universal_recon.tests.plugins.test_social_link_parser.TestSocialLinkParser" name="test_social_links_strict_mode" time="0.002" /><testcase classname="universal_recon.tests.plugins.test_social_plugin" name="test_social_plugin_loads" time="0.001" /><testcase classname="universal_recon.tests.plugins.test_social_plugin" name="test_social_plugin_contract_smoke" time="0.001" /><testcase classname="universal_recon.tests.test_basic" name="test_basic" time="0.001" /><testcase classname="universal_recon.tests.test_risk_overlay_emitter" name="test_emit_site_risk_json" time="0.001"><error message="failed on setup with &quot;PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'&quot;">path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+onexc = functools.partial(&lt;function on_rm_rf_error at 0x000001AAB889D300&gt;, start_path=WindowsPath('//?/C:/Code/bar-directory-recon/logs/pytest_basetemp'))
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+&gt;           os.rmdir(path)
+E           PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+
+C:\ProgramData\miniconda3\Lib\shutil.py:631: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+ignore_errors = False, onerror = None
+
+    def rmtree(path, ignore_errors=False, onerror=None, *, onexc=None, dir_fd=None):
+        """Recursively delete a directory tree.
+    
+        If dir_fd is not None, it should be a file descriptor open to a directory;
+        path will then be relative to that directory.
+        dir_fd may not be implemented on your platform.
+        If it is unavailable, using it will raise a NotImplementedError.
+    
+        If ignore_errors is set, errors are ignored; otherwise, if onexc or
+        onerror is set, it is called to handle the error with arguments (func,
+        path, exc_info) where func is platform and implementation dependent;
+        path is the argument to that function that caused it to fail; and
+        the value of exc_info describes the exception. For onexc it is the
+        exception instance, and for onerror it is a tuple as returned by
+        sys.exc_info().  If ignore_errors is false and both onexc and
+        onerror are None, the exception is reraised.
+    
+        onerror is deprecated and only remains for backwards compatibility.
+        If both onerror and onexc are set, onerror is ignored and onexc is used.
+        """
+    
+        sys.audit("shutil.rmtree", path, dir_fd)
+        if ignore_errors:
+            def onexc(*args):
+                pass
+        elif onerror is None and onexc is None:
+            def onexc(*args):
+                raise
+        elif onexc is None:
+            if onerror is None:
+                def onexc(*args):
+                    raise
+            else:
+                # delegate to onerror
+                def onexc(*args):
+                    func, path, exc = args
+                    if exc is None:
+                        exc_info = None, None, None
+                    else:
+                        exc_info = type(exc), exc, exc.__traceback__
+                    return onerror(func, path, exc_info)
+    
+        if _use_fd_functions:
+            # While the unsafe rmtree works fine on bytes, the fd based does not.
+            if isinstance(path, bytes):
+                path = os.fsdecode(path)
+            stack = [(os.lstat, dir_fd, path, None)]
+            try:
+                while stack:
+                    _rmtree_safe_fd(stack, onexc)
+            finally:
+                # Close any file descriptors still on the stack.
+                while stack:
+                    func, fd, path, entry = stack.pop()
+                    if func is not os.close:
+                        continue
+                    try:
+                        os.close(fd)
+                    except OSError as err:
+                        onexc(os.close, path, err)
+        else:
+            if dir_fd is not None:
+                raise NotImplementedError("dir_fd unavailable on this platform")
+            try:
+                st = os.lstat(path)
+            except OSError as err:
+                onexc(os.lstat, path, err)
+                return
+            try:
+                if _rmtree_islink(st):
+                    # symlinks to directories are forbidden, see bug #1669
+                    raise OSError("Cannot call rmtree on a symbolic link")
+            except OSError as err:
+                onexc(os.path.islink, path, err)
+                # can't continue even if onexc hook returns
+                return
+&gt;           return _rmtree_unsafe(path, onexc)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+C:\ProgramData\miniconda3\Lib\shutil.py:790: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+onexc = functools.partial(&lt;function on_rm_rf_error at 0x000001AAB889D300&gt;, start_path=WindowsPath('//?/C:/Code/bar-directory-recon/logs/pytest_basetemp'))
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+            os.rmdir(path)
+        except FileNotFoundError:
+            pass
+        except OSError as err:
+&gt;           onexc(os.rmdir, path, err)
+E           PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+
+C:\ProgramData\miniconda3\Lib\shutil.py:635: PermissionError</error></testcase><testcase classname="universal_recon.tests.test_risk_overlay_emitter" name="test_calculate_risk_level" time="0.001" /><testcase classname="universal_recon.tests.test_risk_overlay_emitter" name="test_load_validator_tiers" time="0.001"><error message="failed on setup with &quot;PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'&quot;">path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+onexc = functools.partial(&lt;function on_rm_rf_error at 0x000001AAB889D300&gt;, start_path=WindowsPath('//?/C:/Code/bar-directory-recon/logs/pytest_basetemp'))
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+&gt;           os.rmdir(path)
+E           PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+
+C:\ProgramData\miniconda3\Lib\shutil.py:631: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+ignore_errors = False, onerror = None
+
+    def rmtree(path, ignore_errors=False, onerror=None, *, onexc=None, dir_fd=None):
+        """Recursively delete a directory tree.
+    
+        If dir_fd is not None, it should be a file descriptor open to a directory;
+        path will then be relative to that directory.
+        dir_fd may not be implemented on your platform.
+        If it is unavailable, using it will raise a NotImplementedError.
+    
+        If ignore_errors is set, errors are ignored; otherwise, if onexc or
+        onerror is set, it is called to handle the error with arguments (func,
+        path, exc_info) where func is platform and implementation dependent;
+        path is the argument to that function that caused it to fail; and
+        the value of exc_info describes the exception. For onexc it is the
+        exception instance, and for onerror it is a tuple as returned by
+        sys.exc_info().  If ignore_errors is false and both onexc and
+        onerror are None, the exception is reraised.
+    
+        onerror is deprecated and only remains for backwards compatibility.
+        If both onerror and onexc are set, onerror is ignored and onexc is used.
+        """
+    
+        sys.audit("shutil.rmtree", path, dir_fd)
+        if ignore_errors:
+            def onexc(*args):
+                pass
+        elif onerror is None and onexc is None:
+            def onexc(*args):
+                raise
+        elif onexc is None:
+            if onerror is None:
+                def onexc(*args):
+                    raise
+            else:
+                # delegate to onerror
+                def onexc(*args):
+                    func, path, exc = args
+                    if exc is None:
+                        exc_info = None, None, None
+                    else:
+                        exc_info = type(exc), exc, exc.__traceback__
+                    return onerror(func, path, exc_info)
+    
+        if _use_fd_functions:
+            # While the unsafe rmtree works fine on bytes, the fd based does not.
+            if isinstance(path, bytes):
+                path = os.fsdecode(path)
+            stack = [(os.lstat, dir_fd, path, None)]
+            try:
+                while stack:
+                    _rmtree_safe_fd(stack, onexc)
+            finally:
+                # Close any file descriptors still on the stack.
+                while stack:
+                    func, fd, path, entry = stack.pop()
+                    if func is not os.close:
+                        continue
+                    try:
+                        os.close(fd)
+                    except OSError as err:
+                        onexc(os.close, path, err)
+        else:
+            if dir_fd is not None:
+                raise NotImplementedError("dir_fd unavailable on this platform")
+            try:
+                st = os.lstat(path)
+            except OSError as err:
+                onexc(os.lstat, path, err)
+                return
+            try:
+                if _rmtree_islink(st):
+                    # symlinks to directories are forbidden, see bug #1669
+                    raise OSError("Cannot call rmtree on a symbolic link")
+            except OSError as err:
+                onexc(os.path.islink, path, err)
+                # can't continue even if onexc hook returns
+                return
+&gt;           return _rmtree_unsafe(path, onexc)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+C:\ProgramData\miniconda3\Lib\shutil.py:790: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+onexc = functools.partial(&lt;function on_rm_rf_error at 0x000001AAB889D300&gt;, start_path=WindowsPath('//?/C:/Code/bar-directory-recon/logs/pytest_basetemp'))
+
+    def _rmtree_unsafe(path, onexc):
+        def onerror(err):
+            if not isinstance(err, FileNotFoundError):
+                onexc(os.scandir, err.filename, err)
+        results = os.walk(path, topdown=False, onerror=onerror, followlinks=os._walk_symlinks_as_files)
+        for dirpath, dirnames, filenames in results:
+            for name in dirnames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.rmdir(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.rmdir, fullname, err)
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                try:
+                    os.unlink(fullname)
+                except FileNotFoundError:
+                    continue
+                except OSError as err:
+                    onexc(os.unlink, fullname, err)
+        try:
+            os.rmdir(path)
+        except FileNotFoundError:
+            pass
+        except OSError as err:
+&gt;           onexc(os.rmdir, path, err)
+E           PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: '\\\\?\\C:\\Code\\bar-directory-recon\\logs\\pytest_basetemp'
+
+C:\ProgramData\miniconda3\Lib\shutil.py:635: PermissionError</error></testcase><testcase classname="universal_recon.tests.utils.test_audit_report_generator.TestAuditReportGenerator" name="test_generate_audit_report_structure" time="0.001" /><testcase classname="universal_recon.tests.utils.test_audit_report_generator.TestAuditReportGenerator" name="test_plugin_grouping" time="0.001" /><testcase classname="universal_recon.tests.utils.test_audit_report_generator.TestAuditReportGenerator" name="test_score_tier_counts" time="0.001" /><testcase classname="universal_recon.tests.utils.test_audit_report_generator" name="test_generate_audit_report" time="0.001" /><testcase classname="universal_recon.tests.utils.test_score_predictor.TestScorePredictor" name="test_confidence_mapping" time="0.001" /><testcase classname="universal_recon.tests.utils.test_score_predictor.TestScorePredictor" name="test_prediction_keys_added" time="0.001" /><testcase classname="universal_recon.tests.utils.test_score_predictor.TestScorePredictor" name="test_score_range" time="0.001" /><testcase classname="universal_recon.tests.utils.test_score_predictor" name="test_predict_score" time="0.001" /><testcase classname="universal_recon.tests.utils.test_score_visualizer.TestScoreVisualizer" name="test_generate_heatmap_data_structure" time="0.001" /><testcase classname="universal_recon.tests.utils.test_score_visualizer.TestScoreVisualizer" name="test_save_heatmap_data" time="0.002" /><testcase classname="universal_recon.tests.utils.test_score_visualizer" name="test_generate_visualization" time="0.001" /></testsuite></testsuites>

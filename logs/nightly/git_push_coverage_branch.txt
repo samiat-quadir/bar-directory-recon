@@ -1,0 +1,13 @@
+/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe store: line 1: /mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe: No such file or directory
+/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe store: line 1: /mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe: No such file or directory
+Uploading LFS objects: 100% (1/1), 28 KB | 0 B/s, done.
+remote: 
+remote: Create a pull request for 'chore/coverage-nightly-20250820-1728' on GitHub by visiting:        
+remote:      https://github.com/samiat-quadir/bar-directory-recon/pull/new/chore/coverage-nightly-20250820-1728        
+remote: 
+remote: GitHub found 7 vulnerabilities on samiat-quadir/bar-directory-recon's default branch (6 moderate, 1 low). To find out more, visit:        
+remote:      https://github.com/samiat-quadir/bar-directory-recon/security/dependabot        
+remote: 
+branch 'chore/coverage-nightly-20250820-1728' set up to track 'origin/chore/coverage-nightly-20250820-1728'.
+To https://github.com/samiat-quadir/bar-directory-recon.git
+ * [new branch]      HEAD -> chore/coverage-nightly-20250820-1728

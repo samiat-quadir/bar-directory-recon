@@ -1,0 +1,2 @@
+.                                                                        [100%]
+- generated xml file: C:\Code\bar-directory-recon\logs\nightly\junit_hallandale.xml -
