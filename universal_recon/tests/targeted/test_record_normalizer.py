@@ -15,6 +15,7 @@ def test_normalize_adds_optional_defaults():
     ]
     result = normalize(records)
 
+
     assert len(result) == 1
     assert result[0]["confidence"] == 1.0
     assert result[0]["source"] == "unknown"
@@ -60,3 +61,4 @@ def test_normalize_non_strict_mode_handles_missing_fields():
     assert len(result) == 1
     assert result[0]["confidence"] == 1.0
     assert result[0]["source"] == "unknown"
+

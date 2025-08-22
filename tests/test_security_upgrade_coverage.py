@@ -20,6 +20,7 @@ def test_security_manager_coverage():
     assert manager is not None
     assert hasattr(manager, 'fallback_mode')
 
+
     # Test config methods
     email_config = manager.get_email_config()
     assert isinstance(email_config, dict)
@@ -41,6 +42,7 @@ def test_security_manager_coverage():
     singleton = get_security_manager()
     assert singleton is not None
 
+
     # Test secret retrieval with fallback
     with patch.dict(os.environ, {'TEST_SECRET': 'test_value'}):
         secret_value = get_secret('non-existent', 'TEST_SECRET')
@@ -50,6 +52,7 @@ def test_security_manager_coverage():
 def test_universal_recon_imports():
     """Test universal_recon package imports for coverage."""
     import universal_recon
+
 
     # Test main package
     assert hasattr(universal_recon, '__name__')
@@ -77,6 +80,7 @@ def test_property_validation_coverage():
     """Test property_validation with real methods."""
     from property_validation import PropertyValidation
 
+
     validator = PropertyValidation()
     assert validator is not None
 
@@ -93,11 +97,13 @@ def test_basic_imports():
     import config_loader
     assert hasattr(config_loader, '__name__')
 
+
     import data_hunter
     assert hasattr(data_hunter, '__name__')
 
     import logger
     assert hasattr(logger, '__name__')
+
 
     import unified_schema
     assert hasattr(unified_schema, '__name__')
@@ -105,4 +111,6 @@ def test_basic_imports():
 
 if __name__ == "__main__":
     import pytest
+
     pytest.main([__file__, "-v"])
+

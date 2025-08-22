@@ -1,3 +1,4 @@
+
 Name                               Stmts   Miss  Cover   Missing
 ----------------------------------------------------------------
 src\__init__.py                        0      0   100%
@@ -20,3 +21,60 @@ src\ut_bar.py                        188    188     0%   7-237
 src\webdriver_manager.py             177    165     7%   22-289
 ----------------------------------------------------------------
 TOTAL                               3265   2966     9%
+=======
+Name                                                     Stmts   Miss  Cover   Missing
+--------------------------------------------------------------------------------------
+universal_recon\__init__.py                                  1      0   100%
+universal_recon\analytics\__init__.py                        2      2     0%   3-5
+universal_recon\analytics\domain_anomaly_flagger.py         24     24     0%   3-33
+universal_recon\analytics\drift_dashboard_generator.py      58     58     0%   3-164
+universal_recon\analytics\export_csv_summary.py             54     54     0%   3-81
+universal_recon\analytics\overlay_visualizer.py             22     22     0%   3-44
+universal_recon\analytics\plugin_decay_overlay.py           57     57     0%   3-103
+universal_recon\analytics\plugin_registry_dashboard.py      19     19     0%   3-30
+universal_recon\analytics\plugin_usage_diff.py              34     34     0%   3-53
+universal_recon\analytics\risk_overlay_emitter.py           84     84     0%   3-138
+universal_recon\analytics\schema_dashboard_stub.py          16     16     0%   3-31
+universal_recon\analytics\schema_matrix_collector.py        32     32     0%   3-58
+universal_recon\analytics\schema_score_linter.py            20     20     0%   3-31
+universal_recon\analytics\score_drift_export.py             31     31     0%   3-44
+universal_recon\analytics\site_schema_collector.py          13     13     0%   3-28
+universal_recon\analytics\template_health_flagger.py        17     17     0%   7-50
+universal_recon\analytics\trend_badge_tracker.py            63     63     0%   3-93
+universal_recon\analytics\trend_dashboard_stub.py           13     13     0%   3-22
+universal_recon\analytics\validator_drift_overlay.py        51     51     0%   3-78
+universal_recon\cli\__init__.py                              0      0   100%
+universal_recon\cli\run_plugin.py                           15     15     0%   1-18
+universal_recon\core\logger.py                              10      0   100%
+universal_recon\main.py                                     78     78     0%   3-131
+universal_recon\plugin_aggregator.py                        40     40     0%   3-66
+universal_recon\plugin_loader.py                            46     19    59%   31, 39-61
+universal_recon\plugins\__init__.py                          2      0   100%
+universal_recon\plugins\ai_template_indexer.py              19     19     0%   3-39
+universal_recon\plugins\ai_template_indexer_v2.py           49     49     0%   7-156
+universal_recon\plugins\angi_plugin.py                      67     67     0%   6-171
+universal_recon\plugins\auto_dealer_plugin.py              125    125     0%   6-319
+universal_recon\plugins\base.py                             11     11     0%   8-47
+universal_recon\plugins\firm_parser.py                      12      5    58%   16, 23, 29, 34, 38
+universal_recon\plugins\form_autofill.py                    48     48     0%   3-63
+universal_recon\plugins\google_sheets_utils.py              55     55     0%   6-132
+universal_recon\plugins\homeadvisor_plugin.py               91     91     0%   6-210
+universal_recon\plugins\houzz_plugin.py                     67     67     0%   6-171
+universal_recon\plugins\hvac_plumber_plugin.py             127    127     0%   6-313
+universal_recon\plugins\lawyer_directory_plugin.py         124    124     0%   6-316
+universal_recon\plugins\loader.py                           15     15     0%   7-33
+universal_recon\plugins\ml_labeler.py                       22     22     0%   6-50
+universal_recon\plugins\pool_contractor_plugin.py          117    117     0%   6-288
+universal_recon\plugins\realtor_directory_plugin.py        224    224     0%   6-451
+universal_recon\plugins\record_field_validator_v3.py        34     34     0%   3-52
+universal_recon\plugins\reference_realtor.py                14     14     0%   7-79
+universal_recon\plugins\social_link_parser.py               15      0   100%
+universal_recon\plugins\social_link_parser_plugin.py        13     13     0%   1-18
+universal_recon\plugins\thumbtack_plugin.py                 91     91     0%   6-210
+universal_recon\scrapers\realtor_directory_scraper.py       11      3    73%   23-28
+universal_recon\utils\record_normalizer.py                  16      1    94%   18
+universal_recon\utils\score_predictor.py                    27      5    81%   30-31, 39-41
+universal_recon\utils\template_clusterer.py                 22      0   100%
+--------------------------------------------------------------------------------------
+TOTAL                                                     2218   2089     6%
+

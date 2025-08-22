@@ -21,3 +21,4 @@ def test_scraper_with_keyword_args():
     result = scrape_realtor_directory(source_url=None, limit=None)
     assert isinstance(result, list)
     assert result == []
+
