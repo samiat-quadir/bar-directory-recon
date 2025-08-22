@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.462" timestamp="2025-08-20T18:40:24.378608-04:00" hostname="Mothership"><testcase classname="src.tests.test_hallandale_pipeline" name="test_pipeline_nonexistent_pdf" time="0.004" /></testsuite></testsuites>
