@@ -1,4 +1,4 @@
-# universal_recon/core/config_loader.py
+# universal_recon/core/multisite_config_manager.py
 
 import json
 import os
