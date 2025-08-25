@@ -1,11 +1,9 @@
-# tests/utils/test_score_predictor.py
-
 import unittest
 
 from universal_recon.utils.score_predictor import predict_score
 
 
-class TestScorePredictor(unittest.TestCase):
+class TestScorePredictorUtils(unittest.TestCase):
 
     def setUp(self):
         self.records = [
@@ -37,7 +35,7 @@ class TestScorePredictor(unittest.TestCase):
             self.assertLessEqual(r["predicted_score"], 1.0)
 
 
-def test_predict_score():
+def test_predict_score_basic():
     """Basic test to verify score prediction functionality."""
     assert callable(predict_score)
 
