@@ -1,0 +1,82 @@
+[
+  {
+    "file": "src/property_validation.py",
+    "roi": 259,
+    "gap": 259,
+    "complexity": 0,
+    "total": 286,
+    "covered": 27
+  },
+  {
+    "file": "src/data_extractor.py",
+    "roi": 251,
+    "gap": 251,
+    "complexity": 0,
+    "total": 272,
+    "covered": 21
+  },
+  {
+    "file": "src/orchestrator.py",
+    "roi": 242,
+    "gap": 242,
+    "complexity": 0,
+    "total": 277,
+    "covered": 35
+  },
+  {
+    "file": "src/data_hunter.py",
+    "roi": 230,
+    "gap": 230,
+    "complexity": 0,
+    "total": 268,
+    "covered": 38
+  },
+  {
+    "file": "src/property_enrichment.py",
+    "roi": 188,
+    "gap": 188,
+    "complexity": 0,
+    "total": 211,
+    "covered": 23
+  },
+  {
+    "file": "src/pagination_manager.py",
+    "roi": 187,
+    "gap": 187,
+    "complexity": 0,
+    "total": 204,
+    "covered": 17
+  },
+  {
+    "file": "src/pdf_processor.py",
+    "roi": 180,
+    "gap": 180,
+    "complexity": 0,
+    "total": 220,
+    "covered": 40
+  },
+  {
+    "file": "src/webdriver_manager.py",
+    "roi": 165,
+    "gap": 165,
+    "complexity": 0,
+    "total": 177,
+    "covered": 12
+  },
+  {
+    "file": "src/ut_bar.py",
+    "roi": 154,
+    "gap": 154,
+    "complexity": 0,
+    "total": 188,
+    "covered": 34
+  },
+  {
+    "file": "src/hallandale_pipeline.py",
+    "roi": 140,
+    "gap": 140,
+    "complexity": 0,
+    "total": 162,
+    "covered": 22
+  }
+]

@@ -1,4 +1,5 @@
 """Test social link parser plugin functionality (targeted variant)."""
+
 from unittest.mock import Mock
 
 from universal_recon.plugins.social_link_parser import apply
