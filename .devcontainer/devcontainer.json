@@ -7,8 +7,15 @@
             "version": "lts"
         }
     },
-    "postCreateCommand": "pip install -U pip && pip install -r requirements.txt -r requirements-dev.txt || true",
-    "updateContentCommand": "pytest -q -k offline --maxfail=1 --disable-warnings || true",
+    "secrets": {
+        "SCRAPER_API_KEY": {
+            "description": "API key used by scrapers (in your Codespaces user secrets).",
+            "documentationUrl": "https://github.com/settings/codespaces"
+        }
+    },
+    "mounts": [
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    ],
     "customizations": {
         "vscode": {
             "settings": {
