@@ -1,16 +1,23 @@
 {
     "name": "bar-directory-recon",
     "image": "mcr.microsoft.com/devcontainers/python:3.11",
-    "features": { 
-        "ghcr.io/devcontainers/features/github-cli:1": {}, 
-        "ghcr.io/devcontainers/features/node:1": { "version": "lts" } 
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts"
+        }
     },
     "postCreateCommand": "pip install -U pip && pip install -r requirements.txt -r requirements-dev.txt || true",
     "updateContentCommand": "pytest -q -k offline --maxfail=1 --disable-warnings || true",
-    "customizations": { 
-        "vscode": { 
-            "settings": { "python.testing.pytestEnabled": true }, 
-            "extensions": ["ms-python.python","GitHub.copilot-chat"] 
-        } 
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.testing.pytestEnabled": true
+            },
+            "extensions": [
+                "ms-python.python",
+                "GitHub.copilot-chat"
+            ]
+        }
     }
 }
