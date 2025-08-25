@@ -132,3 +132,6 @@ __pycache__/
 *_temp.py
 temp_*/
 
+logs/roi2/
+logs/roi2/
+
