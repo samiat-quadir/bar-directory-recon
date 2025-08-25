@@ -72,7 +72,7 @@ def test_universal_recon_imports():
     from universal_recon.core import logger as ur_logger
     assert hasattr(ur_logger, '__name__')
 
-    from universal_recon.core import config_loader as ur_config
+    from universal_recon.core import multisite_config_manager as ur_config
     assert hasattr(ur_config, '__name__')
 
 
@@ -94,6 +94,8 @@ def test_property_validation_coverage():
 
 def test_basic_imports():
     """Test basic module imports for coverage maintenance."""
+    import sys
+    sys.path.insert(0, 'src')
     import config_loader
     assert hasattr(config_loader, '__name__')
 
