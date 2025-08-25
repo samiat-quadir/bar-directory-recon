@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.079" timestamp="2025-08-20T18:40:30.629503-04:00" hostname="Mothership"><testcase classname="universal_recon.tests.test_risk_overlay_emitter" name="test_emit_site_risk_json" time="0.010" /></testsuite></testsuites>
