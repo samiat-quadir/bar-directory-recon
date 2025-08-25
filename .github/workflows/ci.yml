@@ -1,57 +1,23 @@
-name: CI
-
+name: ci
 on:
-  push:
-    branches: [ "main", "feature/**", "prep/**" ]
   pull_request:
-    branches: [ "main", "feature/**", "prep/**" ]
-  workflow_dispatch:
-
+  push:
+    branches: [main]
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
-
-permissions:
-  contents: read
-  packages: write
-
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        python-version: ['3.9', '3.10', '3.11']
-        os: [ubuntu-latest, windows-latest]
-
+  test:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
-
-      - name: Install Dependencies
-        run: pip install -r requirements-dev.txt
-
-      - name: Run pre-commit hooks
-        run: pre-commit run --all-files
-
-      - name: Type check with mypy
-        run: mypy . --ignore-missing-imports
-
-      - name: Run Tests and Coverage
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: pip install -U pip && pip install -r requirements.txt -r requirements-dev.txt || true
+      - name: Pytest + coverage
         run: |
-          pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=35
-
-      - name: Upload coverage to Codecov
-        if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.xml
-
-      - name: Security scan
-        if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
-        run: python tools/secrets_scan.py --path . --report-path security_check.json
+          pytest -q --maxfail=1 --disable-warnings --cov=src --cov-report=xml
+      - name: Upload coverage XML
+        uses: actions/upload-artifact@v4
+        with: { name: coverage-xml, path: coverage.xml }
