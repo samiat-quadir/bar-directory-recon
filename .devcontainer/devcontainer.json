@@ -13,10 +13,12 @@
             "version": "lts"
         }
     },
-    "runArgs": [
-        "--init",
-        "--privileged"
-    ],
+    "secrets": {
+        "SCRAPER_API_KEY": {
+            "description": "API key used by scrapers (in your Codespaces user secrets).",
+            "documentationUrl": "https://github.com/settings/codespaces"
+        }
+    },
     "mounts": [
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
     ],
