@@ -1,4 +1,4 @@
-"""Test score predictor utility functionality."""
+"""Test score predictor utility functionality (targeted variant)."""
 from universal_recon.utils.score_predictor import predict_score
 
 
@@ -34,4 +34,3 @@ def test_predict_score_adds_predicted_scores():
     assert isinstance(result, list)
     assert len(result) == 1
     # Should have some kind of score prediction logic applied
-
