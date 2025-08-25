@@ -1,0 +1,105 @@
+{
+  "inventory_metadata": {
+    "created_date": "2024-12-29",
+    "version": "1.0.0",
+    "purpose": "Legacy intake inventory for collaborative divorce plugin implementation",
+    "scope": "Essential files for collab_divorce plugin and testing framework"
+  },
+  "plugin_assets": {
+    "primary_plugin": {
+      "file": "universal_recon/plugins/collab_divorce.py",
+      "type": "plugin_implementation",
+      "description": "Collaborative divorce attorney directory plugin",
+      "size_estimate": "8KB",
+      "key_features": [
+        "Mock data generation for offline testing",
+        "Attorney data transformation pipeline", 
+        "Experience scoring algorithm",
+        "Comprehensive data validation"
+      ],
+      "dependencies": [
+        "universal_recon.plugins.base.Plugin",
+        "re",
+        "typing",
+        "urllib.parse"
+      ]
+    },
+    "test_suite": {
+      "directory": "universal_recon/tests/plugins/collab_divorce/",
+      "files": [
+        {
+          "file": "__init__.py",
+          "type": "test_package_init",
+          "size_estimate": "52B"
+        },
+        {
+          "file": "test_offline.py", 
+          "type": "comprehensive_test_suite",
+          "size_estimate": "10KB",
+          "test_count": "25+",
+          "coverage_areas": [
+            "Plugin registration and naming",
+            "Mock data fetching",
+            "Data transformation pipeline",
+            "Validation engine",
+            "Error handling",
+            "Utility methods",
+            "Integration testing"
+          ]
+        }
+      ]
+    }
+  },
+  "documentation": {
+    "intake_report": {
+      "file": "legacy_intake/REPORT.md",
+      "type": "technical_documentation",
+      "size_estimate": "4.5KB",
+      "sections": [
+        "Executive Summary",
+        "Plugin Overview", 
+        "Technical Implementation",
+        "Data Schema",
+        "Validation Results",
+        "Offline Testing Strategy",
+        "Integration Notes",
+        "Compliance and Security"
+      ]
+    }
+  },
+  "quality_metrics": {
+    "plugin_implementation": {
+      "methods_implemented": 8,
+      "validation_rules": 5,
+      "mock_data_records": 2,
+      "transformation_fields": 12,
+      "utility_methods": 6
+    },
+    "test_coverage": {
+      "test_classes": 2,
+      "test_methods": 25,
+      "validation_scenarios": 15,
+      "error_handling_tests": 3,
+      "integration_tests": 3
+    }
+  },
+  "file_structure": {
+    "total_files": 4,
+    "code_files": 2,
+    "documentation_files": 2,
+    "estimated_total_size": "22.5KB",
+    "new_directories_created": 2
+  },
+  "compliance_notes": {
+    "offline_testing": "All tests designed to run without network connectivity",
+    "no_secrets": "No sensitive data or credentials in source code",
+    "deterministic": "Mock data ensures consistent test results",
+    "framework_compatible": "Implements standard Plugin protocol"
+  },
+  "integration_readiness": {
+    "plugin_registry_compatible": true,
+    "framework_protocol_compliant": true,
+    "offline_testable": true,
+    "production_ready_structure": true
+  }
+}

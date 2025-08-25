@@ -26,6 +26,7 @@ Universal Recon is a comprehensive bar directory reconnaissance and automation t
 ## Key Features
 
 - **Plugin-Based Architecture**: Modular system with specialized extractors for different data types
+- **Collaborative Law Support**: Specialized plugin for collaborative divorce attorney directories
 - **Social Media Detection**: Automated discovery of LinkedIn, Twitter, Facebook, and Instagram profiles
 - **Firm Data Extraction**: Intelligent parsing of law firm information and contact details
 - **ML-Powered Classification**: Machine learning-based content labeling and categorization
