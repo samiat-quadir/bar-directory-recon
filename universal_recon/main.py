@@ -2,7 +2,7 @@
 
 import argparse
 
-from universal_recon.core.config_loader import ConfigManager
+from universal_recon.core.multisite_config_manager import ConfigManager
 from universal_recon.core.snapshot_manager import SnapshotArchiver
 from universal_recon.plugin_loader import load_normalized_records, load_plugins_by_type
 

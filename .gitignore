@@ -77,13 +77,8 @@ device_*.json
 settings_*.json
 .env.work
 .env.asus
+# 7 Â· One-off project artefacts
 
-# Dev-only Alertmanager override (do not commit)
-monitoring/alertmanager/alertmanager.local.yml
-
-############################################################
-# 7 · One-off project artefacts
-############################################################
 mega_memory.yaml
 repo_tree.txt
 env_loader.py
@@ -124,4 +119,19 @@ secrets_scan_report_*.json
 .env
 *.task.xml
 monitoring/grafana/provisioning/**/json/*.bak
+
+# Additional cleanup patterns from audit
+*.bak
+archive/
+.coverage*
+htmlcov/
+.pytest_cache/
+__pycache__/
+*_copy.py
+*_backup.py
+*_temp.py
+temp_*/
+
+logs/roi2/
+logs/roi2/
 

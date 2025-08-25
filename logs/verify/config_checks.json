@@ -1,0 +1,12 @@
+{
+  "markers_ok": false,
+  "addopts_ok": true,
+  "docs_present": {
+    "README.md": true,
+    "API.md": false,
+    "DEVELOPMENT.md": false,
+    "SECURITY.md": false,
+    "COMPREHENSIVE_AUDIT_COMPLETION_REPORT.md": true
+  },
+  "ignore_ok": true
+}
