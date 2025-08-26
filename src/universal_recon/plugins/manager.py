@@ -17,3 +17,4 @@ class PluginManager:
         for p in self._plugins:
             results.append(p.run(config))
         return results
+
