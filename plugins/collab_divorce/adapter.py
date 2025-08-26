@@ -67,7 +67,6 @@ def normalize_email(email: Optional[str]) -> str:
         return s
     return ""
 
-
 @dataclass
 class CollabDivorceAdapter:
     """
@@ -100,6 +99,7 @@ class CollabDivorceAdapter:
                 fh.seek(0)
                 dialect = detect_csv_dialect(sample)
                 reader = csv.DictReader(fh, dialect=dialect)
+
                 for row in reader:
                     # Extract and normalize data from various possible column names
                     name = (
@@ -111,6 +111,7 @@ class CollabDivorceAdapter:
                     ).strip()
 
                     raw_email = (
+
                         row.get("Email") or
                         row.get("Email Address") or
                         row.get("E-mail") or

@@ -1,0 +1,10 @@
+name: Agent task
+description: Delegate a background change to Copilot coding agent
+labels: ["agent-task"]
+body:
+  - type: textarea
+    id: goal
+    attributes: { label: Goal, description: "What should change?" }
+  - type: textarea
+    id: acceptance
+    attributes: { label: Acceptance checks, description: "Bullet checks for DONE" }

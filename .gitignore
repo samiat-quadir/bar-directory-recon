@@ -46,7 +46,16 @@ logs/
 *.tmp
 *_temp.py
 *_backup.py
-security_report_*.json
+# Local runtime artifacts and reports
+/logs/**
+/reports/**
+/local/**
+/*.log
+coverage_report.*
+coverage_*.xml
+*.json.gz
+/**/*COMPLETION_REPORT*.md
+!docs/README.md
 # Formatting artifacts
 .black.cache
 .autoflake.cache
@@ -77,13 +86,8 @@ device_*.json
 settings_*.json
 .env.work
 .env.asus
+# 7 Â· One-off project artefacts
 
-# Dev-only Alertmanager override (do not commit)
-monitoring/alertmanager/alertmanager.local.yml
-
-############################################################
-# 7 · One-off project artefacts
-############################################################
 mega_memory.yaml
 repo_tree.txt
 env_loader.py
@@ -137,3 +141,23 @@ __pycache__/
 *_temp.py
 temp_*/
 
+logs/roi2/
+logs/roi2/
+coverage*.xml
+.pytest_tmp/
+
+logs/roi2/
+logs/roi2/
+logs/roi2/
+# Ensure our generated reports and local runtime folders are ignored
+reports/
+# keep local runtime folder pattern
+local/
+=======
+/reports/
+# Note: keep top-level reports/ available for initial commit; ignore reports/local/ runtime outputs
+reports/local/
+/local/
+coverage*.xml
+coverage_report.*
+coverage_html_first/
