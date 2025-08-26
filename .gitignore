@@ -134,4 +134,6 @@ temp_*/
 
 logs/roi2/
 logs/roi2/
+coverage*.xml
+.pytest_tmp/
 

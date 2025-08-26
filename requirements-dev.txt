@@ -19,8 +19,8 @@ bandit==1.7.5
 pytest-mock==3.11.1
 coverage>=7.5
 pyyaml>=6.0.1
-dnspython>=2.0
-hypothesis>=6.0
+dnspython>=2.4
+hypothesis>=6
 lxml>=4.9
 
 # Conditional watcher dependencies (align with Ali's implementation)
