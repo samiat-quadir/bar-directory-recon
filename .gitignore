@@ -46,7 +46,16 @@ logs/
 *.tmp
 *_temp.py
 *_backup.py
-security_report_*.json
+# Local runtime artifacts and reports
+/logs/**
+/reports/**
+/local/**
+/*.log
+coverage_report.*
+coverage_*.xml
+*.json.gz
+/**/*COMPLETION_REPORT*.md
+!docs/README.md
 # Formatting artifacts
 .black.cache
 .autoflake.cache
@@ -137,3 +146,14 @@ logs/roi2/
 coverage*.xml
 .pytest_tmp/
 
+logs/roi2/
+logs/roi2/
+logs/roi2/
+# Ensure our generated reports and local runtime folders are ignored
+/reports/
+# Note: keep top-level reports/ available for initial commit; ignore reports/local/ runtime outputs
+reports/local/
+/local/
+coverage*.xml
+coverage_report.*
+coverage_html_first/

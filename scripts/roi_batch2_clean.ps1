@@ -118,10 +118,10 @@ $prName = 'feat/roi-batch-2-clean'
 $existing = $null
 try { $existing = gh pr view $prName 2>$null } catch { $existing = $null }
 if ($existing) {
-    gh pr edit $prName --title "feat(tests): ROI batch-2 (clean) — deterministic discovery & container-first" --add-label coverage-candidate --body "Renamed duplicate tests in targeted/; removed ignores; ran in container when possible; gate=$target."
+    gh pr edit $prName --title "feat(tests): ROI batch-2 (clean) - deterministic discovery and container-first" --add-label coverage-candidate --body "Renamed duplicate tests in targeted/; removed ignores; ran in container when possible; gate=$target."
     Write-Output 'Edited existing PR'
 } else {
-    gh pr create --title "feat(tests): ROI batch-2 (clean) — deterministic discovery & container-first" --body "Renamed duplicate tests in targeted/; removed ignores; ran in container when possible; gate=$target." --label coverage-candidate --draft
+    gh pr create --title "feat(tests): ROI batch-2 (clean) - deterministic discovery and container-first" --body "Renamed duplicate tests in targeted/; removed ignores; ran in container when possible; gate=$target." --label coverage-candidate --draft
     Write-Output 'Created PR'
 }
 
