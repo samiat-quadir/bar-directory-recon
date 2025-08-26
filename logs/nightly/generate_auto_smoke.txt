@@ -1,0 +1,1 @@
+Wrote 0 auto-smoke tests to universal_recon\tests\auto_smoke

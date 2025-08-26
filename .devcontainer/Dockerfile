@@ -50,6 +50,11 @@ RUN apt-get update && apt-get install -y \
     nano \
     less \
     file \
+    # Libraries needed to build lxml and other Python packages
+    libxml2-dev \
+    libxslt1-dev \
+    zlib1g-dev \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Google Chrome

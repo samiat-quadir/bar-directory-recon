@@ -82,7 +82,7 @@ exclude = [
 [tool.pytest.ini_options]
 minversion = "6.0"
 # Coverage threshold raised after logic tests - significant improvement (9% achieved)
-addopts = "--cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=12"
+addopts = "--cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=18"
 
 testpaths = [
     "src/tests",
