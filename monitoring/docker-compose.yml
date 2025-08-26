@@ -4,6 +4,12 @@ services:
     image: prom/prometheus:latest
     ports: ["9090:9090"]
     volumes: ["./prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c '\n  if command -v curl >/dev/null 2>&1; then\n    curl -fsS http://localhost:9090/-/ready || exit 1;\n  elif command -v wget >/dev/null 2>&1; then\n    wget -qO- http://localhost:9090/-/ready >/dev/null || exit 1;\n  else\n    # neither curl nor wget present - assume service started (host probes may be flaky)\n    exit 0;\n  fi\n'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
   grafana:
     image: grafana/grafana-oss:latest
     ports: ["3000:3000"]
@@ -22,6 +28,12 @@ services:
     volumes:
       - ./alertmanager/config.yml:/etc/alertmanager/alertmanager.yml:ro
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c '\n  if command -v curl >/dev/null 2>&1; then\n    curl -fsS http://localhost:9093/-/ready || exit 1;\n  elif command -v wget >/dev/null 2>&1; then\n    wget -qO- http://localhost:9093/-/ready >/dev/null || exit 1;\n  else\n    # neither curl nor wget present - assume service started (host probes may be flaky)\n    exit 0;\n  fi\n'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
 volumes:
   prom-data:

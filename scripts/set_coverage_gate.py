@@ -60,6 +60,7 @@ def main() -> int:
         default=["pytest.ini", "pyproject.toml"],
         help="Files to update",
     )
+
     args = p.parse_args()
 
     try:

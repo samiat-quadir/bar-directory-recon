@@ -112,6 +112,9 @@ RUN git config --global init.defaultBranch main \
 RUN mkdir -p /workspaces/bar-directory-recon/logs \
     && mkdir -p /workspaces/bar-directory-recon/.pytest_cache \
     && mkdir -p /home/vscode/.cache/pre-commit \
+
+    # Ensure workspace is owned by the 'vscode' user so non-root devcontainer sessions can write to it
+    && chown -R vscode:vscode /home/vscode/.cache \
     && mkdir -p /home/vscode/.cache/pytest_basetemp \
     # Ensure the created directories are owned by the 'vscode' user so non-root devcontainer sessions can write to them
     && chown -R vscode:vscode /home/vscode/.cache/pre-commit \

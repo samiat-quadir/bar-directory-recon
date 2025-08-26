@@ -30,10 +30,10 @@ def detect_csv_dialect(sample: str) -> Any:
         dialect = sniffer.sniff(sample)
     except Exception:
         # Use the well-known 'excel' dialect instance as a safe fallback
-        try:
-            dialect = csv.get_dialect('excel')
-        except Exception:
-            dialect = csv.excel()
+            try:
+                dialect = csv.get_dialect('excel')  # type: ignore
+            except Exception:
+                dialect = csv.excel()  # type: ignore
     return dialect
 
 
@@ -118,6 +118,7 @@ class CollabDivorceAdapter:
                         ""
                     )
                     email = normalize_email(raw_email)
+
                     firm = (
                         row.get("Firm") or
                         row.get("Organization") or
