@@ -209,7 +209,7 @@
     "postCreateCommand": [
         "bash",
         "-c",
-        "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh"
+        "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh && pip install -e .[dev] && pytest -q"
     ],
     "postStartCommand": [
         "bash",
@@ -232,7 +232,8 @@
     "containerEnv": {
         "PROJECT_NAME": "bar-directory-recon",
         "ENVIRONMENT": "development",
-        "LOG_LEVEL": "DEBUG"
+        "LOG_LEVEL": "DEBUG",
+        "SCRAPER_API_KEY": "${localEnv:SCRAPER_API_KEY}"
     },
     "shutdownAction": "stopContainer",
     "hostRequirements": {
