@@ -15,7 +15,7 @@ $dupes = $tests | Group-Object { $_.Name } | Where-Object { $_.Count -gt 1 }
 Write-Output "Found $($dupes.Count) filename groups with duplicates"
 foreach ($group in $dupes) {
     foreach ($file in $group.Group | Where-Object { $_.FullName -like "*\universal_recon\tests\targeted\*" }) {
-        $new = $file.FullName -replace '\.py$','_targeted.py'
+        $new = $file.FullName -replace '\.py$', '_targeted.py'
         if ($file.FullName -ne $new) {
             Write-Output "Renaming: $($file.FullName) -> $new"
             Move-Item -Path $file.FullName -Destination $new -Force
@@ -30,28 +30,31 @@ if (Test-Path $pi) {
     $s = Get-Content $pi -Raw
     Write-Output "Original addopts:"
     $s
-    $s = $s -replace '--ignore=universal_recon/tests/targeted\s*',''
-    $s = $s -replace '--ignore-glob=\*\*/targeted/test_social_link_parser.py\s*',''
+    $s = $s -replace '--ignore=universal_recon/tests/targeted\s*', ''
+    $s = $s -replace '--ignore-glob=\*\*/targeted/test_social_link_parser.py\s*', ''
     Set-Content -Path $pi -Value $s -Encoding utf8
     Write-Output "Updated $pi"
     Get-Content $pi -Raw
-} else {
+}
+else {
     Write-Output "$pi not found"
 }
 
 # 3) Ensure helper scripts live under tools/local and logs are ignored
 New-Item -Force -ItemType Directory tools\local | Out-Null
-$scriptsToMove = @('scripts\compute_top_roi.py','scripts\smoke_imports_coverage.py','scripts\generate_roi_tests.py','scripts\generate_roi_tests_from_json.py','scripts\extract_coverage.py')
+$scriptsToMove = @('scripts\compute_top_roi.py', 'scripts\smoke_imports_coverage.py', 'scripts\generate_roi_tests.py', 'scripts\generate_roi_tests_from_json.py', 'scripts\extract_coverage.py')
 foreach ($p in $scriptsToMove) {
     if (Test-Path $p) {
         try {
             git mv -f $p tools\local\ 2>$null
             Write-Output "git mv $p -> tools/local/"
-        } catch {
+        }
+        catch {
             Write-Output "git mv failed or not in git; using Move-Item for $p"
             Move-Item -Path $p -Destination tools\local\ -Force
         }
-    } else {
+    }
+    else {
         Write-Output "Not found: $p"
     }
 }
@@ -76,7 +79,8 @@ if ($UseContainer) {
         Write-Output 'Running pytest inside devcontainer...'
         devcontainer exec --workspace-folder . bash -lc "pytest -q --maxfail=1 --disable-warnings --cov=src --cov-report=term-missing --cov-report=xml:logs/roi2/coverage_after.xml 2>&1 | tee logs/roi2/pytest_after.txt"
         Write-Output 'Container run complete'
-    } catch {
+    }
+    catch {
         Write-Output 'Container run failed, falling back to venv'
         $UseContainer = $false
     }
@@ -94,16 +98,16 @@ if (-not $UseContainer) {
 $txt = Get-Content logs\roi2\pytest_after.txt -Raw -ErrorAction SilentlyContinue
 if (-not $txt) { Write-Output 'No pytest output found in logs/roi2/pytest_after.txt'; $txt = '' }
 Write-Output 'Pytest output excerpt:'
-if ($txt.Length -gt 1000) { Write-Output $txt.Substring(0,1000) } else { Write-Output $txt }
+if ($txt.Length -gt 1000) { Write-Output $txt.Substring(0, 1000) } else { Write-Output $txt }
 $m = [regex]::Match($txt, 'TOTAL\s+\d+\s+\d+\s+(\d+)%')
 $obs = if ($m.Success) { [int]$m.Groups[1].Value } else { 0 }
 Write-Output "Observed coverage: $obs%"
-$target = [Math]::Min(35, [Math]::Max(8, $obs-1))
+$target = [Math]::Min(35, [Math]::Max(8, $obs - 1))
 Write-Output "Computed gate: $target"
 
-foreach ($f in @('pytest.ini','pyproject.toml','tox.ini')) {
+foreach ($f in @('pytest.ini', 'pyproject.toml', 'tox.ini')) {
     if (Test-Path $f) {
-        (Get-Content $f -Raw) -replace '--cov-fail-under=\d+',"--cov-fail-under=$target" | Set-Content $f -Encoding utf8
+        (Get-Content $f -Raw) -replace '--cov-fail-under=\d+', "--cov-fail-under=$target" | Set-Content $f -Encoding utf8
         Write-Output "Updated $f"
     }
 }
@@ -120,7 +124,8 @@ try { $existing = gh pr view $prName 2>$null } catch { $existing = $null }
 if ($existing) {
     gh pr edit $prName --title "feat(tests): ROI batch-2 (clean) - deterministic discovery and container-first" --add-label coverage-candidate --body "Renamed duplicate tests in targeted/; removed ignores; ran in container when possible; gate=$target."
     Write-Output 'Edited existing PR'
-} else {
+}
+else {
     gh pr create --title "feat(tests): ROI batch-2 (clean) - deterministic discovery and container-first" --body "Renamed duplicate tests in targeted/; removed ignores; ran in container when possible; gate=$target." --label coverage-candidate --draft
     Write-Output 'Created PR'
 }
