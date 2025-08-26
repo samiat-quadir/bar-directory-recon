@@ -112,7 +112,9 @@ RUN git config --global init.defaultBranch main \
 RUN mkdir -p /workspaces/bar-directory-recon/logs \
     && mkdir -p /workspaces/bar-directory-recon/.pytest_cache \
     && mkdir -p /home/vscode/.cache/pre-commit \
-    && chown -R vscode:vscode /home/vscode/.cache
+    # Ensure workspace is owned by the 'vscode' user so non-root devcontainer sessions can write to it
+    && chown -R vscode:vscode /home/vscode/.cache \
+    && chown -R vscode:vscode /workspaces/bar-directory-recon
 
 # Set up Chrome sandbox bypass for containerized environment
 RUN echo '#!/bin/bash\nexec /usr/bin/google-chrome --no-sandbox --disable-dev-shm-usage "$@"' > /usr/local/bin/chrome-no-sandbox \
