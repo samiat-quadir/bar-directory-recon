@@ -8,6 +8,4 @@ class PluginProtocol(Protocol):
 
     name: str
 
-    def run(self, config: dict[str, Any]) -> dict[str, Any]:
-        ...
-
+    def run(self, config: dict[str, Any]) -> dict[str, Any]: ...
