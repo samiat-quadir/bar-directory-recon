@@ -6,9 +6,66 @@ and standardizes them into a common format for the bar directory reconnaissance 
 """
 import csv
 import pathlib
+import re
 from dataclasses import dataclass
-from typing import Any, Dict, Generator
+from typing import Any, Dict, Generator, Optional
 
+
+def detect_csv_dialect(sample: str) -> Any:
+    """Detect the CSV dialect from a sample string.
+
+    This function wraps csv.Sniffer().sniff but provides safe fallbacks
+    for small or malformed samples. It always returns a dialect instance
+    suitable for passing to `csv.DictReader`.
+
+    Args:
+        sample: A string containing the beginning of a CSV file.
+
+    Returns:
+        A csv.Dialect (or compatible object) describing delimiter/quotechar.
+    """
+    sniffer = csv.Sniffer()
+    try:
+        # Try to sniff; if it fails, fall back to comma delimiter
+        dialect = sniffer.sniff(sample)
+    except Exception:
+        # Use the well-known 'excel' dialect instance as a safe fallback
+        try:
+            dialect = csv.get_dialect('excel')
+        except Exception:
+            dialect = csv.excel()
+    return dialect
+
+
+def normalize_email(email: Optional[str]) -> str:
+    """Normalize an email string to a lowercase, trimmed value.
+
+    This function performs lightweight validation and normalization:
+    - Returns an empty string for falsy inputs
+    - Strips surrounding whitespace
+    - Converts to lowercase
+    - If the string contains multiple emails separated by ';' or ',', returns the first candidate
+    - Returns '' if the resulting token doesn't look like an email
+
+    Args:
+        email: Optional raw email string from input
+
+    Returns:
+        Normalized email string or empty string when invalid/missing.
+    """
+    if not email:
+        return ""
+    s = email.strip()
+    # take first token if multiple
+    for sep in (';', ','):
+        if sep in s:
+            s = s.split(sep, 1)[0].strip()
+            break
+    s = s.lower()
+    # basic validation
+    if re.match(r"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$", s):
+        return s
+    return ""
 
 @dataclass
 class CollabDivorceAdapter:
@@ -37,7 +94,12 @@ class CollabDivorceAdapter:
 
         try:
             with p.open(newline="", encoding="utf-8", errors="ignore") as fh:
-                reader = csv.DictReader(fh)
+                # Read a small sample to detect dialect, then rewind
+                sample = fh.read(2048)
+                fh.seek(0)
+                dialect = detect_csv_dialect(sample)
+                reader = csv.DictReader(fh, dialect=dialect)
+
                 for row in reader:
                     # Extract and normalize data from various possible column names
                     name = (
@@ -48,13 +110,14 @@ class CollabDivorceAdapter:
                         ""
                     ).strip()
 
-                    email = (
+                    raw_email = (
+
                         row.get("Email") or
                         row.get("Email Address") or
                         row.get("E-mail") or
                         ""
-                    ).strip().lower()
-
+                    )
+                    email = normalize_email(raw_email)
                     firm = (
                         row.get("Firm") or
                         row.get("Organization") or
