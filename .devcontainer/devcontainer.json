@@ -6,6 +6,10 @@
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts"
         }
+        ,
+        "ghcr.io/devcontainers/features/sshd:1": {
+            "version": "latest"
+        }
     },
     "secrets": {
         "SCRAPER_API_KEY": {
@@ -29,5 +33,50 @@
                 "GitHub.copilot-chat"
             ]
         }
+    },
+    "onCreateCommand": [
+        "bash",
+        "-c",
+        "echo '🚀 Setting up Bar Directory Recon development environment...'"
+    ],
+    "updateContentCommand": [
+        "bash",
+        "-c",
+        "pip install --upgrade pip && pip install -e . && pip install -r requirements-dev.txt"
+    ],
+    "postCreateCommand": [
+        "bash",
+        "-c",
+        "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh && pip install -e .[dev] && pytest -q"
+    ],
+    "postStartCommand": [
+        "bash",
+        "-c",
+        "python -c 'import sys; print(f\"🐍 Python {sys.version}\")' && echo '📦 Installing pre-commit hooks...' && pre-commit install --install-hooks"
+    ],
+    "remoteUser": "vscode",
+    "containerUser": "vscode",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/bar-directory-recon,type=bind,consistency=cached",
+    "workspaceFolder": "/workspaces/bar-directory-recon",
+    "remoteEnv": {
+        "PYTHONPATH": "/workspaces/bar-directory-recon/src:/workspaces/bar-directory-recon",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "PIP_DISABLE_PIP_VERSION_CHECK": "1",
+        "DEBIAN_FRONTEND": "noninteractive",
+        "CHROME_BIN": "/usr/bin/google-chrome",
+        "DISPLAY": ":99.0"
+    },
+    "containerEnv": {
+        "PROJECT_NAME": "bar-directory-recon",
+        "ENVIRONMENT": "development",
+        "LOG_LEVEL": "DEBUG",
+        "SCRAPER_API_KEY": "${localEnv:SCRAPER_API_KEY}"
+    },
+    "shutdownAction": "stopContainer",
+    "hostRequirements": {
+        "cpus": 2,
+        "memory": "4gb",
+        "storage": "8gb"
     }
 }
