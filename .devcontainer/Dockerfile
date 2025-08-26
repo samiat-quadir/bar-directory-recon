@@ -108,12 +108,16 @@ RUN git config --global init.defaultBranch main \
     && git config --global core.autocrlf input \
     && git config --global core.filemode false
 
-# Create logs and cache directories
+# Create logs and cache directories (container-owned) and set ownership to vscode
 RUN mkdir -p /workspaces/bar-directory-recon/logs \
     && mkdir -p /workspaces/bar-directory-recon/.pytest_cache \
     && mkdir -p /home/vscode/.cache/pre-commit \
-    # Ensure workspace is owned by the 'vscode' user so non-root devcontainer sessions can write to it
-    && chown -R vscode:vscode /home/vscode/.cache \
+    && mkdir -p /home/vscode/.cache/pytest_basetemp \
+    # Ensure the created directories are owned by the 'vscode' user so non-root devcontainer sessions can write to them
+    && chown -R vscode:vscode /home/vscode/.cache/pre-commit \
+    && chown -R vscode:vscode /home/vscode/.cache/pytest_basetemp \
+    && chown -R vscode:vscode /workspaces/bar-directory-recon/logs \
+    && chown -R vscode:vscode /workspaces/bar-directory-recon/.pytest_cache \
     && chown -R vscode:vscode /workspaces/bar-directory-recon
 
 # Set up Chrome sandbox bypass for containerized environment
