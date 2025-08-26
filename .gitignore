@@ -151,6 +151,8 @@ logs/roi2/
 logs/roi2/
 # Ensure our generated reports and local runtime folders are ignored
 /reports/
+# Note: keep top-level reports/ available for initial commit; ignore reports/local/ runtime outputs
+reports/local/
 /local/
 coverage*.xml
 coverage_report.*
