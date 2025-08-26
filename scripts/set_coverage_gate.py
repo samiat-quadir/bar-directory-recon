@@ -58,8 +58,10 @@ def main() -> int:
         print(f"Error reading coverage: {e}")
         return 2
 
-    gate = 10 if cov >= 10.5 else 8
-    print(f"Coverage: {cov:.2f}%, chosen gate: {gate}")
+    # New unified policy: gate = clamp(int(total_cov) - 1, 8, 35)
+    observed_floor = int(cov)
+    gate = max(8, min(35, observed_floor - 1))
+    print(f"Coverage: {cov:.2f}%, observed_floor={observed_floor}, chosen gate: {gate}")
 
     for f in args.files:
         try:
