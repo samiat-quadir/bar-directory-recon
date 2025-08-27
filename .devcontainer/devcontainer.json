@@ -209,7 +209,7 @@
     "postCreateCommand": [
         "bash",
         "-c",
-        "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh"
+        "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh && pip install -r requirements-dev.txt && pip install -e .[dev]"
     ],
     "postStartCommand": [
         "bash",
