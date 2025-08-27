@@ -1,0 +1,37 @@
+# Example Alertmanager configuration for local development
+# Copy this to alertmanager.local.yml and customize for your environment
+# (alertmanager.local.yml is git-ignored to prevent committing secrets)
+
+global:
+  smtp_smarthost: 'localhost:1025'  # Use MailHog or similar for testing
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'dev-webhook'
+
+receivers:
+  - name: 'dev-webhook'
+    webhook_configs:
+      - url: 'http://host.docker.internal:5001/alerts'
+        send_resolved: true
+
+  - name: 'dev-email'
+    email_configs:
+      - to: 'dev@localhost'
+        from: 'alertmanager@localhost'
+        subject: '[DEV] {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          {{ end }}
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance']
