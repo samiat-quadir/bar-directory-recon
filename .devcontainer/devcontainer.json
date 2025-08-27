@@ -47,7 +47,7 @@
     "postCreateCommand": [
         "bash",
         "-c",
-        "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh && pip install -e .[dev] && pytest -q"
+        "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh && pip install -r requirements-dev.txt && pip install -e .[dev]"
     ],
     "postStartCommand": [
         "bash",
