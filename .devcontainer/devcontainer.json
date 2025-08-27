@@ -1,199 +1,37 @@
 {
-    "name": "Bar Directory Recon Development",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".."
-    },
+    "name": "bar-directory-recon",
+    "image": "mcr.microsoft.com/devcontainers/python:3.11",
     "features": {
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
-        "ghcr.io/devcontainers/features/git:1": {},
         "ghcr.io/devcontainers/features/github-cli:1": {},
         "ghcr.io/devcontainers/features/node:1": {
-            "nodeGypDependencies": true,
             "version": "lts"
         }
+        ,
+        "ghcr.io/devcontainers/features/sshd:1": {
+            "version": "latest"
+        }
     },
-    "runArgs": [
-        "--init",
-        "--privileged"
-    ],
+    "secrets": {
+        "SCRAPER_API_KEY": {
+            "description": "API key used by scrapers (in your Codespaces user secrets).",
+            "documentationUrl": "https://github.com/settings/codespaces"
+        }
+    },
     "mounts": [
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
     ],
+    "postCreateCommand": "pip install -U pip && (pip install -r requirements.txt -r requirements-dev.txt || true)",
+    "postStartCommand": "sudo chown -R vscode:vscode /workspaces/bar-directory-recon || true",
+    "remoteUser": "vscode",
     "customizations": {
         "vscode": {
+            "settings": {
+                "python.testing.pytestEnabled": true
+            },
             "extensions": [
                 "ms-python.python",
-                "ms-python.flake8",
-                "ms-python.mypy-type-checker",
-                "ms-python.black-formatter",
-                "ms-python.isort",
-                "ms-python.pylint",
-                "ms-toolsai.jupyter",
-                "ms-toolsai.vscode-jupyter-cell-tags",
-                "ms-toolsai.vscode-jupyter-slideshow",
-                "charliermarsh.ruff",
-                "ms-vscode.test-adapter-converter",
-                "littlefoxteam.vscode-python-test-adapter",
-                "redhat.vscode-yaml",
-                "ms-vscode.vscode-json",
-                "esbenp.prettier-vscode",
-                "bradlc.vscode-tailwindcss",
-                "ms-vscode-remote.remote-containers",
-                "github.copilot",
-                "github.copilot-chat",
-                "ms-vscode.vscode-typescript-next",
-                "ms-azuretools.vscode-docker",
-                "humao.rest-client",
-                "ms-vscode.powershell",
-                "redhat.vscode-xml",
-                "dotjoshjohnson.xml",
-                "yzhang.markdown-all-in-one",
-                "davidanson.vscode-markdownlint",
-                "ms-vscode.hexeditor",
-                "github.vscode-pull-request-github",
-                "ms-python.debugpy",
-                "kevinrose.vsc-python-indent",
-                "njpwerner.autodocstring",
-                "ms-python.python-environment-manager",
-                "donjayamanne.python-extension-pack"
-            ],
-            "settings": {
-                "python.defaultInterpreterPath": "/usr/local/bin/python",
-                "python.linting.enabled": true,
-                "python.linting.pylintEnabled": false,
-                "python.linting.flake8Enabled": true,
-                "python.linting.mypyEnabled": true,
-                "python.linting.banditEnabled": true,
-                "python.formatting.provider": "none",
-                "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
-                "[python]": {
-                    "editor.defaultFormatter": "ms-python.black-formatter",
-                    "editor.formatOnSave": true,
-                    "editor.codeActionsOnSave": {
-                        "source.organizeImports": "explicit"
-                    }
-                },
-                "black-formatter.args": [
-                    "--line-length=88",
-                    "--target-version=py311"
-                ],
-                "isort.args": [
-                    "--profile=black",
-                    "--line-length=88"
-                ],
-                "flake8.args": [
-                    "--max-line-length=88",
-                    "--extend-ignore=E203,W503"
-                ],
-                "mypy.args": [
-                    "--ignore-missing-imports",
-                    "--allow-untyped-defs"
-                ],
-                "python.testing.pytestEnabled": true,
-                "python.testing.unittestEnabled": false,
-                "python.testing.pytestArgs": [
-                    "src/tests",
-                    "universal_recon/tests",
-                    "--cov=src",
-                    "--cov=universal_recon",
-                    "--cov-report=term-missing"
-                ],
-                "python.analysis.autoImportCompletions": true,
-                "python.analysis.typeCheckingMode": "basic",
-                "python.analysis.autoSearchPaths": true,
-                "python.analysis.extraPaths": [
-                    "./src",
-                    "./universal_recon"
-                ],
-                "files.exclude": {
-                    "**/__pycache__": true,
-                    "**/.pytest_cache": true,
-                    "**/.coverage": true,
-                    "**/htmlcov": true,
-                    "**/.mypy_cache": true,
-                    "**/.venv*": true,
-                    "**/logs": true,
-                    "**/archive": true
-                },
-                "files.watcherExclude": {
-                    "**/.git/objects/**": true,
-                    "**/.git/subtree-cache/**": true,
-                    "**/node_modules/*/**": true,
-                    "**/.venv*/**": true,
-                    "**/logs/**": true,
-                    "**/archive/**": true
-                },
-                "search.exclude": {
-                    "**/node_modules": true,
-                    "**/bower_components": true,
-                    "**/*.code-search": true,
-                    "**/.venv*": true,
-                    "**/logs": true,
-                    "**/archive": true
-                },
-                "terminal.integrated.defaultProfile.linux": "bash",
-                "terminal.integrated.profiles.linux": {
-                    "bash": {
-                        "path": "bash",
-                        "icon": "terminal-bash"
-                    },
-                    "zsh": {
-                        "path": "zsh"
-                    },
-                    "fish": {
-                        "path": "fish"
-                    },
-                    "tmux": {
-                        "path": "tmux",
-                        "icon": "terminal-tmux"
-                    }
-                },
-                "git.autofetch": true,
-                "git.enableSmartCommit": true,
-                "editor.rulers": [
-                    88
-                ],
-                "editor.renderWhitespace": "boundary",
-                "files.trimTrailingWhitespace": true,
-                "files.insertFinalNewline": true,
-                "workbench.colorTheme": "Default Dark+",
-                "workbench.iconTheme": "vs-seti"
-            }
-        }
-    },
-    "forwardPorts": [
-        3000,
-        5432,
-        8000,
-        8080,
-        9090,
-        9182
-    ],
-    "portsAttributes": {
-        "3000": {
-            "label": "Grafana Dashboard",
-            "onAutoForward": "notify"
-        },
-        "5432": {
-            "label": "PostgreSQL Database",
-            "onAutoForward": "silent"
-        },
-        "8000": {
-            "label": "App Metrics",
-            "onAutoForward": "silent"
-        },
-        "8080": {
-            "label": "cAdvisor",
-            "onAutoForward": "silent"
-        },
-        "9090": {
-            "label": "Prometheus",
-            "onAutoForward": "notify"
-        },
-        "9182": {
-            "label": "Windows Exporter",
-            "onAutoForward": "silent"
+                "GitHub.copilot-chat"
+            ]
         }
     },
     "onCreateCommand": [
@@ -232,7 +70,8 @@
     "containerEnv": {
         "PROJECT_NAME": "bar-directory-recon",
         "ENVIRONMENT": "development",
-        "LOG_LEVEL": "DEBUG"
+        "LOG_LEVEL": "DEBUG",
+        "SCRAPER_API_KEY": "${localEnv:SCRAPER_API_KEY}"
     },
     "shutdownAction": "stopContainer",
     "hostRequirements": {
