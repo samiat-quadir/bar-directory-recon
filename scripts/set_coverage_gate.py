@@ -41,7 +41,12 @@ def replace_gate_in_file(path: str, gate: int) -> None:
             suffix = match.group(3)
             return prefix + opts + f" --cov-fail-under={gate}" + suffix
 
-        new_text = re.sub(r'(addopts\s*=\s*"|addopts\s*=\s*\')(.*?)("|\')', _append_gate, text, flags=re.S)
+        new_text = re.sub(
+            r'(addopts\s*=\s*"|addopts\s*=\s*\')(.*?)("|\')',
+            _append_gate,
+            text,
+            flags=re.S,
+        )
     with open(path, "w", encoding="utf8") as fh:
         fh.write(new_text)
 
@@ -49,7 +54,13 @@ def replace_gate_in_file(path: str, gate: int) -> None:
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--coverage", required=True, help="Path to coverage.xml")
-    p.add_argument("--files", nargs="*", default=["pytest.ini", "pyproject.toml"], help="Files to update")
+    p.add_argument(
+        "--files",
+        nargs="*",
+        default=["pytest.ini", "pyproject.toml"],
+        help="Files to update",
+    )
+
     args = p.parse_args()
 
     try:
@@ -62,7 +73,6 @@ def main() -> int:
     observed_floor = int(cov)
     gate = max(8, min(35, observed_floor - 1))
     print(f"Coverage: {cov:.2f}%, observed_floor={observed_floor}, chosen gate: {gate}")
-
 
     for f in args.files:
         try:
