@@ -56,7 +56,8 @@
                 "kevinrose.vsc-python-indent",
                 "njpwerner.autodocstring",
                 "ms-python.python-environment-manager",
-                "donjayamanne.python-extension-pack"
+                "donjayamanne.python-extension-pack",
+                "GitHub.copilot"
             ],
             "settings": {
                 "python.defaultInterpreterPath": "/usr/local/bin/python",
