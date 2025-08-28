@@ -7,9 +7,7 @@
 Thumbs.db
 desktop.ini
 
-############################################################
-# 2 · Editor / IDE artefacts
-############################################################
+# 2 Â· Editor / IDE artefacts
 .vscode/
 !.vscode/extensions.json          # keep shared extension list
 !.vscode/settings.example.json    # keep templated settings
@@ -17,10 +15,7 @@ desktop.ini
 *.suo
 *.user
 *.code-workspace
-
-############################################################
-# 3 · Python build & virtual-envs
-############################################################
+# 3 Â· Python build & virtual-envs
 # venvs (any depth, any name)
 **/venv*/
 **/.venv*/
@@ -38,10 +33,7 @@ dist/
 *.egg-info/
 *.egg
 pip-wheel-metadata/
-
-############################################################
-# 4 · Tool caches & coverage & logs
-############################################################
+# 4 Â· Tool caches & coverage & logs
 .pytest_cache/
 .coverage
 htmlcov/
@@ -49,15 +41,22 @@ htmlcov/
 .ruff_cache/
 .isort.cfg.bak
 .pre-commit-cache/
-
 # Logs and temporary files
 logs/
 *.log
 *.tmp
 *_temp.py
 *_backup.py
-security_report_*.json
-
+# Local runtime artifacts and reports
+/logs/**
+/reports/**
+/local/**
+/*.log
+coverage_report.*
+coverage_*.xml
+*.json.gz
+/**/*COMPLETION_REPORT*.md
+!docs/README.md
 # Formatting artifacts
 .black.cache
 .autoflake.cache
@@ -80,10 +79,7 @@ merge_conflicts_backup/
 .temp_conflicts/
 snapshots/
 src/backups/archives/
-
-############################################################
-# 6 · Device-specific or secret config
-############################################################
+# 6 Â· Device-specific or secret config
 # generic env / secrets
 *.env
 .env*
@@ -97,10 +93,8 @@ device_*.json
 settings_*.json
 .env.work
 .env.asus
+# 7 Â· One-off project artefacts
 
-############################################################
-# 7 · One-off project artefacts
-############################################################
 mega_memory.yaml
 repo_tree.txt
 env_loader.py
@@ -116,10 +110,7 @@ tools/Test-CrossDeviceCompatibility.ps1
 planning/*.yaml
 !planning/README*.md
 MASTER_IMPLEMENTATION_REPORT.md
-
-############################################################
-# 8 · Binary / large files
-############################################################
+# 8 Â· Binary / large files
 *.zip
 !alienware_bootstrap_bundle.zip  # Critical deployment artifact for ALI
 *.gz
@@ -127,33 +118,52 @@ MASTER_IMPLEMENTATION_REPORT.md
 *.rar
 *.7z
 chromedriver*.exe
-
-############################################################
-# 9 · Git internals (safety net)
-############################################################
+# 9 Â· Git internals (safety net)
 **/.git/
 **/.git/*
-
-############################################################
-# 10 · Merge-conflict artefacts (removed if committed)
-############################################################
+# 10 Â· Merge-conflict artefacts (removed if committed)
 *<<<<<<<*
 *=======*
 *>>>>>>>*
 Copilot Agent Summary.txt
-
-############################################################
-# 11 · Cross-Device Agent Communication
-############################################################
-copilot_agent_relay.md
+# 11 Â· Cross-Device Agent Communication
 copilot_agent_ACE_relay.md
 ALI_RELAY_REPORT.md
-
-############################################################
-# 12 · Large Reports & Scans
-############################################################
+# 12 Â· Large Reports & Scans
 secrets_scan_report_*.json
-
 # smoke-test 2025-07-29T16:36:28
-REPO_HYGIENE_COMPLETION_REPORT.md
+.env
+*.task.xml
+monitoring/grafana/provisioning/**/json/*.bak
 
+# Additional cleanup patterns from audit
+*.bak
+archive/
+.coverage*
+htmlcov/
+.pytest_cache/
+__pycache__/
+*_copy.py
+*_backup.py
+*_temp.py
+temp_*/
+
+logs/roi2/
+logs/roi2/
+coverage*.xml
+.pytest_tmp/
+
+logs/roi2/
+logs/roi2/
+logs/roi2/
+# Ensure our generated reports and local runtime folders are ignored
+reports/
+# keep local runtime folder pattern
+local/
+/reports/
+# Note: keep top-level reports/ available for initial commit; ignore reports/local/ runtime outputs
+reports/local/
+/local/
+coverage*.xml
+coverage_report.*
+coverage_html_first/

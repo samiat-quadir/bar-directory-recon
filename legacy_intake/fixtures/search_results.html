@@ -1,0 +1,665 @@
+<html lang="en" style="" class=" js rgba borderradius boxshadow textshadow opacity fontface generatedcontent"><head><meta http-equiv="origin-trial" content="A/kargTFyk8MR5ueravczef/wIlTkbVk1qXQesp39nV+xNECPdLBVeYffxrM8TmZT6RArWGQVCJ0LRivD7glcAUAAACQeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IkRpc2FibGVUaGlyZFBhcnR5U3RvcmFnZVBhcnRpdGlvbmluZzIiLCJleHBpcnkiOjE3NDIzNDIzOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9">
+        <title> UTAH Bar</title>
+        <meta charset="iso-8859-1">
+        <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+        <meta http-equiv="PRAGMA" content="NO-CACHE">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+        <link href="../../CSS/cvweb.css?ver=20250303" rel="stylesheet">
+		
+		<style>
+		
+		/* MCLE AI 108433 */
+		.hideForMCLE {
+			display:none;
+		}
+		.showForMCLE {
+			display:none;
+		}
+		.showForExhibitor {
+			display:none;
+		}
+		.showForSponsor {
+			display:none;
+		}
+		.header_mcle{
+			position: fixed !important;
+			background:#fff;
+			border-bottom: 2px solid #e0c367;
+			text-align: center;
+			position: relative;
+			transition: background-color ease-in 200ms;
+			-moz-transition: background-color ease-in 200ms; /* Firefox 4 */
+			-webkit-transition: background-color ease-in 200ms; /* Safari and Chrome */
+			-o-transition: background-color ease-in 200ms; /* Opera */
+			-ms-transition: background-color ease-in 200ms; /* IE9? */ 
+			background-color: #fff;
+			position: fixed;
+			width: 100%;
+			z-index: 1000;
+			padding:16px;
+		}
+		.mcle-title {
+			text-align:left;
+			margin:0px;
+			line-height:75px;
+		}
+		@media only screen and (max-width: 600px) {
+			.mcle-title {
+				text-align:left;
+				margin:0px;
+				line-height:32px;
+				margin-bottom:6px;
+			}
+		}
+		
+		.show {
+			display:block !important;
+		}
+		
+		/* print styles */
+
+		.printOnly {
+			display:none;
+		}
+		.printButtonHide {
+			float:right;
+			margin-top:16px;
+		}
+
+		@media print {
+			.printOnly {
+				display:block;
+				margin-top:16px;
+				margin-bottom:32px;
+			}
+			.printHide {
+				display:none;
+			}
+			.printButtonHide {
+				display:none;
+			}
+			.printMcleHide {
+				display: none;
+			}
+			
+			.dl-horizontal dt {
+				width: 160px;
+				float:left;
+				text-align: right;
+			}
+			.dl-horizontal dd { margin-left: 180px; }
+			
+		}
+		</style>
+
+        <script type="text/javascript" async="" charset="utf-8" src="https://www.gstatic.com/recaptcha/releases/rW64dpMGAGrjU7JJQr9xxPl8/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-stI8i0l4UnrupDOI6In0RQyfmG7x4RHoRSlzjf/yDu+T9clp2es/I4WNYpU4isM0"></script><script src="../../js/modernizr.custom.js"></script>
+        <script src="../../js/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="../../js/cvweb_live.js?ver=20250303"></script>
+        <script src="../../js/jquery.validity.js"></script>
+        <script src="../../js/VerificationLib_temp.js?ver=002"></script>
+		<script src="../../js/bootbox.js"></script>
+		<script src="../../js/bootstrap-datepicker.js"></script>
+		<!-- AI 98194 - 4/29/2019 -->
+		<script src="../../js/bootstrap-fileupload.js"></script>
+		
+		
+		<script src="../../js/urllinks.js?v=152815"></script>
+		<script src="https://www.google.com/recaptcha/api.js?render=6Lf8ASYaAAAAAAPE6pP-ciXsTdVEvOPIkgBgC6Ii"></script>
+        
+        <script>
+            //GLOBAL VARIABLES FOR LOGGED IN USER
+            var CUSTOMERCD = "";
+            var ISMEMBERFLG = "";
+            var MEMBERNAME = "";
+            var STATUSSTT = "";
+            var CUSTOMERTYPE = "";
+            var ORGCD = "";
+            var DEBUG = false; //turns on or off debug alerts
+			
+			var heightResizeTime=200; //updated
+			var nqAdditionalHeightPadding=0;
+        </script>
+    </head>
+<body onload="PreparePageDisplay()" style="">
+	
+	<div class="header_mcle showForExhibitor">
+		<img src="../../images/utbar_mcle_seal.png" style="float:left;margin-right:16px;" height="75" width="75">
+		<h1 style="position:relative;top:8px;font-weight:500;font-size:33px;text-align:left;font-family:Calibri;">Utah Exhibitors</h1>
+		<div style="float:right;position:relative;top:-24px;left:-36px;display:none;" class="navForExhibitor printMcleHide">
+			<a href="../memberdll.dll/info?wrp=mainloginwelcome_new_exhibitor.htm&amp;WMT=main_template_home.htm" style="color:#0088cc;"><i class="icon-home"></i> Home</a> &nbsp;|&nbsp;
+			<a href="../msascartdll.dll/showCart" style="color:#0088cc;"><i class="icon-shopping-cart"></i> Cart</a> &nbsp;|&nbsp;
+			<a href="#" onclick="logout_exhibitor();" style="color:#0088cc;"><i class="icon-sign-out"></i> Logout</a>
+		</div>
+	</div>
+	<div class="header_mcle showForSponsor">
+		<img src="../../images/utbar_mcle_seal.png" style="float:left;margin-right:16px;" height="75" width="75">
+		<h1 style="position:relative;top:8px;font-weight:500;font-size:33px;text-align:left;font-family:Calibri;">Utah Sponsors</h1>
+		<div style="float:right;position:relative;top:-24px;left:-36px;display:none;" class="navForSponsor printMcleHide">
+			<a href="../memberdll.dll/info?wrp=mainloginwelcome_new_sponsor.htm&amp;WMT=main_template_home.htm" style="color:#0088cc;"><i class="icon-home"></i> Home</a> &nbsp;|&nbsp;
+			<a href="../msascartdll.dll/showCart" style="color:#0088cc;"><i class="icon-shopping-cart"></i> Cart</a> &nbsp;|&nbsp;
+			<a href="#" onclick="logout_sponsor();" style="color:#0088cc;"><i class="icon-sign-out"></i> Logout</a>
+		</div>
+	</div>
+    <div class="container-fluid" id="content">
+       <!-- <div class="row-fluid visible-desktop">
+            <div class="span12">
+                <div class="navbar" id="navNM" role="navigation">
+	<div class="navbar-inner">
+		<a class="brand" href="/">The UTAH Bar</a>
+	
+		<ul class="nav navbar-nav">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					Events
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="../Eventsdll.dll/EventList?sessionbegdate=>getdate()-1&RANGE=1/10&ONWEBFLG=Y&REGONLINE=Y&SORT=TOPRINTFLG DESC,SESSIONBEGDATE&SESSIONENDDATE=<>1/1/2099">Event Listing</a></li>
+					<li><a href="../Eventsdll.dll/EventList?sessionbegdate=>getdate()-1&RANGE=1/10&ONWEBFLG=Y&REGONLINE=Y&CALVIEW=now&RESPONSEHEADERPAGE=main_template.htm&SESSIONENDDATE=<>1/1/2099">Event Calendar</a></li>
+				</ul>
+			</li>
+			<li class="divider-vertical"></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					Online Store
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" onClick="createPOST('../utilities.dll/openpage',{'wrp':'productsearch.htm'}); return false">Product Search</a></li>
+					<li><a href="../msascartdll.dll/showCart">View My Cart</a></li>
+				</ul>
+			</li>
+			<li class="divider-vertical"></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					Account
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href='../memberdll.dll/info'>Create An Account</a></li>
+					<li><a href="#" onClick="createPOST('../memberdll.dll/info',{'wrp':'membershipapp.htm'}); return false">Become A Member</a></li>
+					<li><a href="#" onClick="createPOST('../memberdll.dll/info',{'wrp':'org_membershipapp.htm'}); return false">Organization Membership</a></li>
+				</ul>
+			</li>
+			<li class="divider-vertical"></li>
+			<li><a href='#' onClick="createPOST('../utilities.dll/openpage',{'WRP':'mainlogin.htm'});"><i class="icon-off"></i> Login</a></li>
+			<li class="divider-vertical"></li>
+			<li class="cartHeaderSummary"></li>
+		</ul>
+	</div>
+</div>
+<div class="navbar" id="navM">
+	<div class="navbar-inner">
+		<a class="brand" href="/Members" target="_top">The Smart Association</a>
+		<ul class="nav">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					My Account
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" onClick="createPOST('../memberdll.dll/Info',{'wrp':'Customer_Update.htm'}); return false">Update My Profile</a></li>
+					<li id="lijoinMem"><a href="#" onClick="createPOST('../memberdll.dll/info',{'wrp':'membershipapp.htm'}); return false">Become A Member</a></li>
+					<li><a href="../dues.dll/List">Renew Membership Dues</a></li>
+					<li><a href="#" onClick="createPOST('../Invoicedll.dll/List',{'payeecd':CUSTOMERCD,'BALANCEDUE':'>-1','sort':'INVOICEDATE DESC','range':'1/20'}); return false">Transaction History</a></li>
+					<li><a href="#" onClick="createPOST('../certificationdll.dll/masterinfo',{'wrp':'certapps.htm'}); return false">View My Certifications</a></li>
+					<li><a href="#" onClick="createPOST('../memberdll.dll/CustomList',{'SQLNAME':'Surveys','ACTIVEFLG':'Y','WHP':'SurveyListHeader.htm','WBP':'SurveyList.htm'}); return false">Surveys</a></li>
+				</ul>
+			</li>
+			<li class="divider-vertical"></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					Events
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" onClick="createPOST('../Registrationdll.dll/List',{'sessionbegdate':'>getdate()','c.customercd':CUSTOMERCD,'SORT':'SESSIONBEGDATE DESC','SESSIONENDDATE':'<>1/1/2099'}); return false">My Event Registrations</a></li>
+    				<li><a href="#" onClick="createPOST('../Eventsdll.dll/EventList',{'sessionbegdate':'>getdate()-1','RANGE':'1/10','ONWEBFLG':'Y','REGONLINE':'Y','SESSIONENDDATE':'<>1/1/2099'});return false">Event Listing</a></li> 
+    				<li><a href="../Eventsdll.dll/EventList?sessionbegdate=>getdate()-1&RANGE=1/10&ONWEBFLG=Y&REGONLINE=Y&CALVIEW=now&RESPONSEHEADERPAGE=main_template.htm&SESSIONENDDATE=<>1/1/2099">Event Calendar</a></li> 
+				</ul>
+			</li>
+			<li class="divider-vertical"></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					Online Store
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" onClick="createPOST('../utilities.dll/openpage',{'wrp':'productsearch.htm'}); return false">Product Search</a></li>
+					<li><a href="../msascartdll.dll/showCart">View My Cart</a></li>
+				</ul>
+			</li>
+			<li class="divider-vertical"></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+					Directories
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" onClick="createPOST('../utilities.dll/OpenPage',{'wrp':'memberSearch.htm'}); return false">Member Directory</a></li>
+					<li><a href="#" onClick="createPOST('../committeedll.dll/list',{'ONWEBFLG':'Y','RANGE':'1/20','SORT':'NAME'}); return false">Committee Directory</a></li>
+					<li><a href="#" onClick="createPOST('../chapterdll.dll/list',{'ONWEBFLG':'Y','RANGE':'1/20','SORT':'CHAPTERNAME'}); return false">Chapter Directory</a></li>
+					<li><a href="#" onClick="createPOST('../utilities.dll/OpenPage',{'wrp':'orgSearch.htm'}); return false">Organization Directory</a></li>
+				</ul>
+			</li>
+			
+			<li class="divider-vertical"></li>
+			<li><a href='../logindll.dll/indlogoff'><i class="icon-off"></i> Logoff</a></li>
+			<li class="divider-vertical"></li>
+			<li class="cartHeaderSummary"></li>
+		</ul>
+	</div>
+</div>
+<script>
+	if (CUSTOMERCD == ''){
+		$('#navNM').show();
+		$('#navM').hide();
+	}else{
+		$('#navNM').hide();
+		$('#navM').show();
+	}
+if (ISMEMBERFLG == 'Y'){$("#lijoinMem").hide();}
+$(".cartHeaderSummary").load('../msascartdll.dll/revieworder?WMT=none&WRP=cartSum.htm');
+</script>
+
+                    <br>
+            </div>
+        </div>-->
+		<div class="row-fluid">
+			<div class="span12">
+				<img src="../../images/UtahBar_TextLogo_Big_with_R.jpg" width="300" class="printOnly mcleHide printMcleHide">
+				<h2 class="printOnly mclePrint"></h2>
+			</div>
+		</div>
+        <div class="row-fluid">
+            <div class="span12">
+				
+				<div style="height:120px;" class="showForExhibitor"></div>
+				<div style="height:120px;" class="showForSponsor"></div>
+                <h2 style="text-transform: normal;">Member List - 19527 Match(es)</h2>
+<br>
+<div class="cartnav text-center">
+  <span class="nav1">&nbsp;&nbsp;&nbsp;</span>
+  <span class="nav2"> <span class="PageNavLink">1</span> 
+<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=26/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">2</a> 
+<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=51/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">3</a>... 
+<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=19476/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">780</a> 
+<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=19501/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">781</a> 
+<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=19526/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">782</a></span>
+  <span class="nav3">&nbsp;&nbsp;&nbsp;<a id="nextlnk" href="https://services.utahbar.org/cvweb/cgi-bin/utilities.dll/CustomList?SORT=m.LASTNAME,%20m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=26/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm"><i class="icon-arrow-right"></i></a>
+
+<script>
+  temp = document.getElementById('nextlnk').href;
+  temp = temp.replace("%&", "%25&");
+  document.getElementById('nextlnk').href = temp;
+</script>
+</span>
+</div>
+	<br>
+<table class="table tablesorter table-hover tablesorter-default" id="myTable">
+	<thead>
+		<tr class="tablesorter-headerRow">
+			<th data-column="0" class="tablesorter-header" tabindex="0" unselectable="on" style="user-select: none;"><div class="tablesorter-header-inner">Bar Number</div></th>
+			<th data-column="1" class="tablesorter-header" tabindex="0" unselectable="on" style="user-select: none;"><div class="tablesorter-header-inner">Full Name</div></th>
+			<th data-column="2" class="tablesorter-header" tabindex="0" unselectable="on" style="user-select: none;"><div class="tablesorter-header-inner">Organization</div></th>
+			<th data-column="3" class="tablesorter-header" tabindex="0" unselectable="on" style="user-select: none;"><div class="tablesorter-header-inner">Type</div></th>
+			<th data-column="4" class="tablesorter-header" tabindex="0" unselectable="on" style="user-select: none;"><div class="tablesorter-header-inner">Status</div></th>
+			<th data-column="5" class="tablesorter-header" tabindex="0" unselectable="on" style="user-select: none;"><div class="tablesorter-header-inner">Bar Admission Date</div></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+	<td>3</td>
+    <td><a href="/Member-Directory/Profile?customercd=3" target="_top">Aadil, Irshad</a> </td>
+	<td>Irshad A. Aadil</td>
+    <td>Active Emeritus Attorney</td>
+    <td>Paid</td>
+    <td>6/13/1980</td>
+</tr>
+<tr>
+	<td>4</td>
+    <td><a href="/Member-Directory/Profile?customercd=4" target="_top">Aadnesen, Grant</a> </td>
+	<td></td>
+    <td>Attorney</td>
+    <td>Deceased</td>
+    <td>10/13/1942</td>
+</tr>
+<tr>
+	<td>17646</td>
+    <td><a href="/Member-Directory/Profile?customercd=17646" target="_top">Aagard, Camille</a> </td>
+	<td>Utah County Public Defender's Association</td>
+    <td>Active Attorney</td>
+    <td>Paid</td>
+    <td>12/9/2020</td>
+</tr>
+<tr>
+	<td>5</td>
+    <td><a href="/Member-Directory/Profile?customercd=5" target="_top">Aagard, David</a> </td>
+	<td></td>
+    <td>Attorney</td>
+    <td>Deceased</td>
+    <td>9/26/1979</td>
+</tr>
+<tr>
+	<td>6</td>
+    <td><a href="/Member-Directory/Profile?customercd=6" target="_top">Aagard, Vance</a> </td>
+	<td></td>
+    <td>Attorney</td>
+    <td>Deceased</td>
+    <td>1/9/1950</td>
+</tr>
+<tr>
+	<td>7</td>
+    <td><a href="/Member-Directory/Profile?customercd=7" target="_top">Aaron, Richard</a> </td>
+	<td>S.J. Quinney College of Law</td>
+    <td>Inactive Emeritus Attorney</td>
+    <td>Paid</td>
+    <td>8/19/1969</td>
+</tr>
+<tr>
+	<td>6071</td>
+    <td><a href="/Member-Directory/Profile?customercd=6071" target="_top">Abadie, Leon</a> </td>
+	<td>Abadie &amp; Schill PC</td>
+    <td>Attorney</td>
+    <td>SuspNP</td>
+    <td>4/7/1993</td>
+</tr>
+<tr>
+	<td>8861</td>
+    <td><a href="/Member-Directory/Profile?customercd=8861" target="_top">Abarca, Enrique</a> </td>
+	<td>Nabors Corporate Services</td>
+    <td>Active Attorney</td>
+    <td>Paid</td>
+    <td>10/18/2000</td>
+</tr>
+<tr>
+	<td>12762</td>
+    <td><a href="/Member-Directory/Profile?customercd=12762" target="_top">Abarca, Jose</a> </td>
+	<td>Polsinelli PC</td>
+    <td>Active Attorney</td>
+    <td>Paid</td>
+    <td>10/31/2011</td>
+</tr>
+<tr>
+	<td>8</td>
+    <td><a href="/Member-Directory/Profile?customercd=8" target="_top">Abbott, Charles</a> </td>
+	<td>Charles F. Abbott, Pc</td>
+    <td>Attorney</td>
+    <td>Deceased</td>
+    <td>9/8/1981</td>
+</tr>
+<tr>
+	<td>11221</td>
+    <td><a href="/Member-Directory/Profile?customercd=11221" target="_top">Abbott, Joshua</a> </td>
+	<td>Sandra Day O'connor College of Law, Arizona State University</td>
+    <td>Attorney</td>
+    <td>SuspNP</td>
+    <td>10/12/2006</td>
+</tr>
+<tr>
+	<td>14577</td>
+    <td><a href="/Member-Directory/Profile?customercd=14577" target="_top">Abbott, Laurie</a> </td>
+	<td>Us Securities And Exchange Commission</td>
+    <td>Active Attorney</td>
+    <td>Paid</td>
+    <td>10/22/2013</td>
+</tr>
+<tr>
+	<td>6695</td>
+    <td><a href="/Member-Directory/Profile?customercd=6695" target="_top">Abbott, Nelson</a> </td>
+	<td>Abbott Law Firm</td>
+    <td>Active Attorney</td>
+    <td>Paid</td>
+    <td>5/17/1994</td>
+</tr>
+<tr>
+	<td>18168</td>
+    <td><a href="/Member-Directory/Profile?customercd=18168" target="_top">Abdullahi, Mohamed</a> </td>
+	<td>City of Logan</td>
+    <td>Active Attorney with less than 3 years </td>
+    <td>Paid</td>
+    <td>5/9/2022</td>
+</tr>
+<tr>
+	<td>5244</td>
+    <td><a href="/Member-Directory/Profile?customercd=5244" target="_top">Abegglen, Diane</a> </td>
+	<td>Diane Abegglen</td>
+    <td>Inactive Attorney No Service</td>
+    <td>Paid</td>
+    <td>10/4/1988</td>
+</tr>
+<tr>
+	<td>9</td>
+    <td><a href="/Member-Directory/Profile?customercd=9" target="_top">Abel, Bryce</a> </td>
+	<td></td>
+    <td>Attorney</td>
+    <td>SuspNP</td>
+    <td>3/12/1981</td>
+</tr>
+<tr>
+	<td>10</td>
+    <td><a href="/Member-Directory/Profile?customercd=10" target="_top">Abelman, Franklen</a> </td>
+	<td></td>
+    <td>Attorney</td>
+    <td>SuspNP</td>
+    <td>4/8/1977</td>
+</tr>
+<tr>
+	<td>12422</td>
+    <td><a href="/Member-Directory/Profile?customercd=12422" target="_top">Abke, Kathleen</a> </td>
+	<td>Strong &amp; Hanni</td>
+    <td>Active Attorney</td>
+    <td>Paid</td>
+    <td>10/20/2009</td>
+</tr>
+<tr>
+	<td>11</td>
+    <td><a href="/Member-Directory/Profile?customercd=11" target="_top">Ables, Wendell</a> </td>
+	<td></td>
+    <td>Attorney</td>
+    <td>Deceased</td>
+    <td>11/5/1959</td>
+</tr>
+<tr>
+	<td>16658</td>
+    <td><a href="/Member-Directory/Profile?customercd=16658" target="_top">Abou-Bakr, Jamila</a> </td>
+	<td>None</td>
+    <td>Inactive Attorney No Service</td>
+    <td>Paid</td>
+    <td>5/15/2018</td>
+</tr>
+<tr>
+	<td>17647</td>
+    <td><a href="/Member-Directory/Profile?customercd=17647" target="_top">Abourahma, Nourin</a> </td>
+	<td>Epperson &amp; Owens</td>
+    <td>Active Attorney</td>
+    <td>Paid</td>
+    <td>1/11/2021</td>
+</tr>
+<tr>
+	<td>9012</td>
+    <td><a href="/Member-Directory/Profile?customercd=9012" target="_top">Abraham, Diane</a> </td>
+	<td></td>
+    <td>Attorney</td>
+    <td>SuspNP</td>
+    <td>6/27/2001</td>
+</tr>
+<tr>
+	<td>12771</td>
+    <td><a href="/Member-Directory/Profile?customercd=12771" target="_top">Abraham, Graeme</a> </td>
+	<td>University of Alaska Fairbanks</td>
+    <td>Attorney</td>
+    <td>SuspNP</td>
+    <td>10/31/2011</td>
+</tr>
+<tr>
+	<td>18169</td>
+    <td><a href="/Member-Directory/Profile?customercd=18169" target="_top">Abram, Eric</a> </td>
+	<td>Holland &amp; Hart LLP</td>
+    <td>Active Attorney</td>
+    <td>Paid</td>
+    <td>5/17/2022</td>
+</tr>
+<tr>
+	<td>13481</td>
+    <td><a href="/Member-Directory/Profile?customercd=13481" target="_top">Abramowitz, Kay</a> </td>
+	<td>Miller Nash Graham &amp; Dunn LLP</td>
+    <td>Attorney</td>
+    <td>Resigned</td>
+    <td>2/14/2011</td>
+</tr>
+	</tbody>
+</table>
+				<!--
+				<h1>We are performing scheduled maintenance</h1>
+				<h3>We will be back online shortly</h3>
+				-->
+            </div>
+        </div>
+    </div>
+    <script src="../../js/jquery.tablesorter.min.js"></script>
+    <script>
+	
+		// MCLE AI 108433: START
+		if (window.location.pathname.indexOf("/mcle/") > -1) {
+			$(".hideForMCLE").remove();
+			$(".showForMCLE").removeClass("showForMCLE");
+			iscmsmode = false;
+			if (CUSTOMERCD != "") {
+				$(".navForMCLE").show();
+			}
+		} else if (window.location.pathname.indexOf("/exhibitors/") > -1) {
+			$(".hideForMCLE").remove();
+			$(".showForExhibitor").removeClass("showForExhibitor");
+			iscmsmode = false;
+			if (CUSTOMERCD != "") {
+				$(".navForExhibitor").show();
+			}
+		} else if (window.location.pathname.indexOf("/sponsors/") > -1) {
+			$(".hideForMCLE").remove();
+			$(".showForSponsor").removeClass("showForSponsor");
+			iscmsmode = false;
+			if (CUSTOMERCD != "") {
+				$(".navForSponsor").show();
+			}
+		} else {
+			$(".showForMCLE").remove();
+			$(".hideForMCLE").removeClass("hideForMCLE");
+		}
+		function logout_mcle() {
+			$.ajax({url: "../logindll.dll/indlogoff", type: "GET", async: true, success: function(content) {
+					window.location.href="https://services.utahbar.org/mcle/";
+				}
+			});
+		}
+		// MCLE AI 108433: END
+		
+		function logout_exhibitor() {
+			$.ajax({url: "../logindll.dll/indlogoff", type: "GET", async: true, success: function(content) {
+					window.location.href="https://services.utahbar.org/exhibitors/";
+				}
+			});
+		}
+		
+		function logout_sponsor() {
+			$.ajax({url: "../logindll.dll/indlogoff", type: "GET", async: true, success: function(content) {
+					window.location.href="https://services.utahbar.org/sponsors/";
+				}
+			});
+		}
+		
+		//	10/13/2017 - RK - bootbox scroll in iframe
+		$("body").on("shown.bs.modal", ".modal", function()
+		{
+			$(this).find('div.modal-dialog').animate({top:$(parent.window.document).scrollTop()},200)
+		});
+
+		//	8/14/2017 - RK - changed all timestamps(in milliseconds) to current time(in hhmmss) due to milliseconds causing the function name to change much faster than expected in certain situations.
+		//  12/6/2018 - testing hhmmss -> hhmm
+		var oldHeight1528 = 0;
+		var nqPauseUpdate = false;
+		
+		function updateHeight1528() {
+			var divcontent = document.getElementById("content");
+			var widthStr = divcontent.offsetHeight;
+			
+			if (widthStr == '0')
+			{
+				widthStr = document.documentElement.clientHeight;
+			}
+			
+			//NQ - 7-13-17 - modal may be larger than parent - so get its height instead
+			if ($(".modal.in").length > 0)
+			{
+				widthStr = 100 + Math.max(widthStr, $(".modal.in .modal-content")[0].offsetHeight);
+			}
+			
+			if ((widthStr != '0') && (widthStr > oldHeight1528) )
+			{
+				var finalWidth = (parseInt(widthStr) + 50 + nqAdditionalHeightPadding) + 'px';
+				
+				var thisIframe = window.top.document.getElementsByTagName('iframe')[0];
+				
+				var thisTimeStamp = $("#timeStamp").text();
+				
+				$("iframe", parent.document).each(function(key,val)
+				{
+					var nqCurrFrame = this;
+					var thisFrameSrc = $(this).attr("src");
+					
+					//	10/17/2017 - RK - check if iframe src attribute has been declared and has a value
+					if( thisFrameSrc != undefined )
+					{
+						//NQ - 7-13-17 - ignores iframes with google domain (e.g., for maps)  
+						if ((thisFrameSrc.indexOf("google.com") <0) && (thisFrameSrc.indexOf("vimeo.com")  <0))
+						{
+							var frameTimeStamp = $(nqCurrFrame).contents().find("#timeStamp").text();
+						
+							if (thisTimeStamp == frameTimeStamp)
+							{
+								thisIframe = nqCurrFrame;
+							}
+						}
+					}
+				});
+				
+				if (thisIframe != null) {
+					thisIframe.style.height = finalWidth;
+					$(thisIframe).css("height", finalWidth);
+				}
+			}
+			
+
+			oldHeight1528 = widthStr;
+			setTimeout(function() {
+				updateHeight1528();
+			}, heightResizeTime);
+		}
+		
+        $(function() {
+            $("#myTable").tablesorter();
+            $("input,select").focus(function() {
+                $(this).parents(".control-group").removeClass("error");
+            });
+            $("body").on("show", ".collapse", function() {
+                $(this).prev("legend").children(".icon-plus").addClass("icon-minus").removeClass("icon-plus")
+            });
+
+            $("body").on("hide", ".collapse", function() {
+                $(this).prev("legend").children(".icon-minus").addClass("icon-plus").removeClass("icon-minus")
+            });
+        });
+
+        function PreparePageDisplay() {
+            //updateHeight();
+			if (window.self !== window.top) { 
+				updateHeight1528();
+			}
+            window.top.scroll(0, 0);
+        }
+    </script>
+
+
+<div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe title="reCAPTCHA" width="256" height="60" role="presentation" name="a-2so7yabgv3et" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6Lf8ASYaAAAAAAPE6pP-ciXsTdVEvOPIkgBgC6Ii&amp;co=aHR0cHM6Ly9zZXJ2aWNlcy51dGFoYmFyLm9yZzo0NDM.&amp;hl=en&amp;v=rW64dpMGAGrjU7JJQr9xxPl8&amp;size=invisible&amp;cb=7qd7eyl2ppj5"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div></body></html>

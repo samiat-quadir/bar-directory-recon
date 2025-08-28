@@ -81,6 +81,7 @@ for ($i = 0; $i -lt $allLines.Length; $i++) {
             $newAddopts = "$current --cov-fail-under=$gate"
         }
         $allLines[$i] = 'addopts = "' + $newAddopts + '"'
+
         $modified = $true
         break
     }

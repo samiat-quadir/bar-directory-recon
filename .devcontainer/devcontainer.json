@@ -1,27 +1,33 @@
 {
-    "name": "Bar Directory Recon Development",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".."
-    },
+    "name": "bar-directory-recon",
+    "image": "mcr.microsoft.com/devcontainers/python:3.11",
     "features": {
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
-        "ghcr.io/devcontainers/features/git:1": {},
         "ghcr.io/devcontainers/features/github-cli:1": {},
         "ghcr.io/devcontainers/features/node:1": {
-            "nodeGypDependencies": true,
             "version": "lts"
         }
+        ,
+        "ghcr.io/devcontainers/features/sshd:1": {
+            "version": "latest"
+        }
     },
-    "runArgs": [
-        "--init",
-        "--privileged"
-    ],
+    "secrets": {
+        "SCRAPER_API_KEY": {
+            "description": "API key used by scrapers (in your Codespaces user secrets).",
+            "documentationUrl": "https://github.com/settings/codespaces"
+        }
+    },
     "mounts": [
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
     ],
+    "postCreateCommand": "pip install -U pip && (pip install -r requirements.txt -r requirements-dev.txt || true)",
+    "postStartCommand": "sudo chown -R vscode:vscode /workspaces/bar-directory-recon || true",
+    "remoteUser": "vscode",
     "customizations": {
         "vscode": {
+            "settings": {
+                "python.testing.pytestEnabled": true
+            },
             "extensions": [
                 "ms-python.python",
                 "ms-python.flake8",
@@ -233,7 +239,8 @@
     "containerEnv": {
         "PROJECT_NAME": "bar-directory-recon",
         "ENVIRONMENT": "development",
-        "LOG_LEVEL": "DEBUG"
+        "LOG_LEVEL": "DEBUG",
+        "SCRAPER_API_KEY": "${localEnv:SCRAPER_API_KEY}"
     },
     "shutdownAction": "stopContainer",
     "hostRequirements": {
