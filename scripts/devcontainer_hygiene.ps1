@@ -28,7 +28,7 @@ Write-Host 'Running pytest to generate coverage report...'
 mkdir -Force reports | Out-Null
 
 # Safely invoke pytest; rely on pytest in PATH inside devcontainer
-$pytestArgs = @('-q','--cov=src','--cov=universal_recon','--cov-report=xml:reports/coverage.xml','-k','not slow and not e2e and not integration')
+$pytestArgs = @('-q', '--cov=src', '--cov=universal_recon', '--cov-report=xml:reports/coverage.xml', '-k', 'not slow and not e2e and not integration')
 Write-Host "Invoking: pytest $($pytestArgs -join ' ')"
 & pytest @pytestArgs
 if ($LASTEXITCODE -ne 0) {
@@ -76,10 +76,12 @@ for ($i = 0; $i -lt $allLines.Length; $i++) {
         $current = $matches[1]
         if ($current -match '--cov-fail-under=\d+') {
             $newAddopts = ($current -replace '--cov-fail-under=\d+', "--cov-fail-under=$gate")
-        } else {
+        }
+        else {
             $newAddopts = "$current --cov-fail-under=$gate"
         }
-        $allLines[$i] = "addopts = \"$newAddopts\""
+        $allLines[$i] = 'addopts = "' + $newAddopts + '"'
+
         $modified = $true
         break
     }
