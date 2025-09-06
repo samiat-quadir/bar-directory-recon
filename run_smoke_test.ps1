@@ -14,32 +14,32 @@ Write-Output "Creating codespace for branch $branch..."
 try {
     # Create the codespace and capture the name
     $createOutput = gh codespace create --repo samiat-quadir/bar-directory-recon --branch $branch --machine basicLinux32gb
-    
+
     # Extract codespace name from the last line of output
     $cs_name = $createOutput | Select-Object -Last 1
     Write-Output "Created codespace: $cs_name"
-    
+
     # Wait for the codespace to be ready - poll status
     $ready = $false
     $retries = 0
     $maxRetries = 20
-    
+
     do {
         Start-Sleep -Seconds 10
         $retries++
         Write-Output "Checking codespace status (attempt $retries/$maxRetries)..."
-        
+
         $cs_list = gh codespace list --json name, state
         if ($cs_list -match "`"name`":\s*`"$cs_name`",\s*`"state`":\s*`"Available`"") {
             $ready = $true
             Write-Output "Codespace is available!"
         }
-        
+
         if ($retries -ge $maxRetries) {
             throw "Timeout waiting for codespace to be ready"
         }
     } while (-not $ready)
-    
+
     Write-Output "Codespace is ready. Running smoke test..."
 
     # Phase 1: Create the smoke_test.sh script in the codespace
@@ -84,25 +84,25 @@ fi
 
 echo "Smoke test completed successfully!"
 '@
-    
+
     # Use SSH to create the script file by creating a local file and transferring it
     $temp_script_path = Join-Path $env:TEMP "smoke_test.sh"
     Set-Content -Path $temp_script_path -Value $script_content
-    
+
     # Upload the script to the codespace
     gh codespace cp $temp_script_path "remote:/home/codespace/smoke_test.sh" -c $cs_name
-    
+
     # Set permissions
     gh codespace ssh -c "chmod +x ~/smoke_test.sh" $cs_name
-    
+
     # Clean up the temporary file
     Remove-Item -Path $temp_script_path
-    
+
     # Phase 2: Execute the script
     Write-Output "Executing smoke test in codespace $cs_name..."
     $testOutput = gh codespace ssh --codespace $cs_name -c "cd /workspaces/bar-directory-recon && bash ~/smoke_test.sh"
     $testResults = $testOutput -join "`n"
-    
+
     # Check if smoke test passed
     if ($testResults -match "SMOKE TEST PASSED") {
         $status = "pass"
@@ -111,7 +111,7 @@ echo "Smoke test completed successfully!"
     else {
         $status = "fail"
         Write-Output "Smoke test failed!"
-        
+
         # Extract exit code if available
         if ($testResults -match "TEST_EXIT=(\d+)") {
             $exit = $matches[1]
@@ -127,7 +127,7 @@ finally {
     # Output summary
     Write-Output ""
     Write-Output "SUMMARY >> task=ace_inline_smoke status=$status exit=$exit cs=$cs_name ref='$branch' tail='$testResults'"
-    
+
     # Optional: Delete the codespace if needed
     # Write-Output "Cleaning up codespace..."
     # gh codespace delete -c $cs_name --force

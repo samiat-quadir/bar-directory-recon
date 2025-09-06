@@ -36,7 +36,7 @@ try {
     for ($i = 1; $i -le 20; $i++) {
         Write-Output "Checking status (attempt $i/20)..."
         Start-Sleep -Seconds 10
-        
+
         # Simple approach - just list all codespaces and check if any are available
         $list_output = gh codespace list
         if ($list_output -match $codespace_name -and $list_output -match "Available") {
@@ -49,7 +49,7 @@ try {
     if (-not $codespace_ready) {
         throw "Timed out waiting for codespace to be ready"
     }
-    
+
     # Create the test script
     $script_content = @'
 #!/bin/bash
@@ -91,26 +91,26 @@ else
     exit $TEST_EXIT
 fi
 '@
-    
+
     # Use SSH to create the script file
     $temp_script_path = Join-Path $env:TEMP "smoke_test.sh"
     Set-Content -Path $temp_script_path -Value $script_content
-    
+
     # Upload the script to the codespace
     Write-Output "Uploading test script..."
     gh codespace cp -c $codespace_name $temp_script_path "remote:/workspaces/bar-directory-recon/smoke_test.sh"
-    
+
     # Set execute permissions
     Write-Output "Setting execute permissions..."
     gh codespace ssh -c $codespace_name -- "chmod +x /workspaces/bar-directory-recon/smoke_test.sh"
-    
+
     # Remove temp file
     Remove-Item -Path $temp_script_path -Force
-    
+
     # Execute the script
     Write-Output "Running smoke test..."
     $test_result = gh codespace ssh -c $codespace_name -- "cd /workspaces/bar-directory-recon && ./smoke_test.sh"
-    
+
     # Check for success - look for RUN_EXIT=0 which indicates the pytest tests passed
     if ($test_result -match "RUN_EXIT=0") {
         Write-Output "========== SMOKE TEST SUCCEEDED =========="
@@ -120,7 +120,7 @@ fi
     else {
         Write-Output "========== SMOKE TEST FAILED =========="
         $test_result | ForEach-Object { Write-Output $_ }
-        
+
         # Extract exit code if available
         $exit_code = "1"
         if ($test_result -match "TEST_EXIT=(\d+)") {
@@ -129,7 +129,7 @@ fi
         elseif ($test_result -match "RUN_EXIT=(\d+)") {
             $exit_code = $matches[1]
         }
-        
+
         Write-Output "SUMMARY >> task=ace_inline_smoke status=fail exit=$exit_code cs=$codespace_name ref='$branch'"
     }
 }
