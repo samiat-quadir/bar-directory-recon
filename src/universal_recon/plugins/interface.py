@@ -1,13 +1,4 @@
-from __future__ import annotations
-
-from typing import Protocol, Any
-
-
-class PluginProtocol(Protocol):
-    """Minimal protocol all plugins should follow."""
-
+from typing import Protocol, Iterable, Dict
+class SourcePlugin(Protocol):
     name: str
-
-    def run(self, config: dict[str, Any]) -> dict[str, Any]:
-        ...
-
+    def fetch(self, query: Dict) -> Iterable[Dict]: ...
