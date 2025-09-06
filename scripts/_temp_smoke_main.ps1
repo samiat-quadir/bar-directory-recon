@@ -87,22 +87,6 @@ Write-Host "SUMMARY >> task=ace_smoke_main status=$status exit=$exit cs=$name ta
 
 # done
 exit ([int]$exit)
-$ErrorActionPreference = 'Stop'
-
-# 0) Scopes check
-$authStatus = gh auth status 2>&1
-if (-not ($authStatus | Select-String -Pattern 'codespace')) {
-    Write-Host "ACTION_NEEDED: gh auth refresh -h github.com -s codespace -s repo -s workflow"
-    Write-Host "SUMMARY >> task=ace_smoke_main status=blocked reason=missing_scope"
-    exit 0
-}
-
-# 1) Create codespace (capture output)
-$dn = "bdr-ace-verify-" + (Get-Date -Format yyyyMMdd-HHmm) + "-" + (Get-Random)
-Write-Host "Creating Codespace: $dn"
-$oldEAP = $ErrorActionPreference
-$ErrorActionPreference = 'Continue'
-$createOut = gh codespace create -R samiat-quadir/bar-directory-recon -b main -m standardLinux32gb --idle-timeout 45m --retention-period 24h --display-name $dn --default-permissions 2>&1
 $createExit = $LASTEXITCODE
 $ErrorActionPreference = $oldEAP
 Write-Host "CREATE_EXIT=$createExit"
