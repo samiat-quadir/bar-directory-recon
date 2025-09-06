@@ -5,6 +5,9 @@
         "ghcr.io/devcontainers/features/github-cli:1": {},
         "ghcr.io/devcontainers/features/node:1": {
             "version": "lts"
+        },
+        "ghcr.io/devcontainers/features/sshd:1": {
+            "version": "latest"
         }
         ,
         "ghcr.io/devcontainers/features/sshd:1": {
@@ -216,7 +219,8 @@
     "postCreateCommand": [
         "bash",
         "-c",
-        "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh && pip install -r requirements-dev.txt && pip install -e .[dev]"
+        "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh && pip install -e .[dev] && pytest -q"
+
     ],
     "postStartCommand": [
         "bash",
