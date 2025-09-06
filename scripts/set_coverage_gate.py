@@ -68,7 +68,6 @@ def main() -> int:
     except Exception as e:
         print(f"Error reading coverage: {e}")
         return 2
-      
     # New unified policy: gate = clamp(int(total_cov) - 1, 8, 35)
     observed_floor = int(cov)
     gate = max(8, min(35, observed_floor - 1))

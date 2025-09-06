@@ -10,4 +10,3 @@ class ExamplePlugin:
         # trivial example behavior
         return {"name": self.name, "received_keys": list(config.keys())}
 
-
