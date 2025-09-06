@@ -66,8 +66,6 @@ def normalize_email(email: Optional[str]) -> str:
     if re.match(r"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$", s):
         return s
     return ""
-
-
 @dataclass
 class CollabDivorceAdapter:
     """
