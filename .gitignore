@@ -1,5 +1,6 @@
 ﻿############################################################
-# 1 Â· Operating-system cruft
+# 1 · Operating-system cruft
+############################################################
 # macOS
 .DS_Store
 # Windows
@@ -60,7 +61,13 @@ coverage_*.xml
 .black.cache
 .autoflake.cache
 *.isorted
-# 5 Â· Logs, data, screenshots, backups
+
+############################################################
+# 5 · Logs, data, screenshots, backups
+############################################################
+logs/
+reports/
+*.log
 *_errors.log
 screenshots/
 data/
@@ -141,6 +148,7 @@ __pycache__/
 *_temp.py
 temp_*/
 
+reports/
 logs/roi2/
 logs/roi2/
 coverage*.xml
@@ -153,7 +161,6 @@ logs/roi2/
 reports/
 # keep local runtime folder pattern
 local/
-=======
 /reports/
 # Note: keep top-level reports/ available for initial commit; ignore reports/local/ runtime outputs
 reports/local/

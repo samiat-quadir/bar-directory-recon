@@ -5,3 +5,4 @@ class _Example:
         q = query.get("q","demo")
         yield {"source": self.name, "q": q, "example": True}
 PLUGIN = _Example()
+
