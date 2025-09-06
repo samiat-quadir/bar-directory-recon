@@ -1,4 +1,3 @@
-*** DELETE FILE
 Param()
 $ErrorActionPreference = 'Stop'
 Set-Location -Path "C:\Code\bar-directory-recon"
