@@ -20,7 +20,7 @@
     "mounts": [
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
     ],
-    "postCreateCommand": "pip install -U pip && (pip install -r requirements.txt -r requirements-dev.txt || true)",
+    "postCreateCommand": "pip install -U pip && (pip install -r requirements.txt -r requirements-dev.txt || true) && git lfs install --skip-repo || true && git config core.autocrlf false",
     "postStartCommand": "sudo chown -R vscode:vscode /workspaces/bar-directory-recon || true",
     "remoteUser": "vscode",
     "customizations": {
