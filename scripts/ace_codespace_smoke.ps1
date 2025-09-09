@@ -11,6 +11,7 @@ $codespaceDisplayName = "bdr-smoke-$(Get-Date -Format yyyyMMdd-HHmm)"
 $authStatus = gh auth status -h github.com 2>&1
 if ($authStatus -notmatch 'codespace') {
     Write-Output "SUMMARY >> task=ali_smoke_wrap status=fail exit=1 note='gh auth missing codespace scope'"
+    
     exit 1
 }
 
@@ -19,6 +20,7 @@ $codespaceJson = gh codespace create -R $repo -b $targetRef -m standardLinux32gb
 $codespaceName = ($codespaceJson | ConvertFrom-Json).name
 if (-not $codespaceName) {
     Write-Output "SUMMARY >> task=ali_smoke_wrap status=fail exit=1 note='Failed to create codespace'"
+
     exit 1
 }
 
