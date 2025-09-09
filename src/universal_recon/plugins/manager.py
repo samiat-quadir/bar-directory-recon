@@ -7,6 +7,7 @@ def load_plugins() -> List[SourcePlugin]:
     if not pkg_path_list or not isinstance(pkg_path_list, list) or not pkg_path_list:
         raise ImportError("Cannot determine package path: __path__ is missing or empty.")
     pkg_path = pkg_path_list[0]
+
     for m in pkgutil.iter_modules([pkg_path]):
         if m.name not in ("interface","manager"):
             mod = importlib.import_module(f".{m.name}", __name__)

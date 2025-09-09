@@ -1,3 +1,5 @@
+dnspython
+lxml
 # Development dependencies - include production requirements
 -r requirements.txt
 
