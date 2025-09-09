@@ -1,4 +1,6 @@
 name: windows-filename-guard
+permissions:
+  contents: read
 on:
   push:
   pull_request:
