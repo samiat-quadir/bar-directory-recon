@@ -187,7 +187,7 @@
             },
             "problemMatcher": [],
             "runOptions": {
-                "runOn": "folderOpen"
+                "runOn": "default"
             },
             "group": {
                 "kind": "build",
