@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
     # Essential build tools
     build-essential \
     git \
+    git-lfs \
+    dos2unix \
     curl \
     wget \
     unzip \
