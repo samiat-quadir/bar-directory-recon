@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
     # Essential build tools
     build-essential \
     git \
+    git-lfs \
+    dos2unix \
     curl \
     wget \
     unzip \
@@ -50,6 +52,11 @@ RUN apt-get update && apt-get install -y \
     nano \
     less \
     file \
+    # Libraries needed to build lxml and other Python packages
+    libxml2-dev \
+    libxslt1-dev \
+    zlib1g-dev \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Google Chrome
@@ -103,11 +110,20 @@ RUN git config --global init.defaultBranch main \
     && git config --global core.autocrlf input \
     && git config --global core.filemode false
 
-# Create logs and cache directories
+# Create logs and cache directories (container-owned) and set ownership to vscode
 RUN mkdir -p /workspaces/bar-directory-recon/logs \
     && mkdir -p /workspaces/bar-directory-recon/.pytest_cache \
     && mkdir -p /home/vscode/.cache/pre-commit \
-    && chown -R vscode:vscode /home/vscode/.cache
+
+    # Ensure workspace is owned by the 'vscode' user so non-root devcontainer sessions can write to it
+    && chown -R vscode:vscode /home/vscode/.cache \
+    && mkdir -p /home/vscode/.cache/pytest_basetemp \
+    # Ensure the created directories are owned by the 'vscode' user so non-root devcontainer sessions can write to them
+    && chown -R vscode:vscode /home/vscode/.cache/pre-commit \
+    && chown -R vscode:vscode /home/vscode/.cache/pytest_basetemp \
+    && chown -R vscode:vscode /workspaces/bar-directory-recon/logs \
+    && chown -R vscode:vscode /workspaces/bar-directory-recon/.pytest_cache \
+    && chown -R vscode:vscode /workspaces/bar-directory-recon
 
 # Set up Chrome sandbox bypass for containerized environment
 RUN echo '#!/bin/bash\nexec /usr/bin/google-chrome --no-sandbox --disable-dev-shm-usage "$@"' > /usr/local/bin/chrome-no-sandbox \
