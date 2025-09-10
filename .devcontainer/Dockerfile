@@ -126,8 +126,8 @@ RUN mkdir -p /workspaces/bar-directory-recon/logs \
     && chown -R vscode:vscode /workspaces/bar-directory-recon
 
 # Set up Chrome sandbox bypass for containerized environment
-RUN echo '#!/bin/bash\nexec /usr/bin/google-chrome --no-sandbox --disable-dev-shm-usage "$@"' > /usr/local/bin/chrome-no-sandbox \
-    && chmod +x /usr/local/bin/chrome-no-sandbox
+COPY .devcontainer/chrome-no-sandbox /usr/local/bin/chrome-no-sandbox
+RUN chmod +x /usr/local/bin/chrome-no-sandbox
 
 # Create startup script for development environment
 RUN echo '#!/bin/bash\n\
