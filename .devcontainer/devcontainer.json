@@ -225,7 +225,7 @@
     "PYTHONUNBUFFERED": "1",
     "PIP_DISABLE_PIP_VERSION_CHECK": "1",
     "DEBIAN_FRONTEND": "noninteractive",
-    "CHROME_BIN": "/usr/bin/google-chrome",
+    "CHROME_BIN": "/usr/local/bin/chrome-no-sandbox",
     "DISPLAY": ":99.0"
   },
   "containerEnv": {
