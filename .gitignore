@@ -11,6 +11,7 @@ desktop.ini
 .vscode/
 !.vscode/extensions.json          # keep shared extension list
 !.vscode/settings.example.json    # keep templated settings
+!.vscode/tasks.json               # keep shared tasks
 .idea/
 *.suo
 *.user

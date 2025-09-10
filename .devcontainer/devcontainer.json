@@ -218,6 +218,7 @@
   "containerUser": "vscode",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/bar-directory-recon,type=bind,consistency=cached",
   "workspaceFolder": "/workspaces/bar-directory-recon",
+  "mounts": ["source=${localEnv:USERPROFILE}\\.cache\\pip,target=/home/vscode/.cache/pip,type=bind"],
   "remoteEnv": {
     "PYTHONPATH": "/workspaces/bar-directory-recon/src:/workspaces/bar-directory-recon",
     "PYTHONDONTWRITEBYTECODE": "1",
