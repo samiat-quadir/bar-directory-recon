@@ -23,3 +23,4 @@ jobs:
         run: |
           gh pr checks ${{ github.event.pull_request.number }} --watch --fail-on-error
           gh pr merge ${{ github.event.pull_request.number }} --squash --delete-branch
+
