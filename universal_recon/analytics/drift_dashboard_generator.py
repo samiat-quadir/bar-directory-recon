@@ -17,26 +17,26 @@ BADGE_COLORS = {
 }
 
 
-def load_status(status_path: str = "output/output_status.json") -> Dict[str, Any]:
+def load_status(status_path: str = "output/output_status.json") -> dict[str, Any]:
     """Load status data from JSON file."""
     if not os.path.exists(status_path):
         print(f"❌ No status summary found at {status_path}")
         return {}
-    with open(status_path, "r", encoding="utf-8") as f:
+    with open(status_path, encoding="utf-8") as f:
         return json.load(f)
 
 
-def load_risk_overlay(path: str = "output/risk_overlay.json") -> Dict[str, Any]:
+def load_risk_overlay(path: str = "output/risk_overlay.json") -> dict[str, Any]:
     """Load risk overlay data if available."""
     if not os.path.exists(path):
         return {"risk_badges": {}}
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
 def generate_html(
-    status_data: Dict[str, Any],
-    risk_data: Dict[str, Any],
+    status_data: dict[str, Any],
+    risk_data: dict[str, Any],
     output_path: str = "output/drift_dashboard.html",
 ) -> None:
     """Generate HTML dashboard with integrated risk overlay."""
@@ -126,7 +126,9 @@ def generate_html(
 def generate_drift_dashboard(matrix_path: str, output_dir: str) -> None:
     """Generate the drift dashboard with risk overlay integration."""
     # Generate risk overlay data first
-    validator_tiers_path = str(Path(__file__).parent.parent / "validators" / "validator_tiers.yaml")
+    validator_tiers_path = str(
+        Path(__file__).parent.parent / "validators" / "validator_tiers.yaml"
+    )
     risk_data = emit_risk_overlay(matrix_path, validator_tiers_path)
 
     # Load status and generate dashboard
@@ -139,12 +141,18 @@ def main() -> None:
     """CLI entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Generate the Drift Dashboard with risk overlay")
-    parser.add_argument(
-        "--status-path", default="output/output_status.json", help="Path to status JSON file"
+    parser = argparse.ArgumentParser(
+        description="Generate the Drift Dashboard with risk overlay"
     )
     parser.add_argument(
-        "--matrix-path", default="output/schema_matrix.json", help="Path to schema matrix JSON"
+        "--status-path",
+        default="output/output_status.json",
+        help="Path to status JSON file",
+    )
+    parser.add_argument(
+        "--matrix-path",
+        default="output/schema_matrix.json",
+        help="Path to schema matrix JSON",
     )
     parser.add_argument(
         "--output-path",
@@ -159,7 +167,9 @@ def main() -> None:
         return
 
     # Generate risk overlay data
-    validator_tiers_path = str(Path(__file__).parent.parent / "validators" / "validator_tiers.yaml")
+    validator_tiers_path = str(
+        Path(__file__).parent.parent / "validators" / "validator_tiers.yaml"
+    )
     risk_data = emit_risk_overlay(args.matrix_path, validator_tiers_path)
     generate_html(status_data, risk_data, args.output_path)
 

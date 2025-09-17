@@ -5,14 +5,12 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from universal_recon.core.multisite_config_manager import ConfigManager
 from universal_recon.core.report_printer import (
     print_audit,
     print_health,
     print_summary,
     print_trend,
 )
-from universal_recon.plugin_loader import load_plugins_by_type
 
 
 def archive_previous_matrix():
@@ -31,7 +29,10 @@ def aggregate_and_print(records, site_name, config, cli_flags):
     os.makedirs(output_dir, exist_ok=True)
 
     summary = {"total_records": len(records)}
-    audit_results = {"plugin": "audit_score_matrix_generator", "total_records": len(records)}
+    audit_results = {
+        "plugin": "audit_score_matrix_generator",
+        "total_records": len(records),
+    }
     trend = {"plugin": "trend_dashboard_stub", "site": site_name}
     health = {"plugin": "template_health_flagger", "site": site_name}
 

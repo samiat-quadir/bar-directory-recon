@@ -2,10 +2,12 @@
 Tests for orchestrator - ROI Batch 1
 Generated for high-impact coverage improvement
 """
+
 import importlib
-import pytest
 import sys
 from pathlib import Path
+
+import pytest
 
 # Add src to path for imports
 src_path = Path(__file__).parent.parent.parent / "src"
@@ -33,17 +35,21 @@ def test_orchestrator_has_expected_structure():
         assert len(module_attrs) > 0, "Module should have at least one public attribute"
 
         # Check for common patterns (classes or functions)
-        has_classes = any(hasattr(getattr(module, attr), "__bases__") 
-                         for attr in module_attrs 
-                         if hasattr(module, attr))
-        has_functions = any(callable(getattr(module, attr)) 
-                           for attr in module_attrs 
-                           if hasattr(module, attr))
+        has_classes = any(
+            hasattr(getattr(module, attr), "__bases__")
+            for attr in module_attrs
+            if hasattr(module, attr)
+        )
+        has_functions = any(
+            callable(getattr(module, attr))
+            for attr in module_attrs
+            if hasattr(module, attr)
+        )
 
         assert has_classes or has_functions, "Module should have classes or functions"
 
     except ImportError:
-        pytest.skip(f"Module orchestrator not available for testing")
+        pytest.skip("Module orchestrator not available for testing")
 
 
 def test_orchestrator_safe_attribute_access():
@@ -69,7 +75,7 @@ def test_orchestrator_safe_attribute_access():
                 pass
 
     except ImportError:
-        pytest.skip(f"Module orchestrator not available for testing")
+        pytest.skip("Module orchestrator not available for testing")
 
 
 def test_orchestrator_instantiation_safety():
@@ -91,11 +97,14 @@ def test_orchestrator_instantiation_safety():
                 if hasattr(cls, "__init__"):
                     # Check if we can call with no args (safe test)
                     import inspect
+
                     sig = inspect.signature(cls.__init__)
                     params = list(sig.parameters.values())[1:]  # Skip 'self'
 
                     # Only try instantiation if no required params
-                    required_params = [p for p in params if p.default == inspect.Parameter.empty]
+                    required_params = [
+                        p for p in params if p.default == inspect.Parameter.empty
+                    ]
                     if not required_params:
                         try:
                             instance = cls()
@@ -109,4 +118,4 @@ def test_orchestrator_instantiation_safety():
                 pass
 
     except ImportError:
-        pytest.skip(f"Module orchestrator not available for testing")
+        pytest.skip("Module orchestrator not available for testing")

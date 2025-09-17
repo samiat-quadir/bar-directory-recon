@@ -4,11 +4,13 @@ Collaborative Divorce Adapter Plugin
 This adapter processes CSV files containing collaborative divorce attorney data
 and standardizes them into a common format for the bar directory reconnaissance system.
 """
+
 import csv
 import pathlib
 import re
 from dataclasses import dataclass
-from typing import Any, Dict, Generator, Optional
+from typing import Any, Dict, Optional
+from collections.abc import Generator
 
 
 def detect_csv_dialect(sample: str) -> Any:
@@ -30,14 +32,14 @@ def detect_csv_dialect(sample: str) -> Any:
         dialect = sniffer.sniff(sample)
     except Exception:
         # Use the well-known 'excel' dialect instance as a safe fallback
-            try:
-                dialect = csv.get_dialect('excel')  # type: ignore
-            except Exception:
-                dialect = csv.excel()  # type: ignore
+        try:
+            dialect = csv.get_dialect("excel")  # type: ignore
+        except Exception:
+            dialect = csv.excel()  # type: ignore
     return dialect
 
 
-def normalize_email(email: Optional[str]) -> str:
+def normalize_email(email: str | None) -> str:
     """Normalize an email string to a lowercase, trimmed value.
 
     This function performs lightweight validation and normalization:
@@ -57,7 +59,7 @@ def normalize_email(email: Optional[str]) -> str:
         return ""
     s = email.strip()
     # take first token if multiple
-    for sep in (';', ','):
+    for sep in (";", ","):
         if sep in s:
             s = s.split(sep, 1)[0].strip()
             break
@@ -66,6 +68,8 @@ def normalize_email(email: Optional[str]) -> str:
     if re.match(r"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$", s):
         return s
     return ""
+
+
 @dataclass
 class CollabDivorceAdapter:
     """
@@ -74,9 +78,10 @@ class CollabDivorceAdapter:
     This adapter reads CSV files containing attorney information and yields
     standardized profile dictionaries with consistent field names.
     """
+
     source_csv: pathlib.Path
 
-    def iter_profiles(self) -> Generator[Dict[str, Any], None, None]:
+    def iter_profiles(self) -> Generator[dict[str, Any], None, None]:
         """
         Iterate over attorney profiles from the source CSV file.
 
@@ -101,27 +106,27 @@ class CollabDivorceAdapter:
                 for row in reader:
                     # Extract and normalize data from various possible column names
                     name = (
-                        row.get("Name") or
-                        row.get("Full Name") or
-                        row.get("Attorney Name") or
-                        row.get("Attorney") or
-                        ""
+                        row.get("Name")
+                        or row.get("Full Name")
+                        or row.get("Attorney Name")
+                        or row.get("Attorney")
+                        or ""
                     ).strip()
 
                     raw_email = (
-                        row.get("Email") or
-                        row.get("Email Address") or
-                        row.get("E-mail") or
-                        ""
+                        row.get("Email")
+                        or row.get("Email Address")
+                        or row.get("E-mail")
+                        or ""
                     )
                     email = normalize_email(raw_email)
 
                     firm = (
-                        row.get("Firm") or
-                        row.get("Organization") or
-                        row.get("Law Firm") or
-                        row.get("Company") or
-                        ""
+                        row.get("Firm")
+                        or row.get("Organization")
+                        or row.get("Law Firm")
+                        or row.get("Company")
+                        or ""
                     ).strip()
 
                     # Only yield if we have at least a name

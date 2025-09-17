@@ -4,9 +4,10 @@ This module provides functionality to automatically discover and load
 all plugins in the universal_recon.plugins package.
 """
 
-import pkgutil
 import importlib
-from typing import Iterator, Any
+import pkgutil
+from typing import Any
+from collections.abc import Iterator
 
 
 def load_plugins() -> Iterator[Any]:
@@ -20,7 +21,7 @@ def load_plugins() -> Iterator[Any]:
     # Iterate through all modules in the plugins package
     for importer, modname, ispkg in pkgutil.iter_modules(plugins_package.__path__):
         # Skip the base protocol and loader itself
-        if modname in ('base', 'loader'):
+        if modname in ("base", "loader"):
             continue
 
         # Import the module

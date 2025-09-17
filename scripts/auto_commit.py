@@ -16,7 +16,7 @@ class GitWorkflow:
     def __init__(self, workspace_path: Path):
         self.workspace_path = workspace_path
 
-    def run_command(self, cmd: List[str], description: str) -> tuple[bool, str]:
+    def run_command(self, cmd: list[str], description: str) -> tuple[bool, str]:
         """Run a command and return success status and output."""
         print(f"[*] {description}...")
         try:
@@ -45,7 +45,7 @@ class GitWorkflow:
 
         return success
 
-    def check_git_status(self) -> tuple[bool, List[str]]:
+    def check_git_status(self) -> tuple[bool, list[str]]:
         """Check git status and return changed files."""
         success, output = self.run_command(
             ["git", "status", "--porcelain"], "Checking git status"
@@ -130,7 +130,7 @@ class GitWorkflow:
 
         return False
 
-    def autonomous_commit_and_push(self, message: Optional[str] = None) -> bool:
+    def autonomous_commit_and_push(self, message: str | None = None) -> bool:
         """Perform autonomous commit and push workflow."""
         print("[*] Starting autonomous commit and push workflow...")
 
@@ -143,7 +143,7 @@ class GitWorkflow:
         print("[*] Starting push workflow...")
         return self.smart_push()
 
-    def autonomous_commit(self, message: Optional[str] = None) -> bool:
+    def autonomous_commit(self, message: str | None = None) -> bool:
         """Perform autonomous commit workflow."""
         print("[*] Starting autonomous commit workflow...")
 

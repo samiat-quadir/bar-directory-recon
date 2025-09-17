@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class DataExtractor:
     """Unified data extraction with configurable selectors and patterns."""
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         """Initialize data extractor with configuration."""
         self.config = config
         self.extraction_rules = config.get("extraction_rules", {})
@@ -32,7 +32,7 @@ class DataExtractor:
             ),
         }
 
-    def extract_from_page(self, driver_manager: Any) -> List[Dict[str, Any]]:
+    def extract_from_page(self, driver_manager: Any) -> list[dict[str, Any]]:
         """Extract all data from current page using configured rules."""
         try:
             page_source = driver_manager.get_page_source()
@@ -62,7 +62,7 @@ class DataExtractor:
             logger.error(f"Error extracting data from page: {e}")
             return []
 
-    def extract_from_element(self, element: Tag) -> Dict[str, Any]:
+    def extract_from_element(self, element: Tag) -> dict[str, Any]:
         """Extract data from a single element using configured rules."""
         data = {}
 
@@ -91,8 +91,8 @@ class DataExtractor:
             return {}
 
     def _extract_field(
-        self, element: Tag, field_config: Dict[str, Any]
-    ) -> Optional[str]:
+        self, element: Tag, field_config: dict[str, Any]
+    ) -> str | None:
         """Extract a specific field using its configuration."""
         try:
             extraction_type = field_config.get("type", "text")
@@ -132,7 +132,7 @@ class DataExtractor:
             logger.error(f"Error extracting field {field_config}: {e}")
             return None
 
-    def _apply_transformations(self, value: str, transformations: List[str]) -> str:
+    def _apply_transformations(self, value: str, transformations: list[str]) -> str:
         """Apply transformations to extracted value."""
         for transform in transformations:
             if transform == "strip":
@@ -158,7 +158,7 @@ class DataExtractor:
 
         return value
 
-    def extract_contact_info(self, text: str) -> Dict[str, str]:
+    def extract_contact_info(self, text: str) -> dict[str, str]:
         """Extract contact information using regex patterns."""
         contact_info = {}
 
@@ -187,7 +187,7 @@ class DataExtractor:
 
         return contact_info
 
-    def extract_listing_urls(self, driver_manager: Any) -> List[str]:
+    def extract_listing_urls(self, driver_manager: Any) -> list[str]:
         """Extract URLs for detail page scraping (two-phase approach)."""
         try:
             page_source = driver_manager.get_page_source()
@@ -222,8 +222,8 @@ class DataExtractor:
             return []
 
     def extract_with_selenium(
-        self, driver_manager: Any, selectors: List[str]
-    ) -> List[Dict[str, Any]]:
+        self, driver_manager: Any, selectors: list[str]
+    ) -> list[dict[str, Any]]:
         """Extract data using Selenium for dynamic content."""
         try:
             driver = driver_manager.driver
@@ -264,7 +264,7 @@ class DataExtractor:
             logger.error(f"Error in Selenium extraction: {e}")
             return []
 
-    def extract_structured_data(self, page_source: str) -> List[Dict[str, Any]]:
+    def extract_structured_data(self, page_source: str) -> list[dict[str, Any]]:
         """Extract structured data (JSON-LD, microdata) from page."""
         try:
             soup = BeautifulSoup(page_source, "html.parser")
@@ -306,7 +306,7 @@ class DataExtractor:
             logger.error(f"Error extracting structured data: {e}")
             return []
 
-    def _extract_microdata(self, element: Tag) -> Dict[str, Any]:
+    def _extract_microdata(self, element: Tag) -> dict[str, Any]:
         """Extract microdata from element."""
         data = {}
 
@@ -328,7 +328,7 @@ class DataExtractor:
 
         return data
 
-    def _is_valid_record(self, data: Dict[str, Any]) -> bool:
+    def _is_valid_record(self, data: dict[str, Any]) -> bool:
         """Check if extracted record meets minimum requirements."""
         required_fields = self.config.get("required_fields", [])
 
@@ -350,8 +350,8 @@ class DataExtractor:
         return datetime.now().isoformat()
 
     def clean_extracted_data(
-        self, data_list: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        self, data_list: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         """Clean and deduplicate extracted data."""
         try:
             cleaned_data = []
@@ -394,8 +394,8 @@ class DataExtractor:
             return data_list
 
     def validate_and_enrich_data(
-        self, data_list: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        self, data_list: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         """Validate and enrich extracted data."""
         try:
             enriched_data = []

@@ -1,4 +1,5 @@
 """Test realtor directory scraper functionality."""
+
 from universal_recon.scrapers.realtor_directory_scraper import scrape_realtor_directory
 
 
@@ -21,4 +22,3 @@ def test_scraper_with_keyword_args():
     result = scrape_realtor_directory(source_url=None, limit=None)
     assert isinstance(result, list)
     assert result == []
-

@@ -11,7 +11,7 @@ $codespaceDisplayName = "bdr-smoke-$(Get-Date -Format yyyyMMdd-HHmm)"
 $authStatus = gh auth status -h github.com 2>&1
 if ($authStatus -notmatch 'codespace') {
     Write-Output "SUMMARY >> task=ali_smoke_wrap status=fail exit=1 note='gh auth missing codespace scope'"
-    
+
     exit 1
 }
 
@@ -40,7 +40,7 @@ dos2unix -q scripts/smoke.sh || true
 bash scripts/smoke.sh
 SH
 chmod +x /tmp/smoke.sh && bash /tmp/smoke.sh; echo RUN_EXIT=$?'
-    
+
     $exitCode = if ($sshOutput -match 'RUN_EXIT=(\d+)') { $matches[1] } else { 999 }
     $status = if ($exitCode -eq 0) { 'ok' } elseif ($exitCode -eq 1) { 'degraded' } else { 'fail' }
 

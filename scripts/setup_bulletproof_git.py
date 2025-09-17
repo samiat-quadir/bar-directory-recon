@@ -10,8 +10,8 @@ from typing import List, Tuple
 
 
 def run_command(
-    cmd: List[str], description: str, check: bool = True
-) -> Tuple[bool, str]:
+    cmd: list[str], description: str, check: bool = True
+) -> tuple[bool, str]:
     """Run command with error handling."""
     print(f"[*] {description}...")
     try:
@@ -130,7 +130,7 @@ def setup_vscode_integration() -> bool:
 
     # Check if bulletproof tasks already exist
     try:
-        with open(tasks_file, "r", encoding="utf-8") as f:
+        with open(tasks_file, encoding="utf-8") as f:
             content = f.read()
 
         if "Bulletproof Git" in content:

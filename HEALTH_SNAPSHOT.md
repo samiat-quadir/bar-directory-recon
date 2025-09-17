@@ -69,7 +69,7 @@ Due to limited src/ coverage data, recommended focus areas:
 coverage_gates:
   immediate: 8%    # Safe baseline (current - 2%)
   short_term: 15%  # 6-month target
-  medium_term: 25% # 12-month target  
+  medium_term: 25% # 12-month target
   long_term: 35%   # 18-month target
 ```
 

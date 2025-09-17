@@ -1,4 +1,5 @@
 import importlib
+
 import pytest
 
 
@@ -52,7 +53,7 @@ def test_logger_handles_different_levels():
 
         try:
             logger = get("test_levels")
-            
+
             # Test that basic logging methods exist and are callable
             if hasattr(logger, "info"):
                 assert callable(logger.info)

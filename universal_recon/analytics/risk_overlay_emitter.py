@@ -3,17 +3,17 @@
 import json
 import os
 import tempfile
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple
 
 from universal_recon.core.logger import get_logger
 
 logger = get_logger(__name__)
 
 
-def load_validator_tiers(tier_path: str) -> Dict[str, Any]:
+def load_validator_tiers(tier_path: str) -> dict[str, Any]:
     """Load validator tier definitions."""
     try:
-        with open(tier_path, "r", encoding="utf-8") as f:
+        with open(tier_path, encoding="utf-8") as f:
             return json.load(f).get("validator_tiers", {})
     except Exception as e:
         logger.error(f"Error loading validator tiers: {e}")
@@ -22,7 +22,7 @@ def load_validator_tiers(tier_path: str) -> Dict[str, Any]:
 
 def calculate_risk_level(
     drift_score: float, health: float, suppression_factor: float
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     """Calculate risk level based on metrics."""
     if drift_score > 0.8 or health < 70 * suppression_factor:
         return ("high", "Critical validator issues detected")
@@ -32,15 +32,21 @@ def calculate_risk_level(
 
 
 def emit_site_risk_json(
-    site_name: str, drift_score: float, health: float, suppression_factor: float, tier_path: str
-) -> Dict[str, Any]:
+    site_name: str,
+    drift_score: float,
+    health: float,
+    suppression_factor: float,
+    tier_path: str,
+) -> dict[str, Any]:
     """Generate risk overlay JSON for a site."""
     try:
         validator_tiers = load_validator_tiers(tier_path)
         if not validator_tiers:
             raise ValueError("Validator tiers could not be loaded")
 
-        risk_level, message = calculate_risk_level(drift_score, health, suppression_factor)
+        risk_level, message = calculate_risk_level(
+            drift_score, health, suppression_factor
+        )
         return {
             "site": site_name,
             "risk_level": risk_level,
@@ -52,7 +58,9 @@ def emit_site_risk_json(
         return {"site": site_name, "risk_level": "error", "message": str(e)}
 
 
-def emit_risk_overlay(matrix_path: Optional[str] = None, validator_tiers_path: Optional[str] = None) -> Dict[str, Any]:
+def emit_risk_overlay(
+    matrix_path: str | None = None, validator_tiers_path: str | None = None
+) -> dict[str, Any]:
     """Generate risk overlay data and return badge counts with site analysis."""
     if not matrix_path or not validator_tiers_path:
         # Return the minimal required format for basic tests
@@ -68,7 +76,7 @@ def emit_risk_overlay(matrix_path: Optional[str] = None, validator_tiers_path: O
 
             # Load matrix data
             try:
-                with open(matrix_path, "r", encoding="utf-8") as f:
+                with open(matrix_path, encoding="utf-8") as f:
                     matrix_data = json.load(f)
             except (json.JSONDecodeError, FileNotFoundError) as e:
                 logger.error(f"Error loading matrix data: {e}")
@@ -112,7 +120,7 @@ def emit_risk_overlay(matrix_path: Optional[str] = None, validator_tiers_path: O
                         "risk_level": risk_level,
                         "message": message,
                         "badge": badge,
-                        "health": health
+                        "health": health,
                     }
 
                 risk_badges[site_name] = site_badges
@@ -120,7 +128,9 @@ def emit_risk_overlay(matrix_path: Optional[str] = None, validator_tiers_path: O
             result = {"risk_badges": risk_badges}
 
             # For tests, write to the same directory as the input files
-            output_path = os.path.join(os.path.dirname(matrix_path), "risk_overlay.json")
+            output_path = os.path.join(
+                os.path.dirname(matrix_path), "risk_overlay.json"
+            )
 
         except Exception as e:
             logger.error(f"Error generating risk overlay: {e}")

@@ -62,11 +62,11 @@ class SecurityAuditor:
     def __init__(self, project_root: str = "."):
         """Initialize security auditor."""
         self.project_root = Path(project_root)
-        self.findings: List[Dict[str, Any]] = []
+        self.findings: list[dict[str, Any]] = []
 
     def scan_project(
-        self, exclude_dirs: Optional[List[str]] = None
-    ) -> List[Dict[str, Any]]:
+        self, exclude_dirs: list[str] | None = None
+    ) -> list[dict[str, Any]]:
         """Scan entire project for security issues."""
         if exclude_dirs is None:
             exclude_dirs = ["archive", ".git", "__pycache__", ".venv", "venv"]
@@ -98,7 +98,7 @@ class SecurityAuditor:
 
         return self.findings
 
-    def _should_ignore_file(self, file_path: Path, exclude_dirs: List[str]) -> bool:
+    def _should_ignore_file(self, file_path: Path, exclude_dirs: list[str]) -> bool:
         """Check if file should be ignored during scan."""
         file_str = str(file_path)
 
@@ -117,7 +117,7 @@ class SecurityAuditor:
     def _scan_file(self, file_path: Path) -> None:
         """Scan individual file for security issues."""
         try:
-            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+            with open(file_path, encoding="utf-8", errors="ignore") as f:
                 content = f.read()
 
             line_number = 0
@@ -187,7 +187,7 @@ class SecurityAuditor:
         }
         return severity_map.get(category, "LOW")
 
-    def generate_report(self) -> Dict[str, Any]:
+    def generate_report(self) -> dict[str, Any]:
         """Generate security audit report."""
         if not self.findings:
             return {
@@ -214,11 +214,11 @@ class SecurityAuditor:
             "recommendations": recommendations,
         }
 
-    def _generate_recommendations(self) -> List[str]:
+    def _generate_recommendations(self) -> list[str]:
         """Generate security recommendations based on findings."""
         recommendations = []
 
-        categories = set(finding["category"] for finding in self.findings)
+        categories = {finding["category"] for finding in self.findings}
 
         if (
             "password" in categories
@@ -256,7 +256,7 @@ class ConfigurationSecurityManager:
         """Initialize configuration security manager."""
         self.env_var_pattern = re.compile(r"\$\{([^}]+)\}")
 
-    def secure_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def secure_config(self, config: dict[str, Any]) -> dict[str, Any]:
         """Process configuration to substitute environment variables."""
         return self._process_dict(config)
 
@@ -289,13 +289,13 @@ class ConfigurationSecurityManager:
 
         return self.env_var_pattern.sub(replace_env_var, value)
 
-    def list_required_env_vars(self, config: Dict[str, Any]) -> Set[str]:
+    def list_required_env_vars(self, config: dict[str, Any]) -> set[str]:
         """List all environment variables referenced in configuration."""
         env_vars = set()
         self._collect_env_vars(config, env_vars)
         return env_vars
 
-    def _collect_env_vars(self, obj: Any, env_vars: Set[str]) -> None:
+    def _collect_env_vars(self, obj: Any, env_vars: set[str]) -> None:
         """Recursively collect environment variable names."""
         if isinstance(obj, dict):
             for value in obj.values():
@@ -310,7 +310,7 @@ class ConfigurationSecurityManager:
                 var_name = match.split(":", 1)[0] if ":" in match else match
                 env_vars.add(var_name)
 
-    def create_env_template(self, config: Dict[str, Any], output_path: str) -> None:
+    def create_env_template(self, config: dict[str, Any], output_path: str) -> None:
         """Create .env template file with all required environment variables."""
         env_vars = self.list_required_env_vars(config)
 
@@ -347,7 +347,7 @@ class ConfigurationSecurityManager:
         logger.info(f"Environment template created: {output_path}")
 
 
-def audit_project_security(project_root: str = ".") -> Dict[str, Any]:
+def audit_project_security(project_root: str = ".") -> dict[str, Any]:
     """Perform complete security audit of the project."""
     auditor = SecurityAuditor(project_root)
     auditor.scan_project()
@@ -355,10 +355,10 @@ def audit_project_security(project_root: str = ".") -> Dict[str, Any]:
 
 
 def secure_configuration(
-    config_path: str, output_path: Optional[str] = None
-) -> Dict[str, Any]:
+    config_path: str, output_path: str | None = None
+) -> dict[str, Any]:
     """Load and secure a configuration file."""
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         config = json.load(f)
 
     manager = ConfigurationSecurityManager()

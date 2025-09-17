@@ -15,7 +15,9 @@ def write_csv_site_scores(matrix, output_dir):
     path = os.path.join(output_dir, "site_scores.csv")
     with open(path, "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["Site", "Field Score", "Plugin Coverage", "Validation Pass Rate"])
+        writer.writerow(
+            ["Site", "Field Score", "Plugin Coverage", "Validation Pass Rate"]
+        )
         for site, data in matrix.get("sites", {}).items():
             scores = data.get("score_summary", {})
             writer.writerow(
@@ -26,7 +28,7 @@ def write_csv_site_scores(matrix, output_dir):
                     scores.get("validation_pass_rate", ""),
                 ]
             )
-    print(f"[✓] site_scores.csv written")
+    print("[✓] site_scores.csv written")
 
 
 def write_csv_plugin_usage(matrix, output_dir):
@@ -48,7 +50,7 @@ def write_csv_plugin_usage(matrix, output_dir):
         for domain, plugins in domain_plugin_counts.items():
             for plugin, count in plugins.items():
                 writer.writerow([domain, plugin, count])
-    print(f"[✓] plugin_usage.csv written")
+    print("[✓] plugin_usage.csv written")
 
 
 def write_csv_domain_summary(matrix, output_dir):
@@ -60,17 +62,23 @@ def write_csv_domain_summary(matrix, output_dir):
         writer.writerow(["Domain", "Sites", "Avg Field Score"])
         for domain, stats in domain_stats.items():
             writer.writerow([domain, stats["sites"], stats["avg_score"]])
-    print(f"[✓] domain_summary.csv written")
+    print("[✓] domain_summary.csv written")
 
 
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="Export schema_matrix.json summary to CSVs")
-    parser.add_argument(
-        "--matrix-path", default="output/schema_matrix.json", help="Path to schema matrix"
+    parser = argparse.ArgumentParser(
+        description="Export schema_matrix.json summary to CSVs"
     )
-    parser.add_argument("--output-dir", default="output/", help="Output folder for CSVs")
+    parser.add_argument(
+        "--matrix-path",
+        default="output/schema_matrix.json",
+        help="Path to schema matrix",
+    )
+    parser.add_argument(
+        "--output-dir", default="output/", help="Output folder for CSVs"
+    )
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)

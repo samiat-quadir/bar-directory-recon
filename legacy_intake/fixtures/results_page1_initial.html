@@ -6,9 +6,9 @@
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
         <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
         <link href="../../CSS/cvweb.css?ver=20250304" rel="stylesheet">
-		
+
 		<style>
-		
+
 		/* MCLE AI 108433 */
 		.hideForMCLE {
 			display:none;
@@ -32,7 +32,7 @@
 			-moz-transition: background-color ease-in 200ms; /* Firefox 4 */
 			-webkit-transition: background-color ease-in 200ms; /* Safari and Chrome */
 			-o-transition: background-color ease-in 200ms; /* Opera */
-			-ms-transition: background-color ease-in 200ms; /* IE9? */ 
+			-ms-transition: background-color ease-in 200ms; /* IE9? */
 			background-color: #fff;
 			position: fixed;
 			width: 100%;
@@ -52,11 +52,11 @@
 				margin-bottom:6px;
 			}
 		}
-		
+
 		.show {
 			display:block !important;
 		}
-		
+
 		/* print styles */
 
 		.printOnly {
@@ -82,14 +82,14 @@
 			.printMcleHide {
 				display: none;
 			}
-			
+
 			.dl-horizontal dt {
 				width: 160px;
 				float:left;
 				text-align: right;
 			}
 			.dl-horizontal dd { margin-left: 180px; }
-			
+
 		}
 		</style>
 
@@ -103,11 +103,11 @@
 		<script src="../../js/bootstrap-datepicker.js"></script>
 		<!-- AI 98194 - 4/29/2019 -->
 		<script src="../../js/bootstrap-fileupload.js"></script>
-		
-		
+
+
 		<script src="../../js/urllinks.js?v=140046"></script>
 		<script src="https://www.google.com/recaptcha/api.js?render=6Lf8ASYaAAAAAAPE6pP-ciXsTdVEvOPIkgBgC6Ii"></script>
-        
+
         <script>
             //GLOBAL VARIABLES FOR LOGGED IN USER
             var CUSTOMERCD = "";
@@ -117,13 +117,13 @@
             var CUSTOMERTYPE = "";
             var ORGCD = "";
             var DEBUG = false; //turns on or off debug alerts
-			
+
 			var heightResizeTime=200; //updated
 			var nqAdditionalHeightPadding=0;
         </script>
     </head>
 <body onload="PreparePageDisplay()" style="">
-	
+
 	<div class="header_mcle showForExhibitor">
 		<img src="../../images/utbar_mcle_seal.png" style="float:left;margin-right:16px;" height="75" width="75">
 		<h1 style="position:relative;top:8px;font-weight:500;font-size:33px;text-align:left;font-family:Calibri;">Utah Exhibitors</h1>
@@ -148,7 +148,7 @@
                 <div class="navbar" id="navNM" role="navigation">
 	<div class="navbar-inner">
 		<a class="brand" href="/">The UTAH Bar</a>
-	
+
 		<ul class="nav navbar-nav">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -216,8 +216,8 @@
 				</a>
 				<ul class="dropdown-menu">
 					<li><a href="#" onClick="createPOST('../Registrationdll.dll/List',{'sessionbegdate':'>getdate()','c.customercd':CUSTOMERCD,'SORT':'SESSIONBEGDATE DESC','SESSIONENDDATE':'<>1/1/2099'}); return false">My Event Registrations</a></li>
-    				<li><a href="#" onClick="createPOST('../Eventsdll.dll/EventList',{'sessionbegdate':'>getdate()-1','RANGE':'1/10','ONWEBFLG':'Y','REGONLINE':'Y','SESSIONENDDATE':'<>1/1/2099'});return false">Event Listing</a></li> 
-    				<li><a href="../Eventsdll.dll/EventList?sessionbegdate=>getdate()-1&RANGE=1/10&ONWEBFLG=Y&REGONLINE=Y&CALVIEW=now&RESPONSEHEADERPAGE=main_template.htm&SESSIONENDDATE=<>1/1/2099">Event Calendar</a></li> 
+    				<li><a href="#" onClick="createPOST('../Eventsdll.dll/EventList',{'sessionbegdate':'>getdate()-1','RANGE':'1/10','ONWEBFLG':'Y','REGONLINE':'Y','SESSIONENDDATE':'<>1/1/2099'});return false">Event Listing</a></li>
+    				<li><a href="../Eventsdll.dll/EventList?sessionbegdate=>getdate()-1&RANGE=1/10&ONWEBFLG=Y&REGONLINE=Y&CALVIEW=now&RESPONSEHEADERPAGE=main_template.htm&SESSIONENDDATE=<>1/1/2099">Event Calendar</a></li>
 				</ul>
 			</li>
 			<li class="divider-vertical"></li>
@@ -244,7 +244,7 @@
 					<li><a href="#" onClick="createPOST('../utilities.dll/OpenPage',{'wrp':'orgSearch.htm'}); return false">Organization Directory</a></li>
 				</ul>
 			</li>
-			
+
 			<li class="divider-vertical"></li>
 			<li><a href='../logindll.dll/indlogoff'><i class="icon-off"></i> Logoff</a></li>
 			<li class="divider-vertical"></li>
@@ -275,18 +275,18 @@ $(".cartHeaderSummary").load('../msascartdll.dll/revieworder?WMT=none&WRP=cartSu
 		</div>
         <div class="row-fluid">
             <div class="span12">
-				
+
 				<div style="height:120px;" class="showForExhibitor"></div>
 				<div style="height:120px;" class="showForSponsor"></div>
                 <h2 style="text-transform: normal;">Member List - 19527 Match(es)</h2>
 <br>
 <div class="cartnav text-center">
   <span class="nav1">&nbsp;&nbsp;&nbsp;</span>
-  <span class="nav2"> <span class="PageNavLink">1</span> 
-<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=26/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">2</a> 
-<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=51/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">3</a>... 
-<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=19476/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">780</a> 
-<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=19501/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">781</a> 
+  <span class="nav2"> <span class="PageNavLink">1</span>
+<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=26/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">2</a>
+<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=51/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">3</a>...
+<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=19476/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">780</a>
+<a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=19501/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">781</a>
 <a href="CustomList?SORT=m.LASTNAME, m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=19526/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm">782</a></span>
   <span class="nav3">&nbsp;&nbsp;&nbsp;<a id="nextlnk" href="https://services.utahbar.org/cvweb/cgi-bin/utilities.dll/CustomList?SORT=m.LASTNAME,%20m.FIRSTNAME&amp;FIRSTFILTER=~&amp;LASTFILTER=~&amp;RANGE=26/25&amp;SQLNAME=UTMEMDIR_NEW&amp;SHOWSQL_off=N&amp;WHP=Customer_Header.htm&amp;WBP=Customer_List.htm"><i class="icon-arrow-right"></i></a>
 
@@ -521,7 +521,7 @@ $(".cartHeaderSummary").load('../msascartdll.dll/revieworder?WMT=none&WRP=cartSu
     </div>
     <script src="../../js/jquery.tablesorter.min.js"></script>
     <script>
-	
+
 		// MCLE AI 108433: START
 		if (window.location.pathname.indexOf("/mcle/") > -1) {
 			$(".hideForMCLE").remove();
@@ -555,21 +555,21 @@ $(".cartHeaderSummary").load('../msascartdll.dll/revieworder?WMT=none&WRP=cartSu
 			});
 		}
 		// MCLE AI 108433: END
-		
+
 		function logout_exhibitor() {
 			$.ajax({url: "../logindll.dll/indlogoff", type: "GET", async: true, success: function(content) {
 					window.location.href="https://services.utahbar.org/exhibitors/";
 				}
 			});
 		}
-		
+
 		function logout_sponsor() {
 			$.ajax({url: "../logindll.dll/indlogoff", type: "GET", async: true, success: function(content) {
 					window.location.href="https://services.utahbar.org/sponsors/";
 				}
 			});
 		}
-		
+
 		//	10/13/2017 - RK - bootbox scroll in iframe
 		$("body").on("shown.bs.modal", ".modal", function()
 		{
@@ -580,43 +580,43 @@ $(".cartHeaderSummary").load('../msascartdll.dll/revieworder?WMT=none&WRP=cartSu
 		//  12/6/2018 - testing hhmmss -> hhmm
 		var oldHeight1400 = 0;
 		var nqPauseUpdate = false;
-		
+
 		function updateHeight1400() {
 			var divcontent = document.getElementById("content");
 			var widthStr = divcontent.offsetHeight;
-			
+
 			if (widthStr == '0')
 			{
 				widthStr = document.documentElement.clientHeight;
 			}
-			
+
 			//NQ - 7-13-17 - modal may be larger than parent - so get its height instead
 			if ($(".modal.in").length > 0)
 			{
 				widthStr = 100 + Math.max(widthStr, $(".modal.in .modal-content")[0].offsetHeight);
 			}
-			
+
 			if ((widthStr != '0') && (widthStr > oldHeight1400) )
 			{
 				var finalWidth = (parseInt(widthStr) + 50 + nqAdditionalHeightPadding) + 'px';
-				
+
 				var thisIframe = window.top.document.getElementsByTagName('iframe')[0];
-				
+
 				var thisTimeStamp = $("#timeStamp").text();
-				
+
 				$("iframe", parent.document).each(function(key,val)
 				{
 					var nqCurrFrame = this;
 					var thisFrameSrc = $(this).attr("src");
-					
+
 					//	10/17/2017 - RK - check if iframe src attribute has been declared and has a value
 					if( thisFrameSrc != undefined )
 					{
-						//NQ - 7-13-17 - ignores iframes with google domain (e.g., for maps)  
+						//NQ - 7-13-17 - ignores iframes with google domain (e.g., for maps)
 						if ((thisFrameSrc.indexOf("google.com") <0) && (thisFrameSrc.indexOf("vimeo.com")  <0))
 						{
 							var frameTimeStamp = $(nqCurrFrame).contents().find("#timeStamp").text();
-						
+
 							if (thisTimeStamp == frameTimeStamp)
 							{
 								thisIframe = nqCurrFrame;
@@ -624,20 +624,20 @@ $(".cartHeaderSummary").load('../msascartdll.dll/revieworder?WMT=none&WRP=cartSu
 						}
 					}
 				});
-				
+
 				if (thisIframe != null) {
 					thisIframe.style.height = finalWidth;
 					$(thisIframe).css("height", finalWidth);
 				}
 			}
-			
+
 
 			oldHeight1400 = widthStr;
 			setTimeout(function() {
 				updateHeight1400();
 			}, heightResizeTime);
 		}
-		
+
         $(function() {
             $("#myTable").tablesorter();
             $("input,select").focus(function() {
@@ -654,7 +654,7 @@ $(".cartHeaderSummary").load('../msascartdll.dll/revieworder?WMT=none&WRP=cartSu
 
         function PreparePageDisplay() {
             //updateHeight();
-			if (window.self !== window.top) { 
+			if (window.self !== window.top) {
 				updateHeight1400();
 			}
             window.top.scroll(0, 0);

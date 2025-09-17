@@ -15,8 +15,8 @@ import importlib
 import json
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterator
-
+from typing import Any
+from collections.abc import Iterator
 
 REGISTRY_PATH = Path(__file__).resolve().parents[1] / "plugin_registry.json"
 
@@ -24,7 +24,7 @@ REGISTRY_PATH = Path(__file__).resolve().parents[1] / "plugin_registry.json"
 def _load_registry():
     if REGISTRY_PATH.exists():
         try:
-            with open(REGISTRY_PATH, "r", encoding="utf-8") as fh:
+            with open(REGISTRY_PATH, encoding="utf-8") as fh:
                 return json.load(fh)
         except Exception:
             return None
@@ -70,22 +70,21 @@ def fanout(query: Any) -> Iterator[dict]:
                 if isinstance(result, dict):
                     yield result
                 elif isinstance(result, Iterable):
-                    for item in result:
-                        yield item
+                    yield from result
             except Exception:
                 continue
 
     # Fallback to loader-based discovery
     try:
         import universal_recon.plugins.loader as loader
+
         for module in loader.load_plugins():
             # try fanout, then run
             if hasattr(module, "fanout"):
                 try:
                     items = module.fanout(query)
                     if isinstance(items, Iterable):
-                        for item in items:
-                            yield item
+                        yield from items
                 except Exception:
                     continue
             elif hasattr(module, "run"):
@@ -96,8 +95,7 @@ def fanout(query: Any) -> Iterator[dict]:
                     if isinstance(res, dict):
                         yield res
                     elif isinstance(res, Iterable):
-                        for item in res:
-                            yield item
+                        yield from res
                 except Exception:
                     continue
     except Exception:

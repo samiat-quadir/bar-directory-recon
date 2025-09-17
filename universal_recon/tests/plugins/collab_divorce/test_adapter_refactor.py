@@ -1,6 +1,6 @@
+import csv
 import io
 import tempfile
-import csv
 from pathlib import Path
 
 from plugins.collab_divorce import adapter
@@ -10,7 +10,10 @@ def test_normalize_email_basic():
     assert adapter.normalize_email(None) == ""
     assert adapter.normalize_email("") == ""
     assert adapter.normalize_email("  Foo.Bar@Example.COM ") == "foo.bar@example.com"
-    assert adapter.normalize_email("multiple@example.com;other@x.com") == "multiple@example.com"
+    assert (
+        adapter.normalize_email("multiple@example.com;other@x.com")
+        == "multiple@example.com"
+    )
     assert adapter.normalize_email("not-an-email") == ""
 
 

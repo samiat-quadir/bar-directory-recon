@@ -1,12 +1,11 @@
 # === analytics/schema_matrix_collector.py ===
 
 import json
-import os
 from pathlib import Path
 from typing import Any, Dict
 
 
-def extract_plugins_used(site_data: Dict[str, Any]) -> list[str]:
+def extract_plugins_used(site_data: dict[str, Any]) -> list[str]:
     """
     Extract unique plugin names from plugin fieldmap records.
     """
@@ -27,7 +26,7 @@ def extract_plugins_used(site_data: Dict[str, Any]) -> list[str]:
     return sorted(plugins)
 
 
-def collect_schema_matrix(output_dir: str = "output/fieldmap") -> Dict:
+def collect_schema_matrix(output_dir: str = "output/fieldmap") -> dict:
     """
     Aggregates all *_fieldmap.json files into a full schema matrix.
     Includes plugins_used[] field if possible.
@@ -52,7 +51,7 @@ def collect_schema_matrix(output_dir: str = "output/fieldmap") -> Dict:
     return matrix
 
 
-def write_schema_matrix(matrix: Dict, save_path: str, verbose: bool = False):
+def write_schema_matrix(matrix: dict, save_path: str, verbose: bool = False):
     Path(save_path).write_text(json.dumps(matrix, indent=2))
     if verbose:
         print(f"[✓] Schema matrix written to {save_path}")

@@ -1,10 +1,9 @@
 # plugins/ai_template_indexer.py
 
-from collections import defaultdict
 from typing import Dict, List
 
 
-def apply(records: List[Dict], context: str = "ai_template_indexer") -> List[Dict]:
+def apply(records: list[dict], context: str = "ai_template_indexer") -> list[dict]:
     """
     Classifies grouped records (template blocks) into profile templates:
     e.g., individual, firm, hybrid, or unknown based on field composition.

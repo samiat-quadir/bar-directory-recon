@@ -6,9 +6,9 @@ Handles git push conflicts and branch synchronization automatically.
 
 import subprocess
 import sys
-from pathlib import Path
-from typing import List, Tuple, Optional
 import time
+from pathlib import Path
+from typing import List, Optional, Tuple
 
 
 class AdvancedGitWorkflow:
@@ -18,7 +18,7 @@ class AdvancedGitWorkflow:
         self.workspace_path = workspace_path
         self.remote_name = "origin"
 
-    def run_command(self, cmd: List[str], description: str) -> Tuple[bool, str]:
+    def run_command(self, cmd: list[str], description: str) -> tuple[bool, str]:
         """Run a command and return success status and output."""
         print(f"[*] {description}...")
         try:
@@ -36,7 +36,7 @@ class AdvancedGitWorkflow:
             print(error_msg)
             return False, error_msg
 
-    def get_current_branch(self) -> Optional[str]:
+    def get_current_branch(self) -> str | None:
         """Get the current branch name."""
         success, output = self.run_command(
             ["git", "branch", "--show-current"], "Getting current branch"
@@ -153,7 +153,7 @@ class AdvancedGitWorkflow:
 
         return success
 
-    def autonomous_sync_and_push(self, commit_message: Optional[str] = None) -> bool:
+    def autonomous_sync_and_push(self, commit_message: str | None = None) -> bool:
         """Complete autonomous workflow: format, commit, and push."""
         print("[*] Starting autonomous sync and push workflow...")
 

@@ -43,7 +43,7 @@ load_dotenv()
 class DataHunter:
     """Automated property list discovery and download system."""
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         """Initialize DataHunter with configuration."""
         self.config_path = config_path or "config/data_hunter_config.json"
         self.input_dir = Path("input")
@@ -66,7 +66,7 @@ class DataHunter:
         # Downloaded files tracking
         self.downloaded_files = self._load_downloaded_files()
 
-    def _load_config(self) -> Dict:
+    def _load_config(self) -> dict:
         """Load configuration from JSON file."""
         default_config = {
             "sources": [
@@ -131,7 +131,7 @@ class DataHunter:
         config_file = Path(self.config_path)
         if config_file.exists():
             try:
-                with open(config_file, "r") as f:
+                with open(config_file) as f:
                     loaded_config = json.load(f)
                 # Merge with defaults
                 for key in default_config:
@@ -174,12 +174,12 @@ class DataHunter:
 
         return logger
 
-    def _load_downloaded_files(self) -> Dict:
+    def _load_downloaded_files(self) -> dict:
         """Load record of previously downloaded files."""
         tracking_file = self.logs_dir / "downloaded_files.json"
         if tracking_file.exists():
             try:
-                with open(tracking_file, "r") as f:
+                with open(tracking_file) as f:
                     return json.load(f)
             except Exception:
                 return {}
@@ -195,7 +195,7 @@ class DataHunter:
         """Generate hash for file URL to track downloads."""
         return hashlib.md5(url.encode()).hexdigest()
 
-    def discover_files(self, source: Dict) -> List[Tuple[str, str]]:
+    def discover_files(self, source: dict) -> list[tuple[str, str]]:
         """Discover files from a source website."""
         found_files = []
 
@@ -332,7 +332,7 @@ class DataHunter:
         )
         return False
 
-    def send_notification(self, message: str, new_files: List[str]):
+    def send_notification(self, message: str, new_files: list[str]):
         """Send notifications about new files."""
         notifications = self.config["notifications"]
 
@@ -350,7 +350,7 @@ class DataHunter:
         if notifications["slack"]["enabled"] and SLACK_AVAILABLE:
             self._send_slack_notification(message, new_files)
 
-    def _send_email_notification(self, message: str, new_files: List[str]):
+    def _send_email_notification(self, message: str, new_files: list[str]):
         """Send email notification."""
         try:
             email_config = self.config["notifications"]["email"]
@@ -382,7 +382,7 @@ class DataHunter:
         except Exception as e:
             self.logger.error(f"Failed to send email notification: {str(e)}")
 
-    def _send_slack_notification(self, message: str, new_files: List[str]):
+    def _send_slack_notification(self, message: str, new_files: list[str]):
         """Send Slack notification."""
         try:
             webhook_url = self.config["notifications"]["slack"]["webhook_url"]
@@ -411,7 +411,7 @@ class DataHunter:
         except Exception as e:
             self.logger.error(f"Failed to send Slack notification: {str(e)}")
 
-    def suggest_pipeline_processing(self, new_files: List[str]):
+    def suggest_pipeline_processing(self, new_files: list[str]):
         """Suggest pipeline processing for new files."""
         if not new_files:
             return
@@ -454,7 +454,7 @@ class DataHunter:
         with open(suggestions_file, "w") as f:
             f.write(suggestion_text)
 
-    def run_discovery(self) -> List[str]:
+    def run_discovery(self) -> list[str]:
         """Run discovery process for all enabled sources."""
         self.logger.info("Starting automated discovery run...")
         new_files = []

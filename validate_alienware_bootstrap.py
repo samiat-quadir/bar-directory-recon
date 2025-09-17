@@ -8,17 +8,17 @@ This script performs additional checks beyond the standard validate_env_state.py
 to ensure complete parity with the ASUS golden image.
 """
 
-import os
-import sys
 import json
-import subprocess
+import os
 import platform
-from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+import subprocess
+import sys
 from datetime import datetime
+from pathlib import Path
+from typing import Dict
 
 
-def get_device_info() -> Dict[str, str]:
+def get_device_info() -> dict[str, str]:
     """Get comprehensive device information."""
     return {
         "hostname": platform.node(),
@@ -32,7 +32,7 @@ def get_device_info() -> Dict[str, str]:
     }
 
 
-def check_alienware_specific_config() -> Dict[str, bool]:
+def check_alienware_specific_config() -> dict[str, bool]:
     """Check Alienware-specific configuration requirements."""
     print("🖥️  Checking Alienware-specific configuration...")
 
@@ -47,7 +47,7 @@ def check_alienware_specific_config() -> Dict[str, bool]:
     # Check device profile has required fields
     if Path(device_profile_path).exists():
         try:
-            with open(device_profile_path, "r") as f:
+            with open(device_profile_path) as f:
                 profile = json.load(f)
 
             required_fields = [
@@ -65,7 +65,9 @@ def check_alienware_specific_config() -> Dict[str, bool]:
 
             # Validate paths exist
             if "project_root" in profile:
-                checks["profile_project_root_exists"] = Path(profile["project_root"]).exists()
+                checks["profile_project_root_exists"] = Path(
+                    profile["project_root"]
+                ).exists()
             if "virtual_env" in profile:
                 checks["profile_venv_exists"] = Path(profile["virtual_env"]).exists()
 
@@ -77,7 +79,7 @@ def check_alienware_specific_config() -> Dict[str, bool]:
     env_path = Path(".env")
     if env_path.exists():
         try:
-            with open(env_path, "r") as f:
+            with open(env_path) as f:
                 env_content = f.read()
 
             checks["env_has_device_name"] = "DEVICE_NAME" in env_content
@@ -91,7 +93,7 @@ def check_alienware_specific_config() -> Dict[str, bool]:
     return checks
 
 
-def check_cross_device_compatibility() -> Dict[str, bool]:
+def check_cross_device_compatibility() -> dict[str, bool]:
     """Check cross-device compatibility features."""
     print("🔄 Checking cross-device compatibility...")
 
@@ -103,7 +105,7 @@ def check_cross_device_compatibility() -> Dict[str, bool]:
 
     for py_file in python_files[:20]:  # Check first 20 Python files
         try:
-            with open(py_file, "r", encoding="utf-8", errors="ignore") as f:
+            with open(py_file, encoding="utf-8", errors="ignore") as f:
                 content = f.read()
 
             # Look for common hardcoded path patterns
@@ -130,14 +132,18 @@ def check_cross_device_compatibility() -> Dict[str, bool]:
     checks["uses_relative_paths"] = True  # Assume true unless proven otherwise
 
     # Check device path resolver
-    resolver_files = ["tools/device_path_resolver.py", "automation/device_resolver.py", "config/path_resolver.py"]
+    resolver_files = [
+        "tools/device_path_resolver.py",
+        "automation/device_resolver.py",
+        "config/path_resolver.py",
+    ]
 
     checks["has_path_resolver"] = any(Path(f).exists() for f in resolver_files)
 
     return checks
 
 
-def check_bootstrap_artifacts() -> Dict[str, bool]:
+def check_bootstrap_artifacts() -> dict[str, bool]:
     """Check artifacts created by bootstrap process."""
     print("📋 Checking bootstrap artifacts...")
 
@@ -169,7 +175,7 @@ def check_bootstrap_artifacts() -> Dict[str, bool]:
     return checks
 
 
-def compare_with_golden_image() -> Dict[str, str]:
+def compare_with_golden_image() -> dict[str, str]:
     """Compare current setup with ASUS golden image requirements."""
     print("🏆 Comparing with ASUS golden image...")
 
@@ -180,15 +186,22 @@ def compare_with_golden_image() -> Dict[str, str]:
 
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pip", "list", "--format=json"], capture_output=True, text=True, check=True
+            [sys.executable, "-m", "pip", "list", "--format=json"],
+            capture_output=True,
+            text=True,
+            check=True,
         )
         installed_packages = json.loads(result.stdout)
         actual_count = len(installed_packages)
 
         if actual_count >= expected_packages:
-            comparison["package_count"] = f"✅ {actual_count}/{expected_packages} packages"
+            comparison["package_count"] = (
+                f"✅ {actual_count}/{expected_packages} packages"
+            )
         else:
-            comparison["package_count"] = f"❌ {actual_count}/{expected_packages} packages"
+            comparison["package_count"] = (
+                f"❌ {actual_count}/{expected_packages} packages"
+            )
 
     except Exception as e:
         comparison["package_count"] = f"❌ Error checking packages: {e}"
@@ -209,7 +222,9 @@ def compare_with_golden_image() -> Dict[str, str]:
 
     missing_golden = []
     try:
-        installed_names = {pkg["name"].lower().replace("-", "_") for pkg in installed_packages}
+        installed_names = {
+            pkg["name"].lower().replace("-", "_") for pkg in installed_packages
+        }
 
         for pkg in golden_packages:
             pkg_normalized = pkg.lower().replace("-", "_")
@@ -246,7 +261,9 @@ def generate_alienware_report():
     device_info = get_device_info()
     print(f"Device: {device_info['hostname']}")
     print(f"System: {device_info['system']} {device_info['release']}")
-    print(f"Python: {device_info['python_version']} ({device_info['python_implementation']})")
+    print(
+        f"Python: {device_info['python_version']} ({device_info['python_implementation']})"
+    )
     print(f"Working Directory: {os.getcwd()}")
     print(f"Validation Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)

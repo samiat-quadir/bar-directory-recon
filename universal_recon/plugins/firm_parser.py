@@ -1,6 +1,7 @@
 """Firm data parser plugin for universal_recon."""
 
-from typing import Any, Dict, Iterator
+from typing import Any, Dict
+from collections.abc import Iterator
 
 
 class FirmParserPlugin:
@@ -11,7 +12,7 @@ class FirmParserPlugin:
         """Return the plugin's unique identifier name."""
         return "firm_parser"
 
-    def fetch(self) -> Iterator[Dict[str, Any]]:
+    def fetch(self) -> Iterator[dict[str, Any]]:
         """Fetch raw firm data from the source.
 
         Yields:
@@ -24,28 +25,27 @@ class FirmParserPlugin:
                 "industry": "Technology",
                 "location": "San Francisco, CA",
                 "employees": 150,
-                "revenue": "10M"
+                "revenue": "10M",
             },
             {
                 "name": "Green Energy Corp",
                 "industry": "Energy",
                 "location": "Austin, TX",
                 "employees": 75,
-                "revenue": "5M"
+                "revenue": "5M",
             },
             {
                 "name": "Financial Advisors LLC",
                 "industry": "Finance",
                 "location": "New York, NY",
                 "employees": 250,
-                "revenue": "25M"
-            }
+                "revenue": "25M",
+            },
         ]
 
-        for firm in sample_firms:
-            yield firm
+        yield from sample_firms
 
-    def transform(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
+    def transform(self, raw_data: dict[str, Any]) -> dict[str, Any]:
         """Transform raw firm data into standardized format.
 
         Args:
@@ -62,11 +62,11 @@ class FirmParserPlugin:
             "employee_count": self._parse_employee_count(raw_data.get("employees")),
             "annual_revenue": self._parse_revenue(raw_data.get("revenue")),
             "data_source": "firm_parser",
-            "record_type": "company_profile"
+            "record_type": "company_profile",
         }
         return transformed
 
-    def validate(self, transformed_data: Dict[str, Any]) -> bool:
+    def validate(self, transformed_data: dict[str, Any]) -> bool:
         """Validate that transformed firm data meets quality requirements.
 
         Args:
@@ -85,7 +85,9 @@ class FirmParserPlugin:
 
         # Check employee count is reasonable (if provided)
         employee_count = transformed_data.get("employee_count")
-        if employee_count is not None and (employee_count < 0 or employee_count > 1000000):
+        if employee_count is not None and (
+            employee_count < 0 or employee_count > 1000000
+        ):
             return False
 
         return True
@@ -112,7 +114,7 @@ class FirmParserPlugin:
         return "Unknown"
 
 
-def parse_firm_data(driver: Any, context: Any) -> Dict[str, Any]:
+def parse_firm_data(driver: Any, context: Any) -> dict[str, Any]:
     """Legacy function for backward compatibility.
 
     Args:
@@ -143,11 +145,11 @@ class FirmParserPlugin:
         # Default: return an empty iterator
         return iter([])
 
-    def transform(self, record: Dict[str, Any]) -> Dict[str, Any]:
+    def transform(self, record: dict[str, Any]) -> dict[str, Any]:
         """Transform raw record into normalized form."""
         # Identity transform by default
         return record
 
-    def validate(self, record: Dict[str, Any]) -> bool:
+    def validate(self, record: dict[str, Any]) -> bool:
         """Basic validation of transformed record."""
         return isinstance(record, dict)

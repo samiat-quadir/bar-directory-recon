@@ -25,4 +25,3 @@ src\webdriver_manager.py                    177    165     7%   22-289
 -----------------------------------------------------------------------
 TOTAL                                      3360   3030    10%
 Coverage XML written to file logs\verify\coverage_now.xml
-

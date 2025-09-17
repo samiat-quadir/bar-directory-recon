@@ -51,7 +51,7 @@ class ScrapingLogger:
         self.logger.addHandler(console_handler)
 
         # Statistics tracking
-        self.stats: Dict[str, Any] = {
+        self.stats: dict[str, Any] = {
             "start_time": datetime.now(),
             "pages_processed": 0,
             "records_extracted": 0,
@@ -61,8 +61,8 @@ class ScrapingLogger:
         }
 
         # Error tracking
-        self.errors: List[Dict[str, Any]] = []
-        self.warnings: List[Dict[str, Any]] = []
+        self.errors: list[dict[str, Any]] = []
+        self.warnings: list[dict[str, Any]] = []
 
         self.info(f"Logger initialized for {name}")
 
@@ -85,7 +85,7 @@ class ScrapingLogger:
         )
 
     def error(
-        self, message: str, exception: Optional[Exception] = None, **kwargs: Any
+        self, message: str, exception: Exception | None = None, **kwargs: Any
     ) -> None:
         """Log error message."""
         self.logger.error(message, **kwargs)
@@ -110,7 +110,7 @@ class ScrapingLogger:
         self.logger.debug(message, **kwargs)
 
     def critical(
-        self, message: str, exception: Optional[Exception] = None, **kwargs: Any
+        self, message: str, exception: Exception | None = None, **kwargs: Any
     ) -> None:
         """Log critical error."""
         self.logger.critical(message, **kwargs)
@@ -142,7 +142,7 @@ class ScrapingLogger:
         else:
             self.warning(f"Page processing failed: {url}", **kwargs)
 
-    def log_record_extracted(self, record: Dict[str, Any], url: str = "") -> None:
+    def log_record_extracted(self, record: dict[str, Any], url: str = "") -> None:
         """Log successful record extraction."""
         records_count = self.stats.get("records_extracted", 0)
         if isinstance(records_count, int):
@@ -157,7 +157,7 @@ class ScrapingLogger:
         self.info(f"Screenshot saved: {screenshot_path} ({context})")
 
     def log_pagination(
-        self, current_page: int, total_pages: Optional[int] = None
+        self, current_page: int, total_pages: int | None = None
     ) -> None:
         """Log pagination progress."""
         if total_pages:
@@ -182,7 +182,7 @@ class ScrapingLogger:
         self.debug(message)
 
     def log_data_validation(
-        self, record: Dict[str, Any], valid: bool, issues: Optional[List[str]] = None
+        self, record: dict[str, Any], valid: bool, issues: list[str] | None = None
     ) -> None:
         """Log data validation results."""
         if valid:
@@ -193,7 +193,7 @@ class ScrapingLogger:
                 f"Record validation failed: {record.get('name', 'Unknown')} - {issues_str}"
             )
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get current statistics."""
         current_time = datetime.now()
         runtime = current_time - self.stats["start_time"]
@@ -242,7 +242,7 @@ Performance:
 
         return summary
 
-    def save_session_report(self, output_path: Optional[str] = None) -> str:
+    def save_session_report(self, output_path: str | None = None) -> str:
         """Save detailed session report to file."""
         if not output_path:
             report_path = (
@@ -331,7 +331,7 @@ def log_function_call(
     logger: ScrapingLogger,
     func_name: str,
     args: tuple = (),
-    kwargs: Optional[dict] = None,
+    kwargs: dict | None = None,
 ) -> None:
     """Log function call with parameters."""
     kwargs = kwargs or {}
