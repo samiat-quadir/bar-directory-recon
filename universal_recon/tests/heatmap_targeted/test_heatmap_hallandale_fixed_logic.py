@@ -1,4 +1,5 @@
 import importlib
+
 import pytest
 
 
@@ -16,7 +17,12 @@ def test_pipeline_dedup_and_idempotent():
     """Test pipeline handles deduplication and is idempotent"""
     try:
         m = importlib.import_module("hallandale_pipeline_fixed")
-        fn = getattr(m, "process", None) or getattr(m, "run", None) or getattr(m, "transform", None) or getattr(m, "pipeline", None)
+        fn = (
+            getattr(m, "process", None)
+            or getattr(m, "run", None)
+            or getattr(m, "transform", None)
+            or getattr(m, "pipeline", None)
+        )
         if fn is None:
             pytest.skip("no pipeline entrypoint found")
 
@@ -50,7 +56,12 @@ def test_pipeline_handles_empty_data():
     """Test pipeline handles empty or invalid data"""
     try:
         m = importlib.import_module("hallandale_pipeline_fixed")
-        fn = getattr(m, "process", None) or getattr(m, "run", None) or getattr(m, "transform", None) or getattr(m, "pipeline", None)
+        fn = (
+            getattr(m, "process", None)
+            or getattr(m, "run", None)
+            or getattr(m, "transform", None)
+            or getattr(m, "pipeline", None)
+        )
         if fn is None:
             pytest.skip("no pipeline entrypoint found")
 
@@ -60,7 +71,11 @@ def test_pipeline_handles_empty_data():
             out_none = fn(None) if fn.__code__.co_argcount > 0 else None
 
             # Should handle gracefully
-            assert out_empty is None or out_empty == [] or isinstance(out_empty, (list, dict))
+            assert (
+                out_empty is None
+                or out_empty == []
+                or isinstance(out_empty, (list, dict))
+            )
             if out_none is not None:
                 assert isinstance(out_none, (list, dict, type(None)))
 

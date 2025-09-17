@@ -9,4 +9,3 @@ Generated: 2025-08-27_15-37-37
 * Tasks found: 36
 * Launch configs: 0
 * PowerShell profile suspicious lines (any): 1
-

@@ -31,7 +31,7 @@ legacy_intake/
 ## Inventory Features
 The `INVENTORY.json` file contains:
 - File paths and names
-- File sizes and extensions  
+- File sizes and extensions
 - SHA1 hashes (first 2MB for large files)
 - Creation and modification timestamps
 - Source root tracking

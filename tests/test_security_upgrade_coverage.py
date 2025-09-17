@@ -2,6 +2,7 @@
 Security upgrade coverage validation tests.
 These tests ensure our security upgrades maintain code coverage standards.
 """
+
 import os
 import sys
 from pathlib import Path
@@ -13,13 +14,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 def test_security_manager_coverage():
     """Test SecurityManager to maintain coverage during security upgrades."""
-    from security_manager import SecurityManager, get_security_manager, get_secret
+    from security_manager import SecurityManager, get_secret, get_security_manager
 
     # Test initialization
     manager = SecurityManager()
     assert manager is not None
-    assert hasattr(manager, 'fallback_mode')
-
+    assert hasattr(manager, "fallback_mode")
 
     # Test config methods
     email_config = manager.get_email_config()
@@ -42,44 +42,46 @@ def test_security_manager_coverage():
     singleton = get_security_manager()
     assert singleton is not None
 
-
     # Test secret retrieval with fallback
-    with patch.dict(os.environ, {'TEST_SECRET': 'test_value'}):
-        secret_value = get_secret('non-existent', 'TEST_SECRET')
-        assert secret_value == 'test_value'
+    with patch.dict(os.environ, {"TEST_SECRET": "test_value"}):
+        secret_value = get_secret("non-existent", "TEST_SECRET")
+        assert secret_value == "test_value"
 
 
 def test_universal_recon_imports():
     """Test universal_recon package imports for coverage."""
     import universal_recon
 
-
     # Test main package
-    assert hasattr(universal_recon, '__name__')
+    assert hasattr(universal_recon, "__name__")
 
     # Test analytics subpackage
     from universal_recon import analytics
-    assert hasattr(analytics, '__name__')
+
+    assert hasattr(analytics, "__name__")
 
     # Test specific analytics modules
     from universal_recon.analytics import domain_anomaly_flagger
-    assert hasattr(domain_anomaly_flagger, '__name__')
+
+    assert hasattr(domain_anomaly_flagger, "__name__")
 
     from universal_recon.analytics import overlay_visualizer
-    assert hasattr(overlay_visualizer, '__name__')
+
+    assert hasattr(overlay_visualizer, "__name__")
 
     # Test core modules
     from universal_recon.core import logger as ur_logger
-    assert hasattr(ur_logger, '__name__')
+
+    assert hasattr(ur_logger, "__name__")
 
     from universal_recon.core import multisite_config_manager as ur_config
-    assert hasattr(ur_config, '__name__')
+
+    assert hasattr(ur_config, "__name__")
 
 
 def test_property_validation_coverage():
     """Test property_validation with real methods."""
     from property_validation import PropertyValidation
-
 
     validator = PropertyValidation()
     assert validator is not None
@@ -87,7 +89,7 @@ def test_property_validation_coverage():
     # Test actual methods
     test_properties = [{"address": "123 Test St", "price": 500000}]
 
-    if hasattr(validator, 'validate_properties'):
+    if hasattr(validator, "validate_properties"):
         result = validator.validate_properties(test_properties)
         assert result is not None
 
@@ -95,24 +97,26 @@ def test_property_validation_coverage():
 def test_basic_imports():
     """Test basic module imports for coverage maintenance."""
     import sys
-    sys.path.insert(0, 'src')
-    import config_loader
-    assert hasattr(config_loader, '__name__')
 
+    sys.path.insert(0, "src")
+    import config_loader
+
+    assert hasattr(config_loader, "__name__")
 
     import data_hunter
-    assert hasattr(data_hunter, '__name__')
+
+    assert hasattr(data_hunter, "__name__")
 
     import logger
-    assert hasattr(logger, '__name__')
 
+    assert hasattr(logger, "__name__")
 
     import unified_schema
-    assert hasattr(unified_schema, '__name__')
+
+    assert hasattr(unified_schema, "__name__")
 
 
 if __name__ == "__main__":
     import pytest
 
     pytest.main([__file__, "-v"])
-

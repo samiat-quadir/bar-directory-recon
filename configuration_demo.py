@@ -57,11 +57,15 @@ def demo_template_generation():
 
     try:
         # Generate automation config template
-        template_path = generate_config_template("automation", "automation/config.template.yaml")
+        template_path = generate_config_template(
+            "automation", "automation/config.template.yaml"
+        )
         print(f"✅ Generated automation template: {template_path}")
 
         # Generate list discovery template
-        template_path = generate_config_template("list_discovery", "list_discovery/config.template.yaml")
+        template_path = generate_config_template(
+            "list_discovery", "list_discovery/config.template.yaml"
+        )
         print(f"✅ Generated list discovery template: {template_path}")
 
     except Exception as e:
@@ -83,7 +87,9 @@ def demo_dashboard_generation(config):
 
         # Add some sample data
         dashboard.update_site_status("example-bar.com", "success", 2.5)
-        dashboard.update_site_status("another-bar.com", "failed", None, "Connection timeout")
+        dashboard.update_site_status(
+            "another-bar.com", "failed", None, "Connection timeout"
+        )
         dashboard.update_site_status("test-bar.com", "running")
 
         # Generate dashboard
@@ -134,7 +140,9 @@ pipeline:
         config = loader.load_automation_config(str(temp_config))
 
         print("✅ Environment variable substitution working:")
-        print(f"   - Discord webhook: {'✅ Set' if config.notifications.discord_webhook else '❌ Not set'}")
+        print(
+            f"   - Discord webhook: {'✅ Set' if config.notifications.discord_webhook else '❌ Not set'}"
+        )
         print(f"   - Email enabled: {config.notifications.email.enabled}")
         print(f"   - Pipeline timeout: {config.pipeline.timeout} seconds")
 
@@ -145,7 +153,11 @@ pipeline:
         print(f"❌ Environment variable demo error: {e}")
     finally:
         # Clean up environment variables
-        for key in ["AUTOMATION_DISCORD_WEBHOOK", "AUTOMATION_EMAIL_ENABLED", "AUTOMATION_PIPELINE_TIMEOUT"]:
+        for key in [
+            "AUTOMATION_DISCORD_WEBHOOK",
+            "AUTOMATION_EMAIL_ENABLED",
+            "AUTOMATION_PIPELINE_TIMEOUT",
+        ]:
             os.environ.pop(key, None)
 
 

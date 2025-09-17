@@ -21,38 +21,38 @@ from typing import List
 def has_bom(file_path: Path) -> bool:
     """Check if file starts with UTF-8 BOM."""
     try:
-        with open(file_path, 'rb') as f:
-            return f.read(3) == b'\xef\xbb\xbf'
-    except (IOError, OSError):
+        with open(file_path, "rb") as f:
+            return f.read(3) == b"\xef\xbb\xbf"
+    except OSError:
         return False
 
 
 def remove_bom(file_path: Path) -> bool:
     """Remove UTF-8 BOM from file. Returns True if BOM was removed."""
     try:
-        with open(file_path, 'rb') as f:
+        with open(file_path, "rb") as f:
             content = f.read()
 
-        if content.startswith(b'\xef\xbb\xbf'):
-            with open(file_path, 'wb') as f:
+        if content.startswith(b"\xef\xbb\xbf"):
+            with open(file_path, "wb") as f:
                 f.write(content[3:])  # Skip BOM bytes
             return True
         return False
-    except (IOError, OSError) as e:
+    except OSError as e:
         print(f"Error processing {file_path}: {e}")
         return False
 
 
-def scan_files(root_dir: Path) -> List[Path]:
+def scan_files(root_dir: Path) -> list[Path]:
     """Find YAML and config files that might have BOM issues."""
     patterns = [
-        '**/*.yml',
-        '**/*.yaml',
-        '**/*.json',
-        '**/prometheus.yml',
-        '**/docker-compose.yml',
-        '**/alertmanager.yml',
-        '**/.env*'
+        "**/*.yml",
+        "**/*.yaml",
+        "**/*.json",
+        "**/prometheus.yml",
+        "**/docker-compose.yml",
+        "**/alertmanager.yml",
+        "**/.env*",
     ]
 
     files: set[Path] = set()
@@ -63,9 +63,15 @@ def scan_files(root_dir: Path) -> List[Path]:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Detect and optionally fix UTF-8 BOM in config files')
-    parser.add_argument('--fix', action='store_true', help='Remove BOMs from detected files')
-    parser.add_argument('--directory', default='.', help='Directory to scan (default: current)')
+    parser = argparse.ArgumentParser(
+        description="Detect and optionally fix UTF-8 BOM in config files"
+    )
+    parser.add_argument(
+        "--fix", action="store_true", help="Remove BOMs from detected files"
+    )
+    parser.add_argument(
+        "--directory", default=".", help="Directory to scan (default: current)"
+    )
     args = parser.parse_args()
 
     root_dir = Path(args.directory).resolve()
@@ -108,5 +114,5 @@ def main():
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

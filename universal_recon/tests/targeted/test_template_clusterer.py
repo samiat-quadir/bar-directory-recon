@@ -1,4 +1,5 @@
 """Test template clusterer utility functionality."""
+
 from universal_recon.utils.template_clusterer import generate_template
 
 
@@ -22,7 +23,7 @@ def test_generate_template_multiple_records():
     records = [
         {"type": "email", "value": "test1@example.com", "url": "http://test1.com"},
         {"type": "email", "value": "test2@example.com", "url": "http://test2.com"},
-        {"type": "phone", "value": "555-1234", "url": "http://test1.com"}
+        {"type": "phone", "value": "555-1234", "url": "http://test1.com"},
     ]
     result = generate_template(records)
     assert isinstance(result, list)

@@ -1,4 +1,5 @@
 import importlib
+
 import pytest
 
 
@@ -16,7 +17,11 @@ def test_next_url_has_page_param():
     """Test pagination URL generation includes page parameters"""
     try:
         m = importlib.import_module("pagination_manager")
-        fn = getattr(m, "build_next_url", None) or getattr(m, "next_page", None) or getattr(m, "advance", None)
+        fn = (
+            getattr(m, "build_next_url", None)
+            or getattr(m, "next_page", None)
+            or getattr(m, "advance", None)
+        )
         if fn is None:
             pytest.skip("no pagination entrypoint found")
 
@@ -46,7 +51,11 @@ def test_pagination_boundary_handling():
     """Test pagination handles boundary conditions"""
     try:
         m = importlib.import_module("pagination_manager")
-        fn = getattr(m, "build_next_url", None) or getattr(m, "next_page", None) or getattr(m, "advance", None)
+        fn = (
+            getattr(m, "build_next_url", None)
+            or getattr(m, "next_page", None)
+            or getattr(m, "advance", None)
+        )
         if fn is None:
             pytest.skip("no pagination entrypoint found")
 
@@ -54,10 +63,18 @@ def test_pagination_boundary_handling():
         try:
             url_zero = fn("https://ex.com/api", 0)
             url_neg = fn("https://ex.com/api", -1)
-            
+
             # Should handle gracefully - either return None, empty, or fix to page 1
-            assert url_zero is None or "page=0" not in str(url_zero) or "page=1" in str(url_zero)
-            assert url_neg is None or "page=-1" not in str(url_neg) or "page=1" in str(url_neg)
+            assert (
+                url_zero is None
+                or "page=0" not in str(url_zero)
+                or "page=1" in str(url_zero)
+            )
+            assert (
+                url_neg is None
+                or "page=-1" not in str(url_neg)
+                or "page=1" in str(url_neg)
+            )
         except Exception:
             # Exception handling is acceptable
             assert True

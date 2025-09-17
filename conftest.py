@@ -33,12 +33,7 @@ if SRC_DIR not in sys.path:
 try:
     _orig_rmtree = shutil.rmtree
 
-    def _safe_rmtree(
-        path,
-        ignore_errors=False,
-        onerror=None,
-        **kwargs
-    ):
+    def _safe_rmtree(path, ignore_errors=False, onerror=None, **kwargs):
         """Retry a few times for transient PermissionError (WinError 32).
 
         If retries are exhausted and ignore_errors is True, return silently.
@@ -52,15 +47,15 @@ try:
                 # Handle both old and new versions of shutil.rmtree
                 # In older Python versions, onexc and dir_fd might not exist
                 rmtree_kwargs = {
-                    'path': path,
-                    'ignore_errors': ignore_errors,
-                    'onerror': onerror
+                    "path": path,
+                    "ignore_errors": ignore_errors,
+                    "onerror": onerror,
                 }
                 # Only pass kwargs that are accepted by the original function
                 for key, value in kwargs.items():
                     if key in inspect.signature(_orig_rmtree).parameters:
                         rmtree_kwargs[key] = value
-                
+
                 return _orig_rmtree(**rmtree_kwargs)
             except PermissionError as exc:
                 # On Windows, winerror == 32 corresponds to "file in use".

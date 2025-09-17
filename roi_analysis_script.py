@@ -4,7 +4,6 @@ import subprocess
 
 import xmltodict
 
-
 cov_xml = pathlib.Path("logs/verify/coverage_now.xml").read_text()
 cov = xmltodict.parse(cov_xml)
 lines = {}
@@ -39,10 +38,13 @@ if "packages" in cov["coverage"]:
 
 # radon cc
 try:
-    cc = subprocess.run(["radon", "cc", "-s", "-j", "src"], capture_output=True, text=True).stdout
+    cc = subprocess.run(
+        ["radon", "cc", "-s", "-j", "src"], capture_output=True, text=True
+    ).stdout
     ccj = json.loads(cc) if cc else {}
 except Exception:
     ccj = {}
+
 
 def score(fn):
     total, covered = lines.get(fn, (0, 0))
@@ -50,7 +52,10 @@ def score(fn):
     comp = 0
     for k, v in ccj.items():
         if k.endswith(fn) or fn.endswith(k):
-            comp += sum({"A": 1, "B": 2, "C": 3, "D": 5, "E": 8, "F": 13}.get(i["rank"], 1) for i in v)
+            comp += sum(
+                {"A": 1, "B": 2, "C": 3, "D": 5, "E": 8, "F": 13}.get(i["rank"], 1)
+                for i in v
+            )
     return (gap * (1 + comp)), gap, comp, total, covered
 
 
@@ -67,7 +72,7 @@ top = [
         "gap": c[2],
         "complexity": c[3],
         "total": c[4],
-        "covered": c[5]
+        "covered": c[5],
     }
     for c in candidates[:10]
 ]

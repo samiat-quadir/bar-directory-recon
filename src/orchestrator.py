@@ -17,6 +17,7 @@ from data_extractor import DataExtractor
 from logger import create_logger
 from pagination_manager import PaginationManager
 from unified_schema import SchemaMapper
+
 # webdriver_manager may be an external package or a local module in this repo.
 # Import defensively: prefer local module if present to avoid 'is not a package' errors
 try:
@@ -35,6 +36,7 @@ except Exception:
         def quit(self):
             return
 
+
 # Google Sheets API scopes
 GOOGLE_SHEETS_SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -45,7 +47,7 @@ GOOGLE_SHEETS_SCOPES = [
 class ScrapingOrchestrator:
     """Main orchestrator for unified scraping operations."""
 
-    def __init__(self, config_path: Union[str, Path]):
+    def __init__(self, config_path: str | Path):
         """Initialize the scraping orchestrator."""
         self.config_loader = ConfigLoader()
         self.config = self.config_loader.load_config(config_path)
@@ -57,14 +59,14 @@ class ScrapingOrchestrator:
         )
 
         # Initialize managers (will be created when needed)
-        self.driver_manager: Optional[WebDriverManager] = None
-        self.pagination_manager: Optional[PaginationManager] = None
-        self.data_extractor: Optional[DataExtractor] = None
+        self.driver_manager: WebDriverManager | None = None
+        self.pagination_manager: PaginationManager | None = None
+        self.data_extractor: DataExtractor | None = None
 
         # Results storage
-        self.extracted_data: List[Dict[str, Any]] = []
-        self.processed_urls: List[str] = []
-        self.failed_urls: List[str] = []
+        self.extracted_data: list[dict[str, Any]] = []
+        self.processed_urls: list[str] = []
+        self.failed_urls: list[str] = []
 
         self.logger.log_config_loaded(str(config_path), self.config.name)
 
@@ -136,7 +138,7 @@ class ScrapingOrchestrator:
             self.logger.error("Failed to initialize managers", exception=e)
             raise
 
-    def _ensure_list(self, value: Any) -> List[str]:
+    def _ensure_list(self, value: Any) -> list[str]:
         """Ensure value is a list of strings."""
         if isinstance(value, str):
             return [value]
@@ -145,7 +147,7 @@ class ScrapingOrchestrator:
         else:
             return []
 
-    def run_listing_phase(self) -> List[str]:
+    def run_listing_phase(self) -> list[str]:
         """Execute the listing phase to collect URLs."""
         self.logger.info("Starting listing phase")
 
@@ -196,7 +198,7 @@ class ScrapingOrchestrator:
             self.logger.log_extraction_phase("listing", start_url, success=False)
             return []
 
-    def run_detail_phase(self, urls: List[str]) -> List[Dict[str, Any]]:
+    def run_detail_phase(self, urls: list[str]) -> list[dict[str, Any]]:
         """Execute the detail phase to extract data from URLs."""
         self.logger.info(f"Starting detail phase with {len(urls)} URLs")
 
@@ -248,7 +250,7 @@ class ScrapingOrchestrator:
 
         return all_data
 
-    def extract_from_current_page(self) -> List[Dict[str, Any]]:
+    def extract_from_current_page(self) -> list[dict[str, Any]]:
         """Extract data from current page (single-phase scraping)."""
         try:
             return self.data_extractor.extract_from_page(self.driver_manager)
@@ -256,7 +258,7 @@ class ScrapingOrchestrator:
             self.logger.error("Failed to extract from current page", exception=e)
             return []
 
-    def run_scraping(self) -> Dict[str, Any]:
+    def run_scraping(self) -> dict[str, Any]:
         """Run the complete scraping process."""
         start_time = datetime.now()
         self.logger.info(f"Starting scraping session: {self.config.name}")
@@ -316,7 +318,7 @@ class ScrapingOrchestrator:
             # Close logger
             self.logger.close()
 
-    def _save_results(self, start_time: datetime) -> Dict[str, Any]:
+    def _save_results(self, start_time: datetime) -> dict[str, Any]:
         """Save results to configured outputs using unified schema."""
         try:
             output_files = []
@@ -403,7 +405,7 @@ class ScrapingOrchestrator:
             return self._create_result_summary(start_time, success=False)
 
     def _save_to_google_sheets(
-        self, df: pd.DataFrame, google_config: Dict[str, Any]
+        self, df: pd.DataFrame, google_config: dict[str, Any]
     ) -> None:
         """Save data to Google Sheets using unified schema."""
         try:
@@ -502,8 +504,8 @@ class ScrapingOrchestrator:
         self,
         start_time: datetime,
         success: bool,
-        output_files: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        output_files: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Create a summary of the scraping results."""
         end_time = datetime.now()
         runtime = end_time - start_time
@@ -545,7 +547,7 @@ class ScrapingOrchestrator:
         base_url: str,
         list_selector: str = ".listing-item",
         max_pages: int = 5,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Quick scraping with minimal configuration."""
         try:
             # Create temporary config
@@ -576,7 +578,7 @@ class ScrapingOrchestrator:
 
 
 # Convenience functions for direct usage
-def scrape_directory(config_path: Union[str, Path]) -> Dict[str, Any]:
+def scrape_directory(config_path: str | Path) -> dict[str, Any]:
     """Scrape a directory using configuration file."""
     orchestrator = ScrapingOrchestrator(config_path)
     return orchestrator.run_scraping()
@@ -584,7 +586,7 @@ def scrape_directory(config_path: Union[str, Path]) -> Dict[str, Any]:
 
 def quick_scrape(
     name: str, base_url: str, list_selector: str = ".listing-item", max_pages: int = 5
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Quick scraping with minimal setup."""
     return ScrapingOrchestrator.quick_scrape(name, base_url, list_selector, max_pages)
 

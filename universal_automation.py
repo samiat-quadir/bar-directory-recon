@@ -22,6 +22,7 @@ from lead_enrichment_plugin import LeadEnrichmentEngine
 try:
     from google.oauth2.service_account import Credentials
     from googleapiclient.discovery import build
+
     GOOGLE_SHEETS_AVAILABLE = True
 except ImportError:
     GOOGLE_SHEETS_AVAILABLE = False
@@ -40,11 +41,8 @@ log_file = logs_dir / f"lead_automation_{timestamp}.log"
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(log_file),
-        logging.StreamHandler(sys.stdout)
-    ]
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler(log_file), logging.StreamHandler(sys.stdout)],
 )
 logger = logging.getLogger(__name__)
 logger.info(f"Logging initialized. Log file: {log_file}")
@@ -58,7 +56,7 @@ AVAILABLE_INDUSTRIES = [
     "auto_dealers",
     "home_services",
     "professional_services",
-    "design_services"
+    "design_services",
 ]
 
 
@@ -67,7 +65,9 @@ class UniversalLeadAutomation:
 
     def __init__(self):
         self.script_dir = script_dir
-        self.plugin_registry_path = self.script_dir / "universal_recon" / "plugin_registry.json"
+        self.plugin_registry_path = (
+            self.script_dir / "universal_recon" / "plugin_registry.json"
+        )
         self.outputs_dir = self.script_dir / "outputs"
         self.logs_dir = self.script_dir / "logs"
         self.plugins = self.load_plugin_registry()
@@ -76,16 +76,16 @@ class UniversalLeadAutomation:
         self.outputs_dir.mkdir(exist_ok=True)
         self.logs_dir.mkdir(exist_ok=True)
 
-    def load_plugin_registry(self) -> List[Dict[str, Any]]:
+    def load_plugin_registry(self) -> list[dict[str, Any]]:
         """Load the plugin registry."""
         try:
-            with open(self.plugin_registry_path, 'r', encoding='utf-8') as f:
+            with open(self.plugin_registry_path, encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
             logger.error(f"Error loading plugin registry: {e}")
             return []
 
-    def get_available_industries(self) -> List[str]:
+    def get_available_industries(self) -> list[str]:
         """Get list of available industries from plugin registry."""
         industries = []
         for plugin in self.plugins:
@@ -93,7 +93,7 @@ class UniversalLeadAutomation:
                 industries.append(plugin["industry"])
         return sorted(list(set(industries)))
 
-    def filter_plugins_by_industry(self, industry: str) -> List[Dict[str, Any]]:
+    def filter_plugins_by_industry(self, industry: str) -> list[dict[str, Any]]:
         """Filter plugins by industry."""
         if industry == "all":
             return self.plugins
@@ -107,24 +107,30 @@ class UniversalLeadAutomation:
 
     def generate_tag(self, city: str, industry: str) -> str:
         """Generate a tag based on city and industry."""
-        city_clean = city.lower().replace(' ', '_').replace('-', '_') if city else "unknown"
-        industry_clean = industry.lower().replace(' ', '_')
+        city_clean = (
+            city.lower().replace(" ", "_").replace("-", "_") if city else "unknown"
+        )
+        industry_clean = industry.lower().replace(" ", "_")
         return f"{city_clean}_{industry_clean}"
 
     def create_output_directory(self, industry: str, city: str) -> Path:
         """Create organized output directory structure."""
         industry_dir = self.outputs_dir / industry
-        city_dir = industry_dir / (city.lower().replace(' ', '_') if city else "unknown_city")
+        city_dir = industry_dir / (
+            city.lower().replace(" ", "_") if city else "unknown_city"
+        )
 
         city_dir.mkdir(parents=True, exist_ok=True)
         return city_dir
 
-    def run_plugin(self, plugin: Dict[str, Any], config: Dict[str, Any]) -> Dict[str, Any]:
+    def run_plugin(
+        self, plugin: dict[str, Any], config: dict[str, Any]
+    ) -> dict[str, Any]:
         """Run a specific plugin."""
         try:
             # Import the plugin module
             module_path = plugin["module"]
-            parts = module_path.split('.')
+            parts = module_path.split(".")
 
             # Dynamic import
             module = __import__(module_path, fromlist=[parts[-1]])
@@ -148,15 +154,15 @@ class UniversalLeadAutomation:
                 "leads": [],
                 "count": 0,
                 "plugin_name": plugin["site_name"],
-                "industry": plugin.get("industry", "unknown")
+                "industry": plugin.get("industry", "unknown"),
             }
 
     def save_leads_to_csv(
         self,
-        leads: List[Dict[str, Any]],
+        leads: list[dict[str, Any]],
         industry: str,
         city: str,
-        filename_prefix: str = "leads"
+        filename_prefix: str = "leads",
     ) -> Path:
         """Save leads to organized CSV structure."""
 
@@ -179,7 +185,9 @@ class UniversalLeadAutomation:
         logger.info(f"Saved {len(leads)} leads to: {output_path}")
         return output_path
 
-    def setup_google_sheets(self, credentials_path: Optional[str] = None) -> Optional[Any]:
+    def setup_google_sheets(
+        self, credentials_path: str | None = None
+    ) -> Any | None:
         """Setup Google Sheets API client (optional)."""
         if not GOOGLE_SHEETS_AVAILABLE:
             logger.warning(
@@ -189,10 +197,14 @@ class UniversalLeadAutomation:
             return None
 
         if not credentials_path:
-            credentials_path = str(self.script_dir / "config" / "google_service_account.json")
+            credentials_path = str(
+                self.script_dir / "config" / "google_service_account.json"
+            )
 
         if not os.path.exists(credentials_path):
-            logger.warning(f"Google Sheets credentials not found at: {credentials_path}")
+            logger.warning(
+                f"Google Sheets credentials not found at: {credentials_path}"
+            )
             return None
 
         try:
@@ -200,13 +212,15 @@ class UniversalLeadAutomation:
             from googleapiclient.discovery import build
 
             # Define the required scopes
-            SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+            SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
             # Load credentials
-            credentials = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
+            credentials = Credentials.from_service_account_file(
+                credentials_path, scopes=SCOPES
+            )
 
             # Build the service
-            service = build('sheets', 'v4', credentials=credentials)
+            service = build("sheets", "v4", credentials=credentials)
             logger.info("Google Sheets API client initialized successfully")
             return service
 
@@ -216,9 +230,9 @@ class UniversalLeadAutomation:
 
     def upload_to_google_sheets(
         self,
-        leads: List[Dict[str, Any]],
+        leads: list[dict[str, Any]],
         sheet_id: str,
-        sheet_name: Optional[str] = None
+        sheet_name: str | None = None,
     ) -> bool:
         """Upload leads to Google Sheets (optional functionality)."""
 
@@ -246,15 +260,11 @@ class UniversalLeadAutomation:
             try:
                 # Create new sheet
                 body = {
-                    'requests': [{
-                        'addSheet': {
-                            'properties': {
-                                'title': sheet_name
-                            }
-                        }
-                    }]
+                    "requests": [{"addSheet": {"properties": {"title": sheet_name}}}]
                 }
-                service.spreadsheets().batchUpdate(spreadsheetId=sheet_id, body=body).execute()
+                service.spreadsheets().batchUpdate(
+                    spreadsheetId=sheet_id, body=body
+                ).execute()
                 logger.info(f"Created new sheet: {sheet_name}")
             except Exception:
                 # Sheet might already exist, continue with data upload
@@ -262,16 +272,19 @@ class UniversalLeadAutomation:
 
             # Upload data
             range_name = f"{sheet_name}!A1"
-            body = {
-                'values': values
-            }
+            body = {"values": values}
 
-            result = service.spreadsheets().values().update(
-                spreadsheetId=sheet_id,
-                range=range_name,
-                valueInputOption='RAW',
-                body=body
-            ).execute()
+            result = (
+                service.spreadsheets()
+                .values()
+                .update(
+                    spreadsheetId=sheet_id,
+                    range=range_name,
+                    valueInputOption="RAW",
+                    body=body,
+                )
+                .execute()
+            )
 
             logger.info(f"Successfully uploaded {len(leads)} leads to Google Sheets")
             return True
@@ -288,14 +301,14 @@ class UniversalLeadAutomation:
         max_records: int = 50,
         test_mode: bool = True,
         keywords: str = "",
-        google_sheet_id: Optional[str] = None,
-        google_sheet_name: Optional[str] = None,
+        google_sheet_id: str | None = None,
+        google_sheet_name: str | None = None,
         enable_enrichment: bool = True,
-        hunter_api_key: Optional[str] = None,
-        numverify_api_key: Optional[str] = None,
+        hunter_api_key: str | None = None,
+        numverify_api_key: str | None = None,
         export_format: str = "both",
-        credentials_path: Optional[str] = None
-    ) -> Dict[str, Any]:
+        credentials_path: str | None = None,
+    ) -> dict[str, Any]:
         """Scrape leads for a specific industry with Phase 4 enrichment."""
 
         # Filter plugins by industry
@@ -306,7 +319,7 @@ class UniversalLeadAutomation:
                 "success": False,
                 "error": f"No plugins found for industry: {industry}",
                 "leads": [],
-                "count": 0
+                "count": 0,
             }
 
         all_leads = []
@@ -320,7 +333,7 @@ class UniversalLeadAutomation:
             "test_mode": test_mode,
             "keywords": keywords,
             "google_sheet_id": google_sheet_id,
-            "google_sheet_name": google_sheet_name
+            "google_sheet_name": google_sheet_name,
         }
 
         # Run each plugin for the industry
@@ -338,17 +351,21 @@ class UniversalLeadAutomation:
                         lead["Tag"] = self.generate_tag(city, industry)
 
                 all_leads.extend(result["leads"])
-                results_summary.append({
-                    "plugin": plugin["site_name"],
-                    "count": result["count"],
-                    "status": "success"
-                })
+                results_summary.append(
+                    {
+                        "plugin": plugin["site_name"],
+                        "count": result["count"],
+                        "status": "success",
+                    }
+                )
             else:
-                results_summary.append({
-                    "plugin": plugin["site_name"],
-                    "count": 0,
-                    "status": f"failed: {result.get('error', 'unknown error')}"
-                })
+                results_summary.append(
+                    {
+                        "plugin": plugin["site_name"],
+                        "count": 0,
+                        "status": f"failed: {result.get('error', 'unknown error')}",
+                    }
+                )
 
         # Phase 4: Lead enrichment
         enriched_leads = []
@@ -357,7 +374,9 @@ class UniversalLeadAutomation:
                 enricher = LeadEnrichmentEngine(hunter_api_key, numverify_api_key)
                 enriched_objects = enricher.enrich_leads_batch(all_leads)
                 enriched_leads = [lead.__dict__ for lead in enriched_objects]
-                logger.info(f"Enriched {len(enriched_leads)} leads with advanced scoring")
+                logger.info(
+                    f"Enriched {len(enriched_leads)} leads with advanced scoring"
+                )
             except Exception as e:
                 logger.warning(f"Lead enrichment failed, using raw data: {e}")
                 enriched_leads = all_leads
@@ -379,58 +398,85 @@ class UniversalLeadAutomation:
                 output_path = self.save_leads_to_csv(enriched_leads, industry, city)
 
             # Upload to Google Sheets if requested and configured
-            if should_export_sheets and (google_sheet_id or os.getenv('DEFAULT_GOOGLE_SHEET_ID')):
+            if should_export_sheets and (
+                google_sheet_id or os.getenv("DEFAULT_GOOGLE_SHEET_ID")
+            ):
                 try:
                     # Use provided sheet ID or fall back to environment variable
-                    sheet_id = google_sheet_id or os.getenv('DEFAULT_GOOGLE_SHEET_ID')
+                    sheet_id = google_sheet_id or os.getenv("DEFAULT_GOOGLE_SHEET_ID")
 
                     if not sheet_id:
-                        logger.warning("No Google Sheet ID provided - skipping Google Sheets export")
+                        logger.warning(
+                            "No Google Sheet ID provided - skipping Google Sheets export"
+                        )
                     else:
                         # Initialize Google Sheets integration with custom credentials if provided
                         from google_sheets_integration import GoogleSheetsIntegration
 
                         if credentials_path:
-                            sheets_integration = GoogleSheetsIntegration(credentials_path=credentials_path)
+                            sheets_integration = GoogleSheetsIntegration(
+                                credentials_path=credentials_path
+                            )
                         else:
                             sheets_integration = GoogleSheetsIntegration()
 
                         # Export using the integration
                         if sheets_integration.service:
-                            sheet_name_final = google_sheet_name or f"{industry}_{city}_leads"
+                            sheet_name_final = (
+                                google_sheet_name or f"{industry}_{city}_leads"
+                            )
 
                             # Setup sheet headers and formatting
-                            sheets_integration.setup_sheet_headers(sheet_id, sheet_name_final)
+                            sheets_integration.setup_sheet_headers(
+                                sheet_id, sheet_name_final
+                            )
 
                             # Batch upsert leads with deduplication
-                            inserted, updated, skipped = sheets_integration.batch_upsert_leads(
-                                sheet_id, enriched_leads, sheet_name_final, avoid_duplicates=True
+                            inserted, updated, skipped = (
+                                sheets_integration.batch_upsert_leads(
+                                    sheet_id,
+                                    enriched_leads,
+                                    sheet_name_final,
+                                    avoid_duplicates=True,
+                                )
                             )
 
                             google_sheets_stats = {
-                                'inserted': inserted,
-                                'updated': updated,
-                                'skipped': skipped,
-                                'total_processed': len(enriched_leads)
+                                "inserted": inserted,
+                                "updated": updated,
+                                "skipped": skipped,
+                                "total_processed": len(enriched_leads),
                             }
 
                             google_sheets_uploaded = inserted > 0 or updated > 0
 
                             if google_sheets_uploaded:
-                                sheet_url = sheets_integration.get_sheet_url(sheet_id, sheet_name_final)
-                                logger.info(f"✅ Google Sheets export successful: {sheet_url}")
+                                sheet_url = sheets_integration.get_sheet_url(
+                                    sheet_id, sheet_name_final
+                                )
+                                logger.info(
+                                    f"✅ Google Sheets export successful: {sheet_url}"
+                                )
                                 print(f"📊 Google Sheets Link: {sheet_url}")
 
-                            logger.info(f"Google Sheets export stats: {google_sheets_stats}")
+                            logger.info(
+                                f"Google Sheets export stats: {google_sheets_stats}"
+                            )
                         else:
-                            logger.warning("Google Sheets service not initialized - authentication may be required")
+                            logger.warning(
+                                "Google Sheets service not initialized - authentication may be required"
+                            )
 
                 except Exception as e:
                     logger.warning(f"Google Sheets export failed: {e}")
                     # If Google Sheets export fails and CSV wasn't requested, create CSV as backup
                     if not should_export_csv and not output_path:
-                        logger.info("Creating CSV backup since Google Sheets export failed")
-                        output_path = self.save_leads_to_csv(enriched_leads, industry, city)
+                        logger.info(
+                            "Creating CSV backup since Google Sheets export failed"
+                        )
+                        output_path = self.save_leads_to_csv(
+                            enriched_leads, industry, city
+                        )
 
         return {
             "success": len(enriched_leads) > 0,
@@ -443,10 +489,12 @@ class UniversalLeadAutomation:
             "results_summary": results_summary,
             "google_sheets_uploaded": google_sheets_uploaded,
             "google_sheets_stats": google_sheets_stats,
-            "urgent_leads": sum(1 for lead in enriched_leads if lead.get('urgency_flag', False))
+            "urgent_leads": sum(
+                1 for lead in enriched_leads if lead.get("urgency_flag", False)
+            ),
         }
 
-    def interactive_mode(self) -> Dict[str, Any]:
+    def interactive_mode(self) -> dict[str, Any]:
         """Interactive mode for guided lead generation."""
 
         print("🏢 Universal Lead Generation - Interactive Mode")
@@ -487,7 +535,7 @@ class UniversalLeadAutomation:
 
         # Test mode
         test_mode_input = input("Use test mode? [Y/n]: ").strip().lower()
-        test_mode = test_mode_input != 'n'
+        test_mode = test_mode_input != "n"
 
         # Keywords
         keywords = input("Keywords (optional): ").strip()
@@ -509,7 +557,7 @@ class UniversalLeadAutomation:
                     state=state,
                     max_records=max_records,
                     test_mode=test_mode,
-                    keywords=keywords
+                    keywords=keywords,
                 )
                 all_results.append(result)
 
@@ -522,7 +570,7 @@ class UniversalLeadAutomation:
                 "industries_processed": len(industries),
                 "successful_industries": successful_industries,
                 "total_leads": total_leads,
-                "results": all_results
+                "results": all_results,
             }
         else:
             return self.scrape_industry(
@@ -531,7 +579,7 @@ class UniversalLeadAutomation:
                 state=state,
                 max_records=max_records,
                 test_mode=test_mode,
-                keywords=keywords
+                keywords=keywords,
             )
 
 
@@ -547,81 +595,70 @@ Examples:
   python universal_automation.py --industry lawyers --city Miami --state FL
   python universal_automation.py --industry all --city Tampa --state FL --max-records 100
   python universal_automation.py --industry pool_contractors --test --verbose
-        """
+        """,
     )
 
     parser.add_argument(
-        "--interactive", "-i",
+        "--interactive",
+        "-i",
         action="store_true",
-        help="Run in interactive mode with guided setup"
+        help="Run in interactive mode with guided setup",
     )
 
     parser.add_argument(
         "--industry",
         choices=AVAILABLE_INDUSTRIES + ["all"],
-        help="Target industry for lead generation"
+        help="Target industry for lead generation",
     )
 
-    parser.add_argument(
-        "--city",
-        help="Target city for lead search"
-    )
+    parser.add_argument("--city", help="Target city for lead search")
 
     parser.add_argument(
-        "--state",
-        help="Target state for lead search (e.g., FL, CA, NY)"
+        "--state", help="Target state for lead search (e.g., FL, CA, NY)"
     )
 
-    parser.add_argument(
-        "--keywords",
-        help="Additional keywords for filtering results"
-    )
+    parser.add_argument("--keywords", help="Additional keywords for filtering results")
 
     parser.add_argument(
-        "--max-records", "-m",
+        "--max-records",
+        "-m",
         type=int,
         default=50,
-        help="Maximum number of records to scrape (default: 50)"
+        help="Maximum number of records to scrape (default: 50)",
     )
 
     parser.add_argument(
-        "--test",
-        action="store_true",
-        help="Run in test mode with simulated data"
+        "--test", action="store_true", help="Run in test mode with simulated data"
     )
 
     parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="Enable verbose logging"
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
     )
 
     parser.add_argument(
         "--list-industries",
         action="store_true",
-        help="List available industries and exit"
+        help="List available industries and exit",
     )
 
     parser.add_argument(
-        "--google-sheet-id",
-        help="Google Sheets ID for optional lead upload"
+        "--google-sheet-id", help="Google Sheets ID for optional lead upload"
     )
 
     parser.add_argument(
-        "--google-sheet-name",
-        help="Name for the Google Sheet tab (optional)"
+        "--google-sheet-name", help="Name for the Google Sheet tab (optional)"
     )
 
     parser.add_argument(
         "--export",
         choices=["csv", "google_sheets", "both"],
         default="both",
-        help="Export format: csv, google_sheets, or both (default: both)"
+        help="Export format: csv, google_sheets, or both (default: both)",
     )
 
     parser.add_argument(
         "--credentials",
-        help="Path to Google OAuth credentials JSON file (default: client_secret_*.json in project root)"
+        help="Path to Google OAuth credentials JSON file (default: client_secret_*.json in project root)",
     )
 
     args = parser.parse_args()
@@ -650,12 +687,14 @@ Examples:
                 print("\n✅ Multi-industry processing completed!")
                 print(f"📊 Industries processed: {result['industries_processed']}")
                 print(f"📊 Total leads found: {result['total_leads']}")
-                print(f"✅ Successful industries: {', '.join(result['successful_industries'])}")
+                print(
+                    f"✅ Successful industries: {', '.join(result['successful_industries'])}"
+                )
             else:
                 # Single industry result
                 print("\n✅ Lead generation completed!")
                 print(f"📊 Found {result['count']} leads")
-                if result['output_path']:
+                if result["output_path"]:
                     print(f"📁 Saved to: {result['output_path']}")
         else:
             print("\n❌ Lead generation failed")
@@ -680,7 +719,7 @@ Examples:
         google_sheet_id=args.google_sheet_id,
         google_sheet_name=args.google_sheet_name,
         export_format=args.export,
-        credentials_path=args.credentials
+        credentials_path=args.credentials,
     )
 
     # Display results
@@ -690,15 +729,17 @@ Examples:
         print(f"📊 Found {result['count']} leads")
         print(f"🔧 Plugins run: {result['plugins_run']}")
 
-        if result['output_path']:
+        if result["output_path"]:
             print(f"📁 Saved to: {result['output_path']}")
 
         # Show plugin results
-        if args.verbose and result['results_summary']:
+        if args.verbose and result["results_summary"]:
             print("\n📋 Plugin Results:")
-            for summary in result['results_summary']:
-                status_icon = "✅" if summary['status'] == 'success' else "❌"
-                print(f"  {status_icon} {summary['plugin']}: {summary['count']} leads ({summary['status']})")
+            for summary in result["results_summary"]:
+                status_icon = "✅" if summary["status"] == "success" else "❌"
+                print(
+                    f"  {status_icon} {summary['plugin']}: {summary['count']} leads ({summary['status']})"
+                )
     else:
         print(f"\n❌ Lead generation failed: {result.get('error', 'Unknown error')}")
         sys.exit(1)

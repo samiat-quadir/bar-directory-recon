@@ -1,4 +1,5 @@
 import importlib
+
 import pytest
 
 
@@ -9,10 +10,12 @@ def test_next_url_basic():
     except ImportError:
         pytest.skip("pagination_manager module not available")
 
-    fn = (getattr(m, "build_next_url", None) or 
-          getattr(m, "next_page", None) or 
-          getattr(m, "advance", None))
-    
+    fn = (
+        getattr(m, "build_next_url", None)
+        or getattr(m, "next_page", None)
+        or getattr(m, "advance", None)
+    )
+
     if fn is None:
         pytest.skip("no pagination function found")
 
@@ -21,7 +24,7 @@ def test_next_url_basic():
     except TypeError:
         # Try positional args
         url = fn("https://ex.com/api", 1, 50)
-    
+
     assert "page" in str(url) or url
 
 
@@ -32,10 +35,12 @@ def test_pagination_edge_cases():
     except ImportError:
         pytest.skip("pagination_manager module not available")
 
-    fn = (getattr(m, "build_next_url", None) or 
-          getattr(m, "next_page", None) or 
-          getattr(m, "advance", None))
-    
+    fn = (
+        getattr(m, "build_next_url", None)
+        or getattr(m, "next_page", None)
+        or getattr(m, "advance", None)
+    )
+
     if fn is None:
         pytest.skip("no pagination function found")
 

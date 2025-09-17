@@ -1,4 +1,8 @@
-from typing import Protocol, Iterable, Dict
+from typing import Dict, Protocol
+from collections.abc import Iterable
+
+
 class SourcePlugin(Protocol):
     name: str
-    def fetch(self, query: Dict) -> Iterable[Dict]: ...
+
+    def fetch(self, query: dict) -> Iterable[dict]: ...

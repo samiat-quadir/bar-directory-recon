@@ -30,7 +30,7 @@ class PropertyEnrichment:
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         )
 
-    def enrich_properties(self, input_file: str) -> Dict[str, Any]:
+    def enrich_properties(self, input_file: str) -> dict[str, Any]:
         """Enrich property data with contact information."""
         try:
             input_path = Path(input_file)
@@ -69,7 +69,7 @@ class PropertyEnrichment:
             logger.error(f"Error enriching properties: {e}")
             return {"status": "error", "message": str(e)}
 
-    def _enrich_single_property(self, property_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _enrich_single_property(self, property_data: dict[str, Any]) -> dict[str, Any]:
         """Enrich a single property with contact information."""
         enriched = property_data.copy()
 
@@ -155,7 +155,7 @@ class PropertyEnrichment:
         owner_upper = str(owner_name).upper()
         return any(indicator in owner_upper for indicator in corporate_indicators)
 
-    def _search_sunbiz(self, business_name: str) -> Dict[str, Any]:
+    def _search_sunbiz(self, business_name: str) -> dict[str, Any]:
         """Search Florida Sunbiz database for corporate entity information."""
         try:
             # Note: This is a simulated Sunbiz search since the actual API requires special access
@@ -230,7 +230,7 @@ class PropertyEnrichment:
         number = f"{random.randint(1000, 9999)}"
         return f"({area_code}) {exchange}-{number}"
 
-    def _find_owner_email(self, property_data: Dict[str, Any]) -> str:
+    def _find_owner_email(self, property_data: dict[str, Any]) -> str:
         """Find or generate owner email using available APIs."""
         owner_name = property_data.get("owner_name", "")
 
@@ -256,7 +256,7 @@ class PropertyEnrichment:
 
         return ""
 
-    def _find_owner_phone(self, property_data: Dict[str, Any]) -> str:
+    def _find_owner_phone(self, property_data: dict[str, Any]) -> str:
         """Find or generate owner phone using available APIs."""
         owner_name = property_data.get("owner_name", "")
 
@@ -278,7 +278,7 @@ class PropertyEnrichment:
 
         return ""
 
-    def _calculate_data_quality_score(self, property_data: Dict[str, Any]) -> float:
+    def _calculate_data_quality_score(self, property_data: dict[str, Any]) -> float:
         """Calculate a data quality score for the property record."""
         score = 0.0
 
@@ -308,7 +308,7 @@ class PropertyEnrichment:
 
         return round(score, 1)
 
-    def _extract_business_name(self, property_data: Dict[str, Any]) -> str:
+    def _extract_business_name(self, property_data: dict[str, Any]) -> str:
         """Extract business name from owner information."""
         owner_name = property_data.get("owner_name", "")
 
@@ -317,7 +317,7 @@ class PropertyEnrichment:
 
         return ""
 
-    def _calculate_priority(self, property_data: Dict[str, Any]) -> bool:
+    def _calculate_priority(self, property_data: dict[str, Any]) -> bool:
         """Calculate if property should be flagged as priority."""
         priority_factors = []
 
@@ -363,7 +363,7 @@ class PropertyEnrichment:
 
         return len(priority_factors) > 0
 
-    def generate_summary_report(self, enriched_file: str) -> Dict[str, Any]:
+    def generate_summary_report(self, enriched_file: str) -> dict[str, Any]:
         """Generate a comprehensive summary report of the enrichment process."""
         try:
             df = pd.read_csv(enriched_file)

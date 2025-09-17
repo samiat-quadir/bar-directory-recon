@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class NotificationConfig:
     """Configuration for notification services."""
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         """Initialize notification configuration."""
         self.config = config
         self.enabled = config.get("enabled", False)
@@ -40,7 +40,7 @@ class NotificationConfig:
 class NotificationAgent:
     """Unified notification agent for scraping operations."""
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: dict[str, Any] | None = None):
         """Initialize notification agent."""
         self.config = NotificationConfig(config or {})
         self.logger = logging.getLogger(f"{__name__}.NotificationAgent")
@@ -51,7 +51,7 @@ class NotificationAgent:
         subject: str = "Scraping Notification",
         notification_type: str = "info",
         include_stats: bool = False,
-        stats: Optional[Dict[str, Any]] = None,
+        stats: dict[str, Any] | None = None,
     ) -> bool:
         """Send notification via configured channels."""
         if not self.config.enabled:
@@ -83,7 +83,7 @@ class NotificationAgent:
         return success
 
     def send_completion_notification(
-        self, session_name: str, stats: Dict[str, Any], success: bool = True
+        self, session_name: str, stats: dict[str, Any], success: bool = True
     ) -> bool:
         """Send completion notification with session statistics."""
         status = "completed successfully" if success else "completed with errors"
@@ -100,7 +100,7 @@ class NotificationAgent:
         )
 
     def send_error_notification(
-        self, session_name: str, error_message: str, error_details: Optional[str] = None
+        self, session_name: str, error_message: str, error_details: str | None = None
     ) -> bool:
         """Send error notification."""
         message = (
@@ -174,8 +174,8 @@ class NotificationAgent:
         message: str,
         subject: str,
         notification_type: str,
-        stats: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, str]:
+        stats: dict[str, Any] | None = None,
+    ) -> dict[str, str]:
         """Prepare message content for different channels."""
 
         # Add timestamp
@@ -314,7 +314,7 @@ class NotificationAgent:
             self.logger.error(f"Failed to send Slack notification: {e}")
             return False
 
-    def _format_stats_for_email(self, stats: Dict[str, Any]) -> str:
+    def _format_stats_for_email(self, stats: dict[str, Any]) -> str:
         """Format statistics for email body."""
         stats_text = "\n\n--- Session Statistics ---\n"
 
@@ -325,7 +325,7 @@ class NotificationAgent:
 
         return stats_text
 
-    def _format_stats_for_slack(self, stats: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _format_stats_for_slack(self, stats: dict[str, Any]) -> list[dict[str, Any]]:
         """Format statistics for Slack attachment fields."""
         fields = []
 
@@ -355,7 +355,7 @@ class NotificationAgent:
         return colors.get(notification_type, "#36a64f")
 
 
-def create_sample_notification_config() -> Dict[str, Any]:
+def create_sample_notification_config() -> dict[str, Any]:
     """Create sample notification configuration."""
     return {
         "enabled": False,

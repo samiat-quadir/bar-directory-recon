@@ -6,7 +6,9 @@ import json
 from pathlib import Path
 
 
-def generate_drift_csv(site: str, baseline_snapshot: str = None, output_dir: str = "output"):
+def generate_drift_csv(
+    site: str, baseline_snapshot: str = None, output_dir: str = "output"
+):
     archive = Path(output_dir) / "archive"
     after_path = Path(output_dir) / "schema_matrix.json"
 
@@ -27,9 +29,14 @@ def generate_drift_csv(site: str, baseline_snapshot: str = None, output_dir: str
         raise FileNotFoundError("One or more matrix files not found.")
 
     def extract_score(path):
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             matrix = json.load(f)
-        return matrix.get("sites", {}).get(site, {}).get("score_summary", {}).get("field_score")
+        return (
+            matrix.get("sites", {})
+            .get(site, {})
+            .get("score_summary", {})
+            .get("field_score")
+        )
 
     old = extract_score(before_path) or 0
     new = extract_score(after_path) or 0
@@ -51,5 +58,7 @@ if __name__ == "__main__":
     parser.add_argument("--output-dir", default="output")
     args = parser.parse_args()
     generate_drift_csv(
-        site=args.site, baseline_snapshot=args.baseline_snapshot, output_dir=args.output_dir
+        site=args.site,
+        baseline_snapshot=args.baseline_snapshot,
+        output_dir=args.output_dir,
     )

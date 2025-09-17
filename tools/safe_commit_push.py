@@ -50,7 +50,9 @@ def check_hardcoded_paths():
     print("Checking for hardcoded paths...")
 
     if os.path.exists("ScanPaths.bat"):
-        result = run_command(["cmd", "/c", "ScanPaths.bat"], check=False, capture_output=True)
+        result = run_command(
+            ["cmd", "/c", "ScanPaths.bat"], check=False, capture_output=True
+        )
 
         if "Found hardcoded paths" in result.stdout:
             print("❌ Hardcoded paths detected. Please fix them before committing.")
@@ -79,8 +81,12 @@ def push_changes():
 def main():
     """Main function."""
     parser = argparse.ArgumentParser(description="Safely commit and push changes.")
-    parser.add_argument("--message", "-m", help="Commit message", default="Updated files")
-    parser.add_argument("--dry-run", action="store_true", help="Don't actually commit or push")
+    parser.add_argument(
+        "--message", "-m", help="Commit message", default="Updated files"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Don't actually commit or push"
+    )
     args = parser.parse_args()
 
     # Change to repository root

@@ -13,7 +13,7 @@ import sys
 from typing import Optional, Set
 
 
-def get_onedrive_path() -> Optional[str]:
+def get_onedrive_path() -> str | None:
     """Get the OneDrive path for the current device."""
     # Try common locations first
     username = os.environ.get("USERNAME", "")
@@ -39,7 +39,7 @@ def get_project_root_path() -> str:
 def scan_file(file_path: str, fix: bool = False) -> int:
     """Scan a file for hardcoded paths and optionally fix them."""
     try:
-        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+        with open(file_path, encoding="utf-8", errors="ignore") as f:
             content = f.read()
     except (UnicodeDecodeError, PermissionError) as e:
         print(f"Error reading {file_path}: {e} - skipping")
@@ -50,12 +50,21 @@ def scan_file(file_path: str, fix: bool = False) -> int:
 
     # Define the patterns to search for - cleaned up from corruption
     patterns = [
-        (r"C:\\Users\\samq\\OneDrive - Digital Age Marketing Group", "get_onedrive_path()"),
-        (r"C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group", "get_onedrive_path()"),
+        (
+            r"C:\\Users\\samq\\OneDrive - Digital Age Marketing Group",
+            "get_onedrive_path()",
+        ),
+        (
+            r"C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group",
+            "get_onedrive_path()",
+        ),
         (r"C:\\Users\\samq\\OneDrive", "get_onedrive_path()"),
         (r"C:\\Users\\samqu\\OneDrive", "get_onedrive_path()"),
         # Remove any remaining corruption patterns
-        (r"os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\)'\)", "get_onedrive_path()"),
+        (
+            r"os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\)'\)",
+            "get_onedrive_path()",
+        ),
     ]
 
     # Check for each pattern
@@ -94,7 +103,9 @@ def scan_file(file_path: str, fix: bool = False) -> int:
                     content = re.sub(pattern, "%ONEDRIVE_PATH%", content)
                 # For other text files, leave a comment
                 else:
-                    content = re.sub(pattern, f"[DYNAMIC_PATH_NEEDED] <!-- {pattern} -->", content)
+                    content = re.sub(
+                        pattern, f"[DYNAMIC_PATH_NEEDED] <!-- {pattern} -->", content
+                    )
 
     # If content changed and fix is enabled, write the changes back
     if fix and content != original_content:
@@ -109,7 +120,9 @@ def scan_file(file_path: str, fix: bool = False) -> int:
     return issues_count
 
 
-def scan_directory(directory: str, exclude_dirs: Optional[Set[str]] = None, fix: bool = False) -> int:
+def scan_directory(
+    directory: str, exclude_dirs: set[str] | None = None, fix: bool = False
+) -> int:
     """Scan a directory for hardcoded paths."""
     if exclude_dirs is None:
         exclude_dirs = {
@@ -134,7 +147,20 @@ def scan_directory(directory: str, exclude_dirs: Optional[Set[str]] = None, fix:
 
         for file in files:
             # Only scan text files
-            if file.endswith((".py", ".ps1", ".bat", ".cmd", ".md", ".txt", ".json", ".html", ".yaml", ".yml")):
+            if file.endswith(
+                (
+                    ".py",
+                    ".ps1",
+                    ".bat",
+                    ".cmd",
+                    ".md",
+                    ".txt",
+                    ".json",
+                    ".html",
+                    ".yaml",
+                    ".yml",
+                )
+            ):
                 file_path = os.path.join(root, file)
                 try:
                     issues = scan_file(file_path, fix)
@@ -147,9 +173,13 @@ def scan_directory(directory: str, exclude_dirs: Optional[Set[str]] = None, fix:
 
 def main() -> int:
     """Main function."""
-    parser = argparse.ArgumentParser(description="Scan for hardcoded paths and fix them")
+    parser = argparse.ArgumentParser(
+        description="Scan for hardcoded paths and fix them"
+    )
     parser.add_argument("--fix", action="store_true", help="Fix the hardcoded paths")
-    parser.add_argument("--directory", "-d", default=".", help="Directory to scan (default: current)")
+    parser.add_argument(
+        "--directory", "-d", default=".", help="Directory to scan (default: current)"
+    )
     args = parser.parse_args()
 
     project_root = os.path.abspath(args.directory)

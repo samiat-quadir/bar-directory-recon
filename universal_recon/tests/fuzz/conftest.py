@@ -1,4 +1,6 @@
-import sys, pathlib
+import pathlib
+import sys
+
 root = pathlib.Path(__file__).resolve().parents[3]
 src = root / "src"
 if src.exists():
