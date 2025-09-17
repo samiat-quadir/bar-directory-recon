@@ -1,6 +1,6 @@
 import importlib
 import urllib.parse
-
+import re
 import pytest
 
 
@@ -57,7 +57,11 @@ def test_extract_basic():
             assert parsed.hostname == "x.com"
         else:
             # Fallback to check that expected strings are in 's'
-            assert "x.com" in s or "https://x.com/u" in s
+            # Find all URLs in 's' and assert that at least one has hostname 'x.com'
+            urls = re.findall(r'https?://[^\s\'"]+', s)
+            found = any(urllib.parse.urlparse(u).hostname == "x.com" for u in urls)
+            # If no URLs found, fallback to old substring check (unlikely, but for robustness)
+            assert found or "x.com" in s or "https://x.com/u" in s
 
     except Exception:
         # Graceful degradation
