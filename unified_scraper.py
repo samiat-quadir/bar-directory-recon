@@ -44,9 +44,7 @@ Examples:
         action="store_true",
         help="Suppress verbose output (errors only)",
     )
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Enable verbose debug output"
-    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose debug output")
     parser.add_argument(
         "--config-dir",
         default="config",
@@ -56,89 +54,53 @@ Examples:
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Quick scrape command
-    quick_parser = subparsers.add_parser(
-        "quick", help="Quick scrape with minimal configuration"
-    )
-    quick_parser.add_argument(
-        "--name", required=True, help="Name for the scraping session"
-    )
+    quick_parser = subparsers.add_parser("quick", help="Quick scrape with minimal configuration")
+    quick_parser.add_argument("--name", required=True, help="Name for the scraping session")
     quick_parser.add_argument("--url", required=True, help="Base URL to scrape")
     quick_parser.add_argument(
         "--selector", default=".listing-item", help="CSS selector for listing items"
     )
-    quick_parser.add_argument(
-        "--max-pages", type=int, default=5, help="Maximum pages to scrape"
-    )
+    quick_parser.add_argument("--max-pages", type=int, default=5, help="Maximum pages to scrape")
     quick_parser.add_argument(
         "--headless", action="store_true", default=True, help="Run in headless mode"
     )
-    quick_parser.add_argument(
-        "--verbose", action="store_true", help="Enable verbose logging"
-    )
+    quick_parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
     # Configuration command
-    config_parser = subparsers.add_parser(
-        "config", help="Create configuration template"
-    )
-    config_parser.add_argument(
-        "--name", required=True, help="Name for the configuration"
-    )
+    config_parser = subparsers.add_parser("config", help="Create configuration template")
+    config_parser.add_argument("--name", required=True, help="Name for the configuration")
     config_parser.add_argument("--url", required=True, help="Base URL for scraping")
-    config_parser.add_argument(
-        "--output", required=True, help="Output path for configuration file"
-    )
+    config_parser.add_argument("--output", required=True, help="Output path for configuration file")
     config_parser.add_argument(
         "--industry", help="Industry type (lawyers, realtors, contractors, etc.)"
     )
 
     # Scrape command
-    scrape_parser = subparsers.add_parser(
-        "scrape", help="Run scraping with configuration file"
-    )
-    scrape_parser.add_argument(
-        "--config", required=True, help="Path to configuration file"
-    )
+    scrape_parser = subparsers.add_parser("scrape", help="Run scraping with configuration file")
+    scrape_parser.add_argument("--config", required=True, help="Path to configuration file")
     scrape_parser.add_argument(
         "--headless", action="store_true", default=True, help="Run in headless mode"
     )
-    scrape_parser.add_argument(
-        "--verbose", action="store_true", help="Enable verbose logging"
-    )
-    scrape_parser.add_argument(
-        "--max-records", type=int, help="Maximum records to extract"
-    )
+    scrape_parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
+    scrape_parser.add_argument("--max-records", type=int, help="Maximum records to extract")
     scrape_parser.add_argument("--max-pages", type=int, help="Maximum pages to process")
 
     # List command
     list_parser = subparsers.add_parser("list", help="List available configurations")
-    list_parser.add_argument(
-        "--config-dir", default="config", help="Configuration directory"
-    )
+    list_parser.add_argument("--config-dir", default="config", help="Configuration directory")
 
     # Validate command
-    validate_parser = subparsers.add_parser(
-        "validate", help="Validate configuration file"
-    )
-    validate_parser.add_argument(
-        "--config", required=True, help="Path to configuration file"
-    )
+    validate_parser = subparsers.add_parser("validate", help="Validate configuration file")
+    validate_parser.add_argument("--config", required=True, help="Path to configuration file")
 
     # Test command
-    test_parser = subparsers.add_parser(
-        "test", help="Test scraping setup without extraction"
-    )
-    test_parser.add_argument(
-        "--config", required=True, help="Path to configuration file"
-    )
-    test_parser.add_argument(
-        "--pages", type=int, default=1, help="Number of pages to test"
-    )
+    test_parser = subparsers.add_parser("test", help="Test scraping setup without extraction")
+    test_parser.add_argument("--config", required=True, help="Path to configuration file")
+    test_parser.add_argument("--pages", type=int, default=1, help="Number of pages to test")
 
     # Add notification test subcommand
     notify_parser = subparsers.add_parser("notify-test", help="Send test notification")
-    notify_parser.add_argument(
-        "--config", required=True, help="Configuration file path"
-    )
+    notify_parser.add_argument("--config", required=True, help="Configuration file path")
     notify_parser.add_argument(
         "--type",
         choices=["email", "sms", "slack", "all"],
@@ -274,9 +236,7 @@ def handle_scrape(args: argparse.Namespace) -> None:
             stats = result.get("statistics", {})
             if stats:
                 print(f"   Pages per minute: {stats.get('pages_per_minute', 0):.2f}")
-                print(
-                    f"   Records per minute: {stats.get('records_per_minute', 0):.2f}"
-                )
+                print(f"   Records per minute: {stats.get('records_per_minute', 0):.2f}")
         else:
             print("❌ Scraping failed!")
 
@@ -361,9 +321,7 @@ def handle_validate_config(args: argparse.Namespace) -> None:
         # Check pagination settings
         pagination = config.pagination
         if pagination.get("enabled"):
-            print(
-                f"   Pagination: Enabled (max {pagination.get('max_pages', 'unlimited')} pages)"
-            )
+            print(f"   Pagination: Enabled (max {pagination.get('max_pages', 'unlimited')} pages)")
         else:
             print("   Pagination: Disabled")
 

@@ -1,7 +1,6 @@
 import json
 import os
 from collections import defaultdict
-from typing import Dict, List
 
 
 def load_summaries_from_directory(directory: str) -> list[dict]:

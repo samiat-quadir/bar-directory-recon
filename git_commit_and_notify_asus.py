@@ -26,8 +26,6 @@ if __name__ == "__main__":
     logging.info("🚀 Starting Git commit and notification process...")
 
     run_script("auto_git_commit.py")  # Step 1: Run Git commit script
-    run_script(
-        "asus_notifier.py"
-    )  # Step 2: Send notification email via ASUS-specific notifier
+    run_script("asus_notifier.py")  # Step 2: Send notification email via ASUS-specific notifier
 
     logging.info("✅ Process complete.\n")

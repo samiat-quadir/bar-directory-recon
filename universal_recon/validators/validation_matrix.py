@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, Optional
+from typing import Any
 
 import yaml
 
@@ -23,7 +23,5 @@ def load_validation_matrix(yaml_path: str | None = None) -> dict[str, Any]:
         try:
             return yaml.safe_load(f)
         except yaml.YAMLError as e:
-            print(
-                f"[load_validation_matrix] Failed to parse validation matrix YAML: {e}"
-            )
+            print(f"[load_validation_matrix] Failed to parse validation matrix YAML: {e}")
             return {}

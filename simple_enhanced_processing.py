@@ -33,20 +33,12 @@ def load_and_process_data():
 
         # Analyze data
         total_records = len(df)
-        email_records = (
-            df["owner_email"].notna().sum() if "owner_email" in df.columns else 0
-        )
-        phone_records = (
-            df["owner_phone"].notna().sum() if "owner_phone" in df.columns else 0
-        )
+        email_records = df["owner_email"].notna().sum() if "owner_email" in df.columns else 0
+        phone_records = df["owner_phone"].notna().sum() if "owner_phone" in df.columns else 0
 
         print(f"   • Total records: {total_records}")
-        print(
-            f"   • Records with email: {email_records} ({email_records/total_records*100:.1f}%)"
-        )
-        print(
-            f"   • Records with phone: {phone_records} ({phone_records/total_records*100:.1f}%)"
-        )
+        print(f"   • Records with email: {email_records} ({email_records/total_records*100:.1f}%)")
+        print(f"   • Records with phone: {phone_records} ({phone_records/total_records*100:.1f}%)")
 
         # Export to Google Sheets
         export_success = export_to_sheets(df, "Hallandale_Properties")
@@ -186,14 +178,10 @@ def generate_final_summary(results, found_pdfs):
     total_cities = len(results)
 
     if total_exported < total_cities:
-        summary["recommendations"].append(
-            "Fix Google Sheets configuration for failed exports"
-        )
+        summary["recommendations"].append("Fix Google Sheets configuration for failed exports")
 
     if not found_pdfs:
-        summary["recommendations"].append(
-            "Acquire additional city/county property data"
-        )
+        summary["recommendations"].append("Acquire additional city/county property data")
         summary["recommendations"].append("Check suggested public data sources")
 
     # Check API configuration
@@ -204,9 +192,7 @@ def generate_final_summary(results, found_pdfs):
         api_missing.append("ZeroBounce")
 
     if api_missing:
-        summary["recommendations"].append(
-            f"Configure missing APIs: {', '.join(api_missing)}"
-        )
+        summary["recommendations"].append(f"Configure missing APIs: {', '.join(api_missing)}")
 
     # Save summary
     summary_file = f"outputs/processing_summary_{timestamp}.json"
@@ -281,9 +267,7 @@ def main():
         print("=" * 60)
 
         total_records = sum(data["total_records"] for data in results.values())
-        successful_exports = sum(
-            1 for data in results.values() if data.get("export_success")
-        )
+        successful_exports = sum(1 for data in results.values() if data.get("export_success"))
 
         print(f"Cities processed: {len(results)}")
         print(f"Total records: {total_records}")

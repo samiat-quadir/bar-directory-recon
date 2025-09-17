@@ -6,7 +6,7 @@ Scrapes lead data from pool contractor directories and business listings
 import logging
 import re
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import pandas as pd
 import requests
@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 class PoolContractorScraper:
     """Scraper for pool contractor business directories."""
 
-    def __init__(
-        self, city: str = "", state: str = "", max_records: int | None = None
-    ):
+    def __init__(self, city: str = "", state: str = "", max_records: int | None = None):
         self.city = city
         self.state = state
         self.max_records = max_records or 50
@@ -206,15 +204,11 @@ class PoolContractorScraper:
                 for selector in listing_selectors:
                     listings = soup.select(selector)
                     if listings:
-                        logger.info(
-                            f"Found {len(listings)} listings with selector: {selector}"
-                        )
+                        logger.info(f"Found {len(listings)} listings with selector: {selector}")
                         break
 
                 # Extract contractor information
-                for i, listing in enumerate(
-                    listings[: self.max_records // len(target_urls)]
-                ):
+                for i, listing in enumerate(listings[: self.max_records // len(target_urls)]):
                     try:
                         text = listing.get_text()
                         contact_info = self.extract_contact_info(text)
@@ -258,9 +252,7 @@ class PoolContractorScraper:
         """Main scraping method."""
 
         if test_mode:
-            logger.info(
-                "Running in TEST MODE - generating simulated pool contractor data"
-            )
+            logger.info("Running in TEST MODE - generating simulated pool contractor data")
             return self.scrape_test_data()
         else:
             logger.info("Running in LIVE MODE - scraping real pool contractor data")

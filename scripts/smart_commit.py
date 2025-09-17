@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Smart commit - only important files"""
+
 import subprocess
 import sys
 
 
 def smart_commit(message):
-    result = subprocess.run(
-        ["git", "status", "--porcelain"], capture_output=True, text=True
-    )
+    result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
     if not result.stdout.strip():
         return False
 
@@ -30,9 +29,7 @@ def smart_commit(message):
     for f in files_to_add:
         subprocess.run(["git", "add", f], capture_output=True)
 
-    result = subprocess.run(
-        ["git", "commit", "-m", message], capture_output=True, text=True
-    )
+    result = subprocess.run(["git", "commit", "-m", message], capture_output=True, text=True)
     print(f"✅ {message}" if result.returncode == 0 else "❌ Failed")
     return result.returncode == 0
 

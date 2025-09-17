@@ -19,7 +19,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 # Add project root to path
 project_root = Path(__file__).parent
@@ -129,9 +129,7 @@ class AsyncPipelineExecutor:
                         logger.info(f"Site {site} completed successfully (simulated)")
                         return True
                     else:
-                        logger.warning(
-                            f"Site {site} attempt {attempt + 1} failed (simulated)"
-                        )
+                        logger.warning(f"Site {site} attempt {attempt + 1} failed (simulated)")
                 else:
                     # Real pipeline execution
                     loop = asyncio.get_event_loop()
@@ -192,18 +190,14 @@ class AsyncPipelineExecutor:
         """Run with real-time progress reporting."""
         completed = {}
         pending_tasks = {
-            asyncio.create_task(
-                self._execute_site_with_semaphore(site), name=site
-            ): site
+            asyncio.create_task(self._execute_site_with_semaphore(site), name=site): site
             for site in sites
         }
 
         print(f"🚀 Starting processing of {len(sites)} sites...")
 
         while pending_tasks:
-            done, pending = await asyncio.wait(
-                pending_tasks, return_when=asyncio.FIRST_COMPLETED
-            )
+            done, pending = await asyncio.wait(pending_tasks, return_when=asyncio.FIRST_COMPLETED)
 
             for task in done:
                 site = pending_tasks.pop(task)
@@ -217,9 +211,7 @@ class AsyncPipelineExecutor:
                     completed[site] = False
                     print(f"Progress: {len(completed)}/{len(sites)} - {site}: ❌ ERROR")
 
-            pending_tasks = {
-                task: site for task, site in pending_tasks.items() if task in pending
-            }
+            pending_tasks = {task: site for task, site in pending_tasks.items() if task in pending}
 
         return completed
 
@@ -281,9 +273,7 @@ async def demo_sync_vs_async():
     print(f"\n📊 Performance Improvement: {improvement:.1f}x faster")
     print(f"Time saved: {sync_time - async_time:.1f} seconds")
 
-    success_rate = (
-        sum(1 for success in results.values() if success) / len(results) * 100
-    )
+    success_rate = sum(1 for success in results.values() if success) / len(results) * 100
     print(f"Success rate: {success_rate:.1f}%")
 
 

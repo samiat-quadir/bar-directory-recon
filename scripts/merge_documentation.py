@@ -11,7 +11,6 @@ import argparse
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
 
 
 class DocumentationMerger:
@@ -88,9 +87,7 @@ class DocumentationMerger:
             by_phase[phase].append(meta)
 
         # Generate TOC
-        for phase in sorted(
-            by_phase.keys(), key=lambda x: int(x) if x.isdigit() else 999
-        ):
+        for phase in sorted(by_phase.keys(), key=lambda x: int(x) if x.isdigit() else 999):
             if phase != "0":
                 toc.append(f"## Phase {phase}")
             else:
@@ -128,9 +125,7 @@ class DocumentationMerger:
 
         # Header
         merged_content.append("# Bar Directory Recon - Complete Documentation")
-        merged_content.append(
-            f"*Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n"
-        )
+        merged_content.append(f"*Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n")
         merged_content.append(
             "This document consolidates all project documentation from multiple README files.\n"
         )
@@ -171,9 +166,7 @@ class DocumentationMerger:
 
         # Add footer
         merged_content.append("## Document Information")
-        merged_content.append(
-            f"- **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        )
+        merged_content.append(f"- **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         merged_content.append(f"- **Source Files**: {len(readme_files)} README files")
         merged_content.append("- **Project**: Bar Directory Recon")
         merged_content.append(
@@ -208,9 +201,7 @@ class DocumentationMerger:
         content = ["# API Reference\n"]
         for file_path in sorted(api_files):
             content.append(f"## {file_path.stem}")
-            content.append(
-                f"[View Documentation]({file_path.relative_to(self.docs_dir)})\n"
-            )
+            content.append(f"[View Documentation]({file_path.relative_to(self.docs_dir)})\n")
 
         (self.docs_dir / "API.md").write_text("\n".join(content))
 
@@ -226,9 +217,7 @@ class DocumentationMerger:
 
 def main():
     """Main entry point for documentation merger."""
-    parser = argparse.ArgumentParser(
-        description="Merge README files into unified documentation"
-    )
+    parser = argparse.ArgumentParser(description="Merge README files into unified documentation")
     parser.add_argument(
         "--project-root", type=Path, default=".", help="Root directory of the project"
     )

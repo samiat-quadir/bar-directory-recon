@@ -11,7 +11,6 @@ import re
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -58,9 +57,7 @@ class DataHunter:
         # Session for HTTP requests
         self.session = requests.Session()
         self.session.headers.update(
-            {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            }
+            {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
         )
 
         # Downloaded files tracking
@@ -163,9 +160,7 @@ class DataHunter:
         console_handler.setLevel(logging.INFO)
 
         # Formatter
-        formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        )
+        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         file_handler.setFormatter(formatter)
         console_handler.setFormatter(formatter)
 
@@ -226,9 +221,7 @@ class DataHunter:
                 for pattern in source["patterns"]:
                     if re.search(pattern, href, re.IGNORECASE):
                         # Extract filename from URL or link text
-                        filename = self._extract_filename(
-                            href, link.get_text(strip=True)
-                        )
+                        filename = self._extract_filename(href, link.get_text(strip=True))
                         found_files.append((href, filename))
                         self.logger.info(f"Found matching file: {filename} -> {href}")
                         break
@@ -368,9 +361,7 @@ class DataHunter:
 
             msg.attach(MIMEText(body, "plain"))
 
-            server = smtplib.SMTP(
-                email_config["smtp_server"], email_config["smtp_port"]
-            )
+            server = smtplib.SMTP(email_config["smtp_server"], email_config["smtp_port"])
             server.starttls()
             server.login(email_config["username"], email_config["password"])
             text = msg.as_string()
@@ -434,12 +425,8 @@ class DataHunter:
                     script = "universal_pipeline.py"
 
                 suggestion_log.append(f"File: {file}")
-                suggestion_log.append(
-                    f"  Suggested command: python {script} --input {file_path}"
-                )
-                suggestion_log.append(
-                    f"  Alternative: python unified_scraper.py --pdf {file_path}"
-                )
+                suggestion_log.append(f"  Suggested command: python {script} --input {file_path}")
+                suggestion_log.append(f"  Alternative: python unified_scraper.py --pdf {file_path}")
                 suggestion_log.append("")
 
         # Log suggestions
@@ -448,8 +435,7 @@ class DataHunter:
 
         # Save suggestions to file
         suggestions_file = (
-            self.logs_dir
-            / f"processing_suggestions_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+            self.logs_dir / f"processing_suggestions_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
         )
         with open(suggestions_file, "w") as f:
             f.write(suggestion_text)
@@ -518,12 +504,8 @@ def main():
     """Main function for command-line usage."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Data Hunter - Automated Property List Discovery"
-    )
-    parser.add_argument(
-        "--run-once", action="store_true", help="Run discovery once and exit"
-    )
+    parser = argparse.ArgumentParser(description="Data Hunter - Automated Property List Discovery")
+    parser.add_argument("--run-once", action="store_true", help="Run discovery once and exit")
     parser.add_argument("--schedule", action="store_true", help="Run with scheduler")
     parser.add_argument("--config", help="Path to config file")
 

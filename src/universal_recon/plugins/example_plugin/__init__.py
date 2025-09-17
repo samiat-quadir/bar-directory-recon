@@ -1,5 +1,5 @@
-from typing import Dict
 from collections.abc import Iterable
+from typing import Dict
 
 
 class _Example:

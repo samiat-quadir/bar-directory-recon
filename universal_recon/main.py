@@ -36,12 +36,8 @@ def main():
         help="emit risk_overlay.json using validator tiers",
     )
     # Realtor directory automation arguments
-    parser.add_argument(
-        "--output", help="Output file path for realtor directory scraping"
-    )
-    parser.add_argument(
-        "--max-records", type=int, help="Maximum number of records to scrape"
-    )
+    parser.add_argument("--output", help="Output file path for realtor directory scraping")
+    parser.add_argument("--max-records", type=int, help="Maximum number of records to scrape")
     parser.add_argument("--google-sheet-id", help="Google Sheets ID for upload")
     args = parser.parse_args()
 
@@ -95,9 +91,7 @@ def main():
             save_schema_matrix,
         )
 
-        matrix = collect_schema_matrix(
-            fieldmap_dir="output/fieldmap", plugin_dir="output/plugins"
-        )
+        matrix = collect_schema_matrix(fieldmap_dir="output/fieldmap", plugin_dir="output/plugins")
         save_schema_matrix(matrix)
         if args.verbose:
             print("✅ Schema matrix collected and saved.")

@@ -9,7 +9,7 @@ import re
 import smtplib
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import dns.resolver
 import pandas as pd
@@ -28,12 +28,8 @@ class PropertyValidation:
         self._setup_logging()
 
         # Validation patterns
-        self.email_pattern = re.compile(
-            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-        )
-        self.phone_pattern = re.compile(
-            r"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$"
-        )
+        self.email_pattern = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+        self.phone_pattern = re.compile(r"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$")
         self.folio_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}-\d{4}$")
 
     def _setup_logging(self) -> None:
@@ -116,9 +112,7 @@ class PropertyValidation:
             logger.error(f"Error validating properties: {e}")
             return {"status": "error", "message": str(e)}
 
-    def _validate_single_property(
-        self, property_data: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _validate_single_property(self, property_data: dict[str, Any]) -> dict[str, Any]:
         """Validate a single property record."""
         validated = property_data.copy()
 
@@ -205,9 +199,7 @@ class PropertyValidation:
             result["email_validation_notes"].append(f"SMTP verification error: {e}")
 
         # Overall email validity
-        result["email_valid"] = (
-            result["email_format_valid"] and result["email_domain_valid"]
-        )
+        result["email_valid"] = result["email_format_valid"] and result["email_domain_valid"]
 
         return result
 
@@ -233,9 +225,7 @@ class PropertyValidation:
             result["phone_format_valid"] = True
             result["phone_validation_notes"].append("Phone format is valid")
         else:
-            result["phone_validation_notes"].append(
-                f"Invalid phone length: {len(phone_clean)}"
-            )
+            result["phone_validation_notes"].append(f"Invalid phone length: {len(phone_clean)}")
             return result
 
         # Area code validation
@@ -264,9 +254,7 @@ class PropertyValidation:
             result["phone_area_code_valid"] = True
             result["phone_validation_notes"].append("Florida area code detected")
         else:
-            result["phone_validation_notes"].append(
-                f"Non-Florida area code: {area_code}"
-            )
+            result["phone_validation_notes"].append(f"Non-Florida area code: {area_code}")
 
         # Phone type detection
         if area_code in ["954", "754"]:  # Broward County
@@ -328,9 +316,7 @@ class PropertyValidation:
         zip_match = re.search(r"\b33\d{3}\b", address)
         if zip_match:
             result["address_zip_valid"] = True
-            result["address_validation_notes"].append(
-                f"Valid ZIP code: {zip_match.group()}"
-            )
+            result["address_validation_notes"].append(f"Valid ZIP code: {zip_match.group()}")
 
         # Overall address validity
         result["address_valid"] = result["address_format_valid"] and (
@@ -455,9 +441,7 @@ class PropertyValidation:
             "owner_phone",
         ]
 
-        filled_fields = sum(
-            1 for field in required_fields if property_data.get(field, "").strip()
-        )
+        filled_fields = sum(1 for field in required_fields if property_data.get(field, "").strip())
 
         return (filled_fields / len(required_fields)) * 100
 
@@ -504,9 +488,7 @@ class PropertyValidation:
 
                 # Priority properties sheet
                 priority_df = df[df["priority_flag"] == True]
-                priority_df.to_excel(
-                    writer, sheet_name="Priority Properties", index=False
-                )
+                priority_df.to_excel(writer, sheet_name="Priority Properties", index=False)
 
                 # Summary statistics sheet
                 summary_data = {
@@ -545,55 +527,40 @@ class PropertyValidation:
                 f.write("HALLANDALE PROPERTY VALIDATION SUMMARY\n")
                 f.write("=" * 50 + "\n\n")
 
-                f.write(
-                    f"Processing Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-                )
+                f.write(f"Processing Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
                 f.write(f"Output File: {output_file}\n\n")
 
                 f.write("VALIDATION STATISTICS:\n")
                 f.write("-" * 30 + "\n")
                 f.write(f"Total Properties Processed: {stats['total_properties']}\n")
-                valid_email_pct = (
-                    stats["valid_emails"] / stats["total_properties"] * 100
-                )
+                valid_email_pct = stats["valid_emails"] / stats["total_properties"] * 100
                 f.write(
                     f"Properties with Valid Emails: {stats['valid_emails']} "
                     f"({valid_email_pct:.1f}%)\n"
                 )
-                verified_email_pct = (
-                    stats["verified_emails"] / stats["total_properties"] * 100
-                )
+                verified_email_pct = stats["verified_emails"] / stats["total_properties"] * 100
                 f.write(
                     f"Properties with Verified Emails: {stats['verified_emails']} "
                     f"({verified_email_pct:.1f}%)\n"
                 )
-                valid_phone_pct = (
-                    stats["valid_phones"] / stats["total_properties"] * 100
-                )
+                valid_phone_pct = stats["valid_phones"] / stats["total_properties"] * 100
                 f.write(
                     f"Properties with Valid Phones: {stats['valid_phones']} "
                     f"({valid_phone_pct:.1f}%)\n"
                 )
-                valid_address_pct = (
-                    stats["valid_addresses"] / stats["total_properties"] * 100
-                )
+                valid_address_pct = stats["valid_addresses"] / stats["total_properties"] * 100
                 f.write(
                     f"Properties with Valid Addresses: {stats['valid_addresses']} "
                     f"({valid_address_pct:.1f}%)\n"
                 )
-                priority_pct = (
-                    stats["priority_properties"] / stats["total_properties"] * 100
-                )
+                priority_pct = stats["priority_properties"] / stats["total_properties"] * 100
                 f.write(
                     f"Priority Properties: {stats['priority_properties']} "
                     f"({priority_pct:.1f}%)\n"
                 )
-                complete_pct = (
-                    stats["complete_records"] / stats["total_properties"] * 100
-                )
+                complete_pct = stats["complete_records"] / stats["total_properties"] * 100
                 f.write(
-                    f"Complete Records: {stats['complete_records']} "
-                    f"({complete_pct:.1f}%)\n\n"
+                    f"Complete Records: {stats['complete_records']} " f"({complete_pct:.1f}%)\n\n"
                 )
 
                 if stats["validation_errors"]:
@@ -619,7 +586,5 @@ class PropertyValidation:
 
 if __name__ == "__main__":
     validator = PropertyValidation()
-    result = validator.validate_properties(
-        "outputs/hallandale/hallandale_properties_enriched.csv"
-    )
+    result = validator.validate_properties("outputs/hallandale/hallandale_properties_enriched.csv")
     print(f"Validation result: {result}")

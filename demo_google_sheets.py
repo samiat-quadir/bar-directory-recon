@@ -125,9 +125,7 @@ def demo_oauth_flow():
     except ImportError as e:
         print(f"❌ Import error: {e}")
         print("Please install Google API packages:")
-        print(
-            "pip install google-api-python-client google-auth-oauthlib google-auth-httplib2"
-        )
+        print("pip install google-api-python-client google-auth-oauthlib google-auth-httplib2")
         return False
     except Exception as e:
         print(f"❌ Error: {e}")
@@ -195,9 +193,7 @@ def demo_automation_script():
             f'   PowerShell -ExecutionPolicy Bypass -File "{script_path}" -Industry "pool_contractors" -City "Miami" -State "FL" -GoogleSheetId "your-sheet-id"'
         )
         print("")
-        print(
-            "⏰ For scheduled runs, use Windows Task Scheduler to run this PowerShell script"
-        )
+        print("⏰ For scheduled runs, use Windows Task Scheduler to run this PowerShell script")
 
         return True
     else:

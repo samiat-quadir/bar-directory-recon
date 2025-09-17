@@ -46,9 +46,7 @@ def test_complete_pipeline():
     enrichment_result = enricher.enrich_properties(str(raw_file))
 
     if enrichment_result["status"] == "success":
-        print(
-            f"✓ Enrichment completed: {enrichment_result['enriched_count']} properties"
-        )
+        print(f"✓ Enrichment completed: {enrichment_result['enriched_count']} properties")
 
         # Generate summary
         summary = enricher.generate_summary_report(enrichment_result["output_file"])
@@ -61,14 +59,10 @@ def test_complete_pipeline():
         print(f"  Records with phones: {summary.get('records_with_phones', 0)}")
         print(f"  Priority records: {summary.get('priority_records', 0)}")
         print(f"  Corporate entities: {summary.get('corporate_entities', 0)}")
-        print(
-            f"  Average quality score: {summary.get('average_data_quality_score', 0)}/100"
-        )
+        print(f"  Average quality score: {summary.get('average_data_quality_score', 0)}/100")
 
     else:
-        print(
-            f"✗ Enrichment failed: {enrichment_result.get('message', 'Unknown error')}"
-        )
+        print(f"✗ Enrichment failed: {enrichment_result.get('message', 'Unknown error')}")
         return
 
     # Step 3: Validate properties
@@ -79,9 +73,7 @@ def test_complete_pipeline():
     if validation_result["status"] == "success":
         print("✓ Validation completed")
     else:
-        print(
-            f"✗ Validation failed: {validation_result.get('message', 'Unknown error')}"
-        )
+        print(f"✗ Validation failed: {validation_result.get('message', 'Unknown error')}")
 
     # Step 4: Create Excel export
     print("\nStep 4: Creating Excel export...")
@@ -104,14 +96,9 @@ def test_complete_pipeline():
             # Missing contact info
             missing_contact = enriched_df[
                 (enriched_df["owner_email"].isna() | (enriched_df["owner_email"] == ""))
-                & (
-                    enriched_df["owner_phone"].isna()
-                    | (enriched_df["owner_phone"] == "")
-                )
+                & (enriched_df["owner_phone"].isna() | (enriched_df["owner_phone"] == ""))
             ]
-            missing_contact.to_excel(
-                writer, sheet_name="Missing Contact Info", index=False
-            )
+            missing_contact.to_excel(writer, sheet_name="Missing Contact Info", index=False)
 
         print(f"✓ Excel file created: {excel_file}")
         print(f"  - All Properties: {len(enriched_df)} records")

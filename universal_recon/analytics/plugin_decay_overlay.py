@@ -86,9 +86,7 @@ def generate_overlay():
             )
         html.append("</ul>")
         if meta["score_suppressed_by"]:
-            html.append(
-                f"<p><b>⚠️ Score suppressed: −{meta['score_suppressed_by']}%</b></p>"
-            )
+            html.append(f"<p><b>⚠️ Score suppressed: −{meta['score_suppressed_by']}%</b></p>")
     html.append("</body></html>")
 
     with open(EXPORT_HTML, "w", encoding="utf-8") as f:

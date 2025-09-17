@@ -66,16 +66,12 @@ def demo_configuration() -> None:
     # Split long notification line for readability
     discord_status = "✅" if config["notifications"]["discord_webhook"] else "❌"
     email_status = "✅" if config["notifications"]["email"]["enabled"] else "❌"
-    print(
-        f"   • Notification channels: Discord: {discord_status}, Email: {email_status}"
-    )
+    print(f"   • Notification channels: Discord: {discord_status}, Email: {email_status}")
 
     # Show List Discovery config
     if runner.list_discovery:
         discovery_config = runner.list_discovery.config
-        print(
-            f"   • List Discovery URLs: {len(discovery_config.get('monitored_urls', []))}"
-        )
+        print(f"   • List Discovery URLs: {len(discovery_config.get('monitored_urls', []))}")
 
     wait_for_user()
 
@@ -99,9 +95,7 @@ def demo_dashboard() -> None:
 
     # Add some sample data
     dashboard.update_site_status("demo-site-1.com", "success", {"score": 85.2})
-    dashboard.update_site_status(
-        "demo-site-2.com", "failed", {"error": "Connection timeout"}
-    )
+    dashboard.update_site_status("demo-site-2.com", "failed", {"error": "Connection timeout"})
     dashboard.update_site_status("demo-site-3.com", "success", {"score": 92.1})
     # dashboard.update_log_event("List Discovery", "Downloaded 3 new files from 'County Licenses'")
     # If you want to log an event, use the correct method if available, e.g.:

@@ -6,7 +6,7 @@ Defines the standard data structure and field mappings for all scraped data.
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -192,9 +192,7 @@ class SchemaMapper:
 
         return UnifiedDataRecord(**unified_data)
 
-    def to_export_dict(
-        self, record: UnifiedDataRecord, schema: str = "standard"
-    ) -> dict[str, str]:
+    def to_export_dict(self, record: UnifiedDataRecord, schema: str = "standard") -> dict[str, str]:
         """Convert unified record to export dictionary with proper column headers."""
         export_schema = self.EXPORT_SCHEMA.get(schema, self.EXPORT_SCHEMA["standard"])
         export_data = {}

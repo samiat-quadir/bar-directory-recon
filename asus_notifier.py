@@ -11,9 +11,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # Load environment variables
-env_path = (
-    r"C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
-)
+env_path = r"C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
 load_dotenv(env_path)
 
 TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")

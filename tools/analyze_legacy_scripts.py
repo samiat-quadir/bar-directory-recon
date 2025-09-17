@@ -9,7 +9,6 @@ Finds PowerShell and Batch scripts that aren't referenced anywhere in the codeba
 import os
 import re
 from pathlib import Path
-from typing import Dict, List, Set
 
 
 def find_all_scripts(root_dir: str) -> set[str]:
@@ -47,7 +46,6 @@ def find_script_references(root_dir: str, scripts: set[str]) -> dict[str, list[s
                 for excluded in [".git", "__pycache__", ".venv", "node_modules"]
             )
         ):
-
             try:
                 with open(file_path, encoding="utf-8", errors="ignore") as f:
                     content = f.read()
@@ -59,13 +57,9 @@ def find_script_references(root_dir: str, scripts: set[str]) -> dict[str, list[s
                     # Look for script name (with or without extension)
                     if script in content or script_base in content:
                         # Verify it's actually a reference (not just part of another word)
-                        pattern = (
-                            r"\b" + re.escape(script_base) + r"(?:\.(?:bat|ps1))?\b"
-                        )
+                        pattern = r"\b" + re.escape(script_base) + r"(?:\.(?:bat|ps1))?\b"
                         if re.search(pattern, content, re.IGNORECASE):
-                            references[script].append(
-                                str(file_path.relative_to(root_path))
-                            )
+                            references[script].append(str(file_path.relative_to(root_path)))
 
             except Exception as e:
                 print(f"Error reading {file_path}: {e}")

@@ -6,9 +6,7 @@ import json
 from pathlib import Path
 
 
-def generate_drift_csv(
-    site: str, baseline_snapshot: str = None, output_dir: str = "output"
-):
+def generate_drift_csv(site: str, baseline_snapshot: str = None, output_dir: str = "output"):
     archive = Path(output_dir) / "archive"
     after_path = Path(output_dir) / "schema_matrix.json"
 
@@ -31,12 +29,7 @@ def generate_drift_csv(
     def extract_score(path):
         with open(path, encoding="utf-8") as f:
             matrix = json.load(f)
-        return (
-            matrix.get("sites", {})
-            .get(site, {})
-            .get("score_summary", {})
-            .get("field_score")
-        )
+        return matrix.get("sites", {}).get(site, {}).get("score_summary", {}).get("field_score")
 
     old = extract_score(before_path) or 0
     new = extract_score(after_path) or 0

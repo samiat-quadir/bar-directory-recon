@@ -53,9 +53,7 @@ def get_staged_python_files():
         files = result.stdout.strip().split("\n")
         return [f for f in files if f.endswith(".py") and os.path.exists(f)]
     except subprocess.CalledProcessError:
-        print(
-            "⚠️ Warning: Unable to get staged files. Running linters on all Python files."
-        )
+        print("⚠️ Warning: Unable to get staged files. Running linters on all Python files.")
         # Fallback to all Python files in the repo
         result = subprocess.run(
             ["git", "ls-files", "*.py"], check=True, capture_output=True, text=True

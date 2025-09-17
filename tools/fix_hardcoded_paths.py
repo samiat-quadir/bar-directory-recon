@@ -10,7 +10,6 @@ import argparse
 import os
 import re
 import sys
-from typing import Optional, Set
 
 
 def get_onedrive_path() -> str | None:
@@ -103,9 +102,7 @@ def scan_file(file_path: str, fix: bool = False) -> int:
                     content = re.sub(pattern, "%ONEDRIVE_PATH%", content)
                 # For other text files, leave a comment
                 else:
-                    content = re.sub(
-                        pattern, f"[DYNAMIC_PATH_NEEDED] <!-- {pattern} -->", content
-                    )
+                    content = re.sub(pattern, f"[DYNAMIC_PATH_NEEDED] <!-- {pattern} -->", content)
 
     # If content changed and fix is enabled, write the changes back
     if fix and content != original_content:
@@ -120,9 +117,7 @@ def scan_file(file_path: str, fix: bool = False) -> int:
     return issues_count
 
 
-def scan_directory(
-    directory: str, exclude_dirs: set[str] | None = None, fix: bool = False
-) -> int:
+def scan_directory(directory: str, exclude_dirs: set[str] | None = None, fix: bool = False) -> int:
     """Scan a directory for hardcoded paths."""
     if exclude_dirs is None:
         exclude_dirs = {
@@ -173,9 +168,7 @@ def scan_directory(
 
 def main() -> int:
     """Main function."""
-    parser = argparse.ArgumentParser(
-        description="Scan for hardcoded paths and fix them"
-    )
+    parser = argparse.ArgumentParser(description="Scan for hardcoded paths and fix them")
     parser.add_argument("--fix", action="store_true", help="Fix the hardcoded paths")
     parser.add_argument(
         "--directory", "-d", default=".", help="Directory to scan (default: current)"

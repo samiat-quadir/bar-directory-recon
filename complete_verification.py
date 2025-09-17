@@ -40,9 +40,7 @@ def check_system_tools():
 
     for tool, command in tools.items():
         try:
-            result = subprocess.run(
-                command.split(), capture_output=True, text=True, timeout=10
-            )
+            result = subprocess.run(command.split(), capture_output=True, text=True, timeout=10)
             if result.returncode == 0:
                 print(f"✅ {tool} - Available")
                 available.append(tool)

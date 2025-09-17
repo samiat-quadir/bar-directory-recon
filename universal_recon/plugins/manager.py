@@ -13,10 +13,9 @@ Implementation choices:
 
 import importlib
 import json
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Any
-from collections.abc import Iterator
 
 REGISTRY_PATH = Path(__file__).resolve().parents[1] / "plugin_registry.json"
 

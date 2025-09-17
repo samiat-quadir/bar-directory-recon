@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 
 def extract_plugins_used(site_data: dict[str, Any]) -> list[str]:

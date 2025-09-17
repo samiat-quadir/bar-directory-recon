@@ -8,7 +8,7 @@ import argparse
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 
@@ -70,9 +70,7 @@ class CrossDeviceTaskRunner:
             return result
         except subprocess.TimeoutExpired:
             print("⏱️  Command timed out after 5 minutes")
-            return subprocess.CompletedProcess(
-                ssh_command, 124, "", "Command timed out"
-            )
+            return subprocess.CompletedProcess(ssh_command, 124, "", "Command timed out")
         except Exception as e:
             print(f"❌ Error executing SSH command: {e}")
             return subprocess.CompletedProcess(ssh_command, 1, "", str(e))
@@ -103,9 +101,7 @@ class CrossDeviceTaskRunner:
 
         # Check if task requires admin privileges
         if task_config.get("requires_admin", False):
-            print(
-                "⚠️  This task requires administrator privileges on the remote machine"
-            )
+            print("⚠️  This task requires administrator privileges on the remote machine")
 
         # Handle workflow tasks (multiple steps)
         if "steps" in task_config:
@@ -190,9 +186,7 @@ Examples:
     )
 
     parser.add_argument("task", nargs="?", help="Task name to execute")
-    parser.add_argument(
-        "--list", "-l", action="store_true", help="List all available tasks"
-    )
+    parser.add_argument("--list", "-l", action="store_true", help="List all available tasks")
     parser.add_argument("--test", "-t", action="store_true", help="Test SSH connection")
     parser.add_argument(
         "--config",

@@ -8,7 +8,7 @@ import logging
 import os
 import time
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 from urllib.parse import urljoin
 
 import pandas as pd
@@ -73,15 +73,13 @@ class RealtorDirectoryScraper:
         """Extract details from a member listing element."""
         try:
             # Extract name
-            name_elem = member_element.find(
-                "h3", class_="member-name"
-            ) or member_element.find(".name")
+            name_elem = member_element.find("h3", class_="member-name") or member_element.find(
+                ".name"
+            )
             name = name_elem.get_text(strip=True) if name_elem else ""
 
             # Extract business name
-            business_elem = member_element.find(
-                ".business-name"
-            ) or member_element.find(".company")
+            business_elem = member_element.find(".business-name") or member_element.find(".company")
             business_name = business_elem.get_text(strip=True) if business_elem else ""
 
             # Extract email (may be obfuscated)
@@ -94,11 +92,7 @@ class RealtorDirectoryScraper:
                 email_text = member_element.find(text=lambda x: x and "@" in x)
                 if email_text:
                     # Basic deobfuscation for common patterns
-                    email = (
-                        email_text.strip()
-                        .replace(" [at] ", "@")
-                        .replace(" [dot] ", ".")
-                    )
+                    email = email_text.strip().replace(" [at] ", "@").replace(" [dot] ", ".")
 
             # Extract phone number
             phone_elem = member_element.find("a", href=lambda x: x and "tel:" in x)
@@ -115,9 +109,7 @@ class RealtorDirectoryScraper:
                     phone = phone_match.group(1)
 
             # Extract address
-            address_elem = member_element.find(".address") or member_element.find(
-                ".location"
-            )
+            address_elem = member_element.find(".address") or member_element.find(".location")
             address = address_elem.get_text(strip=True) if address_elem else ""
 
             # Only return if we have at least a name
@@ -210,9 +202,7 @@ class RealtorDirectoryScraper:
             driver.get(url)
 
             # Wait for page to load
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.TAG_NAME, "body"))
-            )
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
             # Try to load more content if pagination exists
             try:
@@ -228,9 +218,7 @@ class RealtorDirectoryScraper:
                     try:
                         load_more_btn = driver.find_element(By.CSS_SELECTOR, selector)
                         if load_more_btn.is_displayed():
-                            driver.execute_script(
-                                "arguments[0].click();", load_more_btn
-                            )
+                            driver.execute_script("arguments[0].click();", load_more_btn)
                             time.sleep(2)
                             break
                     except Exception:
@@ -277,9 +265,7 @@ class RealtorDirectoryScraper:
 
         return leads
 
-    def scrape_directory(
-        self, search_params: dict[str, str] | None = None
-    ) -> list[dict[str, str]]:
+    def scrape_directory(self, search_params: dict[str, str] | None = None) -> list[dict[str, str]]:
         """Main scraping method."""
 
         # Construct URL with search parameters

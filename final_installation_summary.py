@@ -83,9 +83,7 @@ def check_system_requirements() -> bool:
 
     requirements = {
         "Python 3.8+": sys.version_info >= (3, 8),
-        "Chrome Browser": Path(
-            "C:/Program Files/Google/Chrome/Application/chrome.exe"
-        ).exists(),
+        "Chrome Browser": Path("C:/Program Files/Google/Chrome/Application/chrome.exe").exists(),
         "Git": True,  # We'll check this separately
         "PowerShell": True,  # We'll check this separately
     }
@@ -113,9 +111,7 @@ def check_system_requirements() -> bool:
     # Git and PowerShell
     for tool in ["git", "powershell"]:
         try:
-            result = subprocess.run(
-                f"{tool} --version", shell=True, capture_output=True, text=True
-            )
+            result = subprocess.run(f"{tool} --version", shell=True, capture_output=True, text=True)
             if result.returncode == 0:
                 print(f"✅ {tool.title()} - Available")
             else:

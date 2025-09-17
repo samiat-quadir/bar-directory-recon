@@ -11,7 +11,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import pandas as pd
 
@@ -65,9 +65,7 @@ class UniversalLeadAutomation:
 
     def __init__(self):
         self.script_dir = script_dir
-        self.plugin_registry_path = (
-            self.script_dir / "universal_recon" / "plugin_registry.json"
-        )
+        self.plugin_registry_path = self.script_dir / "universal_recon" / "plugin_registry.json"
         self.outputs_dir = self.script_dir / "outputs"
         self.logs_dir = self.script_dir / "logs"
         self.plugins = self.load_plugin_registry()
@@ -107,25 +105,19 @@ class UniversalLeadAutomation:
 
     def generate_tag(self, city: str, industry: str) -> str:
         """Generate a tag based on city and industry."""
-        city_clean = (
-            city.lower().replace(" ", "_").replace("-", "_") if city else "unknown"
-        )
+        city_clean = city.lower().replace(" ", "_").replace("-", "_") if city else "unknown"
         industry_clean = industry.lower().replace(" ", "_")
         return f"{city_clean}_{industry_clean}"
 
     def create_output_directory(self, industry: str, city: str) -> Path:
         """Create organized output directory structure."""
         industry_dir = self.outputs_dir / industry
-        city_dir = industry_dir / (
-            city.lower().replace(" ", "_") if city else "unknown_city"
-        )
+        city_dir = industry_dir / (city.lower().replace(" ", "_") if city else "unknown_city")
 
         city_dir.mkdir(parents=True, exist_ok=True)
         return city_dir
 
-    def run_plugin(
-        self, plugin: dict[str, Any], config: dict[str, Any]
-    ) -> dict[str, Any]:
+    def run_plugin(self, plugin: dict[str, Any], config: dict[str, Any]) -> dict[str, Any]:
         """Run a specific plugin."""
         try:
             # Import the plugin module
@@ -185,9 +177,7 @@ class UniversalLeadAutomation:
         logger.info(f"Saved {len(leads)} leads to: {output_path}")
         return output_path
 
-    def setup_google_sheets(
-        self, credentials_path: str | None = None
-    ) -> Any | None:
+    def setup_google_sheets(self, credentials_path: str | None = None) -> Any | None:
         """Setup Google Sheets API client (optional)."""
         if not GOOGLE_SHEETS_AVAILABLE:
             logger.warning(
@@ -197,14 +187,10 @@ class UniversalLeadAutomation:
             return None
 
         if not credentials_path:
-            credentials_path = str(
-                self.script_dir / "config" / "google_service_account.json"
-            )
+            credentials_path = str(self.script_dir / "config" / "google_service_account.json")
 
         if not os.path.exists(credentials_path):
-            logger.warning(
-                f"Google Sheets credentials not found at: {credentials_path}"
-            )
+            logger.warning(f"Google Sheets credentials not found at: {credentials_path}")
             return None
 
         try:
@@ -215,9 +201,7 @@ class UniversalLeadAutomation:
             SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
             # Load credentials
-            credentials = Credentials.from_service_account_file(
-                credentials_path, scopes=SCOPES
-            )
+            credentials = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
 
             # Build the service
             service = build("sheets", "v4", credentials=credentials)
@@ -259,12 +243,8 @@ class UniversalLeadAutomation:
             # Try to create a new sheet or use existing one
             try:
                 # Create new sheet
-                body = {
-                    "requests": [{"addSheet": {"properties": {"title": sheet_name}}}]
-                }
-                service.spreadsheets().batchUpdate(
-                    spreadsheetId=sheet_id, body=body
-                ).execute()
+                body = {"requests": [{"addSheet": {"properties": {"title": sheet_name}}}]}
+                service.spreadsheets().batchUpdate(spreadsheetId=sheet_id, body=body).execute()
                 logger.info(f"Created new sheet: {sheet_name}")
             except Exception:
                 # Sheet might already exist, continue with data upload
@@ -374,9 +354,7 @@ class UniversalLeadAutomation:
                 enricher = LeadEnrichmentEngine(hunter_api_key, numverify_api_key)
                 enriched_objects = enricher.enrich_leads_batch(all_leads)
                 enriched_leads = [lead.__dict__ for lead in enriched_objects]
-                logger.info(
-                    f"Enriched {len(enriched_leads)} leads with advanced scoring"
-                )
+                logger.info(f"Enriched {len(enriched_leads)} leads with advanced scoring")
             except Exception as e:
                 logger.warning(f"Lead enrichment failed, using raw data: {e}")
                 enriched_leads = all_leads
@@ -398,9 +376,7 @@ class UniversalLeadAutomation:
                 output_path = self.save_leads_to_csv(enriched_leads, industry, city)
 
             # Upload to Google Sheets if requested and configured
-            if should_export_sheets and (
-                google_sheet_id or os.getenv("DEFAULT_GOOGLE_SHEET_ID")
-            ):
+            if should_export_sheets and (google_sheet_id or os.getenv("DEFAULT_GOOGLE_SHEET_ID")):
                 try:
                     # Use provided sheet ID or fall back to environment variable
                     sheet_id = google_sheet_id or os.getenv("DEFAULT_GOOGLE_SHEET_ID")
@@ -422,23 +398,17 @@ class UniversalLeadAutomation:
 
                         # Export using the integration
                         if sheets_integration.service:
-                            sheet_name_final = (
-                                google_sheet_name or f"{industry}_{city}_leads"
-                            )
+                            sheet_name_final = google_sheet_name or f"{industry}_{city}_leads"
 
                             # Setup sheet headers and formatting
-                            sheets_integration.setup_sheet_headers(
-                                sheet_id, sheet_name_final
-                            )
+                            sheets_integration.setup_sheet_headers(sheet_id, sheet_name_final)
 
                             # Batch upsert leads with deduplication
-                            inserted, updated, skipped = (
-                                sheets_integration.batch_upsert_leads(
-                                    sheet_id,
-                                    enriched_leads,
-                                    sheet_name_final,
-                                    avoid_duplicates=True,
-                                )
+                            inserted, updated, skipped = sheets_integration.batch_upsert_leads(
+                                sheet_id,
+                                enriched_leads,
+                                sheet_name_final,
+                                avoid_duplicates=True,
                             )
 
                             google_sheets_stats = {
@@ -454,14 +424,10 @@ class UniversalLeadAutomation:
                                 sheet_url = sheets_integration.get_sheet_url(
                                     sheet_id, sheet_name_final
                                 )
-                                logger.info(
-                                    f"✅ Google Sheets export successful: {sheet_url}"
-                                )
+                                logger.info(f"✅ Google Sheets export successful: {sheet_url}")
                                 print(f"📊 Google Sheets Link: {sheet_url}")
 
-                            logger.info(
-                                f"Google Sheets export stats: {google_sheets_stats}"
-                            )
+                            logger.info(f"Google Sheets export stats: {google_sheets_stats}")
                         else:
                             logger.warning(
                                 "Google Sheets service not initialized - authentication may be required"
@@ -471,12 +437,8 @@ class UniversalLeadAutomation:
                     logger.warning(f"Google Sheets export failed: {e}")
                     # If Google Sheets export fails and CSV wasn't requested, create CSV as backup
                     if not should_export_csv and not output_path:
-                        logger.info(
-                            "Creating CSV backup since Google Sheets export failed"
-                        )
-                        output_path = self.save_leads_to_csv(
-                            enriched_leads, industry, city
-                        )
+                        logger.info("Creating CSV backup since Google Sheets export failed")
+                        output_path = self.save_leads_to_csv(enriched_leads, industry, city)
 
         return {
             "success": len(enriched_leads) > 0,
@@ -489,9 +451,7 @@ class UniversalLeadAutomation:
             "results_summary": results_summary,
             "google_sheets_uploaded": google_sheets_uploaded,
             "google_sheets_stats": google_sheets_stats,
-            "urgent_leads": sum(
-                1 for lead in enriched_leads if lead.get("urgency_flag", False)
-            ),
+            "urgent_leads": sum(1 for lead in enriched_leads if lead.get("urgency_flag", False)),
         }
 
     def interactive_mode(self) -> dict[str, Any]:
@@ -613,9 +573,7 @@ Examples:
 
     parser.add_argument("--city", help="Target city for lead search")
 
-    parser.add_argument(
-        "--state", help="Target state for lead search (e.g., FL, CA, NY)"
-    )
+    parser.add_argument("--state", help="Target state for lead search (e.g., FL, CA, NY)")
 
     parser.add_argument("--keywords", help="Additional keywords for filtering results")
 
@@ -627,13 +585,9 @@ Examples:
         help="Maximum number of records to scrape (default: 50)",
     )
 
-    parser.add_argument(
-        "--test", action="store_true", help="Run in test mode with simulated data"
-    )
+    parser.add_argument("--test", action="store_true", help="Run in test mode with simulated data")
 
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Enable verbose logging"
-    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
 
     parser.add_argument(
         "--list-industries",
@@ -641,13 +595,9 @@ Examples:
         help="List available industries and exit",
     )
 
-    parser.add_argument(
-        "--google-sheet-id", help="Google Sheets ID for optional lead upload"
-    )
+    parser.add_argument("--google-sheet-id", help="Google Sheets ID for optional lead upload")
 
-    parser.add_argument(
-        "--google-sheet-name", help="Name for the Google Sheet tab (optional)"
-    )
+    parser.add_argument("--google-sheet-name", help="Name for the Google Sheet tab (optional)")
 
     parser.add_argument(
         "--export",
@@ -687,9 +637,7 @@ Examples:
                 print("\n✅ Multi-industry processing completed!")
                 print(f"📊 Industries processed: {result['industries_processed']}")
                 print(f"📊 Total leads found: {result['total_leads']}")
-                print(
-                    f"✅ Successful industries: {', '.join(result['successful_industries'])}"
-                )
+                print(f"✅ Successful industries: {', '.join(result['successful_industries'])}")
             else:
                 # Single industry result
                 print("\n✅ Lead generation completed!")

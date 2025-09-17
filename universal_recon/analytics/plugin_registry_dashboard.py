@@ -32,9 +32,7 @@ def analyze_plugins(matrix_path: str, export_path: str = None, verbose: bool = F
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Plugin Registry Dashboard")
-    parser.add_argument(
-        "--matrix-path", required=True, help="Path to schema_matrix.json"
-    )
+    parser.add_argument("--matrix-path", required=True, help="Path to schema_matrix.json")
     parser.add_argument("--export-json", help="Path to export JSON plugin summary")
     parser.add_argument("--verbose", action="store_true", help="Verbose output")
     args = parser.parse_args()

@@ -18,7 +18,7 @@ import logging
 import os
 import time
 from functools import lru_cache
-from typing import Any, Dict, Optional
+from typing import Any
 
 try:  # Optional Azure dependencies
     from azure.identity import (  # type: ignore
@@ -77,9 +77,7 @@ class SecurityManager:
                 self._initialize_client()
                 self.fallback_mode = False
             except Exception as e:  # pragma: no cover - defensive
-                logging.warning(
-                    f"Failed to initialize Azure Key Vault client: {e}. Falling back."
-                )
+                logging.warning(f"Failed to initialize Azure Key Vault client: {e}. Falling back.")
                 self.fallback_mode = True
         else:
             self.fallback_mode = True
@@ -106,9 +104,7 @@ class SecurityManager:
 
     # --- Public API ------------------------------------------------------------------------
     @lru_cache(maxsize=128)
-    def get_secret(
-        self, secret_name: str, fallback_env_var: str | None = None
-    ) -> str:
+    def get_secret(self, secret_name: str, fallback_env_var: str | None = None) -> str:
         """Retrieve secret or raise ValueError if unavailable."""
         # Key Vault first
         if not self.fallback_mode and self.client:
@@ -132,9 +128,7 @@ class SecurityManager:
         if val2:
             return val2
 
-        raise ValueError(
-            f"Secret '{secret_name}' not found in Key Vault or environment variables"
-        )
+        raise ValueError(f"Secret '{secret_name}' not found in Key Vault or environment variables")
 
     def get_email_config(self) -> dict[str, Any]:
         try:

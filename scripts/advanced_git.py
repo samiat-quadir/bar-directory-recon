@@ -8,7 +8,6 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import List, Optional, Tuple
 
 
 class AdvancedGitWorkflow:
@@ -55,9 +54,7 @@ class AdvancedGitWorkflow:
         print(f"[*] Smart push for branch: {branch_name}")
 
         # Step 1: Fetch latest changes
-        success, _ = self.run_command(
-            ["git", "fetch", self.remote_name], "Fetching latest changes"
-        )
+        success, _ = self.run_command(["git", "fetch", self.remote_name], "Fetching latest changes")
         if not success:
             print("[!] Fetch failed, attempting push anyway...")
 
@@ -163,9 +160,7 @@ class AdvancedGitWorkflow:
             print("[!] Code formatting failed, continuing anyway...")
 
         # Step 2: Check for changes
-        success, output = self.run_command(
-            ["git", "status", "--porcelain"], "Checking for changes"
-        )
+        success, output = self.run_command(["git", "status", "--porcelain"], "Checking for changes")
 
         if not success:
             return False
@@ -213,9 +208,7 @@ def main() -> None:
         action="store_true",
         help="Reset local branch to match remote",
     )
-    parser.add_argument(
-        "--auto-sync", action="store_true", help="Autonomous sync, commit and push"
-    )
+    parser.add_argument("--auto-sync", action="store_true", help="Autonomous sync, commit and push")
     parser.add_argument("--message", "-m", help="Commit message for auto-sync")
 
     args = parser.parse_args()

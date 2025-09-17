@@ -216,9 +216,7 @@ def enrich_property_data(properties):
         # Add metadata
         enriched.update(
             {
-                "contact_verified": bool(
-                    enriched["owner_email"] or enriched["owner_phone"]
-                ),
+                "contact_verified": bool(enriched["owner_email"] or enriched["owner_phone"]),
                 "enrichment_source": "sunbiz" if is_corporate else "individual_api",
                 "enrichment_date": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "data_quality_score": calculate_quality_score(enriched),
@@ -285,9 +283,7 @@ def create_excel_summary(enriched_df, output_dir):
         missing_contact_df = enriched_df[
             (enriched_df["owner_email"] == "") & (enriched_df["owner_phone"] == "")
         ]
-        missing_contact_df.to_excel(
-            writer, sheet_name="Missing Contact Info", index=False
-        )
+        missing_contact_df.to_excel(writer, sheet_name="Missing Contact Info", index=False)
 
         # Summary statistics
         summary_stats = {
@@ -377,9 +373,7 @@ def main():
     with open(summary_file, "w") as f:
         f.write("HALLANDALE PROPERTY PROCESSING SUMMARY REPORT\\n")
         f.write("=" * 50 + "\\n\\n")
-        f.write(
-            f"Processing Date: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\\n\\n"
-        )
+        f.write(f"Processing Date: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\\n\\n")
         f.write("RECORD COUNTS:\\n")
         f.write(f"  Total Records Processed: {total_records}\\n")
         f.write(f"  Records with Email: {records_with_email}\\n")

@@ -8,11 +8,7 @@ m = None
 fn = None
 try:
     m = importlib.import_module("orchestrator")
-    fn = (
-        getattr(m, "run", None)
-        or getattr(m, "orchestrate", None)
-        or getattr(m, "execute", None)
-    )
+    fn = getattr(m, "run", None) or getattr(m, "orchestrate", None) or getattr(m, "execute", None)
 except ImportError:
     pass
 

@@ -8,9 +8,9 @@ and standardizes them into a common format for the bar directory reconnaissance 
 import csv
 import pathlib
 import re
-from dataclasses import dataclass
-from typing import Any, Dict, Optional
 from collections.abc import Generator
+from dataclasses import dataclass
+from typing import Any
 
 
 def detect_csv_dialect(sample: str) -> Any:
@@ -114,10 +114,7 @@ class CollabDivorceAdapter:
                     ).strip()
 
                     raw_email = (
-                        row.get("Email")
-                        or row.get("Email Address")
-                        or row.get("E-mail")
-                        or ""
+                        row.get("Email") or row.get("Email Address") or row.get("E-mail") or ""
                     )
                     email = normalize_email(raw_email)
 

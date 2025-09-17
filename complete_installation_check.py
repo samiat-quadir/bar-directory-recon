@@ -19,9 +19,7 @@ def check_python_version():
         print(f"✅ Python {version.major}.{version.minor}.{version.micro} - Compatible")
         return True
     else:
-        print(
-            f"❌ Python {version.major}.{version.minor}.{version.micro} - Requires Python 3.8+"
-        )
+        print(f"❌ Python {version.major}.{version.minor}.{version.micro} - Requires Python 3.8+")
         return False
 
 
@@ -55,9 +53,7 @@ def check_system_tools():
     for tool, command in tools.items():
         try:
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            if result.returncode == 0 or (
-                tool == "chrome" and "Program Files" in result.stderr
-            ):
+            if result.returncode == 0 or (tool == "chrome" and "Program Files" in result.stderr):
                 print(f"✅ {tool} - Available")
                 results[tool] = True
             else:
@@ -245,9 +241,7 @@ def main():
         print("3. Set up automated scheduling")
         return True
     else:
-        print(
-            f"\n⚠️  {total - passed} checks failed. Please install missing components."
-        )
+        print(f"\n⚠️  {total - passed} checks failed. Please install missing components.")
         return False
 
 

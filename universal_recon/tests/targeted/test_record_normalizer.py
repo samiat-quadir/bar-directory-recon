@@ -44,9 +44,7 @@ def test_normalize_preserves_existing_optional_fields():
 
 def test_normalize_strict_mode_raises_on_missing_fields():
     """Test that strict mode raises ValueError for missing required fields."""
-    records = [
-        {"type": "email", "value": "test@example.com"}
-    ]  # missing xpath, context, url
+    records = [{"type": "email", "value": "test@example.com"}]  # missing xpath, context, url
 
     try:
         normalize(records, strict=True)
@@ -57,9 +55,7 @@ def test_normalize_strict_mode_raises_on_missing_fields():
 
 def test_normalize_non_strict_mode_handles_missing_fields():
     """Test that non-strict mode handles missing required fields gracefully."""
-    records = [
-        {"type": "email", "value": "test@example.com"}
-    ]  # missing xpath, context, url
+    records = [{"type": "email", "value": "test@example.com"}]  # missing xpath, context, url
     result = normalize(records, strict=False)
 
     assert len(result) == 1

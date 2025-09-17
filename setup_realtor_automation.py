@@ -13,9 +13,7 @@ def run_command(command: str, description: str = "") -> bool:
     """Run a command and handle errors."""
     print(f"🔧 {description}")
     try:
-        _ = subprocess.run(
-            command, shell=True, check=True, capture_output=True, text=True
-        )
+        _ = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
         print(f"✅ {description} - Success")
         return True
     except subprocess.CalledProcessError as e:

@@ -169,9 +169,7 @@ def check_git_setup():
 
     try:
         # Check git version
-        result = subprocess.run(
-            ["git", "--version"], capture_output=True, text=True, check=True
-        )
+        result = subprocess.run(["git", "--version"], capture_output=True, text=True, check=True)
         print(f"✅ Git: {result.stdout.strip()}")
 
         # Check safe directory
@@ -298,9 +296,7 @@ def main():
         print(f"\n⚠️  {total - passed} checks failed. Please review and fix issues.")
         print("\nCommon fixes:")
         print("  - Run: pip install -r requirements-dev.txt")
-        print(
-            "  - Check: git config --global --add safe.directory /workspaces/bar-directory-recon"
-        )
+        print("  - Check: git config --global --add safe.directory /workspaces/bar-directory-recon")
         print("  - Verify: PYTHONPATH includes project directories")
         return False
 

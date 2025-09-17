@@ -24,7 +24,6 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import List
 
 
 def find_git_repository() -> Path:
@@ -76,9 +75,7 @@ def resolve_file(file: str, primary_strategy: str, fallback_strategy: str) -> bo
         )
         print(f"✅ Resolved {file} using '{primary_strategy}' strategy.")
     except subprocess.CalledProcessError:
-        print(
-            f"⚠️ '{primary_strategy}' failed for {file}, trying '{fallback_strategy}'..."
-        )
+        print(f"⚠️ '{primary_strategy}' failed for {file}, trying '{fallback_strategy}'...")
         try:
             subprocess.run(
                 ["git", "checkout", f"--{fallback_strategy}", file],
@@ -100,9 +97,7 @@ def resolve_file(file: str, primary_strategy: str, fallback_strategy: str) -> bo
     return True
 
 
-def resolve_conflicts(
-    primary_strategy: str = "ours", fallback_strategy: str = "theirs"
-) -> None:
+def resolve_conflicts(primary_strategy: str = "ours", fallback_strategy: str = "theirs") -> None:
     """Resolve all conflicted files."""
     print(
         f"🔧 Starting conflict resolution with primary strategy: '{primary_strategy}', "

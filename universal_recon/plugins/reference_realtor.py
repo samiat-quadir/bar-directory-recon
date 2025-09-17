@@ -4,8 +4,8 @@ This plugin serves as an example of how to implement the Plugin interface
 for realtor directory data sources.
 """
 
-from typing import Any, Dict
 from collections.abc import Iterator
+from typing import Any
 
 
 class RealtorPlugin:
@@ -77,6 +77,5 @@ class RealtorPlugin:
         # Basic validation - ensure required fields are present
         required_fields = ["source", "id", "name"]
         return all(
-            field in transformed_data and transformed_data[field]
-            for field in required_fields
+            field in transformed_data and transformed_data[field] for field in required_fields
         )

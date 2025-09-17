@@ -19,7 +19,6 @@ import argparse
 import re
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 # Known problematic dependencies and their fixes
 DEPENDENCY_FIXES = {
@@ -96,9 +95,7 @@ def validate_file(file_path: Path) -> list[tuple[str, str, str]]:
                 else:
                     fix_msg = f"Change to: {new_pattern}"
 
-                issues.append(
-                    (str(line_num), f"Outdated dependency: {old_pattern}", fix_msg)
-                )
+                issues.append((str(line_num), f"Outdated dependency: {old_pattern}", fix_msg))
 
     return issues
 
@@ -172,12 +169,8 @@ def fix_file(file_path: Path) -> bool:
 
 def main():
     """Main function to validate and optionally fix requirements files."""
-    parser = argparse.ArgumentParser(
-        description="Validate requirements files for known issues"
-    )
-    parser.add_argument(
-        "--fix", action="store_true", help="Automatically fix detected issues"
-    )
+    parser = argparse.ArgumentParser(description="Validate requirements files for known issues")
+    parser.add_argument("--fix", action="store_true", help="Automatically fix detected issues")
     parser.add_argument(
         "--files",
         nargs="*",

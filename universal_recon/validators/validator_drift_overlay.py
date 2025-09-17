@@ -83,9 +83,7 @@ def export_html(results, path):
 
             # Split description retrieval across multiple lines for readability
             description = alert.get("description")
-            default_tooltip = VALIDATOR_DRIFT_BADGES.get(alert["severity"], {}).get(
-                "tooltip", ""
-            )
+            default_tooltip = VALIDATOR_DRIFT_BADGES.get(alert["severity"], {}).get("tooltip", "")
             tip = description or default_tooltip
 
             # Create the HTML list item
@@ -96,9 +94,7 @@ def export_html(results, path):
             )
 
         if result.get("suppression_reason"):
-            html.append(
-                f"<li><i>💤 Score suppressed: {result['suppression_reason']}</i></li>"
-            )
+            html.append(f"<li><i>💤 Score suppressed: {result['suppression_reason']}</i></li>")
 
         html.append("</ul>")
     html.append("</body></html>")

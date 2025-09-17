@@ -1,7 +1,7 @@
 """Firm data parser plugin for universal_recon."""
 
-from typing import Any, Dict
 from collections.abc import Iterator
+from typing import Any
 
 
 class FirmParserPlugin:
@@ -85,9 +85,7 @@ class FirmParserPlugin:
 
         # Check employee count is reasonable (if provided)
         employee_count = transformed_data.get("employee_count")
-        if employee_count is not None and (
-            employee_count < 0 or employee_count > 1000000
-        ):
+        if employee_count is not None and (employee_count < 0 or employee_count > 1000000):
             return False
 
         return True

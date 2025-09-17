@@ -9,7 +9,7 @@ import logging
 import os
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +64,7 @@ class SecurityAuditor:
         self.project_root = Path(project_root)
         self.findings: list[dict[str, Any]] = []
 
-    def scan_project(
-        self, exclude_dirs: list[str] | None = None
-    ) -> list[dict[str, Any]]:
+    def scan_project(self, exclude_dirs: list[str] | None = None) -> list[dict[str, Any]]:
         """Scan entire project for security issues."""
         if exclude_dirs is None:
             exclude_dirs = ["archive", ".git", "__pycache__", ".venv", "venv"]
@@ -220,11 +218,7 @@ class SecurityAuditor:
 
         categories = {finding["category"] for finding in self.findings}
 
-        if (
-            "password" in categories
-            or "api_key" in categories
-            or "secret" in categories
-        ):
+        if "password" in categories or "api_key" in categories or "secret" in categories:
             recommendations.append(
                 "Move all credentials to environment variables or secure configuration files"
             )
@@ -233,18 +227,14 @@ class SecurityAuditor:
             )
 
         if "hardcoded_paths" in categories:
-            recommendations.append(
-                "Replace hardcoded file paths with configurable options"
-            )
+            recommendations.append("Replace hardcoded file paths with configurable options")
 
         if any(cat in categories for cat in ["api_key", "secret", "token"]):
             recommendations.append(
                 "Consider using a secrets management service for production deployments"
             )
 
-        recommendations.append(
-            "Add security audit to CI/CD pipeline to catch future issues"
-        )
+        recommendations.append("Add security audit to CI/CD pipeline to catch future issues")
 
         return recommendations
 
@@ -354,9 +344,7 @@ def audit_project_security(project_root: str = ".") -> dict[str, Any]:
     return auditor.generate_report()
 
 
-def secure_configuration(
-    config_path: str, output_path: str | None = None
-) -> dict[str, Any]:
+def secure_configuration(config_path: str, output_path: str | None = None) -> dict[str, Any]:
     """Load and secure a configuration file."""
     with open(config_path, encoding="utf-8") as f:
         config = json.load(f)

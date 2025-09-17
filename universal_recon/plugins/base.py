@@ -5,8 +5,8 @@ Using typing.Protocol for duck typing - plugins don't need to inherit,
 just implement the required methods with correct signatures.
 """
 
-from typing import Any, Dict, Protocol
 from collections.abc import Iterator
+from typing import Any, Protocol
 
 
 class Plugin(Protocol):

@@ -6,7 +6,7 @@ Scrapes lead data from HVAC and plumbing contractor directories
 import logging
 import re
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import pandas as pd
 import requests
@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 class HVACPlumberScraper:
     """Scraper for HVAC and plumbing contractor directories."""
 
-    def __init__(
-        self, city: str = "", state: str = "", max_records: int | None = None
-    ):
+    def __init__(self, city: str = "", state: str = "", max_records: int | None = None):
         self.city = city
         self.state = state
         self.max_records = max_records or 50
@@ -233,15 +231,11 @@ class HVACPlumberScraper:
                 for selector in listing_selectors:
                     listings = soup.select(selector)
                     if listings:
-                        logger.info(
-                            f"Found {len(listings)} listings with selector: {selector}"
-                        )
+                        logger.info(f"Found {len(listings)} listings with selector: {selector}")
                         break
 
                 # Extract contractor information
-                for i, listing in enumerate(
-                    listings[: self.max_records // len(target_urls)]
-                ):
+                for i, listing in enumerate(listings[: self.max_records // len(target_urls)]):
                     try:
                         text = listing.get_text()
                         contact_info = self.extract_contact_info(text)

@@ -37,9 +37,7 @@ def generate_overlay(
     with open(matrix_path, encoding="utf-8") as f:
         matrix = json.load(f)
     rows = [render_row(site, data) for site, data in matrix.get("sites", {}).items()]
-    html = TEMPLATE.format(
-        rows="\n".join(rows), date=datetime.today().strftime("%Y-%m-%d")
-    )
+    html = TEMPLATE.format(rows="\n".join(rows), date=datetime.today().strftime("%Y-%m-%d"))
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)

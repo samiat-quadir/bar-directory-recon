@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 resolve_device_profile.py
 
@@ -144,8 +144,7 @@ def link_device_profile(device_name):
         # If the target already exists, backup first
         if target_profile.exists():
             backup_file = (
-                config_dir
-                / f"device_profile.json.bak.{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+                config_dir / f"device_profile.json.bak.{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             )
             shutil.copy2(target_profile, backup_file)
             logger.info(f"Backed up existing device_profile.json to {backup_file.name}")
@@ -166,9 +165,7 @@ def link_device_profile(device_name):
             else:
                 # Unix-style symlink
                 os.symlink(source_profile, target_profile)
-            logger.info(
-                f"Created symlink from {source_profile.name} to {target_profile.name}"
-            )
+            logger.info(f"Created symlink from {source_profile.name} to {target_profile.name}")
         except Exception as e:
             # If symlink fails, fall back to copy
             logger.warning(f"Symlink creation failed: {e}")

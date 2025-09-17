@@ -6,7 +6,7 @@ Scrapes lead data from HomeAdvisor pro directory
 import logging
 import re
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import requests
 from selenium import webdriver
@@ -26,9 +26,7 @@ logger = logging.getLogger(__name__)
 class HomeAdvisorScraper:
     """Scraper for HomeAdvisor professional directories."""
 
-    def __init__(
-        self, city: str = "", state: str = "", max_records: int | None = None
-    ):
+    def __init__(self, city: str = "", state: str = "", max_records: int | None = None):
         self.city = city
         self.state = state
         self.max_records = max_records or 50
@@ -195,9 +193,7 @@ class HomeAdvisorScraper:
             # 3. Extract professional profiles
             # 4. Parse contact information
 
-            logger.warning(
-                "Live HomeAdvisor scraping not implemented - using test data"
-            )
+            logger.warning("Live HomeAdvisor scraping not implemented - using test data")
             return self.scrape_test_data()
 
         except Exception as e:
@@ -216,9 +212,7 @@ def run_plugin(config: dict[str, Any]) -> dict[str, Any]:
     google_sheet_id = config.get("google_sheet_id")
     google_sheet_name = config.get("google_sheet_name")
 
-    logger.info(
-        f"HomeAdvisor Plugin - City: {city}, State: {state}, Test Mode: {test_mode}"
-    )
+    logger.info(f"HomeAdvisor Plugin - City: {city}, State: {state}, Test Mode: {test_mode}")
 
     try:
         scraper = HomeAdvisorScraper(city=city, state=state, max_records=max_records)

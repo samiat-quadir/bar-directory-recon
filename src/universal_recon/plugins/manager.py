@@ -1,6 +1,5 @@
 import importlib
 import pkgutil
-from typing import Dict, List
 from collections.abc import Iterable
 
 from .interface import SourcePlugin

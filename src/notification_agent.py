@@ -11,7 +11,7 @@ import ssl
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -103,9 +103,7 @@ class NotificationAgent:
         self, session_name: str, error_message: str, error_details: str | None = None
     ) -> bool:
         """Send error notification."""
-        message = (
-            f"Scraping session '{session_name}' encountered an error: {error_message}"
-        )
+        message = f"Scraping session '{session_name}' encountered an error: {error_message}"
 
         if error_details:
             message += f"\n\nDetails:\n{error_details}"
@@ -151,9 +149,7 @@ class NotificationAgent:
             self.logger.warning("Slack notifications not enabled")
             return False
 
-        return self._send_slack(
-            "This is a test Slack message from the Unified Scraping Framework"
-        )
+        return self._send_slack("This is a test Slack message from the Unified Scraping Framework")
 
     def send_test_notification_by_type(self, notification_type: str) -> bool:
         """Send test notification for specific type."""
@@ -283,9 +279,7 @@ class NotificationAgent:
             return True
 
         except ImportError:
-            self.logger.error(
-                "Twilio library not installed. Install with: pip install twilio"
-            )
+            self.logger.error("Twilio library not installed. Install with: pip install twilio")
             return False
         except Exception as e:
             self.logger.error(f"Failed to send SMS: {e}")

@@ -10,7 +10,7 @@ import logging
 import re
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import pandas as pd
 
@@ -55,9 +55,7 @@ class PropertyEnrichment:
             output_file = self.output_dir / "hallandale_properties_enriched.csv"
             enriched_df.to_csv(output_file, index=False)
 
-            logger.info(
-                f"Enriched {len(enriched_properties)} properties to {output_file}"
-            )
+            logger.info(f"Enriched {len(enriched_properties)} properties to {output_file}")
 
             return {
                 "status": "success",
@@ -323,11 +321,7 @@ class PropertyEnrichment:
 
         # Check inspection due date
         inspection_due = property_data.get("inspection_due", "")
-        if (
-            inspection_due
-            and not pd.isna(inspection_due)
-            and str(inspection_due).strip()
-        ):
+        if inspection_due and not pd.isna(inspection_due) and str(inspection_due).strip():
             priority_factors.append("inspection_due")
 
         # Check year built (buildings from 1980-1990 flagged as priority for inspection)
@@ -344,19 +338,14 @@ class PropertyEnrichment:
         notes = property_data.get("notes", "")
         if notes and not pd.isna(notes):
             notes_str = str(notes).lower()
-            if any(
-                keyword in notes_str
-                for keyword in ["priority", "urgent", "violation", "code"]
-            ):
+            if any(keyword in notes_str for keyword in ["priority", "urgent", "violation", "code"]):
                 priority_factors.append("notes_priority")
 
         # Missing contact information makes it priority
         owner_email = property_data.get("owner_email", "")
         owner_phone = property_data.get("owner_phone", "")
 
-        if (
-            not owner_email or pd.isna(owner_email) or str(owner_email).strip() == ""
-        ) and (
+        if (not owner_email or pd.isna(owner_email) or str(owner_email).strip() == "") and (
             not owner_phone or pd.isna(owner_phone) or str(owner_phone).strip() == ""
         ):
             priority_factors.append("missing_contact")
@@ -370,12 +359,8 @@ class PropertyEnrichment:
 
             # Calculate statistics
             total_records = len(df)
-            records_with_email = len(
-                df[df["owner_email"].notna() & (df["owner_email"] != "")]
-            )
-            records_with_phone = len(
-                df[df["owner_phone"].notna() & (df["owner_phone"] != "")]
-            )
+            records_with_email = len(df[df["owner_email"].notna() & (df["owner_email"] != "")])
+            records_with_phone = len(df[df["owner_phone"].notna() & (df["owner_phone"] != "")])
             priority_records = len(df[df["priority_flag"] == True])
             corporate_entities = len(df[df["is_corporate"] == True])
             individual_owners = total_records - corporate_entities
@@ -404,18 +389,10 @@ class PropertyEnrichment:
                 "needs_manual_review": needs_manual_review,
                 "enrichment_sources": source_counts,
                 "success_rates": {
-                    "email_enrichment": round(
-                        (records_with_email / total_records) * 100, 1
-                    ),
-                    "phone_enrichment": round(
-                        (records_with_phone / total_records) * 100, 1
-                    ),
+                    "email_enrichment": round((records_with_email / total_records) * 100, 1),
+                    "phone_enrichment": round((records_with_phone / total_records) * 100, 1),
                     "contact_enrichment": round(
-                        (
-                            (records_with_email + records_with_phone)
-                            / (total_records * 2)
-                        )
-                        * 100,
+                        ((records_with_email + records_with_phone) / (total_records * 2)) * 100,
                         1,
                     ),
                 },
@@ -428,31 +405,19 @@ class PropertyEnrichment:
                 f.write("=" * 50 + "\n\n")
                 f.write(f"Processing Date: {summary['processing_date']}\n\n")
                 f.write("RECORD COUNTS:\n")
-                f.write(
-                    f"  Total Records Processed: {summary['total_records_processed']}\n"
-                )
+                f.write(f"  Total Records Processed: {summary['total_records_processed']}\n")
                 f.write(f"  Records with Email: {summary['records_with_emails']}\n")
                 f.write(f"  Records with Phone: {summary['records_with_phones']}\n")
                 f.write(f"  Priority Records: {summary['priority_records']}\n")
                 f.write(f"  Corporate Entities: {summary['corporate_entities']}\n")
                 f.write(f"  Individual Owners: {summary['individual_owners']}\n\n")
                 f.write("DATA QUALITY:\n")
-                f.write(
-                    f"  Average Quality Score: {summary['average_data_quality_score']}/100\n"
-                )
-                f.write(
-                    f"  High Quality Records (80+): {summary['high_quality_records']}\n"
-                )
-                f.write(
-                    f"  Needs Manual Review (<50): {summary['needs_manual_review']}\n\n"
-                )
+                f.write(f"  Average Quality Score: {summary['average_data_quality_score']}/100\n")
+                f.write(f"  High Quality Records (80+): {summary['high_quality_records']}\n")
+                f.write(f"  Needs Manual Review (<50): {summary['needs_manual_review']}\n\n")
                 f.write("SUCCESS RATES:\n")
-                f.write(
-                    f"  Email Enrichment: {summary['success_rates']['email_enrichment']}%\n"
-                )
-                f.write(
-                    f"  Phone Enrichment: {summary['success_rates']['phone_enrichment']}%\n"
-                )
+                f.write(f"  Email Enrichment: {summary['success_rates']['email_enrichment']}%\n")
+                f.write(f"  Phone Enrichment: {summary['success_rates']['phone_enrichment']}%\n")
                 f.write(
                     f"  Overall Contact Enrichment: {summary['success_rates']['contact_enrichment']}%\n\n"
                 )
@@ -473,9 +438,7 @@ if __name__ == "__main__":
 
     # Process the raw property data
     logger.info("Starting property enrichment process")
-    result = enricher.enrich_properties(
-        "outputs/hallandale/hallandale_properties_raw.csv"
-    )
+    result = enricher.enrich_properties("outputs/hallandale/hallandale_properties_raw.csv")
     print(f"Enrichment result: {result}")
 
     if result.get("status") == "success":
@@ -486,6 +449,4 @@ if __name__ == "__main__":
         print(f"  Records with emails: {summary.get('records_with_emails', 0)}")
         print(f"  Records with phones: {summary.get('records_with_phones', 0)}")
         print(f"  Priority records: {summary.get('priority_records', 0)}")
-        print(
-            f"  Average quality score: {summary.get('average_data_quality_score', 0)}"
-        )
+        print(f"  Average quality score: {summary.get('average_data_quality_score', 0)}")

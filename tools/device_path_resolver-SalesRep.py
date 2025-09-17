@@ -85,9 +85,7 @@ def get_project_path():
 
     # Fallback to common locations
     potential_paths = [
-        os.path.join(
-            onedrive, "Desktop", "Local Py", "Work Projects", "bar-directory-recon"
-        ),
+        os.path.join(onedrive, "Desktop", "Local Py", "Work Projects", "bar-directory-recon"),
         os.path.join(onedrive, "Documents", "Projects", "bar-directory-recon"),
     ]
 
@@ -111,9 +109,7 @@ def resolve_path(path):
 
     # Replace OneDrive path
     if "OneDrive" in path:
-        return path.replace(
-            os.path.dirname(os.path.dirname(onedrive_path)), onedrive_path
-        )
+        return path.replace(os.path.dirname(os.path.dirname(onedrive_path)), onedrive_path)
 
     # Replace project path
     if "bar-directory-recon" in path:

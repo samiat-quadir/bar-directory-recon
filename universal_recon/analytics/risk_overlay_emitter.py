@@ -3,7 +3,7 @@
 import json
 import os
 import tempfile
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
 from universal_recon.core.logger import get_logger
 
@@ -44,9 +44,7 @@ def emit_site_risk_json(
         if not validator_tiers:
             raise ValueError("Validator tiers could not be loaded")
 
-        risk_level, message = calculate_risk_level(
-            drift_score, health, suppression_factor
-        )
+        risk_level, message = calculate_risk_level(drift_score, health, suppression_factor)
         return {
             "site": site_name,
             "risk_level": risk_level,
@@ -128,9 +126,7 @@ def emit_risk_overlay(
             result = {"risk_badges": risk_badges}
 
             # For tests, write to the same directory as the input files
-            output_path = os.path.join(
-                os.path.dirname(matrix_path), "risk_overlay.json"
-            )
+            output_path = os.path.join(os.path.dirname(matrix_path), "risk_overlay.json")
 
         except Exception as e:
             logger.error(f"Error generating risk overlay: {e}")
