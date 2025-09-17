@@ -6,7 +6,7 @@ Unified data extraction from web pages using configurable selectors and patterns
 
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from bs4 import BeautifulSoup, Tag
 from selenium.webdriver.common.by import By
@@ -43,9 +43,7 @@ class DataExtractor:
             containers = soup.select(container_selector)
 
             if not containers:
-                logger.warning(
-                    f"No containers found with selector: {container_selector}"
-                )
+                logger.warning(f"No containers found with selector: {container_selector}")
                 return []
 
             extracted_data = []
@@ -68,9 +66,7 @@ class DataExtractor:
 
         try:
             # Extract each field defined in extraction rules
-            for field_name, field_config in self.extraction_rules.get(
-                "fields", {}
-            ).items():
+            for field_name, field_config in self.extraction_rules.get("fields", {}).items():
                 value = self._extract_field(element, field_config)
                 if value:
                     data[field_name] = value
@@ -90,9 +86,7 @@ class DataExtractor:
             logger.error(f"Error extracting data from element: {e}")
             return {}
 
-    def _extract_field(
-        self, element: Tag, field_config: dict[str, Any]
-    ) -> str | None:
+    def _extract_field(self, element: Tag, field_config: dict[str, Any]) -> str | None:
         """Extract a specific field using its configuration."""
         try:
             extraction_type = field_config.get("type", "text")
@@ -232,9 +226,7 @@ class DataExtractor:
             for selector in selectors:
                 try:
                     elements = driver.find_elements(By.CSS_SELECTOR, selector)
-                    logger.info(
-                        f"Found {len(elements)} elements with selector: {selector}"
-                    )
+                    logger.info(f"Found {len(elements)} elements with selector: {selector}")
 
                     for element in elements:
                         try:
@@ -276,9 +268,7 @@ class DataExtractor:
                 try:
                     import json
 
-                    script_content = (
-                        getattr(script, "string", None) or script.get_text()
-                    )
+                    script_content = getattr(script, "string", None) or script.get_text()
                     if script_content:
                         data = json.loads(script_content)
                     if isinstance(data, dict):
@@ -320,9 +310,7 @@ class DataExtractor:
         for prop_element in prop_elements:
             if isinstance(prop_element, Tag):
                 prop_name = prop_element.get("itemprop")
-                prop_value = prop_element.get("content") or prop_element.get_text(
-                    strip=True
-                )
+                prop_value = prop_element.get("content") or prop_element.get_text(strip=True)
                 if prop_name and prop_value:
                     data[str(prop_name)] = prop_value
 
@@ -349,9 +337,7 @@ class DataExtractor:
 
         return datetime.now().isoformat()
 
-    def clean_extracted_data(
-        self, data_list: list[dict[str, Any]]
-    ) -> list[dict[str, Any]]:
+    def clean_extracted_data(self, data_list: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Clean and deduplicate extracted data."""
         try:
             cleaned_data = []
@@ -384,18 +370,14 @@ class DataExtractor:
 
                     cleaned_data.append(cleaned_record)
 
-            logger.info(
-                f"Cleaned data: {len(data_list)} -> {len(cleaned_data)} records"
-            )
+            logger.info(f"Cleaned data: {len(data_list)} -> {len(cleaned_data)} records")
             return cleaned_data
 
         except Exception as e:
             logger.error(f"Error cleaning data: {e}")
             return data_list
 
-    def validate_and_enrich_data(
-        self, data_list: list[dict[str, Any]]
-    ) -> list[dict[str, Any]]:
+    def validate_and_enrich_data(self, data_list: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Validate and enrich extracted data."""
         try:
             enriched_data = []

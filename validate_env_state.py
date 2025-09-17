@@ -12,7 +12,6 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 
 def check_python_packages() -> tuple[list[str], list[str]]:
@@ -46,8 +45,7 @@ def check_python_packages() -> tuple[list[str], list[str]]:
         )
         installed_data = json.loads(result.stdout)
         installed_packages = {
-            pkg["name"].lower().replace("-", "_"): pkg["version"]
-            for pkg in installed_data
+            pkg["name"].lower().replace("-", "_"): pkg["version"] for pkg in installed_data
         }
     except Exception as e:
         print(f"❌ Failed to get installed packages: {e}")
@@ -246,11 +244,7 @@ def generate_validation_report():
 
     for var, value in env_checks.items():
         if value:
-            print(
-                f"✅ {var} = {value[:50]}..."
-                if len(str(value)) > 50
-                else f"✅ {var} = {value}"
-            )
+            print(f"✅ {var} = {value[:50]}..." if len(str(value)) > 50 else f"✅ {var} = {value}")
         else:
             print(f"❌ {var} = (not set)")
 

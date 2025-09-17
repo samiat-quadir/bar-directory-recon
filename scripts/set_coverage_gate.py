@@ -5,6 +5,7 @@ Usage: python scripts/set_coverage_gate.py --coverage reports/coverage.xml
 
 Logic: if coverage >= 10.5 -> gate=10 else gate=8. Replaces --cov-fail-under= in pytest.ini and pyproject.toml.
 """
+
 from __future__ import annotations
 
 import argparse

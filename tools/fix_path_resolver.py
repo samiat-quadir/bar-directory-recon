@@ -98,14 +98,16 @@ def fix_device_path_resolver():
     new_content = re.sub(pattern, replacement, content)
 
     # Fix reference to get_onedrive_path in get_project_root_path
-    get_project_root_pattern = r"onedrive_path = os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)"
-    get_project_root_replacement = "onedrive_path = get_onedrive_path()"
-    new_content = re.sub(
-        get_project_root_pattern, get_project_root_replacement, new_content
+    get_project_root_pattern = (
+        r"onedrive_path = os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)"
     )
+    get_project_root_replacement = "onedrive_path = get_onedrive_path()"
+    new_content = re.sub(get_project_root_pattern, get_project_root_replacement, new_content)
 
     # Fix reference to get_onedrive_path in register_current_device
-    register_current_device_pattern = r"onedrive_path = os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)"
+    register_current_device_pattern = (
+        r"onedrive_path = os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)"
+    )
     register_current_device_replacement = "onedrive_path = get_onedrive_path()"
     new_content = re.sub(
         register_current_device_pattern,
@@ -159,9 +161,7 @@ if __name__ == "__main__":
     success = fix_device_path_resolver()
     if success:
         print("Finished fixing device_path_resolver.py")
-        print(
-            "You can now run python tools/device_path_resolver.py to verify it works correctly"
-        )
+        print("You can now run python tools/device_path_resolver.py to verify it works correctly")
     else:
         print("Failed to fix device_path_resolver.py")
         sys.exit(1)

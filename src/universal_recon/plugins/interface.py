@@ -1,5 +1,5 @@
-from typing import Dict, Protocol
 from collections.abc import Iterable
+from typing import Protocol
 
 
 class SourcePlugin(Protocol):

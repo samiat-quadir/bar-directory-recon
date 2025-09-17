@@ -50,9 +50,7 @@ def run_weekly_scrape():
 
         if result["success"]:
             logger.info("✅ Weekly scrape completed successfully")
-            logger.info(
-                f"📁 {result['leads_count']} leads saved to {result['output_path']}"
-            )
+            logger.info(f"📁 {result['leads_count']} leads saved to {result['output_path']}")
 
             # Create a symlink to the latest file for easy access
             latest_path = os.path.join("outputs", "realtor_leads_latest.csv")
@@ -69,9 +67,7 @@ def run_weekly_scrape():
                 logger.info(f"📎 Latest file copied to {latest_path}")
 
         else:
-            logger.error(
-                f"❌ Weekly scrape failed: {result.get('error', 'Unknown error')}"
-            )
+            logger.error(f"❌ Weekly scrape failed: {result.get('error', 'Unknown error')}")
 
     except Exception as e:
         logger.error(f"❌ Scheduler error: {e}")
@@ -83,9 +79,7 @@ def run_interactive_mode():
     print("=" * 40)
 
     # Get user preferences
-    max_records = input(
-        "Enter max records to scrape (or press Enter for no limit): "
-    ).strip()
+    max_records = input("Enter max records to scrape (or press Enter for no limit): ").strip()
     max_records = int(max_records) if max_records.isdigit() else None
 
     # Search parameters
@@ -174,9 +168,7 @@ def main():
 
     else:  # once mode
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_path = args.output or os.path.join(
-            "outputs", f"realtor_leads_{timestamp}.csv"
-        )
+        output_path = args.output or os.path.join("outputs", f"realtor_leads_{timestamp}.csv")
 
         result = scrape_realtor_directory(
             output_path=output_path,

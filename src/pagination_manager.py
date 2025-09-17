@@ -6,8 +6,8 @@ Unified pagination handling for directory scraping.
 
 import logging
 import time
-from typing import Any, Dict, Optional
 from collections.abc import Generator
+from typing import Any
 
 from selenium.webdriver.common.by import By
 

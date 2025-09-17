@@ -34,9 +34,7 @@ def export_html(status, path="output/validator_drift_overlay.html"):
             else BADGE_COLORS.get("critical" if suppress >= 10 else "warning")
         )
         html.append("<div style='border:1px solid #ccc;margin:10px;padding:10px;'>")
-        html.append(
-            f"<h2>{site} - <span style='color:{color}'>{health.upper()}</span></h2>"
-        )
+        html.append(f"<h2>{site} - <span style='color:{color}'>{health.upper()}</span></h2>")
         if not drift:
             html.append("<p>✅ All validator plugins present.</p>")
         else:

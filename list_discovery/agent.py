@@ -24,7 +24,7 @@ import re
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 from urllib.parse import urljoin, urlparse
 
 # Optional imports with fallbacks
@@ -65,9 +65,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(
-            PROJECT_ROOT / "logs" / "automation" / "list_discovery.log"
-        ),
+        logging.FileHandler(PROJECT_ROOT / "logs" / "automation" / "list_discovery.log"),
         logging.StreamHandler(sys.stdout),
     ],
 )
@@ -98,9 +96,7 @@ class WebPageMonitor:
         self.monitored_urls = config.get("monitored_urls", [])
         self.download_dir = Path(config.get("download_dir", "input/discovered_lists"))
         self.state_file = Path(config.get("state_file", "list_discovery/state.json"))
-        self.file_extensions = config.get(
-            "file_extensions", [".pdf", ".csv", ".xls", ".xlsx"]
-        )
+        self.file_extensions = config.get("file_extensions", [".pdf", ".csv", ".xls", ".xlsx"])
         self.check_interval = config.get("check_interval", 3600)  # 1 hour default
 
         # Ensure directories exist
@@ -166,25 +162,19 @@ class WebPageMonitor:
                     # Extract filename from URL or link text
                     filename = os.path.basename(parsed_url.path)
                     if not filename:
-                        filename = link.get_text(strip=True)[
-                            :50
-                        ]  # Fallback to link text
+                        filename = link.get_text(strip=True)[:50]  # Fallback to link text
 
                     file_links.append((full_url, filename))
                     break
 
         return file_links
 
-    async def _download_file(
-        self, session: Any, url: str, filename: str
-    ) -> Path | None:
+    async def _download_file(self, session: Any, url: str, filename: str) -> Path | None:
         """Download a file to the download directory"""
         try:
             # Sanitize filename
             safe_filename = re.sub(r"[^\w\s.-]", "_", filename)
-            if not any(
-                safe_filename.lower().endswith(ext) for ext in self.file_extensions
-            ):
+            if not any(safe_filename.lower().endswith(ext) for ext in self.file_extensions):
                 # Add extension if missing
                 parsed_url = urlparse(url)
                 path_ext = os.path.splitext(parsed_url.path)[1]
@@ -264,9 +254,7 @@ class WebPageMonitor:
                     discovered_files.add(file_url)
 
                     # Download the file
-                    downloaded_path = await self._download_file(
-                        session, file_url, filename
-                    )
+                    downloaded_path = await self._download_file(session, file_url, filename)
                     if downloaded_path:
                         downloaded_files.append(downloaded_path)
 
@@ -334,11 +322,8 @@ Files are ready for processing in the input directory.
 
         async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=60),
-            headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            },
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
         ) as session:
-
             for url_config in self.monitored_urls:
                 try:
                     downloaded_files = await self._check_url(session, url_config)
@@ -348,9 +333,7 @@ Files are ready for processing in the input directory.
                     await asyncio.sleep(2)
 
                 except Exception as e:
-                    logger.error(
-                        f"Error processing URL {url_config.get('url', 'unknown')}: {e}"
-                    )
+                    logger.error(f"Error processing URL {url_config.get('url', 'unknown')}: {e}")
 
         # Save state after checking all URLs
         self._save_state()
@@ -359,9 +342,7 @@ Files are ready for processing in the input directory.
 
     async def monitor_continuously(self) -> None:
         """Continuously monitor URLs at specified intervals"""
-        logger.info(
-            f"Starting continuous monitoring (check interval: {self.check_interval}s)"
-        )
+        logger.info(f"Starting continuous monitoring (check interval: {self.check_interval}s)")
 
         while True:
             try:
@@ -395,8 +376,7 @@ Files are ready for processing in the input directory.
         recent_downloads = [
             item
             for item in self.state["download_history"]
-            if datetime.fromisoformat(item["timestamp"])
-            > datetime.now() - timedelta(days=7)
+            if datetime.fromisoformat(item["timestamp"]) > datetime.now() - timedelta(days=7)
         ]
 
         return {
@@ -558,12 +538,8 @@ async def main():
     subparsers.add_parser("check", help="Run single check for new files")
 
     # Monitor command
-    monitor_parser = subparsers.add_parser(
-        "monitor", help="Start continuous monitoring"
-    )
-    monitor_parser.add_argument(
-        "--interval", type=int, help="Check interval in seconds"
-    )
+    monitor_parser = subparsers.add_parser("monitor", help="Start continuous monitoring")
+    monitor_parser.add_argument("--interval", type=int, help="Check interval in seconds")
 
     # Status command
     subparsers.add_parser("status", help="Show current status and statistics")

@@ -2,6 +2,7 @@
 """
 Set Intelligent Coverage Gate - Update --cov-fail-under based on observed coverage
 """
+
 import pathlib
 import re
 import sys

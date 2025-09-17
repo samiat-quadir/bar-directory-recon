@@ -8,7 +8,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor
@@ -82,9 +82,7 @@ class HallandalePipeline:
 
             # Step 2: Enrich properties
             self.logger.info("Step 2: Enriching property data")
-            enrichment_result = self.enricher.enrich_properties(
-                pdf_result["output_file"]
-            )
+            enrichment_result = self.enricher.enrich_properties(pdf_result["output_file"])
 
             if not enrichment_result.get("success", False):
                 error_msg = f"Property enrichment failed: {enrichment_result.get('message', 'Unknown error')}"
@@ -101,16 +99,12 @@ class HallandalePipeline:
 
             # Step 3: Generate enrichment summary
             self.logger.info("Step 3: Generating enrichment summary")
-            summary = self.enricher.generate_summary_report(
-                enrichment_result["output_file"]
-            )
+            summary = self.enricher.generate_summary_report(enrichment_result["output_file"])
             results["enrichment_summary"] = summary
 
             # Step 4: Validate property data
             self.logger.info("Step 4: Validating property data")
-            validation_result = self.validator.validate_properties(
-                enrichment_result["output_file"]
-            )
+            validation_result = self.validator.validate_properties(enrichment_result["output_file"])
 
             if not validation_result.get("success", False):
                 error_msg = f"Property validation failed: {validation_result.get('message', 'Unknown error')}"
@@ -128,9 +122,7 @@ class HallandalePipeline:
             if GOOGLE_SHEETS_AVAILABLE:
                 # Step 6: Upload to Google Sheets (if configured)
                 self.logger.info("Step 6: Uploading to Google Sheets")
-                sheets_result = self._upload_to_google_sheets(
-                    enrichment_result["output_file"]
-                )
+                sheets_result = self._upload_to_google_sheets(enrichment_result["output_file"])
                 results["google_sheets_result"] = sheets_result
                 if sheets_result.get("success", False):
                     results["steps_completed"].append("google_sheets_upload")
@@ -182,9 +174,7 @@ class HallandalePipeline:
         """Upload results to Google Sheets."""
         try:
             # Placeholder for Google Sheets integration
-            self.logger.info(
-                "Google Sheets upload simulated (requires API credentials setup)"
-            )
+            self.logger.info("Google Sheets upload simulated (requires API credentials setup)")
             return {
                 "success": True,
                 "message": "Upload simulated - Google Sheets integration not configured",
@@ -202,12 +192,8 @@ class HallandalePipeline:
                 f.write("HALLANDALE PROPERTY PROCESSING PIPELINE REPORT\n")
                 f.write("=" * 50 + "\n\n")
 
-                f.write(
-                    f"Pipeline Status: {results.get('pipeline_status', 'Unknown')}\n"
-                )
-                f.write(
-                    f"Steps Completed: {', '.join(results.get('steps_completed', []))}\n"
-                )
+                f.write(f"Pipeline Status: {results.get('pipeline_status', 'Unknown')}\n")
+                f.write(f"Steps Completed: {', '.join(results.get('steps_completed', []))}\n")
 
                 if results.get("errors"):
                     f.write(f"\nErrors: {len(results['errors'])}\n")
@@ -231,18 +217,14 @@ class HallandalePipeline:
 
 def main() -> None:
     """Main function for command-line usage."""
-    parser = argparse.ArgumentParser(
-        description="Hallandale Property Processing Pipeline"
-    )
+    parser = argparse.ArgumentParser(description="Hallandale Property Processing Pipeline")
     parser.add_argument("pdf_file", help="Path to the PDF file to process")
     parser.add_argument(
         "--output-dir",
         default="outputs/hallandale",
         help="Output directory for results",
     )
-    parser.add_argument(
-        "--export", action="store_true", help="Export results to Excel and CSV"
-    )
+    parser.add_argument("--export", action="store_true", help="Export results to Excel and CSV")
 
     args = parser.parse_args()
 

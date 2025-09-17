@@ -103,9 +103,7 @@ def export_to_google_sheets(df: pd.DataFrame, sheet_name: str, analysis: dict) -
                 "https://www.googleapis.com/auth/drive",
             ]
 
-            creds = Credentials.from_service_account_file(
-                credentials_path, scopes=scope
-            )
+            creds = Credentials.from_service_account_file(credentials_path, scopes=scope)
             client = gspread.authorize(creds)
 
             # Open spreadsheet
@@ -116,9 +114,7 @@ def export_to_google_sheets(df: pd.DataFrame, sheet_name: str, analysis: dict) -
                 worksheet = spreadsheet.worksheet(sheet_name)
                 worksheet.clear()
             except gspread.WorksheetNotFound:
-                worksheet = spreadsheet.add_worksheet(
-                    title=sheet_name, rows=1000, cols=20
-                )
+                worksheet = spreadsheet.add_worksheet(title=sheet_name, rows=1000, cols=20)
 
             # Prepare data for export
             export_df = df.copy()
@@ -129,9 +125,7 @@ def export_to_google_sheets(df: pd.DataFrame, sheet_name: str, analysis: dict) -
                     export_df[col] = export_df[col].astype(str)
 
             # Export data
-            worksheet.update(
-                [export_df.columns.values.tolist()] + export_df.values.tolist()
-            )
+            worksheet.update([export_df.columns.values.tolist()] + export_df.values.tolist())
 
             # Add summary information
             summary_row = len(export_df) + 3
@@ -148,9 +142,7 @@ def export_to_google_sheets(df: pd.DataFrame, sheet_name: str, analysis: dict) -
                 f'Export Date: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}',
             )
 
-            print(
-                f"✅ Exported {len(export_df)} records to Google Sheets: {sheet_name}"
-            )
+            print(f"✅ Exported {len(export_df)} records to Google Sheets: {sheet_name}")
             return True
 
         except ImportError:
@@ -204,9 +196,7 @@ def generate_processing_summary(
     summary = {
         "processing_date": datetime.now().isoformat(),
         "total_cities_processed": len(data),
-        "total_records_processed": sum(
-            analysis["total_records"] for analysis in analyses
-        ),
+        "total_records_processed": sum(analysis["total_records"] for analysis in analyses),
         "api_status": api_status,
         "export_results": export_results,
         "city_analyses": analyses,
@@ -215,19 +205,13 @@ def generate_processing_summary(
 
     # Generate recommendations
     if not api_status["hunter_io"]:
-        summary["recommendations"].append(
-            "Configure Hunter.io API for enhanced email discovery"
-        )
+        summary["recommendations"].append("Configure Hunter.io API for enhanced email discovery")
 
     if not api_status["zerobounce"]:
-        summary["recommendations"].append(
-            "Configure ZeroBounce API for email validation"
-        )
+        summary["recommendations"].append("Configure ZeroBounce API for email validation")
 
     if not api_status["google_sheets"]:
-        summary["recommendations"].append(
-            "Verify Google Sheets credentials and configuration"
-        )
+        summary["recommendations"].append("Verify Google Sheets credentials and configuration")
 
     for analysis in analyses:
         if analysis.get("email_completion_rate", 0) < 50:
@@ -255,9 +239,7 @@ def main():
     data = load_existing_data()
 
     if not data:
-        print(
-            "❌ No processed data found. Please run the initial processing pipeline first."
-        )
+        print("❌ No processed data found. Please run the initial processing pipeline first.")
         return
 
     # Step 2: Check API status
@@ -288,9 +270,7 @@ def main():
 
         # Step 4: Export to Google Sheets
         print(f"\n🔄 Step 4: Exporting {city_name} to Google Sheets...")
-        export_success = export_to_google_sheets(
-            df, f"{city_name}_properties", analysis
-        )
+        export_success = export_to_google_sheets(df, f"{city_name}_properties", analysis)
         export_results[city_name] = export_success
 
     # Step 5: Generate comprehensive summary
@@ -298,7 +278,9 @@ def main():
     summary = generate_processing_summary(data, analyses, api_status, export_results)
 
     # Save summary to file
-    summary_file = f"outputs/enhanced_processing_summary_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.json"
+    summary_file = (
+        f"outputs/enhanced_processing_summary_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.json"
+    )
     Path("outputs").mkdir(exist_ok=True)
 
     with open(summary_file, "w", encoding="utf-8") as f:
@@ -362,7 +344,9 @@ def main():
     report_lines.extend(["", "=" * 70, "END OF REPORT", "=" * 70])
 
     # Save text report
-    report_file = f"outputs/enhanced_processing_report_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt"
+    report_file = (
+        f"outputs/enhanced_processing_report_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt"
+    )
 
     with open(report_file, "w", encoding="utf-8") as f:
         f.write("\n".join(report_lines))
@@ -380,9 +364,7 @@ def main():
     )
 
     if summary["recommendations"]:
-        print(
-            f"\nNext steps: {len(summary['recommendations'])} recommendations generated"
-        )
+        print(f"\nNext steps: {len(summary['recommendations'])} recommendations generated")
         for i, rec in enumerate(summary["recommendations"][:3], 1):
             print(f"  {i}. {rec}")
         if len(summary["recommendations"]) > 3:

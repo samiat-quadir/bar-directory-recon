@@ -8,7 +8,7 @@ for refactoring. Uses AST parsing to calculate cyclomatic complexity.
 
 import ast
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 class ComplexityAnalyzer:
@@ -54,11 +54,7 @@ class ComplexityAnalyzer:
             for node in ast.walk(tree):
                 if isinstance(node, ast.FunctionDef):
                     complexity = self.analyze_function_complexity(node)
-                    line_count = (
-                        node.end_lineno - node.lineno
-                        if hasattr(node, "end_lineno")
-                        else 0
-                    )
+                    line_count = node.end_lineno - node.lineno if hasattr(node, "end_lineno") else 0
 
                     functions.append(
                         {
@@ -90,9 +86,7 @@ class ComplexityAnalyzer:
 
         return all_functions
 
-    def identify_refactor_candidates(
-        self, functions: list[dict[str, Any]]
-    ) -> list[dict[str, Any]]:
+    def identify_refactor_candidates(self, functions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Identify functions that are candidates for refactoring."""
         candidates = []
 
@@ -146,9 +140,7 @@ def main():
 
         for i, func in enumerate(candidates[:10], 1):
             print(f"{i}. {func['name']} ({Path(func['file']).name}:{func['line']})")
-            print(
-                f"   Score: {func['refactor_score']}, Complexity: {func['complexity']}"
-            )
+            print(f"   Score: {func['refactor_score']}, Complexity: {func['complexity']}")
             print(f"   Reasons: {', '.join(func['reasons'])}")
             print()
 

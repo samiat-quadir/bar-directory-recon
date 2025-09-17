@@ -35,12 +35,8 @@ def flag_anomalies(matrix_path: str, export_path: str = None, verbose: bool = Fa
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Domain Anomaly Flagger")
-    parser.add_argument(
-        "--matrix-path", required=True, help="Path to schema_matrix.json"
-    )
-    parser.add_argument(
-        "--export-json", help="Optional: write modified matrix to this file"
-    )
+    parser.add_argument("--matrix-path", required=True, help="Path to schema_matrix.json")
+    parser.add_argument("--export-json", help="Optional: write modified matrix to this file")
     parser.add_argument("--verbose", action="store_true", help="Verbose printout")
     args = parser.parse_args()
 

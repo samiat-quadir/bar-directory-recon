@@ -6,7 +6,7 @@ Scrapes lead data from franchise auto dealership directories
 import logging
 import re
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import pandas as pd
 import requests
@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 class AutoDealerScraper:
     """Scraper for franchise auto dealership directories."""
 
-    def __init__(
-        self, city: str = "", state: str = "", max_records: int | None = None
-    ):
+    def __init__(self, city: str = "", state: str = "", max_records: int | None = None):
         self.city = city
         self.state = state
         self.max_records = max_records or 50
@@ -246,15 +244,11 @@ class AutoDealerScraper:
                 for selector in listing_selectors:
                     listings = soup.select(selector)
                     if listings:
-                        logger.info(
-                            f"Found {len(listings)} listings with selector: {selector}"
-                        )
+                        logger.info(f"Found {len(listings)} listings with selector: {selector}")
                         break
 
                 # Extract dealer information
-                for i, listing in enumerate(
-                    listings[: self.max_records // len(target_urls)]
-                ):
+                for i, listing in enumerate(listings[: self.max_records // len(target_urls)]):
                     try:
                         text = listing.get_text()
                         contact_info = self.extract_contact_info(text)
@@ -262,9 +256,7 @@ class AutoDealerScraper:
                         # Extract dealership name
                         name_elem = listing.find(["h1", "h2", "h3", "h4"])
                         dealer_name = (
-                            name_elem.get_text(strip=True)
-                            if name_elem
-                            else f"Auto Dealer {i+1}"
+                            name_elem.get_text(strip=True) if name_elem else f"Auto Dealer {i+1}"
                         )
 
                         # Determine auto brand from dealer name or URL
@@ -277,10 +269,7 @@ class AutoDealerScraper:
                             "BMW",
                             "Nissan",
                         ]:
-                            if (
-                                brand.lower() in dealer_name.lower()
-                                or brand.lower() in url.lower()
-                            ):
+                            if brand.lower() in dealer_name.lower() or brand.lower() in url.lower():
                                 auto_brand = brand
                                 break
 

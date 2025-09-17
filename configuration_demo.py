@@ -57,9 +57,7 @@ def demo_template_generation():
 
     try:
         # Generate automation config template
-        template_path = generate_config_template(
-            "automation", "automation/config.template.yaml"
-        )
+        template_path = generate_config_template("automation", "automation/config.template.yaml")
         print(f"✅ Generated automation template: {template_path}")
 
         # Generate list discovery template
@@ -87,9 +85,7 @@ def demo_dashboard_generation(config):
 
         # Add some sample data
         dashboard.update_site_status("example-bar.com", "success", 2.5)
-        dashboard.update_site_status(
-            "another-bar.com", "failed", None, "Connection timeout"
-        )
+        dashboard.update_site_status("another-bar.com", "failed", None, "Connection timeout")
         dashboard.update_site_status("test-bar.com", "running")
 
         # Generate dashboard

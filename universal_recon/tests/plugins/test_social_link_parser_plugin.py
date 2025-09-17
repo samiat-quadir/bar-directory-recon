@@ -17,7 +17,6 @@ def mock_driver_with_html(html):
 
 
 class TestSocialLinkParserPlugin(unittest.TestCase):
-
     def setUp(self):
         # snapshot file relative to tests/plugins
         sample_path = "snapshots/sample.html"
@@ -26,7 +25,9 @@ class TestSocialLinkParserPlugin(unittest.TestCase):
                 self.sample_html = f.read()
         except FileNotFoundError:
             # Fallback minimal HTML if snapshot is missing
-            self.sample_html = '<html><body><a href="https://linkedin.com/in/testuser">LinkedIn</a></body></html>'
+            self.sample_html = (
+                '<html><body><a href="https://linkedin.com/in/testuser">LinkedIn</a></body></html>'
+            )
         self.driver = mock_driver_with_html(self.sample_html)
 
     def test_social_links_soft_mode(self):

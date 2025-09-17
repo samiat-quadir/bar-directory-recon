@@ -38,9 +38,7 @@ if "packages" in cov["coverage"]:
 
 # radon cc
 try:
-    cc = subprocess.run(
-        ["radon", "cc", "-s", "-j", "src"], capture_output=True, text=True
-    ).stdout
+    cc = subprocess.run(["radon", "cc", "-s", "-j", "src"], capture_output=True, text=True).stdout
     ccj = json.loads(cc) if cc else {}
 except Exception:
     ccj = {}
@@ -53,8 +51,7 @@ def score(fn):
     for k, v in ccj.items():
         if k.endswith(fn) or fn.endswith(k):
             comp += sum(
-                {"A": 1, "B": 2, "C": 3, "D": 5, "E": 8, "F": 13}.get(i["rank"], 1)
-                for i in v
+                {"A": 1, "B": 2, "C": 3, "D": 5, "E": 8, "F": 13}.get(i["rank"], 1) for i in v
             )
     return (gap * (1 + comp)), gap, comp, total, covered
 

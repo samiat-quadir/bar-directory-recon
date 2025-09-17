@@ -8,7 +8,6 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import List, Optional, Tuple
 
 
 class BulletproofGitWorkflow:
@@ -78,9 +77,7 @@ class BulletproofGitWorkflow:
             if success:
                 success_count += 1
 
-        print(
-            f"[+] Git environment configured ({success_count}/{len(configs)} settings)"
-        )
+        print(f"[+] Git environment configured ({success_count}/{len(configs)} settings)")
         return success_count >= len(configs) - 2  # Allow a couple failures
 
     def verify_environment(self) -> bool:
@@ -368,9 +365,7 @@ class BulletproofGitWorkflow:
                 print(f"[!] Branch '{current_branch}' is protected")
                 print("[*] Options:")
                 print("    1. Use --auto to create feature branch automatically")
-                print(
-                    "    2. Checkout different branch: git checkout -b feature/my-branch"
-                )
+                print("    2. Checkout different branch: git checkout -b feature/my-branch")
                 return False
 
         # Step 4: Check for conflicts

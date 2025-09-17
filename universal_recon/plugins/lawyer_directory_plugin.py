@@ -6,7 +6,7 @@ Scrapes lead data from state bar associations and legal directories
 import logging
 import re
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import pandas as pd
 import requests
@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 class LawyerBarDirectoryScraper:
     """Scraper for state bar directories and legal professional listings."""
 
-    def __init__(
-        self, city: str = "", state: str = "", max_records: int | None = None
-    ):
+    def __init__(self, city: str = "", state: str = "", max_records: int | None = None):
         self.city = city
         self.state = state
         self.max_records = max_records or 50
@@ -245,15 +243,11 @@ class LawyerBarDirectoryScraper:
                 for selector in listing_selectors:
                     listings = soup.select(selector)
                     if listings:
-                        logger.info(
-                            f"Found {len(listings)} listings with selector: {selector}"
-                        )
+                        logger.info(f"Found {len(listings)} listings with selector: {selector}")
                         break
 
                 # Extract lawyer information
-                for i, listing in enumerate(
-                    listings[: self.max_records // len(target_urls)]
-                ):
+                for i, listing in enumerate(listings[: self.max_records // len(target_urls)]):
                     try:
                         text = listing.get_text()
                         contact_info = self.extract_contact_info(text)
@@ -261,9 +255,7 @@ class LawyerBarDirectoryScraper:
                         # Extract lawyer name
                         name_elem = listing.find(["h1", "h2", "h3", "h4"])
                         lawyer_name = (
-                            name_elem.get_text(strip=True)
-                            if name_elem
-                            else f"Attorney {i+1}"
+                            name_elem.get_text(strip=True) if name_elem else f"Attorney {i+1}"
                         )
 
                         # Extract firm/business name
@@ -360,9 +352,7 @@ def run_plugin(config: dict[str, Any]) -> dict[str, Any]:
     test_mode = config.get("test_mode", True)
 
     try:
-        leads = scrape_lawyers(
-            city=city, state=state, max_records=max_records, test_mode=test_mode
-        )
+        leads = scrape_lawyers(city=city, state=state, max_records=max_records, test_mode=test_mode)
 
         return {
             "success": True,

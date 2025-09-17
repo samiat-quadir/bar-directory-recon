@@ -6,7 +6,7 @@ Handles loading and validation of scraping configurations from JSON/YAML files.
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import yaml
 
@@ -42,10 +42,7 @@ class ConfigLoader:
             raise FileNotFoundError(f"Configuration file not found: {config_path}")
 
         # Load based on file extension
-        if (
-            config_path.suffix.lower() == ".yaml"
-            or config_path.suffix.lower() == ".yml"
-        ):
+        if config_path.suffix.lower() == ".yaml" or config_path.suffix.lower() == ".yml":
             with open(config_path, encoding="utf-8") as f:
                 config_data = yaml.safe_load(f)
         elif config_path.suffix.lower() == ".json":
@@ -57,9 +54,7 @@ class ConfigLoader:
         # Validate and create config object
         return self._validate_config(config_data)
 
-    def save_config(
-        self, config: ScrapingConfig, config_path: str | Path
-    ) -> None:
+    def save_config(self, config: ScrapingConfig, config_path: str | Path) -> None:
         """Save configuration to file."""
         config_path = Path(config_path)
 
@@ -67,10 +62,7 @@ class ConfigLoader:
         config_dict = self._config_to_dict(config)
 
         # Save based on file extension
-        if (
-            config_path.suffix.lower() == ".yaml"
-            or config_path.suffix.lower() == ".yml"
-        ):
+        if config_path.suffix.lower() == ".yaml" or config_path.suffix.lower() == ".yml":
             with open(config_path, "w", encoding="utf-8") as f:
                 yaml.dump(config_dict, f, default_flow_style=False, indent=2)
         elif config_path.suffix.lower() == ".json":
@@ -268,15 +260,9 @@ class ConfigLoader:
         # Validate pagination
         pagination_type = config.pagination.get("type", "none")
         if pagination_type != "none":
-            if pagination_type == "next_button" and not config.pagination.get(
-                "next_selector"
-            ):
-                errors.append(
-                    "Next button selector is required for next_button pagination"
-                )
-            elif pagination_type == "load_more" and not config.pagination.get(
-                "load_more_selector"
-            ):
+            if pagination_type == "next_button" and not config.pagination.get("next_selector"):
+                errors.append("Next button selector is required for next_button pagination")
+            elif pagination_type == "load_more" and not config.pagination.get("load_more_selector"):
                 errors.append("Load more selector is required for load_more pagination")
 
         # Validate output configuration
@@ -313,19 +299,13 @@ class ConfigLoader:
 
     def is_required_field(self, field_name: str, config: ScrapingConfig) -> bool:
         """Check if a field is required."""
-        selector_config = config.data_extraction.get("selectors", {}).get(
-            field_name, {}
-        )
+        selector_config = config.data_extraction.get("selectors", {}).get(field_name, {})
         required = selector_config.get("required", False)
         return bool(required)
 
-    def get_extraction_patterns(
-        self, field_name: str, config: ScrapingConfig
-    ) -> list[str]:
+    def get_extraction_patterns(self, field_name: str, config: ScrapingConfig) -> list[str]:
         """Get regex patterns for field extraction."""
-        selector_config = config.data_extraction.get("selectors", {}).get(
-            field_name, {}
-        )
+        selector_config = config.data_extraction.get("selectors", {}).get(field_name, {})
         patterns = selector_config.get("patterns", [])
         if isinstance(patterns, str):
             return [patterns]

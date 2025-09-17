@@ -11,9 +11,9 @@ import os
 import random
 import re
 import time
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from collections.abc import Callable
 
 from dotenv import load_dotenv
 from selenium import webdriver
@@ -29,9 +29,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class UtahBarScraper:
-    def __init__(
-        self, headless=True, max_pages=50, retry_attempts=3, user_agent=None, workers=1
-    ):
+    def __init__(self, headless=True, max_pages=50, retry_attempts=3, user_agent=None, workers=1):
         self.headless = headless
         self.max_pages = max_pages
         self.retry_attempts = retry_attempts
@@ -81,9 +79,7 @@ class UtahBarScraper:
         options.add_argument("--window-size=1920,1080")
         if self.user_agent:
             options.add_argument(f"user-agent={self.user_agent}")
-        driver = webdriver.Chrome(
-            service=Service(self.chromedriver_path), options=options
-        )
+        driver = webdriver.Chrome(service=Service(self.chromedriver_path), options=options)
         try:
             driver.execute_cdp_cmd("Network.enable", {})
             driver.execute_cdp_cmd(
@@ -102,9 +98,7 @@ class UtahBarScraper:
             try:
                 return func(*args, **kwargs)
             except (TimeoutException, NoSuchElementException, WebDriverException) as e:
-                self.logger.warning(
-                    f"Retry {attempt+1}/{self.retry_attempts} failed: {e}"
-                )
+                self.logger.warning(f"Retry {attempt+1}/{self.retry_attempts} failed: {e}")
                 time.sleep(random.uniform(2, 5))
         return None
 
@@ -124,14 +118,10 @@ class UtahBarScraper:
         self.switch_to_iframe(driver)
         try:
             search_btn = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable(
-                    (By.CSS_SELECTOR, "button[id^='search-btn']")
-                )
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "button[id^='search-btn']"))
             )
             driver.execute_script("arguments[0].click();", search_btn)
-            WebDriverWait(driver, 15).until(
-                EC.presence_of_element_located((By.TAG_NAME, "table"))
-            )
+            WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.TAG_NAME, "table")))
             return True
         except Exception as e:
             self.logger.error(f"Search failed: {e}")
@@ -179,9 +169,7 @@ class UtahBarScraper:
                 EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), 'Next')]"))
             )
             driver.execute_script("arguments[0].click();", next_button)
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.TAG_NAME, "table"))
-            )
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "table")))
             return True
         except Exception:
             return False

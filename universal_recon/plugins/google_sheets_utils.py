@@ -6,7 +6,7 @@ Shared functionality for exporting lead data to Google Sheets
 import logging
 import os
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import pandas as pd
 
@@ -54,9 +54,7 @@ def export_to_google_sheets(
         # Set up credentials
         credentials_path = os.path.join("config", "google_service_account.json")
         if not os.path.exists(credentials_path):
-            logger.warning(
-                f"Google Sheets credentials not found at: {credentials_path}"
-            )
+            logger.warning(f"Google Sheets credentials not found at: {credentials_path}")
             return False
 
         from google.oauth2.service_account import Credentials
@@ -66,9 +64,7 @@ def export_to_google_sheets(
         SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
         # Load credentials
-        credentials = Credentials.from_service_account_file(
-            credentials_path, scopes=SCOPES
-        )
+        credentials = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
 
         # Build the service
         service = build("sheets", "v4", credentials=credentials)
@@ -86,9 +82,7 @@ def export_to_google_sheets(
         # Try to create a new sheet
         try:
             body = {"requests": [{"addSheet": {"properties": {"title": sheet_name}}}]}
-            service.spreadsheets().batchUpdate(
-                spreadsheetId=sheet_id, body=body
-            ).execute()
+            service.spreadsheets().batchUpdate(spreadsheetId=sheet_id, body=body).execute()
             logger.info(f"Created new sheet: {sheet_name}")
         except Exception:
             logger.info(f"Using existing sheet: {sheet_name}")
@@ -101,9 +95,7 @@ def export_to_google_sheets(
             spreadsheetId=sheet_id, range=range_name, valueInputOption="RAW", body=body
         ).execute()
 
-        logger.info(
-            f"Successfully exported {len(data)} leads to Google Sheets: {sheet_name}"
-        )
+        logger.info(f"Successfully exported {len(data)} leads to Google Sheets: {sheet_name}")
         return True
 
     except Exception as e:

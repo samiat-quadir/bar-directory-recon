@@ -4,6 +4,7 @@
 This generator reads logs/nightly/coverage_first.xml and for the lowest-coverage
 modules creates simple tests that only import the module to detect import errors.
 """
+
 import pathlib
 import xml.etree.ElementTree as ET
 
@@ -23,9 +24,7 @@ for package in root.findall("packages/package"):
     for cl in package.findall("classes/class"):
         filename = cl.get("filename")
         # Keep project files only
-        if not filename.startswith("src/") and not filename.startswith(
-            "universal_recon/"
-        ):
+        if not filename.startswith("src/") and not filename.startswith("universal_recon/"):
             continue
         # convert path to module import path heuristically
         mod = filename.replace("/", ".").rstrip(".py")

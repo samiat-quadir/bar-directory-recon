@@ -49,9 +49,7 @@ for cls in classes_list:
     byfile[fn] = (tot, covd)
 
 try:
-    cc = subprocess.run(
-        shlex.split("radon cc -s -j src"), capture_output=True, text=True
-    )
+    cc = subprocess.run(shlex.split("radon cc -s -j src"), capture_output=True, text=True)
     ccj = json.loads(cc.stdout) if cc.stdout else {}
 except Exception:
     ccj = {}

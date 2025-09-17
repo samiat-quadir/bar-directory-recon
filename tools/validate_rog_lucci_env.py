@@ -46,9 +46,7 @@ def banner(message):
 def run_command(cmd):
     """Run a command and return the output."""
     try:
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, check=True, shell=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True, shell=True)
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         error(f"Command failed: {cmd}")
@@ -110,9 +108,7 @@ def check_virtual_env():
                 error(f"Missing activation script: {script}")
                 all_found = False
             else:
-                warning(
-                    f"Missing activation script: {script} (may not be needed on Windows)"
-                )
+                warning(f"Missing activation script: {script} (may not be needed on Windows)")
 
     if all_found:
         success("Virtual environment is properly configured")
@@ -248,22 +244,16 @@ def check_vs_code_settings():
             "chatAttention"
         )
         if chat_attention != "never":
-            warning(
-                "github.copilot.chat.promptsUserData.chatAttention is not set to 'never'"
-            )
+            warning("github.copilot.chat.promptsUserData.chatAttention is not set to 'never'")
         else:
-            success(
-                "github.copilot.chat.promptsUserData.chatAttention is properly configured"
-            )
+            success("github.copilot.chat.promptsUserData.chatAttention is properly configured")
 
         # Check if terminal execution is enabled
         terminal_execution = settings.get(
             "github.copilot.chat.server.security.enableTerminalExecution"
         )
         if not terminal_execution:
-            warning(
-                "github.copilot.chat.server.security.enableTerminalExecution is not enabled"
-            )
+            warning("github.copilot.chat.server.security.enableTerminalExecution is not enabled")
         else:
             success(
                 "github.copilot.chat.server.security.enableTerminalExecution is properly configured"

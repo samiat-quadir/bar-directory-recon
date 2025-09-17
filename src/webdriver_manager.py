@@ -7,7 +7,7 @@ Unified WebDriver setup and management for all scraping operations.
 import logging
 import os
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -53,9 +53,7 @@ class WebDriverManager:
 
             # Anti-detection options
             chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-            chrome_options.add_experimental_option(
-                "excludeSwitches", ["enable-automation"]
-            )
+            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
             chrome_options.add_experimental_option("useAutomationExtension", False)
 
             # Performance optimization
@@ -112,9 +110,7 @@ class WebDriverManager:
                 WebDriverWait(self.driver, self.default_timeout).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, wait_for_element))
                 )
-                logger.info(
-                    f"Successfully loaded page with element: {wait_for_element}"
-                )
+                logger.info(f"Successfully loaded page with element: {wait_for_element}")
             else:
                 # Wait for body to load
                 WebDriverWait(self.driver, self.default_timeout).until(
@@ -175,18 +171,12 @@ class WebDriverManager:
                 logger.error("WebDriver not initialized")
                 return
 
-            last_height = self.driver.execute_script(
-                "return document.body.scrollHeight"
-            )
+            last_height = self.driver.execute_script("return document.body.scrollHeight")
 
             while True:
-                self.driver.execute_script(
-                    "window.scrollTo(0, document.body.scrollHeight);"
-                )
+                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 time.sleep(pause_time)
-                new_height = self.driver.execute_script(
-                    "return document.body.scrollHeight"
-                )
+                new_height = self.driver.execute_script("return document.body.scrollHeight")
                 if new_height == last_height:
                     break
                 last_height = new_height

@@ -77,10 +77,7 @@ def test_config_loader_bad_port():
                 port_val = getattr(cfg, "PORT", getattr(cfg, "port", None))
                 if port_val is not None:
                     # Either it's converted to int or has sensible default
-                    assert (
-                        isinstance(port_val, (int, type(None)))
-                        or port_val != "not_an_int"
-                    )
+                    assert isinstance(port_val, (int, type(None))) or port_val != "not_an_int"
         except (ValueError, TypeError):
             # Exception handling is also acceptable behavior
             assert True

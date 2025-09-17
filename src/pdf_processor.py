@@ -7,7 +7,7 @@ Extracts property data from PDF files using multiple extraction methods.
 import logging
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import pandas as pd
 
@@ -171,9 +171,7 @@ class HallandalePropertyProcessor:
                 pdf_reader = PyPDF2.PdfReader(file)
 
                 for page_num, page in enumerate(pdf_reader.pages):
-                    logger.info(
-                        f"Processing page {page_num + 1}/{len(pdf_reader.pages)}"
-                    )
+                    logger.info(f"Processing page {page_num + 1}/{len(pdf_reader.pages)}")
 
                     text = page.extract_text()
                     if text:
@@ -315,9 +313,7 @@ class HallandalePropertyProcessor:
 
         return text
 
-    def _standardize_properties(
-        self, properties: list[dict[str, Any]]
-    ) -> list[dict[str, Any]]:
+    def _standardize_properties(self, properties: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Standardize property data format."""
         standardized = []
 
@@ -381,9 +377,7 @@ class HallandalePropertyProcessor:
 
         return year
 
-    def _deduplicate_properties(
-        self, properties: list[dict[str, Any]]
-    ) -> list[dict[str, Any]]:
+    def _deduplicate_properties(self, properties: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Remove duplicate properties."""
         seen_addresses = set()
         unique_properties = []

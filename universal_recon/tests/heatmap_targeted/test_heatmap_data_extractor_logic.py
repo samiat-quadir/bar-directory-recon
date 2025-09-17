@@ -1,6 +1,7 @@
 import importlib
-import urllib.parse
 import re
+import urllib.parse
+
 import pytest
 
 

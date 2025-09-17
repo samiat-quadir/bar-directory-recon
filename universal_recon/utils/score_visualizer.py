@@ -2,7 +2,6 @@
 
 import json
 import os
-from typing import Dict, List
 
 from universal_recon.core.logger import get_logger
 

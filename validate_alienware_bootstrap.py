@@ -15,7 +15,6 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict
 
 
 def get_device_info() -> dict[str, str]:
@@ -65,9 +64,7 @@ def check_alienware_specific_config() -> dict[str, bool]:
 
             # Validate paths exist
             if "project_root" in profile:
-                checks["profile_project_root_exists"] = Path(
-                    profile["project_root"]
-                ).exists()
+                checks["profile_project_root_exists"] = Path(profile["project_root"]).exists()
             if "virtual_env" in profile:
                 checks["profile_venv_exists"] = Path(profile["virtual_env"]).exists()
 
@@ -195,13 +192,9 @@ def compare_with_golden_image() -> dict[str, str]:
         actual_count = len(installed_packages)
 
         if actual_count >= expected_packages:
-            comparison["package_count"] = (
-                f"✅ {actual_count}/{expected_packages} packages"
-            )
+            comparison["package_count"] = f"✅ {actual_count}/{expected_packages} packages"
         else:
-            comparison["package_count"] = (
-                f"❌ {actual_count}/{expected_packages} packages"
-            )
+            comparison["package_count"] = f"❌ {actual_count}/{expected_packages} packages"
 
     except Exception as e:
         comparison["package_count"] = f"❌ Error checking packages: {e}"
@@ -222,9 +215,7 @@ def compare_with_golden_image() -> dict[str, str]:
 
     missing_golden = []
     try:
-        installed_names = {
-            pkg["name"].lower().replace("-", "_") for pkg in installed_packages
-        }
+        installed_names = {pkg["name"].lower().replace("-", "_") for pkg in installed_packages}
 
         for pkg in golden_packages:
             pkg_normalized = pkg.lower().replace("-", "_")
@@ -261,9 +252,7 @@ def generate_alienware_report():
     device_info = get_device_info()
     print(f"Device: {device_info['hostname']}")
     print(f"System: {device_info['system']} {device_info['release']}")
-    print(
-        f"Python: {device_info['python_version']} ({device_info['python_implementation']})"
-    )
+    print(f"Python: {device_info['python_version']} ({device_info['python_implementation']})")
     print(f"Working Directory: {os.getcwd()}")
     print(f"Validation Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)

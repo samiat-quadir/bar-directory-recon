@@ -7,7 +7,6 @@ This script handles the entire git workflow autonomously.
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 
 class GitWorkflow:
@@ -47,9 +46,7 @@ class GitWorkflow:
 
     def check_git_status(self) -> tuple[bool, list[str]]:
         """Check git status and return changed files."""
-        success, output = self.run_command(
-            ["git", "status", "--porcelain"], "Checking git status"
-        )
+        success, output = self.run_command(["git", "status", "--porcelain"], "Checking git status")
 
         if not success:
             return False, []
@@ -164,9 +161,7 @@ class GitWorkflow:
 
         # 3. Use default message if none provided
         if not message:
-            message = (
-                "Autonomous commit: Update security implementation and fix formatting"
-            )
+            message = "Autonomous commit: Update security implementation and fix formatting"
 
         # 4. Commit with hooks disabled to prevent infinite loops
         if not self.commit_changes(message, skip_hooks=True):
@@ -182,12 +177,8 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Autonomous Git Workflow")
-    parser.add_argument(
-        "--push", action="store_true", help="Also push after committing"
-    )
-    parser.add_argument(
-        "--push-only", action="store_true", help="Only push, don't commit"
-    )
+    parser.add_argument("--push", action="store_true", help="Also push after committing")
+    parser.add_argument("--push-only", action="store_true", help="Only push, don't commit")
     parser.add_argument("--message", "-m", help="Commit message")
 
     args = parser.parse_args()

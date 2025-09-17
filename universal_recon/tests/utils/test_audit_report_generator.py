@@ -4,7 +4,6 @@ from universal_recon.utils.audit_report_generator import generate_audit_report
 
 
 class TestAuditReportGenerator(unittest.TestCase):
-
     def setUp(self):
         self.sample_records = [
             {
@@ -53,9 +52,7 @@ class TestAuditReportGenerator(unittest.TestCase):
         audit = generate_audit_report(self.sample_records)
         self.assertIn("email_plugin", audit["validator_errors_by_plugin"])
         self.assertIn("firm_parser", audit["validator_errors_by_plugin"])
-        self.assertGreaterEqual(
-            sum(audit["score_tiers"].values()), audit["total_records"]
-        )
+        self.assertGreaterEqual(sum(audit["score_tiers"].values()), audit["total_records"])
 
 
 def test_generate_audit_report():

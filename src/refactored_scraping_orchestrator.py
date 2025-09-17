@@ -7,7 +7,7 @@ This addresses the complexity issue identified in the audit.
 
 import logging
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -49,14 +49,10 @@ class IndustryScrapingOrchestrator:
 
         target_plugins = self.automation_engine.filter_plugins_by_industry(industry)
         if not target_plugins:
-            return self._build_error_result(
-                f"No plugins found for industry: {industry}"
-            )
+            return self._build_error_result(f"No plugins found for industry: {industry}")
 
         # 2. Execute scraping
-        raw_leads, results_summary = self._execute_plugin_scraping(
-            target_plugins, industry, config
-        )
+        raw_leads, results_summary = self._execute_plugin_scraping(target_plugins, industry, config)
 
         # 3. Enrich leads if enabled
         enriched_leads = self._enrich_leads_if_enabled(
@@ -140,9 +136,7 @@ class IndustryScrapingOrchestrator:
 
         return all_leads, results_summary
 
-    def _process_plugin_leads(
-        self, leads: list[dict], industry: str, source: str
-    ) -> list[dict]:
+    def _process_plugin_leads(self, leads: list[dict], industry: str, source: str) -> list[dict]:
         """Add metadata tags to leads from a plugin."""
         for lead in leads:
             if "industry" not in lead:
@@ -150,9 +144,7 @@ class IndustryScrapingOrchestrator:
             if "source" not in lead:
                 lead["source"] = source
             if "Tag" not in lead:
-                lead["Tag"] = self.automation_engine.generate_tag(
-                    lead.get("city", ""), industry
-                )
+                lead["Tag"] = self.automation_engine.generate_tag(lead.get("city", ""), industry)
         return leads
 
     def _enrich_leads_if_enabled(
@@ -249,18 +241,14 @@ class IndustryScrapingOrchestrator:
             # Get sheet ID (provided or from environment)
             sheet_id = google_sheet_id or os.getenv("DEFAULT_GOOGLE_SHEET_ID")
             if not sheet_id:
-                logger.warning(
-                    "No Google Sheet ID provided - skipping Google Sheets export"
-                )
+                logger.warning("No Google Sheet ID provided - skipping Google Sheets export")
                 return result
 
             # Initialize Google Sheets integration
             from google_sheets_integration import GoogleSheetsIntegration
 
             if credentials_path:
-                sheets_integration = GoogleSheetsIntegration(
-                    credentials_path=credentials_path
-                )
+                sheets_integration = GoogleSheetsIntegration(credentials_path=credentials_path)
             else:
                 sheets_integration = GoogleSheetsIntegration()
 
@@ -328,7 +316,5 @@ class IndustryScrapingOrchestrator:
             "results_summary": results_summary,
             "google_sheets_uploaded": export_results["google_sheets_uploaded"],
             "google_sheets_stats": export_results["google_sheets_stats"],
-            "urgent_leads": sum(
-                1 for lead in enriched_leads if lead.get("urgency_flag", False)
-            ),
+            "urgent_leads": sum(1 for lead in enriched_leads if lead.get("urgency_flag", False)),
         }

@@ -2,6 +2,7 @@
 """
 Direct ROI Analysis - Build Top-ROI list from coverage report
 """
+
 import json
 import pathlib
 import subprocess
@@ -117,9 +118,7 @@ def analyze_coverage_and_roi():
 
     # Get complexity data with radon
     try:
-        result = subprocess.run(
-            ["radon", "cc", "-j", "src"], capture_output=True, text=True
-        )
+        result = subprocess.run(["radon", "cc", "-j", "src"], capture_output=True, text=True)
         complexity_data = json.loads(result.stdout) if result.stdout else {}
     except:
         complexity_data = {}
@@ -140,9 +139,7 @@ def analyze_coverage_and_roi():
             ):
                 # Weight by complexity rank
                 rank_weights = {"A": 1, "B": 2, "C": 3, "D": 5, "E": 8, "F": 13}
-                complexity = sum(
-                    rank_weights.get(item.get("rank", "A"), 1) for item in cc_data
-                )
+                complexity = sum(rank_weights.get(item.get("rank", "A"), 1) for item in cc_data)
                 break
 
         # ROI = gap × (1 + complexity) - prioritize high-impact files

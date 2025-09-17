@@ -8,7 +8,7 @@ import os
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import pandas as pd
 
@@ -82,9 +82,7 @@ class ScrapingOrchestrator:
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
                 ),
                 "disable_js": self.config.options.get("disable_js", False),
-                "viewport": self.config.options.get(
-                    "viewport", {"width": 1920, "height": 1080}
-                ),
+                "viewport": self.config.options.get("viewport", {"width": 1920, "height": 1080}),
             }
 
             self.driver_manager = WebDriverManager(driver_config)
@@ -94,36 +92,26 @@ class ScrapingOrchestrator:
                 "max_pages": self.config.pagination.get("max_pages", 10),
                 "page_delay": self.config.pagination.get("delay", 2.0),
                 "pagination_selectors": {
-                    "next_button": self._ensure_list(
-                        self.config.pagination.get("next_button", [])
-                    ),
-                    "load_more": self._ensure_list(
-                        self.config.pagination.get("load_more", [])
-                    ),
+                    "next_button": self._ensure_list(self.config.pagination.get("next_button", [])),
+                    "load_more": self._ensure_list(self.config.pagination.get("load_more", [])),
                     "page_numbers": self._ensure_list(
                         self.config.pagination.get("page_numbers", [])
                     ),
                 },
             }
 
-            self.pagination_manager = PaginationManager(
-                self.driver_manager, pagination_config
-            )
+            self.pagination_manager = PaginationManager(self.driver_manager, pagination_config)
 
             # Data extraction configuration
             extraction_config = {
                 "extraction_rules": {
-                    "listing_container": self.config.listing_phase.get(
-                        "list_selector", "body"
-                    ),
+                    "listing_container": self.config.listing_phase.get("list_selector", "body"),
                     "fields": self.config.data_extraction.get("selectors", {}),
                     "detail_url_selectors": self._ensure_list(
                         self.config.listing_phase.get("link_selector", [])
                     ),
                 },
-                "required_fields": self.config.data_extraction.get(
-                    "required_fields", []
-                ),
+                "required_fields": self.config.data_extraction.get("required_fields", []),
                 "base_url": self.config.base_url,
                 "current_url": "",
                 "industry": self.config.name,
@@ -171,9 +159,7 @@ class ScrapingOrchestrator:
                 self.logger.log_pagination(page_num)
 
                 # Extract URLs from current page
-                page_urls = self.data_extractor.extract_listing_urls(
-                    self.driver_manager
-                )
+                page_urls = self.data_extractor.extract_listing_urls(self.driver_manager)
                 all_urls.extend(page_urls)
 
                 self.logger.info(f"Page {page_num}: Found {len(page_urls)} URLs")
@@ -187,9 +173,7 @@ class ScrapingOrchestrator:
             unique_urls = list(dict.fromkeys(all_urls))
 
             self.logger.log_extraction_phase("listing", start_url, success=True)
-            self.logger.info(
-                f"Listing phase completed: {len(unique_urls)} unique URLs found"
-            )
+            self.logger.info(f"Listing phase completed: {len(unique_urls)} unique URLs found")
 
             return unique_urls
 
@@ -224,9 +208,7 @@ class ScrapingOrchestrator:
 
                 if page_data:
                     all_data.extend(page_data)
-                    self.logger.log_page_processed(
-                        url, success=True, records=len(page_data)
-                    )
+                    self.logger.log_page_processed(url, success=True, records=len(page_data))
 
                     for record in page_data:
                         self.logger.log_record_extracted(record, url)
@@ -291,9 +273,7 @@ class ScrapingOrchestrator:
 
             # Clean and validate data
             if self.extracted_data:
-                self.extracted_data = self.data_extractor.clean_extracted_data(
-                    self.extracted_data
-                )
+                self.extracted_data = self.data_extractor.clean_extracted_data(self.extracted_data)
                 self.extracted_data = self.data_extractor.validate_and_enrich_data(
                     self.extracted_data
                 )
@@ -301,9 +281,7 @@ class ScrapingOrchestrator:
             # Save results
             result_summary = self._save_results(start_time)
 
-            self.logger.info(
-                f"Scraping completed successfully: {len(self.extracted_data)} records"
-            )
+            self.logger.info(f"Scraping completed successfully: {len(self.extracted_data)} records")
             return result_summary
 
         except Exception as e:
@@ -349,15 +327,11 @@ class ScrapingOrchestrator:
             )
 
             # Create DataFrame with unified schema column order
-            df = schema_mapper.create_export_dataframe(
-                mapped_data, export_type="standard"
-            )
+            df = schema_mapper.create_export_dataframe(mapped_data, export_type="standard")
 
             # Generate output filename
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            base_filename = self.config.output.get(
-                "filename", f"{self.config.name}_{timestamp}"
-            )
+            base_filename = self.config.output.get("filename", f"{self.config.name}_{timestamp}")
 
             # Remove extension if present
             if "." in base_filename:
@@ -396,17 +370,13 @@ class ScrapingOrchestrator:
                 except Exception as e:
                     self.logger.warning(f"Failed to save to Google Sheets: {e}")
 
-            return self._create_result_summary(
-                start_time, success=True, output_files=output_files
-            )
+            return self._create_result_summary(start_time, success=True, output_files=output_files)
 
         except Exception as e:
             self.logger.error("Failed to save results", exception=e)
             return self._create_result_summary(start_time, success=False)
 
-    def _save_to_google_sheets(
-        self, df: pd.DataFrame, google_config: dict[str, Any]
-    ) -> None:
+    def _save_to_google_sheets(self, df: pd.DataFrame, google_config: dict[str, Any]) -> None:
         """Save data to Google Sheets using unified schema."""
         try:
             # Check if Google Sheets libraries are available
@@ -436,9 +406,7 @@ class ScrapingOrchestrator:
             # Authentication
             creds = None
             if os.path.exists(token_path):
-                creds = Credentials.from_authorized_user_file(
-                    token_path, GOOGLE_SHEETS_SCOPES
-                )
+                creds = Credentials.from_authorized_user_file(token_path, GOOGLE_SHEETS_SCOPES)
 
             if not creds or not creds.valid:
                 if creds and creds.expired and creds.refresh_token:

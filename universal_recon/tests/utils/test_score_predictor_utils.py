@@ -4,7 +4,6 @@ from universal_recon.utils.score_predictor import predict_score
 
 
 class TestScorePredictorUtils(unittest.TestCase):
-
     def setUp(self):
         self.records = [
             {"type": "email", "value": "john@example.com"},

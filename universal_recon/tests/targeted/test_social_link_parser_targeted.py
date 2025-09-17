@@ -19,7 +19,9 @@ def test_social_link_parser_empty_html():
 def test_social_link_parser_detects_linkedin():
     """Test that social link parser detects LinkedIn URLs."""
     mock_driver = Mock()
-    mock_driver.page_source = '<html><body><a href="https://linkedin.com/in/testuser">LinkedIn</a></body></html>'
+    mock_driver.page_source = (
+        '<html><body><a href="https://linkedin.com/in/testuser">LinkedIn</a></body></html>'
+    )
     mock_driver.current_url = "http://test.com"
 
     result = apply(mock_driver, "test_context")

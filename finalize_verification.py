@@ -2,6 +2,7 @@
 """
 Intelligent Coverage Gate Adjustment Script
 """
+
 import pathlib
 import subprocess
 

@@ -15,7 +15,6 @@ Options:
 import argparse
 import sys
 from pathlib import Path
-from typing import List
 
 
 def has_bom(file_path: Path) -> bool:
@@ -66,12 +65,8 @@ def main():
     parser = argparse.ArgumentParser(
         description="Detect and optionally fix UTF-8 BOM in config files"
     )
-    parser.add_argument(
-        "--fix", action="store_true", help="Remove BOMs from detected files"
-    )
-    parser.add_argument(
-        "--directory", default=".", help="Directory to scan (default: current)"
-    )
+    parser.add_argument("--fix", action="store_true", help="Remove BOMs from detected files")
+    parser.add_argument("--directory", default=".", help="Directory to scan (default: current)")
     args = parser.parse_args()
 
     root_dir = Path(args.directory).resolve()

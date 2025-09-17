@@ -241,9 +241,7 @@ class TestSecurityManager:
         """Test health check with Key Vault error."""
         manager = SecurityManager()
         mock_client = Mock()
-        mock_client.list_properties_of_secrets.side_effect = Exception(
-            "Connection failed"
-        )
+        mock_client.list_properties_of_secrets.side_effect = Exception("Connection failed")
         manager.client = mock_client
         manager.fallback_mode = False
 
@@ -273,9 +271,7 @@ class TestGlobalFunctions:
             result = get_secret("test-secret", "TEST_ENV_VAR")
 
             assert result == "test-value"
-            mock_manager.get_secret.assert_called_once_with(
-                "test-secret", "TEST_ENV_VAR"
-            )
+            mock_manager.get_secret.assert_called_once_with("test-secret", "TEST_ENV_VAR")
 
 
 class TestIntegration:

@@ -65,16 +65,8 @@ def test_pagination_boundary_handling():
             url_neg = fn("https://ex.com/api", -1)
 
             # Should handle gracefully - either return None, empty, or fix to page 1
-            assert (
-                url_zero is None
-                or "page=0" not in str(url_zero)
-                or "page=1" in str(url_zero)
-            )
-            assert (
-                url_neg is None
-                or "page=-1" not in str(url_neg)
-                or "page=1" in str(url_neg)
-            )
+            assert url_zero is None or "page=0" not in str(url_zero) or "page=1" in str(url_zero)
+            assert url_neg is None or "page=-1" not in str(url_neg) or "page=1" in str(url_neg)
         except Exception:
             # Exception handling is acceptable
             assert True

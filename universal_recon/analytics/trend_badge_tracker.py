@@ -3,7 +3,6 @@
 import argparse
 import json
 from pathlib import Path
-from typing import Dict
 
 
 def regenerate_site_score_trend(

@@ -71,11 +71,7 @@ def test_pipeline_handles_empty_data():
             out_none = fn(None) if fn.__code__.co_argcount > 0 else None
 
             # Should handle gracefully
-            assert (
-                out_empty is None
-                or out_empty == []
-                or isinstance(out_empty, (list, dict))
-            )
+            assert out_empty is None or out_empty == [] or isinstance(out_empty, (list, dict))
             if out_none is not None:
                 assert isinstance(out_none, (list, dict, type(None)))
 

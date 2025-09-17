@@ -4,8 +4,8 @@ This plugin classifies grouped records (template blocks) into profile templates
 such as individual, firm, hybrid, or unknown based on field composition.
 """
 
-from typing import Any, Dict, List
 from collections.abc import Iterator
+from typing import Any
 
 
 class AITemplateIndexerPlugin:
@@ -67,9 +67,7 @@ class AITemplateIndexerPlugin:
             Dict[str, Any]: Template with classification and scoring
         """
         template = raw_data.copy()
-        field_types = {
-            field["type"] for field in raw_data.get("fields", []) if "type" in field
-        }
+        field_types = {field["type"] for field in raw_data.get("fields", []) if "type" in field}
 
         # Classification rules based on field composition
         if {"name", "email", "bar_number"}.issubset(field_types):
@@ -82,9 +80,7 @@ class AITemplateIndexerPlugin:
             template_type = "unknown"
 
         # Calculate template score (completeness signal)
-        template_score = (
-            len(field_types) / 8.0
-        )  # normalized against expected max fields
+        template_score = len(field_types) / 8.0  # normalized against expected max fields
 
         # Determine confidence level
         if template_score > 0.75:

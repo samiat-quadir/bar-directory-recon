@@ -5,7 +5,7 @@ Scrapes lead data from Houzz design professional directories
 
 import logging
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import requests
 
@@ -20,9 +20,7 @@ logger = logging.getLogger(__name__)
 class HouzzScraper:
     """Scraper for Houzz professional directories."""
 
-    def __init__(
-        self, city: str = "", state: str = "", max_records: int | None = None
-    ):
+    def __init__(self, city: str = "", state: str = "", max_records: int | None = None):
         self.city = city
         self.state = state
         self.max_records = max_records or 50

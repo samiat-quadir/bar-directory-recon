@@ -13,9 +13,7 @@ def test_firm_plugin_contract_smoke(monkeypatch):
     # If the real underlying functions are absent in CI, stub a minimal iterator
     base = importlib.import_module("universal_recon.plugins.firm_parser")
     if not hasattr(base, "iter_firms"):
-        P.fetch = lambda **_: iter(
-            [{"name": "Acme", "industry": "Legal Services", "raw": {}}]
-        )
+        P.fetch = lambda **_: iter([{"name": "Acme", "industry": "Legal Services", "raw": {}}])
 
     outs = []
     for rec in P.fetch():

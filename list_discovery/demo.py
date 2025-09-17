@@ -11,10 +11,9 @@ Demonstrates the capabilities of the List Discovery Agent including:
 - Notification systems
 """
 
-
 import asyncio
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -29,9 +28,7 @@ try:
     LIST_DISCOVERY_AVAILABLE = True
 except ImportError as e:
     print(f"❌ Error importing modules: {e}")
-    print(
-        "💡 Please install dependencies: pip install aiohttp aiofiles beautifulsoup4 PyYAML"
-    )
+    print("💡 Please install dependencies: pip install aiohttp aiofiles beautifulsoup4 PyYAML")
     LIST_DISCOVERY_AVAILABLE = False
 
 
@@ -42,9 +39,7 @@ class ListDiscoveryDemo:
 
     def __init__(self) -> None:
         self.demo_config = {
-            "monitored_urls": [
-                {"url": "https://httpbin.org/json", "name": "Demo API Endpoint"}
-            ],
+            "monitored_urls": [{"url": "https://httpbin.org/json", "name": "Demo API Endpoint"}],
             "download_dir": "input/demo_discovered",
             "file_extensions": [".pdf", ".csv", ".json", ".txt"],
             "check_interval": 300,  # 5 minutes for demo
@@ -232,9 +227,7 @@ class ListDiscoveryDemo:
                 discord = config.get("discord_webhook")
                 email = config.get("email", {})
 
-                print(
-                    f"  Discord: {'✅ Configured' if discord else '❌ Not configured'}"
-                )
+                print(f"  Discord: {'✅ Configured' if discord else '❌ Not configured'}")
                 print(
                     f"  Email: {'✅ Configured' if email.get('enabled') else '❌ Not configured'}"
                 )
@@ -297,9 +290,7 @@ class ListDiscoveryDemo:
         print("  ✅ Error handling and logging")
 
         print("\nNext Steps:")
-        print(
-            "  1. Install dependencies: pip install -r list_discovery/requirements.txt"
-        )
+        print("  1. Install dependencies: pip install -r list_discovery/requirements.txt")
         print("  2. Setup configuration: python list_discovery/agent.py setup")
         print("  3. Add monitoring URLs: RunListDiscovery.bat add")
         print("  4. Start discovery: RunListDiscovery.bat check")

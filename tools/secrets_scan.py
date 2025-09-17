@@ -180,9 +180,7 @@ class SecretsScanner:
                                 secret_value = matched_text
 
                             # Create a redacted line for the report
-                            redacted_line = re.sub(
-                                re.escape(secret_value), "[REDACTED]", line
-                            )
+                            redacted_line = re.sub(re.escape(secret_value), "[REDACTED]", line)
 
                             # Add the finding
                             file_findings.append(
@@ -213,9 +211,7 @@ class SecretsScanner:
         try:
             for root, dirs, files in os.walk(directory):
                 # Filter directories
-                dirs[:] = [
-                    d for d in dirs if self.should_scan_dir(os.path.join(root, d))
-                ]
+                dirs[:] = [d for d in dirs if self.should_scan_dir(os.path.join(root, d))]
 
                 # Scan each file
                 for file in files:
@@ -255,14 +251,10 @@ class SecretsScanner:
         report = {
             "scan_info": {
                 "start_time": (
-                    self.start_time.strftime("%Y-%m-%d %H:%M:%S")
-                    if self.start_time
-                    else None
+                    self.start_time.strftime("%Y-%m-%d %H:%M:%S") if self.start_time else None
                 ),
                 "end_time": (
-                    self.end_time.strftime("%Y-%m-%d %H:%M:%S")
-                    if self.end_time
-                    else None
+                    self.end_time.strftime("%Y-%m-%d %H:%M:%S") if self.end_time else None
                 ),
                 "files_scanned": self.files_scanned,
                 "files_with_secrets": self.files_with_secrets,
@@ -294,9 +286,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Scan for secrets and sensitive information in files"
     )
-    parser.add_argument(
-        "--path", default=os.getcwd(), help="Path to scan (file or directory)"
-    )
+    parser.add_argument("--path", default=os.getcwd(), help="Path to scan (file or directory)")
     parser.add_argument("--report-path", help="Path to save the JSON report")
     parser.add_argument("--config", help="Path to custom configuration JSON file")
 

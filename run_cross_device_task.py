@@ -5,13 +5,10 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Optional
 
 import yaml
 
-CFG = yaml.safe_load(
-    Path("automation/cross_device_tasks.yaml").read_text(encoding="utf-8")
-)
+CFG = yaml.safe_load(Path("automation/cross_device_tasks.yaml").read_text(encoding="utf-8"))
 
 
 def ensure_identity_opts(cmd: str) -> str:
@@ -98,9 +95,7 @@ if args.list_workflows:
     print("Workflows:", ", ".join(sorted(flows.keys())))
     sys.exit(0)
 if not args.target:
-    print(
-        "Usage: python run_cross_device_task.py <task|workflow> [--list --list-workflows]"
-    )
+    print("Usage: python run_cross_device_task.py <task|workflow> [--list --list-workflows]")
     sys.exit(1)
 
 items = []

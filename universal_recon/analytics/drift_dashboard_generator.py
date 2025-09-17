@@ -3,7 +3,7 @@
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from universal_recon.analytics.risk_overlay_emitter import emit_risk_overlay
 
@@ -126,9 +126,7 @@ def generate_html(
 def generate_drift_dashboard(matrix_path: str, output_dir: str) -> None:
     """Generate the drift dashboard with risk overlay integration."""
     # Generate risk overlay data first
-    validator_tiers_path = str(
-        Path(__file__).parent.parent / "validators" / "validator_tiers.yaml"
-    )
+    validator_tiers_path = str(Path(__file__).parent.parent / "validators" / "validator_tiers.yaml")
     risk_data = emit_risk_overlay(matrix_path, validator_tiers_path)
 
     # Load status and generate dashboard
@@ -141,9 +139,7 @@ def main() -> None:
     """CLI entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Generate the Drift Dashboard with risk overlay"
-    )
+    parser = argparse.ArgumentParser(description="Generate the Drift Dashboard with risk overlay")
     parser.add_argument(
         "--status-path",
         default="output/output_status.json",
@@ -167,9 +163,7 @@ def main() -> None:
         return
 
     # Generate risk overlay data
-    validator_tiers_path = str(
-        Path(__file__).parent.parent / "validators" / "validator_tiers.yaml"
-    )
+    validator_tiers_path = str(Path(__file__).parent.parent / "validators" / "validator_tiers.yaml")
     risk_data = emit_risk_overlay(args.matrix_path, validator_tiers_path)
     generate_html(status_data, risk_data, args.output_path)
 

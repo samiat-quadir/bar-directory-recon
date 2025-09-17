@@ -9,7 +9,7 @@ import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class ScrapingLogger:
@@ -36,9 +36,7 @@ class ScrapingLogger:
         simple_formatter = logging.Formatter("%(levelname)s: %(message)s")
 
         # File handler for detailed logs
-        log_file = (
-            self.log_dir / f"{name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        )
+        log_file = self.log_dir / f"{name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         file_handler = logging.FileHandler(log_file, encoding="utf-8")
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(detailed_formatter)
@@ -84,9 +82,7 @@ class ScrapingLogger:
             }
         )
 
-    def error(
-        self, message: str, exception: Exception | None = None, **kwargs: Any
-    ) -> None:
+    def error(self, message: str, exception: Exception | None = None, **kwargs: Any) -> None:
         """Log error message."""
         self.logger.error(message, **kwargs)
         errors_count = self.stats.get("errors", 0)
@@ -109,9 +105,7 @@ class ScrapingLogger:
         """Log debug message."""
         self.logger.debug(message, **kwargs)
 
-    def critical(
-        self, message: str, exception: Exception | None = None, **kwargs: Any
-    ) -> None:
+    def critical(self, message: str, exception: Exception | None = None, **kwargs: Any) -> None:
         """Log critical error."""
         self.logger.critical(message, **kwargs)
         errors_count = self.stats.get("errors", 0)
@@ -156,9 +150,7 @@ class ScrapingLogger:
             self.stats["screenshots"] = screenshots_count + 1
         self.info(f"Screenshot saved: {screenshot_path} ({context})")
 
-    def log_pagination(
-        self, current_page: int, total_pages: int | None = None
-    ) -> None:
+    def log_pagination(self, current_page: int, total_pages: int | None = None) -> None:
         """Log pagination progress."""
         if total_pages:
             self.info(f"Processing page {current_page}/{total_pages}")
@@ -246,8 +238,7 @@ Performance:
         """Save detailed session report to file."""
         if not output_path:
             report_path = (
-                self.log_dir
-                / f"{self.name}_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                self.log_dir / f"{self.name}_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
             )
             output_path = str(report_path)
 
@@ -287,9 +278,7 @@ Performance:
             handler.close()
             self.logger.removeHandler(handler)
 
-    def configure_logging_level(
-        self, quiet: bool = False, verbose: bool = False
-    ) -> None:
+    def configure_logging_level(self, quiet: bool = False, verbose: bool = False) -> None:
         """Configure logging level based on quiet/verbose flags."""
         if quiet:
             # Suppress all but critical messages
@@ -320,9 +309,7 @@ Performance:
                 self.logger.info("Standard logging level set")
 
 
-def create_logger(
-    name: str, log_dir: str = "logs", log_level: str = "INFO"
-) -> ScrapingLogger:
+def create_logger(name: str, log_dir: str = "logs", log_level: str = "INFO") -> ScrapingLogger:
     """Create a new scraping logger instance."""
     return ScrapingLogger(name, log_dir, log_level)
 
@@ -341,9 +328,7 @@ def log_function_call(
     logger.debug(f"Calling {func_name}({params})")
 
 
-def log_exception(
-    logger: ScrapingLogger, exception: Exception, context: str = ""
-) -> None:
+def log_exception(logger: ScrapingLogger, exception: Exception, context: str = "") -> None:
     """Log exception with context."""
     context_msg = f" in {context}" if context else ""
     logger.error(f"Exception{context_msg}: {str(exception)}", exception=exception)

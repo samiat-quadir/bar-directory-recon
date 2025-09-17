@@ -1,7 +1,6 @@
 # universal_recon/utils/record_field_validator_v3.py
 
 import logging
-from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
@@ -44,9 +43,7 @@ def validate_records(
         passed.append(rec)
 
     if verbose or not strict:
-        logger.info(
-            f"✅ Validation Complete: {len(passed)} passed, {len(failed)} failed"
-        )
+        logger.info(f"✅ Validation Complete: {len(passed)} passed, {len(failed)} failed")
         if verbose and failed:
             for f in failed:
                 logger.warning(f"[!] Warning: Failed Record: {f.get('error')}")

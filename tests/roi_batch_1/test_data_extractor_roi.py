@@ -41,9 +41,7 @@ def test_data_extractor_has_expected_structure():
             if hasattr(module, attr)
         )
         has_functions = any(
-            callable(getattr(module, attr))
-            for attr in module_attrs
-            if hasattr(module, attr)
+            callable(getattr(module, attr)) for attr in module_attrs if hasattr(module, attr)
         )
 
         assert has_classes or has_functions, "Module should have classes or functions"
@@ -102,9 +100,7 @@ def test_data_extractor_instantiation_safety():
                     params = list(sig.parameters.values())[1:]  # Skip 'self'
 
                     # Only try instantiation if no required params
-                    required_params = [
-                        p for p in params if p.default == inspect.Parameter.empty
-                    ]
+                    required_params = [p for p in params if p.default == inspect.Parameter.empty]
                     if not required_params:
                         try:
                             instance = cls()

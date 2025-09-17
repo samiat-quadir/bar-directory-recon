@@ -5,7 +5,7 @@ Test suite for core configuration and data processing modules
 import json
 import os
 import tempfile
-from typing import Any, Dict
+from typing import Any
 
 # Import modules to test
 from src.config_loader import ConfigLoader, ScrapingConfig

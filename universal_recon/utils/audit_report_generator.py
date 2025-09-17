@@ -1,7 +1,5 @@
 """Generate audit reports for validator health."""
 
-from typing import Dict, List
-
 from universal_recon.core.logger import get_logger
 
 logger = get_logger(__name__)

@@ -8,7 +8,7 @@ import logging
 import re
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # Optional API validation hooks (requires API keys)
 try:
@@ -86,13 +86,9 @@ class LeadEnrichmentEngine:
         self.session = requests.Session() if REQUESTS_AVAILABLE else None
 
         # Email and phone validation patterns (strict)
-        self.email_pattern = re.compile(
-            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-        )
+        self.email_pattern = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
         self.phone_patterns = {
-            "us": re.compile(
-                r"^\+?1?[-.\s]?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})$"
-            ),
+            "us": re.compile(r"^\+?1?[-.\s]?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})$"),
             "international": re.compile(r"^\+[1-9]\d{1,14}$"),
         }
 
@@ -126,9 +122,7 @@ class LeadEnrichmentEngine:
                 return False, False
 
         # Hunter.io API validation (if available)
-        deliverable = (
-            self._check_email_deliverability(email) if self.hunter_api_key else False
-        )
+        deliverable = self._check_email_deliverability(email) if self.hunter_api_key else False
 
         return format_valid, deliverable
 
@@ -152,9 +146,7 @@ class LeadEnrichmentEngine:
             return False, False
 
         # Numverify API validation (if available)
-        number_valid = (
-            self._check_phone_validity(cleaned) if self.numverify_api_key else False
-        )
+        number_valid = self._check_phone_validity(cleaned) if self.numverify_api_key else False
 
         return format_valid, number_valid
 
@@ -183,17 +175,13 @@ class LeadEnrichmentEngine:
         for pattern in linkedin_patterns:
             match = re.search(pattern, search_text)
             if match:
-                social_urls["linkedin_url"] = (
-                    f"https://linkedin.com/company/{match.group(1)}"
-                )
+                social_urls["linkedin_url"] = f"https://linkedin.com/company/{match.group(1)}"
                 break
 
         # Facebook patterns
         facebook_match = re.search(r"facebook\.com/([a-zA-Z0-9\._\-]+)", search_text)
         if facebook_match:
-            social_urls["facebook_url"] = (
-                f"https://facebook.com/{facebook_match.group(1)}"
-            )
+            social_urls["facebook_url"] = f"https://facebook.com/{facebook_match.group(1)}"
 
         # Twitter/X patterns
         twitter_match = re.search(r"(?:twitter|x)\.com/([a-zA-Z0-9_]+)", search_text)
@@ -203,15 +191,11 @@ class LeadEnrichmentEngine:
         # Instagram patterns
         instagram_match = re.search(r"instagram\.com/([a-zA-Z0-9\._]+)", search_text)
         if instagram_match:
-            social_urls["instagram_url"] = (
-                f"https://instagram.com/{instagram_match.group(1)}"
-            )
+            social_urls["instagram_url"] = f"https://instagram.com/{instagram_match.group(1)}"
 
         return social_urls
 
-    def calculate_lead_score(
-        self, lead_data: dict[str, Any]
-    ) -> tuple[float, bool, str]:
+    def calculate_lead_score(self, lead_data: dict[str, Any]) -> tuple[float, bool, str]:
         """
         Calculate advanced lead score and urgency flag.
         Returns: (score, urgency_flag, urgency_reason)
@@ -306,9 +290,7 @@ class LeadEnrichmentEngine:
             "advertising",
         ]
 
-        business_text = (
-            f"{lead_data.get('company', '')} {lead_data.get('description', '')}".lower()
-        )
+        business_text = f"{lead_data.get('company', '')} {lead_data.get('description', '')}".lower()
         for keyword in high_value_keywords:
             if keyword in business_text:
                 urgency_flag = True
@@ -386,9 +368,7 @@ class LeadEnrichmentEngine:
                     f"Enriched lead: {enriched.company} (Score: {enriched.lead_score:.1f})"
                 )
             except Exception as e:
-                logger.error(
-                    f"Error enriching lead {raw_lead.get('company', 'Unknown')}: {e}"
-                )
+                logger.error(f"Error enriching lead {raw_lead.get('company', 'Unknown')}: {e}")
                 continue
 
         return enriched_leads
@@ -480,9 +460,7 @@ if __name__ == "__main__":
     parser.add_argument("input_file", help="Input CSV file with raw leads")
     parser.add_argument("--output", "-o", help="Output CSV file for enriched leads")
     parser.add_argument("--hunter-key", help="Hunter.io API key for email verification")
-    parser.add_argument(
-        "--numverify-key", help="Numverify API key for phone verification"
-    )
+    parser.add_argument("--numverify-key", help="Numverify API key for phone verification")
 
     args = parser.parse_args()
 
@@ -497,9 +475,7 @@ if __name__ == "__main__":
     # Show summary stats
     if enriched_leads:
         urgent_count = sum(1 for lead in enriched_leads if lead.urgency_flag)
-        avg_score = sum(lead.lead_score for lead in enriched_leads) / len(
-            enriched_leads
-        )
+        avg_score = sum(lead.lead_score for lead in enriched_leads) / len(enriched_leads)
         verified_emails = sum(1 for lead in enriched_leads if lead.email_verified)
         verified_phones = sum(1 for lead in enriched_leads if lead.phone_verified)
 

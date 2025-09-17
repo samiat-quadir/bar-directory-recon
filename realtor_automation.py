@@ -8,7 +8,7 @@ import argparse
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 # Add universal_recon to path
 script_dir = Path(__file__).resolve().parent
@@ -63,9 +63,7 @@ def interactive_mode() -> dict[str, Any]:
 
     # Technical options
     print("\n⚙️ Technical Options:")
-    use_selenium = (
-        input("Use Selenium for dynamic content? [Y/n]: ").strip().lower() != "n"
-    )
+    use_selenium = input("Use Selenium for dynamic content? [Y/n]: ").strip().lower() != "n"
     debug_mode = input("Enable debug output? [y/N]: ").strip().lower() == "y"
 
     return {
@@ -103,7 +101,6 @@ def run_enhanced_scraper(config: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> None:
-
     parser = argparse.ArgumentParser(
         description="Realtor Directory Lead Automation",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -129,17 +126,11 @@ Examples:
         help="Output CSV file path (default: outputs/realtor_leads.csv)",
     )
 
-    parser.add_argument(
-        "--max-records", "-m", type=int, help="Maximum number of records to scrape"
-    )
+    parser.add_argument("--max-records", "-m", type=int, help="Maximum number of records to scrape")
 
-    parser.add_argument(
-        "--google-sheet-id", "-g", help="Google Sheets ID for uploading results"
-    )
+    parser.add_argument("--google-sheet-id", "-g", help="Google Sheets ID for uploading results")
 
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Enable verbose logging"
-    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
 
     parser.add_argument(
         "--schedule", action="store_true", help="Show scheduling setup instructions"

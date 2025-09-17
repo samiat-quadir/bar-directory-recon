@@ -44,9 +44,7 @@ def suppress_scores(
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Suppress schema scores based on drift risk"
-    )
+    parser = argparse.ArgumentParser(description="Suppress schema scores based on drift risk")
     parser.add_argument("--matrix-path", default="output/schema_matrix.json")
     parser.add_argument("--status-path", default="output/output_status.json")
     parser.add_argument("--export-path", default="output/schema_matrix_suppressed.json")

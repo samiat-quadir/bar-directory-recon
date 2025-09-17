@@ -38,20 +38,15 @@ skip = [".venv311", "merge_conflicts_backup", ".temp_conflicts", "logs", "archiv
 known_first_party = ["src", "universal_recon"]
 
 [tool.ruff]
-line-length = 88
+line-length = 100
 target-version = "py311"
-extend-select = ["E", "F", "W", "I"]
-ignore = ["E501"]  # Ignore line too long for now
-exclude = [
-    ".git",
-    ".venv",
-    ".venv311",
-    "__pycache__",
-    "build",
-    "dist",
-    "logs",
-    "archive",
-]
+
+[tool.ruff.format]
+quote-style = "preserve"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]  # baseline: errors, pyflakes, import sort
+ignore = ["E501"]         # handled by Black; avoid conflicts
 
 [tool.autoflake]
 remove-all-unused-imports = true

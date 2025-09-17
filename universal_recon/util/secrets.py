@@ -7,7 +7,6 @@ Usage:
     key = get_secret("SCRAPER_API_KEY")  # returns None if unset
 """
 import os
-from typing import Optional
 
 
 def get_secret(name: str, default: str | None = None) -> str | None:

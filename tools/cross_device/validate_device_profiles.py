@@ -82,9 +82,7 @@ with open(log_path, "a", encoding="utf-8") as log:
                 "python.pythonPath" not in settings
                 or "${workspaceFolder}/.venv/Scripts/python.exe" not in settings
             ):
-                log.write(
-                    "[ERROR] .vscode/settings.json: python.pythonPath not set correctly.\n"
-                )
+                log.write("[ERROR] .vscode/settings.json: python.pythonPath not set correctly.\n")
     if not os.path.exists(".vscode/tasks.json"):
         log.write("[ERROR] .vscode/tasks.json missing.\n")
     else:
@@ -93,9 +91,7 @@ with open(log_path, "a", encoding="utf-8") as log:
             if "Run Pre-commit" not in tasks:
                 log.write("[ERROR] .vscode/tasks.json: Missing task Run Pre-commit.\n")
             if "Test Cross-Device" not in tasks:
-                log.write(
-                    "[ERROR] .vscode/tasks.json: Missing task Test Cross-Device.\n"
-                )
+                log.write("[ERROR] .vscode/tasks.json: Missing task Test Cross-Device.\n")
     log.write(f"[SUMMARY] {'OK' if exit_code == 0 else 'ERROR'}\n")
 
 sys.exit(exit_code)

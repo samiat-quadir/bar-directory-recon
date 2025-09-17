@@ -9,7 +9,7 @@ import json
 import logging
 import os
 import re
-from typing import Any, Dict, List
+from typing import Any
 
 import requests
 
@@ -85,9 +85,7 @@ class LeadScoringEngine:
             )
         ):
             score += self.WEIGHTS["business_name_quality"]
-            score_breakdown["business_name_quality"] = self.WEIGHTS[
-                "business_name_quality"
-            ]
+            score_breakdown["business_name_quality"] = self.WEIGHTS["business_name_quality"]
 
         # Complete address
         if address and len(address.split(",")) >= 3:  # Street, City, State format
@@ -109,9 +107,7 @@ class LeadScoringEngine:
         full_text = f"{business_name} {address} {lead.get('Practice Area', '')}".lower()
         matching_keywords = [kw for kw in self.niche_keywords if kw in full_text]
         if matching_keywords:
-            keyword_score = min(
-                len(matching_keywords) * 5, self.WEIGHTS["niche_keyword_match"]
-            )
+            keyword_score = min(len(matching_keywords) * 5, self.WEIGHTS["niche_keyword_match"])
             score += keyword_score
             score_breakdown["niche_keyword_match"] = keyword_score
             score_breakdown["matching_keywords"] = matching_keywords
@@ -222,16 +218,12 @@ class LeadScoringEngine:
                 writer.writeheader()
                 writer.writerows(priority_leads)
 
-            logger.info(
-                f"Saved top {len(priority_leads)} priority leads to {output_path}"
-            )
+            logger.info(f"Saved top {len(priority_leads)} priority leads to {output_path}")
             return output_path
 
         return None
 
-    def generate_scoring_report(
-        self, scored_leads: list[dict[str, Any]]
-    ) -> dict[str, Any]:
+    def generate_scoring_report(self, scored_leads: list[dict[str, Any]]) -> dict[str, Any]:
         """Generate a summary report of lead scoring results."""
 
         if not scored_leads:
@@ -271,9 +263,7 @@ def main():
     )
     parser.add_argument("--city", default="Fort Lauderdale", help="Target city")
     parser.add_argument("--state", default="FL", help="Target state")
-    parser.add_argument(
-        "--top-n", type=int, default=20, help="Number of top leads to save"
-    )
+    parser.add_argument("--top-n", type=int, default=20, help="Number of top leads to save")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
 
     args = parser.parse_args()

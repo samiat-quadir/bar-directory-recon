@@ -81,9 +81,7 @@ class TestRiskOverlayEmitter(TestCase):
         )
 
         # Test low risk scenarios
-        self.assertEqual(
-            calculate_risk_level(0.3, 95, 1.0), ("low", "Stable validation state")
-        )
+        self.assertEqual(calculate_risk_level(0.3, 95, 1.0), ("low", "Stable validation state"))
 
     def test_load_validator_tiers(self):
         """Test loading validator tier definitions."""

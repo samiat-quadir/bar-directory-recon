@@ -68,9 +68,7 @@ def main():
 
     if missing_packages:
         print("\n⚠️ Missing packages. Install with:")
-        print(
-            "pip install google-api-python-client google-auth-oauthlib google-auth-httplib2"
-        )
+        print("pip install google-api-python-client google-auth-oauthlib google-auth-httplib2")
         print("   (You can continue the test - packages will be installed when needed)")
 
     # Test 3: Verify CLI integration
@@ -83,15 +81,11 @@ def main():
 
         # Create a test parser with our new arguments
         parser = argparse.ArgumentParser()
-        parser.add_argument(
-            "--export", choices=["csv", "google_sheets", "both"], default="both"
-        )
+        parser.add_argument("--export", choices=["csv", "google_sheets", "both"], default="both")
         parser.add_argument("--credentials", help="Path to credentials file")
 
         # Test parsing
-        test_args = parser.parse_args(
-            ["--export", "google_sheets", "--credentials", "test.json"]
-        )
+        test_args = parser.parse_args(["--export", "google_sheets", "--credentials", "test.json"])
 
         print(f"   ✅ --export argument: {test_args.export}")
         print(f"   ✅ --credentials argument: {test_args.credentials}")
@@ -169,10 +163,7 @@ def main():
         print("   ✅ Logs directory exists")
 
         # Test writing a log file
-        test_log = (
-            logs_dir
-            / f"integration_test_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        )
+        test_log = logs_dir / f"integration_test_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         try:
             test_log.write_text("Integration test log entry")
             print("   ✅ Log file writing works")

@@ -4,6 +4,7 @@
 
 Usage: python scripts/set_gate.py --logs logs/roi2/pytest_after.txt
 """
+
 import argparse
 import pathlib
 import re
