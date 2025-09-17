@@ -9,11 +9,9 @@ import json
 import logging
 import os
 import re
-from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
 import requests
-from urllib.parse import urlparse
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -32,19 +30,28 @@ class LeadScoringEngine:
         "niche_keyword_match": 10,
         "business_name_quality": 5,
         "complete_address": 5,
-        "website_accessible": 10
+        "website_accessible": 10,
     }
 
     def __init__(self, target_city: str = "Fort Lauderdale", target_state: str = "FL"):
         self.target_city = target_city.lower()
         self.target_state = target_state.upper()
         self.niche_keywords = [
-            "luxury", "premium", "high-end", "exclusive", "custom",
-            "cash buyer", "investor", "commercial", "residential",
-            "foreclosure", "short sale", "new construction"
+            "luxury",
+            "premium",
+            "high-end",
+            "exclusive",
+            "custom",
+            "cash buyer",
+            "investor",
+            "commercial",
+            "residential",
+            "foreclosure",
+            "short sale",
+            "new construction",
         ]
 
-    def score_lead(self, lead: Dict[str, Any]) -> Dict[str, Any]:
+    def score_lead(self, lead: dict[str, Any]) -> dict[str, Any]:
         """Score a single lead based on multiple factors."""
         score = 0
         score_breakdown = {}
@@ -57,7 +64,7 @@ class LeadScoringEngine:
 
         # Phone present
         phone = lead.get("Phone", "").strip()
-        if phone and re.search(r'\d{3}.*\d{3}.*\d{4}', phone):
+        if phone and re.search(r"\d{3}.*\d{3}.*\d{4}", phone):
             score += self.WEIGHTS["phone_present"]
             score_breakdown["phone_present"] = self.WEIGHTS["phone_present"]
 
@@ -69,12 +76,18 @@ class LeadScoringEngine:
 
         # Business name quality (not generic)
         business_name = lead.get("Business Name", "")
-        if business_name and len(business_name) > 5 and not any(
-            generic in business_name.lower()
-            for generic in ["company", "corp", "llc", "inc", "business"]
+        if (
+            business_name
+            and len(business_name) > 5
+            and not any(
+                generic in business_name.lower()
+                for generic in ["company", "corp", "llc", "inc", "business"]
+            )
         ):
             score += self.WEIGHTS["business_name_quality"]
-            score_breakdown["business_name_quality"] = self.WEIGHTS["business_name_quality"]
+            score_breakdown["business_name_quality"] = self.WEIGHTS[
+                "business_name_quality"
+            ]
 
         # Complete address
         if address and len(address.split(",")) >= 3:  # Street, City, State format
@@ -96,7 +109,9 @@ class LeadScoringEngine:
         full_text = f"{business_name} {address} {lead.get('Practice Area', '')}".lower()
         matching_keywords = [kw for kw in self.niche_keywords if kw in full_text]
         if matching_keywords:
-            keyword_score = min(len(matching_keywords) * 5, self.WEIGHTS["niche_keyword_match"])
+            keyword_score = min(
+                len(matching_keywords) * 5, self.WEIGHTS["niche_keyword_match"]
+            )
             score += keyword_score
             score_breakdown["niche_keyword_match"] = keyword_score
             score_breakdown["matching_keywords"] = matching_keywords
@@ -118,7 +133,7 @@ class LeadScoringEngine:
             response = requests.get(
                 website,
                 timeout=10,
-                headers={"User-Agent": "Mozilla/5.0 (compatible; LeadScorer/1.0)"}
+                headers={"User-Agent": "Mozilla/5.0 (compatible; LeadScorer/1.0)"},
             )
             return response.status_code == 200
         except Exception:
@@ -139,8 +154,12 @@ class LeadScoringEngine:
 
             # Look for mobile-friendly indicators
             mobile_indicators = [
-                "viewport", "responsive", "mobile-optimized",
-                "@media", "device-width", "bootstrap"
+                "viewport",
+                "responsive",
+                "mobile-optimized",
+                "@media",
+                "device-width",
+                "bootstrap",
             ]
 
             return any(indicator in content for indicator in mobile_indicators)
@@ -158,12 +177,12 @@ class LeadScoringEngine:
         else:
             return "MINIMAL"
 
-    def score_leads_from_csv(self, csv_path: str) -> List[Dict[str, Any]]:
+    def score_leads_from_csv(self, csv_path: str) -> list[dict[str, Any]]:
         """Score all leads from a CSV file."""
         scored_leads = []
 
         try:
-            with open(csv_path, 'r', encoding='utf-8') as f:
+            with open(csv_path, encoding="utf-8") as f:
                 reader = csv.DictReader(f)
                 for lead in reader:
                     scored_lead = self.score_lead(lead)
@@ -180,10 +199,7 @@ class LeadScoringEngine:
             return []
 
     def save_priority_leads(
-        self,
-        scored_leads: List[Dict[str, Any]],
-        output_path: str,
-        top_n: int = 20
+        self, scored_leads: list[dict[str, Any]], output_path: str, top_n: int = 20
     ) -> str:
         """Save top priority leads to CSV."""
 
@@ -201,17 +217,21 @@ class LeadScoringEngine:
         if priority_leads:
             fieldnames = list(priority_leads[0].keys())
 
-            with open(output_path, 'w', newline='', encoding='utf-8') as f:
+            with open(output_path, "w", newline="", encoding="utf-8") as f:
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writeheader()
                 writer.writerows(priority_leads)
 
-            logger.info(f"Saved top {len(priority_leads)} priority leads to {output_path}")
+            logger.info(
+                f"Saved top {len(priority_leads)} priority leads to {output_path}"
+            )
             return output_path
 
         return None
 
-    def generate_scoring_report(self, scored_leads: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def generate_scoring_report(
+        self, scored_leads: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Generate a summary report of lead scoring results."""
 
         if not scored_leads:
@@ -224,7 +244,7 @@ class LeadScoringEngine:
             "HIGH": len([l for l in scored_leads if l.get("Priority") == "HIGH"]),
             "MEDIUM": len([l for l in scored_leads if l.get("Priority") == "MEDIUM"]),
             "LOW": len([l for l in scored_leads if l.get("Priority") == "LOW"]),
-            "MINIMAL": len([l for l in scored_leads if l.get("Priority") == "MINIMAL"])
+            "MINIMAL": len([l for l in scored_leads if l.get("Priority") == "MINIMAL"]),
         }
 
         return {
@@ -233,7 +253,7 @@ class LeadScoringEngine:
             "highest_score": max(scores) if scores else 0,
             "lowest_score": min(scores) if scores else 0,
             "priority_distribution": priority_counts,
-            "top_5_leads": scored_leads[:5] if len(scored_leads) >= 5 else scored_leads
+            "top_5_leads": scored_leads[:5] if len(scored_leads) >= 5 else scored_leads,
         }
 
 
@@ -243,11 +263,17 @@ def main():
 
     parser = argparse.ArgumentParser(description="Lead Scoring Engine")
     parser.add_argument("input_csv", help="Input CSV file with leads")
-    parser.add_argument("--output", "-o", help="Output file for priority leads",
-                       default="outputs/priority_leads.csv")
+    parser.add_argument(
+        "--output",
+        "-o",
+        help="Output file for priority leads",
+        default="outputs/priority_leads.csv",
+    )
     parser.add_argument("--city", default="Fort Lauderdale", help="Target city")
     parser.add_argument("--state", default="FL", help="Target state")
-    parser.add_argument("--top-n", type=int, default=20, help="Number of top leads to save")
+    parser.add_argument(
+        "--top-n", type=int, default=20, help="Number of top leads to save"
+    )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
 
     args = parser.parse_args()
@@ -273,27 +299,27 @@ def main():
     report = scorer.generate_scoring_report(scored_leads)
 
     # Display results
-    print(f"\n📊 Lead Scoring Results:")
+    print("\n📊 Lead Scoring Results:")
     print(f"   Total leads processed: {report['total_leads']}")
     print(f"   Average score: {report['average_score']:.1f}")
     print(f"   Highest score: {report['highest_score']}")
 
-    print(f"\n🎯 Priority Distribution:")
-    for priority, count in report['priority_distribution'].items():
-        percentage = (count / report['total_leads']) * 100
+    print("\n🎯 Priority Distribution:")
+    for priority, count in report["priority_distribution"].items():
+        percentage = (count / report["total_leads"]) * 100
         print(f"   {priority}: {count} leads ({percentage:.1f}%)")
 
     if output_path:
         print(f"\n✅ Top {args.top_n} priority leads saved to: {output_path}")
 
     # Show top 3 leads
-    if report['top_5_leads']:
-        print(f"\n🥇 Top 3 Priority Leads:")
-        for i, lead in enumerate(report['top_5_leads'][:3], 1):
-            name = lead.get('Full Name', 'Unknown')
-            business = lead.get('Business Name', 'Unknown')
-            score = lead.get('Score', 0)
-            priority = lead.get('Priority', 'Unknown')
+    if report["top_5_leads"]:
+        print("\n🥇 Top 3 Priority Leads:")
+        for i, lead in enumerate(report["top_5_leads"][:3], 1):
+            name = lead.get("Full Name", "Unknown")
+            business = lead.get("Business Name", "Unknown")
+            score = lead.get("Score", 0)
+            priority = lead.get("Priority", "Unknown")
             print(f"   {i}. {name} ({business}) - Score: {score} ({priority})")
 
 

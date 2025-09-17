@@ -8,7 +8,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 # Import pipeline modules
 from pdf_processor import HallandalePropertyProcessor
@@ -55,10 +55,10 @@ class HallandalePipeline:
         self.logger.info("STARTING HALLANDALE PROPERTY PROCESSING PIPELINE")
         self.logger.info("=" * 60)
 
-    def run_pipeline(self, pdf_path: str) -> Dict[str, Any]:
+    def run_pipeline(self, pdf_path: str) -> dict[str, Any]:
         """Run the complete Hallandale processing pipeline."""
         try:
-            results: Dict[str, Any] = {}
+            results: dict[str, Any] = {}
             results["pipeline_status"] = "running"
             results["steps_completed"] = []
             results["errors"] = []
@@ -153,7 +153,7 @@ class HallandalePipeline:
             }
             return results
 
-    def _export_final_results(self, results: Dict[str, Any]) -> Dict[str, Any]:
+    def _export_final_results(self, results: dict[str, Any]) -> dict[str, Any]:
         """Export final results to Excel and CSV."""
         try:
             export_files = []
@@ -178,7 +178,7 @@ class HallandalePipeline:
             self.logger.error(f"Excel export failed: {e}")
             return {"success": False, "message": f"Export failed: {e}"}
 
-    def _upload_to_google_sheets(self, data_file: str) -> Dict[str, Any]:
+    def _upload_to_google_sheets(self, data_file: str) -> dict[str, Any]:
         """Upload results to Google Sheets."""
         try:
             # Placeholder for Google Sheets integration
@@ -193,7 +193,7 @@ class HallandalePipeline:
             self.logger.error(f"Google Sheets upload failed: {e}")
             return {"success": False, "message": f"Google Sheets upload failed: {e}"}
 
-    def _generate_final_report(self, results: Dict[str, Any]) -> Dict[str, Any]:
+    def _generate_final_report(self, results: dict[str, Any]) -> dict[str, Any]:
         """Generate comprehensive final report."""
         try:
             report_file = self.output_dir / "pipeline_report.txt"

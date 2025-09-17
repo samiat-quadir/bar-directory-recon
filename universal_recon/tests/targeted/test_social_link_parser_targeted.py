@@ -32,7 +32,9 @@ def test_social_link_parser_detects_linkedin():
 def test_social_link_parser_detects_twitter():
     """Test that social link parser detects Twitter URLs."""
     mock_driver = Mock()
-    mock_driver.page_source = '<html><body><a href="https://twitter.com/testuser">Twitter</a></body></html>'
+    mock_driver.page_source = (
+        '<html><body><a href="https://twitter.com/testuser">Twitter</a></body></html>'
+    )
     mock_driver.current_url = "http://test.com"
 
     result = apply(mock_driver, "test_context")
@@ -45,7 +47,9 @@ def test_social_link_parser_detects_twitter():
 def test_social_link_parser_ignores_twitter_share():
     """Test that social link parser ignores Twitter share URLs."""
     mock_driver = Mock()
-    mock_driver.page_source = '<html><body><a href="https://twitter.com/share">Share</a></body></html>'
+    mock_driver.page_source = (
+        '<html><body><a href="https://twitter.com/share">Share</a></body></html>'
+    )
     mock_driver.current_url = "http://test.com"
 
     result = apply(mock_driver, "test_context")

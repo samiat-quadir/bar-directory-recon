@@ -1,4 +1,5 @@
 import importlib
+
 import pytest
 
 
@@ -9,11 +10,13 @@ def test_pipeline_idempotent_dedup():
     except ImportError:
         pytest.skip("hallandale_pipeline_fixed module not available")
 
-    fn = (getattr(m, "process", None) or 
-          getattr(m, "run", None) or 
-          getattr(m, "transform", None) or 
-          getattr(m, "pipeline", None))
-    
+    fn = (
+        getattr(m, "process", None)
+        or getattr(m, "run", None)
+        or getattr(m, "transform", None)
+        or getattr(m, "pipeline", None)
+    )
+
     if fn is None:
         pytest.skip("no pipeline function found")
 
@@ -29,11 +32,13 @@ def test_pipeline_empty_data():
     except ImportError:
         pytest.skip("hallandale_pipeline_fixed module not available")
 
-    fn = (getattr(m, "process", None) or 
-          getattr(m, "run", None) or 
-          getattr(m, "transform", None) or 
-          getattr(m, "pipeline", None))
-    
+    fn = (
+        getattr(m, "process", None)
+        or getattr(m, "run", None)
+        or getattr(m, "transform", None)
+        or getattr(m, "pipeline", None)
+    )
+
     if fn is None:
         pytest.skip("no pipeline function found")
 

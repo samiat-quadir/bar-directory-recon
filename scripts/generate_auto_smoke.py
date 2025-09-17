@@ -23,18 +23,20 @@ for package in root.findall("packages/package"):
     for cl in package.findall("classes/class"):
         filename = cl.get("filename")
         # Keep project files only
-        if not filename.startswith("src/") and not filename.startswith("universal_recon/"):
+        if not filename.startswith("src/") and not filename.startswith(
+            "universal_recon/"
+        ):
             continue
         # convert path to module import path heuristically
-        mod = filename.replace('/', '.').rstrip('.py')
+        mod = filename.replace("/", ".").rstrip(".py")
         modules.append(mod)
 
 # pick first 30 modules to keep tests small
 modules = modules[:30]
 for m in modules:
-    test_name = m.replace('.', '_')
+    test_name = m.replace(".", "_")
     path = out_dir / f"test_import_{test_name}.py"
-    with path.open('w', encoding='utf8') as f:
+    with path.open("w", encoding="utf8") as f:
         f.write(f"# Auto-generated import-only smoke test for {m}\n")
         f.write("try:\n")
         f.write(f"    import {m}\n")

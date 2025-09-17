@@ -29,7 +29,7 @@ def read_coverage_percent(xml_path: str) -> float:
 
 def replace_gate_in_file(path: str, gate: int) -> None:
     pattern = re.compile(r"--cov-fail-under=\s*\d+")
-    with open(path, "r", encoding="utf8") as fh:
+    with open(path, encoding="utf8") as fh:
         text = fh.read()
     if pattern.search(text):
         new_text = pattern.sub(f"--cov-fail-under={gate}", text)

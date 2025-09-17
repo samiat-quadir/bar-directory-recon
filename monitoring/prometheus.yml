@@ -15,4 +15,3 @@ scrape_configs:
     static_configs: [{ targets: ["host.docker.internal:9182"] }]
   - job_name: "windows_ali"
     static_configs: [{ targets: ["100.121.228.16:9182"] }]
-

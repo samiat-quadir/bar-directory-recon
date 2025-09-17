@@ -8,7 +8,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
 
 
 class BulletproofGitWorkflow:
@@ -22,11 +22,11 @@ class BulletproofGitWorkflow:
 
     def run_command(
         self,
-        cmd: List[str],
+        cmd: list[str],
         description: str,
         check: bool = True,
         capture_output: bool = True,
-    ) -> Tuple[bool, str]:
+    ) -> tuple[bool, str]:
         """Run command with enhanced error handling."""
         print(f"[*] {description}...")
         try:
@@ -112,7 +112,7 @@ class BulletproofGitWorkflow:
 
         return passed >= 2  # Require at least Git and repo
 
-    def get_current_branch(self) -> Optional[str]:
+    def get_current_branch(self) -> str | None:
         """Get current branch with error handling."""
         success, output = self.run_command(
             ["git", "branch", "--show-current"], "Getting current branch"

@@ -25,10 +25,10 @@ logger = logging.getLogger(__name__)
 class WebDriverManager:
     """Unified WebDriver manager with consistent setup and teardown."""
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         """Initialize WebDriver manager with configuration."""
         self.config = config
-        self.driver: Optional[webdriver.Chrome] = None
+        self.driver: webdriver.Chrome | None = None
         self.default_timeout = config.get("timeout", 30)
         self.headless = config.get("headless", True)
         self.user_agent = config.get(
@@ -94,7 +94,7 @@ class WebDriverManager:
             logger.error(f"Failed to setup WebDriver: {e}")
             raise WebDriverException(f"WebDriver setup failed: {e}")
 
-    def navigate_to(self, url: str, wait_for_element: Optional[str] = None) -> bool:
+    def navigate_to(self, url: str, wait_for_element: str | None = None) -> bool:
         """Navigate to URL with optional element wait."""
         try:
             if not self.driver:
@@ -131,7 +131,7 @@ class WebDriverManager:
             logger.error(f"Navigation failed: {e}")
             return False
 
-    def wait_for_element(self, selector: str, timeout: Optional[int] = None) -> bool:
+    def wait_for_element(self, selector: str, timeout: int | None = None) -> bool:
         """Wait for element to be present."""
         try:
             if not self.driver:
@@ -147,7 +147,7 @@ class WebDriverManager:
             logger.warning(f"Element not found within {wait_time}s: {selector}")
             return False
 
-    def click_element(self, selector: str, timeout: Optional[int] = None) -> bool:
+    def click_element(self, selector: str, timeout: int | None = None) -> bool:
         """Click element with wait."""
         try:
             if not self.driver:
@@ -281,9 +281,9 @@ class WebDriverManager:
 
     def __exit__(
         self,
-        exc_type: Optional[type],
-        exc_val: Optional[Exception],
-        exc_tb: Optional[Any],
+        exc_type: type | None,
+        exc_val: Exception | None,
+        exc_tb: Any | None,
     ) -> None:
         """Context manager exit."""
         self.quit()

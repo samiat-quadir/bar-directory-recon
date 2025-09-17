@@ -2,6 +2,46 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Lint (Ruff)",
+            "type": "shell",
+            "command": "ruff check --fix .",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Format (Black)",
+            "type": "shell",
+            "command": "black .",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Test (quick)",
+            "type": "shell",
+            "command": "pytest",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Test (cov)",
+            "type": "shell",
+            "command": "pytest --cov=src --cov-report=term-missing",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
             "label": "Run Automation Setup",
             "type": "shell",
             "command": "${command:python.interpreterPath}",

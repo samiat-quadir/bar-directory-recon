@@ -1,4 +1,5 @@
 """Test core logger functionality."""
+
 from universal_recon.core.logger import get_logger
 
 
@@ -6,9 +7,9 @@ def test_get_logger_returns_logger():
     """Test that get_logger returns a logger instance."""
     logger = get_logger("test")
     assert logger is not None
-    assert hasattr(logger, 'info')
-    assert hasattr(logger, 'error')
-    assert hasattr(logger, 'warning')
+    assert hasattr(logger, "info")
+    assert hasattr(logger, "error")
+    assert hasattr(logger, "warning")
 
 
 def test_get_logger_with_different_names():

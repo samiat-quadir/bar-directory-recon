@@ -47,7 +47,7 @@ class PropertyValidation:
             ],
         )
 
-    def validate_properties(self, input_file: str) -> Dict[str, Any]:
+    def validate_properties(self, input_file: str) -> dict[str, Any]:
         """Validate property data and contact information."""
         try:
             input_path = Path(input_file)
@@ -117,8 +117,8 @@ class PropertyValidation:
             return {"status": "error", "message": str(e)}
 
     def _validate_single_property(
-        self, property_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, property_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Validate a single property record."""
         validated = property_data.copy()
 
@@ -161,7 +161,7 @@ class PropertyValidation:
 
         return validated
 
-    def _validate_email_comprehensive(self, email: str) -> Dict[str, Any]:
+    def _validate_email_comprehensive(self, email: str) -> dict[str, Any]:
         """Comprehensive email validation."""
         result = {
             "email_valid": False,
@@ -211,7 +211,7 @@ class PropertyValidation:
 
         return result
 
-    def _validate_phone_comprehensive(self, phone: str) -> Dict[str, Any]:
+    def _validate_phone_comprehensive(self, phone: str) -> dict[str, Any]:
         """Comprehensive phone validation."""
         result = {
             "phone_valid": False,
@@ -281,7 +281,7 @@ class PropertyValidation:
 
         return result
 
-    def _validate_address_comprehensive(self, address: str) -> Dict[str, Any]:
+    def _validate_address_comprehensive(self, address: str) -> dict[str, Any]:
         """Comprehensive address validation."""
         result = {
             "address_valid": False,
@@ -381,7 +381,7 @@ class PropertyValidation:
         # Basic folio pattern check
         return bool(re.match(r"^\d{4}-\d{2}-\d{2}-\d{4}$", folio))
 
-    def _validate_dates(self, inspection_due: str) -> Dict[str, Any]:
+    def _validate_dates(self, inspection_due: str) -> dict[str, Any]:
         """Validate date fields."""
         result = {
             "inspection_due_valid": False,
@@ -410,7 +410,7 @@ class PropertyValidation:
 
         return result
 
-    def _calculate_priority_comprehensive(self, property_data: Dict[str, Any]) -> bool:
+    def _calculate_priority_comprehensive(self, property_data: dict[str, Any]) -> bool:
         """Calculate comprehensive priority flag."""
         priority_factors = []
 
@@ -443,7 +443,7 @@ class PropertyValidation:
 
         return len(priority_factors) >= 2
 
-    def _calculate_completeness(self, property_data: Dict[str, Any]) -> float:
+    def _calculate_completeness(self, property_data: dict[str, Any]) -> float:
         """Calculate completeness score."""
         required_fields = [
             "property_address",
@@ -461,7 +461,7 @@ class PropertyValidation:
 
         return (filled_fields / len(required_fields)) * 100
 
-    def _calculate_validation_score(self, property_data: Dict[str, Any]) -> float:
+    def _calculate_validation_score(self, property_data: dict[str, Any]) -> float:
         """Calculate overall validation score."""
         score_components = [
             ("email_valid", 25),
@@ -479,7 +479,7 @@ class PropertyValidation:
         return total_score
 
     def _update_validation_stats(
-        self, validated_prop: Dict[str, Any], stats: Dict[str, Any]
+        self, validated_prop: dict[str, Any], stats: dict[str, Any]
     ) -> None:
         """Update validation statistics."""
         if validated_prop.get("email_valid"):
@@ -536,7 +536,7 @@ class PropertyValidation:
         except Exception as e:
             logger.error(f"Error creating Excel export: {e}")
 
-    def _create_summary_report(self, stats: Dict[str, Any], output_file: Path) -> Path:
+    def _create_summary_report(self, stats: dict[str, Any], output_file: Path) -> Path:
         """Create detailed summary report."""
         summary_file = self.output_dir / "hallandale_processing_summary.txt"
 

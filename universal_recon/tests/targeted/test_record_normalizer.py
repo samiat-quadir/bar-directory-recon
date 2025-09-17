@@ -1,4 +1,5 @@
 """Test record normalizer utility functions."""
+
 from universal_recon.utils.record_normalizer import normalize
 
 
@@ -10,11 +11,10 @@ def test_normalize_adds_optional_defaults():
             "value": "test@example.com",
             "xpath": "//a",
             "context": "root",
-            "url": "http://test.com"
+            "url": "http://test.com",
         }
     ]
     result = normalize(records)
-
 
     assert len(result) == 1
     assert result[0]["confidence"] == 1.0
@@ -32,7 +32,7 @@ def test_normalize_preserves_existing_optional_fields():
             "context": "root",
             "url": "http://test.com",
             "confidence": 0.8,
-            "source": "custom"
+            "source": "custom",
         }
     ]
     result = normalize(records)
@@ -44,7 +44,9 @@ def test_normalize_preserves_existing_optional_fields():
 
 def test_normalize_strict_mode_raises_on_missing_fields():
     """Test that strict mode raises ValueError for missing required fields."""
-    records = [{"type": "email", "value": "test@example.com"}]  # missing xpath, context, url
+    records = [
+        {"type": "email", "value": "test@example.com"}
+    ]  # missing xpath, context, url
 
     try:
         normalize(records, strict=True)
@@ -55,10 +57,11 @@ def test_normalize_strict_mode_raises_on_missing_fields():
 
 def test_normalize_non_strict_mode_handles_missing_fields():
     """Test that non-strict mode handles missing required fields gracefully."""
-    records = [{"type": "email", "value": "test@example.com"}]  # missing xpath, context, url
+    records = [
+        {"type": "email", "value": "test@example.com"}
+    ]  # missing xpath, context, url
     result = normalize(records, strict=False)
 
     assert len(result) == 1
     assert result[0]["confidence"] == 1.0
     assert result[0]["source"] == "unknown"
-

@@ -11,8 +11,8 @@ MIN_TEMPLATE_CONFIDENCE = 0.5
 
 
 def validate_records(
-    records: List[Dict], strict: bool = False, verbose: bool = False
-) -> List[Dict]:
+    records: list[dict], strict: bool = False, verbose: bool = False
+) -> list[dict]:
     """
     Validates records using field completeness, score, and predicted score.
     Returns cleaned list (or raises) and logs summary stats.
@@ -44,7 +44,9 @@ def validate_records(
         passed.append(rec)
 
     if verbose or not strict:
-        logger.info(f"✅ Validation Complete: {len(passed)} passed, {len(failed)} failed")
+        logger.info(
+            f"✅ Validation Complete: {len(passed)} passed, {len(failed)} failed"
+        )
         if verbose and failed:
             for f in failed:
                 logger.warning(f"[!] Warning: Failed Record: {f.get('error')}")

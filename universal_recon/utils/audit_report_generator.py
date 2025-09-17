@@ -7,7 +7,7 @@ from universal_recon.core.logger import get_logger
 logger = get_logger(__name__)
 
 
-def generate_audit_report(records: List[Dict]) -> Dict:
+def generate_audit_report(records: list[dict]) -> dict:
     """Generate audit report from validation records."""
     try:
         report = {

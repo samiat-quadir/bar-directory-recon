@@ -10,7 +10,7 @@ import os
 from typing import Optional
 
 
-def get_secret(name: str, default: Optional[str] = None) -> Optional[str]:
+def get_secret(name: str, default: str | None = None) -> str | None:
     """Return the environment variable value for `name` or `default`.
 
     Treat empty strings and a commonly-used placeholder as unset. This

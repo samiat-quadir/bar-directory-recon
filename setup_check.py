@@ -28,7 +28,9 @@ def install_core_dependencies():
     print("📦 Installing core dependencies...")
 
     try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements-core.txt"])
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", "-r", "requirements-core.txt"]
+        )
         print("✅ Core dependencies installed successfully!")
         return True
     except subprocess.CalledProcessError as e:
@@ -72,7 +74,9 @@ def main():
     if missing_packages:
         print(f"\n📦 Missing packages: {', '.join(missing_packages)}")
 
-        user_input = input("\nWould you like to install missing dependencies now? (y/n): ")
+        user_input = input(
+            "\nWould you like to install missing dependencies now? (y/n): "
+        )
         if user_input.lower() in ("y", "yes"):
             if install_core_dependencies():
                 print("\n✅ All dependencies installed!")

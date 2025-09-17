@@ -1,16 +1,19 @@
-import json, pathlib, textwrap
-roi=pathlib.Path('logs/roi2/top_roi.json')
+import json
+import pathlib
+import textwrap
+
+roi = pathlib.Path("logs/roi2/top_roi.json")
 if not roi.exists():
-    print('no roi')
+    print("no roi")
     raise SystemExit(0)
-entries=json.loads(roi.read_text())[:6]
-out=pathlib.Path('universal_recon/tests/roi_batch_2')
-out.mkdir(parents=True,exist_ok=True)
+entries = json.loads(roi.read_text())[:6]
+out = pathlib.Path("universal_recon/tests/roi_batch_2")
+out.mkdir(parents=True, exist_ok=True)
 for e in entries:
-    fn=pathlib.Path(e['file']).name
-    mod=fn.replace('.py','')
-    p=out/f"test_{mod}_roi2.py"
-    body=f"""
+    fn = pathlib.Path(e["file"]).name
+    mod = fn.replace(".py", "")
+    p = out / f"test_{mod}_roi2.py"
+    body = f"""
 import importlib
 m = importlib.import_module('{mod}')
 
@@ -30,5 +33,5 @@ def test_{mod}_first_callable():
                     assert True
                 break
 """
-    p.write_text(textwrap.dedent(body), encoding='utf-8')
-print('WROTE')
+    p.write_text(textwrap.dedent(body), encoding="utf-8")
+print("WROTE")

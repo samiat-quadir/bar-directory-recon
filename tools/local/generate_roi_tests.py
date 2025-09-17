@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
-import textwrap, pathlib
-files=["property_validation","data_extractor","orchestrator","data_hunter","property_enrichment","pagination_manager"]
-out=pathlib.Path('universal_recon/tests/roi_batch_2')
+import pathlib
+import textwrap
+
+files = [
+    "property_validation",
+    "data_extractor",
+    "orchestrator",
+    "data_hunter",
+    "property_enrichment",
+    "pagination_manager",
+]
+out = pathlib.Path("universal_recon/tests/roi_batch_2")
 out.mkdir(parents=True, exist_ok=True)
 for mod in files:
-    p=out/f"test_{mod}_roi2.py"
-    body=f'''
+    p = out / f"test_{mod}_roi2.py"
+    body = f"""
 import importlib
 import pytest
 m = importlib.import_module('{mod}')
@@ -32,6 +41,6 @@ def test_{mod}_first_callable_contract():
                     # avoid network/side effects
                     assert True
                 break
-'''
-    p.write_text(textwrap.dedent(body), encoding='utf-8')
-print('WROTE_TESTS')
+"""
+    p.write_text(textwrap.dedent(body), encoding="utf-8")
+print("WROTE_TESTS")

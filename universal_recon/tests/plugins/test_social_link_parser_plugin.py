@@ -1,4 +1,5 @@
 """Plugin-style tests for social link parser to avoid import name collision with targeted tests."""
+
 import unittest
 
 from universal_recon.plugins import social_link_parser
@@ -21,11 +22,11 @@ class TestSocialLinkParserPlugin(unittest.TestCase):
         # snapshot file relative to tests/plugins
         sample_path = "snapshots/sample.html"
         try:
-            with open(sample_path, "r", encoding="utf-8") as f:
+            with open(sample_path, encoding="utf-8") as f:
                 self.sample_html = f.read()
         except FileNotFoundError:
             # Fallback minimal HTML if snapshot is missing
-            self.sample_html = "<html><body><a href=\"https://linkedin.com/in/testuser\">LinkedIn</a></body></html>"
+            self.sample_html = '<html><body><a href="https://linkedin.com/in/testuser">LinkedIn</a></body></html>'
         self.driver = mock_driver_with_html(self.sample_html)
 
     def test_social_links_soft_mode(self):

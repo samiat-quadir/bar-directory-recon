@@ -1,4 +1,5 @@
 import importlib
+
 import pytest
 
 
@@ -16,7 +17,11 @@ def test_orchestrator_handles_skip_and_error():
     """Test orchestrator handles mixed success/failure scenarios"""
     try:
         m = importlib.import_module("orchestrator")
-        fn = getattr(m, "run", None) or getattr(m, "orchestrate", None) or getattr(m, "execute", None)
+        fn = (
+            getattr(m, "run", None)
+            or getattr(m, "orchestrate", None)
+            or getattr(m, "execute", None)
+        )
         if fn is None:
             pytest.skip("no orchestrator entrypoint found")
 
@@ -28,7 +33,7 @@ def test_orchestrator_handles_skip_and_error():
 
         try:
             # Try with steps format
-            if hasattr(fn, '__code__') and fn.__code__.co_argcount >= 2:
+            if hasattr(fn, "__code__") and fn.__code__.co_argcount >= 2:
                 out = fn(steps=[("a", _ok, True), ("b", _boom, False)], seed=1)
             else:
                 try:
@@ -55,7 +60,11 @@ def test_orchestrator_empty_steps():
     """Test orchestrator handles empty or null input"""
     try:
         m = importlib.import_module("orchestrator")
-        fn = getattr(m, "run", None) or getattr(m, "orchestrate", None) or getattr(m, "execute", None)
+        fn = (
+            getattr(m, "run", None)
+            or getattr(m, "orchestrate", None)
+            or getattr(m, "execute", None)
+        )
         if fn is None:
             pytest.skip("no orchestrator entrypoint found")
 

@@ -1,4 +1,5 @@
 import importlib
+
 import pytest
 
 
@@ -9,10 +10,12 @@ def test_orchestrator_skips_disabled_and_handles_error():
     except ImportError:
         pytest.skip("orchestrator module not available")
 
-    fn = (getattr(m, "run", None) or 
-          getattr(m, "orchestrate", None) or 
-          getattr(m, "execute", None))
-    
+    fn = (
+        getattr(m, "run", None)
+        or getattr(m, "orchestrate", None)
+        or getattr(m, "execute", None)
+    )
+
     if fn is None:
         pytest.skip("no orchestrator function found")
 
@@ -27,7 +30,7 @@ def test_orchestrator_skips_disabled_and_handles_error():
     except TypeError:
         # Try different signature
         out = fn([("a", _ok, True), ("b", _boom, False)], 1)
-    
+
     assert out is not None
 
 
@@ -38,10 +41,12 @@ def test_orchestrator_basic_execution():
     except ImportError:
         pytest.skip("orchestrator module not available")
 
-    fn = (getattr(m, "run", None) or 
-          getattr(m, "orchestrate", None) or 
-          getattr(m, "execute", None))
-    
+    fn = (
+        getattr(m, "run", None)
+        or getattr(m, "orchestrate", None)
+        or getattr(m, "execute", None)
+    )
+
     if fn is None:
         pytest.skip("no orchestrator function found")
 

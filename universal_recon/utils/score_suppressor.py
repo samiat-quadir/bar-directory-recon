@@ -15,10 +15,10 @@ def suppress_scores(
         print("❌ Required input files not found.")
         return
 
-    with open(matrix_path, "r", encoding="utf-8") as f:
+    with open(matrix_path, encoding="utf-8") as f:
         matrix = json.load(f)
 
-    with open(status_path, "r", encoding="utf-8") as f:
+    with open(status_path, encoding="utf-8") as f:
         status = json.load(f)
 
     modified_sites = 0
@@ -44,7 +44,9 @@ def suppress_scores(
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Suppress schema scores based on drift risk")
+    parser = argparse.ArgumentParser(
+        description="Suppress schema scores based on drift risk"
+    )
     parser.add_argument("--matrix-path", default="output/schema_matrix.json")
     parser.add_argument("--status-path", default="output/output_status.json")
     parser.add_argument("--export-path", default="output/schema_matrix_suppressed.json")
