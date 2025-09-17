@@ -18,6 +18,14 @@ jobs:
       - name: Pytest + coverage
         run: |
           pytest -q --maxfail=1 --disable-warnings --cov=src --cov-report=xml
+      - name: Check coverage gate (12% minimum)
+        run: |
+          python - << 'PY'
+          import sys, xml.etree.ElementTree as ET
+          pct=float(ET.parse('coverage.xml').getroot().attrib['line-rate'])*100
+          print(f"Observed coverage: {pct:.2f}%")
+          sys.exit(0 if pct >= 12.0 else 1)
+          PY
       - name: Upload coverage XML
         uses: actions/upload-artifact@v4
         with: { name: coverage-xml, path: coverage.xml }
