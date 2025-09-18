@@ -29,7 +29,6 @@ jobs:
               if pct < 12.0:
                   print("Coverage below 12% threshold — failing build.")
                   sys.exit(1)
-              sys.exit(0)
           except FileNotFoundError:
               print("ERROR: coverage.xml not found")
               sys.exit(2)
