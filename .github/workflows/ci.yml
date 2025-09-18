@@ -22,9 +22,22 @@ jobs:
         run: |
           python - << 'PY'
           import sys, xml.etree.ElementTree as ET
-          pct=float(ET.parse('coverage.xml').getroot().attrib['line-rate'])*100
-          print(f"Observed coverage: {pct:.2f}%")
-          sys.exit(0 if pct >= 12.0 else 1)
+          try:
+              tree = ET.parse('coverage.xml')
+              pct = float(tree.getroot().attrib['line-rate']) * 100
+              print(f"Observed coverage: {pct:.2f}%")
+              if pct < 12.0:
+                  print("Coverage below 12% threshold — failing build.")
+                  sys.exit(1)
+          except FileNotFoundError:
+              print("ERROR: coverage.xml not found")
+              sys.exit(2)
+          except ET.ParseError:
+              print("ERROR: coverage.xml is malformed")
+              sys.exit(3)
+          except KeyError as e:
+              print(f"ERROR: attribute '{e.args[0]}' not found in coverage.xml")
+              sys.exit(4)
           PY
       - name: Upload coverage XML
         uses: actions/upload-artifact@v4
