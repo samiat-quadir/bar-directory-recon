@@ -35,8 +35,8 @@ jobs:
           except ET.ParseError:
               print("ERROR: coverage.xml is malformed")
               sys.exit(3)
-          except KeyError:
-              print("ERROR: 'line-rate' not found in coverage.xml")
+          except KeyError as e:
+              print(f"ERROR: attribute '{e.args[0]}' not found in coverage.xml")
               sys.exit(4)
           PY
       - name: Upload coverage XML
