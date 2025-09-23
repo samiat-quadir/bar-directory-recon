@@ -3,8 +3,6 @@
 import json
 import os
 import time
-from datetime import datetime, timedelta
-from pathlib import Path
 
 OUTPUT_DIR = "output"
 STATUS_JSON = os.path.join(OUTPUT_DIR, "output_status.json")
@@ -30,7 +28,7 @@ def check_staleness(path):
 def load_json(path):
     if not os.path.exists(path):
         return {}
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 

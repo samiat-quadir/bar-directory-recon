@@ -8,6 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+
 def check_python_version():
     """Check Python version compatibility."""
     print("🐍 Checking Python Version...")
@@ -23,14 +24,15 @@ def check_python_version():
         print("❌ Python 3.8+ required")
         return False
 
+
 def check_system_tools():
     """Check essential system tools."""
     print("\n🛠️ Checking System Tools...")
     print("=" * 40)
 
     tools = {
-        'Git': 'git --version',
-        'PowerShell': 'powershell -Command "Get-Host | Select-Object Version"'
+        "Git": "git --version",
+        "PowerShell": 'powershell -Command "Get-Host | Select-Object Version"',
     }
 
     available = []
@@ -51,6 +53,7 @@ def check_system_tools():
 
     return len(missing) == 0
 
+
 def check_chrome_webdriver():
     """Check Chrome WebDriver availability."""
     print("\n🌐 Checking Chrome WebDriver...")
@@ -58,12 +61,14 @@ def check_chrome_webdriver():
 
     try:
         from webdriver_manager.chrome import ChromeDriverManager
+
         driver_path = ChromeDriverManager().install()
         print(f"✅ ChromeDriver available at: {driver_path}")
         return True
     except Exception as e:
         print(f"❌ ChromeDriver issue: {e}")
         return False
+
 
 def check_framework_functionality():
     """Test key framework functionality."""
@@ -72,12 +77,30 @@ def check_framework_functionality():
 
     tests = [
         ("Config Loader", "from src.config_loader import ConfigLoader; ConfigLoader()"),
-        ("WebDriver Manager", "from src.webdriver_manager import WebDriverManager; WebDriverManager({})"),
-        ("Data Extractor", "from src.data_extractor import DataExtractor; DataExtractor({})"),
-        ("Orchestrator", "from src.orchestrator import ScrapingOrchestrator; ScrapingOrchestrator(None)"),
-        ("Schema Mapper", "from src.unified_schema import SchemaMapper; SchemaMapper()"),
-        ("Notification Agent", "from src.notification_agent import NotificationAgent; NotificationAgent()"),
-        ("Security Auditor", "from src.security_audit import SecurityAuditor; SecurityAuditor()")
+        (
+            "WebDriver Manager",
+            "from src.webdriver_manager import WebDriverManager; WebDriverManager({})",
+        ),
+        (
+            "Data Extractor",
+            "from src.data_extractor import DataExtractor; DataExtractor({})",
+        ),
+        (
+            "Orchestrator",
+            "from src.orchestrator import ScrapingOrchestrator; ScrapingOrchestrator(None)",
+        ),
+        (
+            "Schema Mapper",
+            "from src.unified_schema import SchemaMapper; SchemaMapper()",
+        ),
+        (
+            "Notification Agent",
+            "from src.notification_agent import NotificationAgent; NotificationAgent()",
+        ),
+        (
+            "Security Auditor",
+            "from src.security_audit import SecurityAuditor; SecurityAuditor()",
+        ),
     ]
 
     all_working = True
@@ -92,6 +115,7 @@ def check_framework_functionality():
 
     return all_working
 
+
 def check_cli_functionality():
     """Test CLI functionality."""
     print("\n💻 Testing CLI Functionality...")
@@ -99,8 +123,12 @@ def check_cli_functionality():
 
     try:
         # Test CLI help
-        result = subprocess.run([sys.executable, "unified_scraper.py", "--help"],
-                              capture_output=True, text=True, timeout=30)
+        result = subprocess.run(
+            [sys.executable, "unified_scraper.py", "--help"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
 
         if result.returncode == 0 and "usage:" in result.stdout.lower():
             print("✅ CLI help working")
@@ -120,15 +148,13 @@ def check_cli_functionality():
         print(f"❌ CLI test error: {e}")
         return False
 
+
 def check_config_files():
     """Check configuration files."""
     print("\n📁 Checking Configuration Files...")
     print("=" * 40)
 
-    config_files = [
-        "config/lawyer_directory.json",
-        "config/realtor_directory.json"
-    ]
+    config_files = ["config/lawyer_directory.json", "config/realtor_directory.json"]
 
     all_present = True
 
@@ -141,17 +167,13 @@ def check_config_files():
 
     return all_present
 
+
 def check_output_directories():
     """Check and create output directories."""
     print("\n📂 Checking Output Directories...")
     print("=" * 40)
 
-    directories = [
-        "output",
-        "logs",
-        "logs/screenshots",
-        "archive"
-    ]
+    directories = ["output", "logs", "logs/screenshots", "archive"]
 
     for directory in directories:
         dir_path = Path(directory)
@@ -166,6 +188,7 @@ def check_output_directories():
 
     return True
 
+
 def generate_installation_report():
     """Generate final installation report."""
     print("\n📋 Installation Verification Report")
@@ -178,7 +201,7 @@ def generate_installation_report():
         ("Framework Modules", check_framework_functionality()),
         ("CLI Functionality", check_cli_functionality()),
         ("Configuration Files", check_config_files()),
-        ("Output Directories", check_output_directories())
+        ("Output Directories", check_output_directories()),
     ]
 
     passed = sum(1 for _, result in checks if result)
@@ -207,6 +230,7 @@ def generate_installation_report():
 
     return passed == total
 
+
 def main():
     """Main verification process."""
     print("🔍 Unified Scraping Framework - Complete Installation Verification")
@@ -217,10 +241,15 @@ def main():
     if success:
         print("\n📚 Quick Start Commands:")
         print("python unified_scraper.py --help")
-        print("python unified_scraper.py scrape --config-dir config lawyer_directory --max-records 1 --verbose")
-        print("python unified_scraper.py notify-test --config config/lawyer_directory.json --type all")
+        print(
+            "python unified_scraper.py scrape --config-dir config lawyer_directory --max-records 1 --verbose"
+        )
+        print(
+            "python unified_scraper.py notify-test --config config/lawyer_directory.json --type all"
+        )
 
     return success
+
 
 if __name__ == "__main__":
     main()

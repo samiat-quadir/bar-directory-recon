@@ -58,6 +58,7 @@
         "njpwerner.autodocstring",
         "ms-python.python-environment-manager",
         "donjayamanne.python-extension-pack"
+
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
@@ -211,6 +212,7 @@
     "bash",
     "-c",
     "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh"
+
   ],
   "postStartCommand": [
     "bash",
@@ -243,3 +245,4 @@
     "storage": "8gb"
   }
 }
+
