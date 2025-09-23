@@ -1,8 +1,24 @@
+# Normalize text on checkout; do NOT auto-renormalize existing files
+* text=auto eol=lf
+
 *.py text eol=lf
 *.yaml text eol=lf
 *.sh text eol=lf
 *.sh text eol=lf
 *.bat text eol=crlf
+
+# Additional Windows-native scripts with CRLF endings
+*.cmd eol=crlf
+*.ps1 eol=crlf
+
+# Additional binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.ico binary
+
 # Prevent merge conflicts on local env/config/trash
 *.env merge=ours
 *.yaml merge=union
