@@ -1,6 +1,14 @@
 name: devcontainer-validate
 on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.devcontainer/**'
+      - 'Dockerfile*'
   pull_request:
+    paths:
+      - '.devcontainer/**'
+      - 'Dockerfile*'
 jobs:
   build:
     runs-on: ubuntu-latest
