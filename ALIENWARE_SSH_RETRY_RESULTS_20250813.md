@@ -1,7 +1,7 @@
 # Alienware SSH Retry Test Results - After ASUS Dual-Path Install
 
-**Date**: August 13, 2025  
-**Task**: Retry SSH auto-selection after ASUS dual-path install  
+**Date**: August 13, 2025
+**Task**: Retry SSH auto-selection after ASUS dual-path install
 **Status**: **COMPLETED** - Same Authentication Issue Persists ❌🔄
 
 ## Test Context 🔄

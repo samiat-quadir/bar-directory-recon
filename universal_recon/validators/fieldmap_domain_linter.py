@@ -8,7 +8,7 @@ import yaml
 
 # Load validation matrix
 VALIDATION_MATRIX_PATH = Path(__file__).parent.parent / "validation_matrix.yaml"
-with open(VALIDATION_MATRIX_PATH, "r", encoding="utf-8") as f:
+with open(VALIDATION_MATRIX_PATH, encoding="utf-8") as f:
     VALIDATION_MATRIX = yaml.safe_load(f)
 
 

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cmd="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+if [ -z "$cmd" ]; then
+  echo "chrome wrapper: no chrome binary found" >&2
+  exit 127
+fi
+exec "$cmd" --no-sandbox "$@"
