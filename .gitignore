@@ -155,6 +155,8 @@ logs/roi2/
 coverage*.xml
 .pytest_tmp/
 
+.pip-cache/
+
 logs/roi2/
 logs/roi2/
 logs/roi2/
