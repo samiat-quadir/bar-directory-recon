@@ -8,7 +8,6 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import List, Tuple, Optional
 
 
 class BulletproofGitWorkflow:
@@ -22,11 +21,11 @@ class BulletproofGitWorkflow:
 
     def run_command(
         self,
-        cmd: List[str],
+        cmd: list[str],
         description: str,
         check: bool = True,
         capture_output: bool = True,
-    ) -> Tuple[bool, str]:
+    ) -> tuple[bool, str]:
         """Run command with enhanced error handling."""
         print(f"[*] {description}...")
         try:
@@ -37,7 +36,7 @@ class BulletproofGitWorkflow:
                 text=True,
                 cwd=self.workspace_path,
                 timeout=30,  # Prevent hanging
-            )
+            , timeout=60)
             if capture_output:
                 print(f"[+] {description} completed successfully")
                 return True, result.stdout.strip()
@@ -78,9 +77,7 @@ class BulletproofGitWorkflow:
             if success:
                 success_count += 1
 
-        print(
-            f"[+] Git environment configured ({success_count}/{len(configs)} settings)"
-        )
+        print(f"[+] Git environment configured ({success_count}/{len(configs)} settings)")
         return success_count >= len(configs) - 2  # Allow a couple failures
 
     def verify_environment(self) -> bool:
@@ -112,7 +109,7 @@ class BulletproofGitWorkflow:
 
         return passed >= 2  # Require at least Git and repo
 
-    def get_current_branch(self) -> Optional[str]:
+    def get_current_branch(self) -> str | None:
         """Get current branch with error handling."""
         success, output = self.run_command(
             ["git", "branch", "--show-current"], "Getting current branch"
@@ -368,9 +365,7 @@ class BulletproofGitWorkflow:
                 print(f"[!] Branch '{current_branch}' is protected")
                 print("[*] Options:")
                 print("    1. Use --auto to create feature branch automatically")
-                print(
-                    "    2. Checkout different branch: git checkout -b feature/my-branch"
-                )
+                print("    2. Checkout different branch: git checkout -b feature/my-branch")
                 return False
 
         # Step 4: Check for conflicts
@@ -457,3 +452,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
