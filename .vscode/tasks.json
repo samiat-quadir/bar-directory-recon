@@ -549,6 +549,27 @@
                 "reveal": "always",
                 "panel": "new"
             }
+        },
+        {
+            "label": "Install Dev Deps",
+            "type": "shell",
+            "command": ".\\.venv\\Scripts\\python -m pip install -U pip && .\\.venv\\Scripts\\pip install -e .[dev]",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Fast Tests",
+            "type": "shell",
+            "command": ".\\.venv\\Scripts\\pytest -p no:cacheprovider -o addopts=\"\" -k \"not slow and not e2e and not integration\" -q",
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "Pre-commit All",
+            "type": "shell",
+            "command": ".\\.venv\\Scripts\\pre-commit run -a",
+            "group": "test",
+            "problemMatcher": []
         }
     ]
 }

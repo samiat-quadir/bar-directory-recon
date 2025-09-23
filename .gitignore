@@ -157,17 +157,5 @@ coverage*.xml
 
 .pip-cache/
 
-logs/roi2/
-logs/roi2/
-logs/roi2/
-# Ensure our generated reports and local runtime folders are ignored
-reports/
-# keep local runtime folder pattern
-local/
-/reports/
-# Note: keep top-level reports/ available for initial commit; ignore reports/local/ runtime outputs
-reports/local/
-/local/
-coverage*.xml
-coverage_report.*
-coverage_html_first/
+.ruff-cache/
+

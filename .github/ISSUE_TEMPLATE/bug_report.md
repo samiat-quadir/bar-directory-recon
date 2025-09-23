@@ -1,27 +1,13 @@
 ---
-name: Bug report
-about: Something broke or behaves unexpectedly
+name: "Bug report"
+about: "Report a bug"
 labels: bug
 ---
-
-**What happened**
--
-
-**Expected**
--
+**What happened?**
 
 **Steps to reproduce**
-1.
-2.
 
-**Env**
-- Devcontainer/Codespaces/Windows?
-- Branch/SHA:
+**Expected vs actual**
 
-**Logs/Screens**
-- (attach snippets)
+**Logs / screenshots**
 
-**Acceptance Checks**
-- [ ] Repro steps are minimal & deterministic
-- [ ] Failing test or log included
-- [ ] No secrets in attachments

@@ -1,23 +1,17 @@
-﻿# Pull Request
+﻿## Summary
+_Short description of the change._
 
-## Summary
-
-* What / Why
+## Type
+- [ ] chore | dx | docs | fix | feat
 
 ## Checklist
+- [ ] Paths limited to automation/monitoring/docs/tools
+- [ ] Pre-commit passed locally
+- [ ] Tests + coverage gate green
+- [ ] Fast tests pass: `pytest -k "not slow and not e2e and not integration"`
+- [ ] No secrets added (baseline clean)
+- [ ] No secrets in logs or code
 
-* [ ] Devcontainer/Codespace preflight ok; clean working tree
-* [ ] Tests added/updated; deterministic (no network)
-* [ ] CI green; coverage impact noted
-* [ ] No large artifacts staged (logs/, reports/, coverage*.xml, media)
+## Acceptance checks
+_Add 2-4 bullets for what "done" means._
 
-## Risk / Backout
-
-* Risk:
-* Backout:
-
-## Validation
-
-* Evidence / tail:
-
-`SUMMARY >> pr status=<draft/ready> area=<tests/ci/docs> delta_cov=<n%>`
