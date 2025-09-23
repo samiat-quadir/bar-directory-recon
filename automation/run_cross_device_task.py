@@ -62,10 +62,11 @@ class CrossDeviceTaskRunner:
                     ssh_command,
                     capture_output=True,
                     text=True,
-                    timeout=300,  # 5 minute timeout
-                )
+                    timeout=300  # 5 minute timeout
+                , timeout=60)
+
             else:
-                result = subprocess.run(ssh_command, timeout=300)
+                result = subprocess.run(ssh_command, timeout=300, timeout=60)
 
             return result
         except subprocess.TimeoutExpired:
@@ -235,3 +236,4 @@ Examples:
 
 if __name__ == "__main__":
     main()
+

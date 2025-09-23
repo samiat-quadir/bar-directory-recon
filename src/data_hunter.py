@@ -188,7 +188,7 @@ class DataHunter:
 
     def _get_file_hash(self, url: str) -> str:
         """Generate hash for file URL to track downloads."""
-        return hashlib.md5(url.encode()).hexdigest()
+        return hashlib.sha256(url.encode()).hexdigest()
 
     def discover_files(self, source: dict) -> list[tuple[str, str]]:
         """Discover files from a source website."""
@@ -394,7 +394,7 @@ class DataHunter:
                 ],
             }
 
-            response = requests.post(webhook_url, json=slack_message)
+            response = requests.post(webhook_url, json=slack_message, timeout=30)
             response.raise_for_status()
 
             self.logger.info("Slack notification sent successfully")
@@ -527,3 +527,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

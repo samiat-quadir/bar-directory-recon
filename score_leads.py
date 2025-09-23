@@ -129,7 +129,8 @@ class LeadScoringEngine:
             response = requests.get(
                 website,
                 timeout=10,
-                headers={"User-Agent": "Mozilla/5.0 (compatible; LeadScorer/1.0)"},
+                headers={"User-Agent": "Mozilla/5.0 (compatible; LeadScorer/1.0, timeout=30)"}
+
             )
             return response.status_code == 200
         except Exception:
@@ -145,7 +146,7 @@ class LeadScoringEngine:
                 "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15"
             }
 
-            response = requests.get(website, timeout=10, headers=mobile_headers)
+            response = requests.get(website, timeout=10, headers=mobile_headers, timeout=30)
             content = response.text.lower()
 
             # Look for mobile-friendly indicators
@@ -315,3 +316,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

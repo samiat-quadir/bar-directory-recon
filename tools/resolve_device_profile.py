@@ -159,7 +159,7 @@ def link_device_profile(device_name):
                     capture_output=True,
                     text=True,
                     shell=True,
-                )
+                , timeout=60)
                 if result.returncode != 0:
                     raise Exception(f"Failed to create symlink: {result.stderr}")
             else:
@@ -205,3 +205,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
