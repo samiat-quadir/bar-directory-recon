@@ -8,17 +8,16 @@ This script performs additional checks beyond the standard validate_env_state.py
 to ensure complete parity with the ASUS golden image.
 """
 
-import os
-import sys
 import json
-import subprocess
+import os
 import platform
-from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+import subprocess
+import sys
 from datetime import datetime
+from pathlib import Path
 
 
-def get_device_info() -> Dict[str, str]:
+def get_device_info() -> dict[str, str]:
     """Get comprehensive device information."""
     return {
         "hostname": platform.node(),
@@ -32,7 +31,7 @@ def get_device_info() -> Dict[str, str]:
     }
 
 
-def check_alienware_specific_config() -> Dict[str, bool]:
+def check_alienware_specific_config() -> dict[str, bool]:
     """Check Alienware-specific configuration requirements."""
     print("🖥️  Checking Alienware-specific configuration...")
 
@@ -47,7 +46,7 @@ def check_alienware_specific_config() -> Dict[str, bool]:
     # Check device profile has required fields
     if Path(device_profile_path).exists():
         try:
-            with open(device_profile_path, "r") as f:
+            with open(device_profile_path) as f:
                 profile = json.load(f)
 
             required_fields = [
@@ -77,7 +76,7 @@ def check_alienware_specific_config() -> Dict[str, bool]:
     env_path = Path(".env")
     if env_path.exists():
         try:
-            with open(env_path, "r") as f:
+            with open(env_path) as f:
                 env_content = f.read()
 
             checks["env_has_device_name"] = "DEVICE_NAME" in env_content
@@ -91,7 +90,7 @@ def check_alienware_specific_config() -> Dict[str, bool]:
     return checks
 
 
-def check_cross_device_compatibility() -> Dict[str, bool]:
+def check_cross_device_compatibility() -> dict[str, bool]:
     """Check cross-device compatibility features."""
     print("🔄 Checking cross-device compatibility...")
 
@@ -103,7 +102,7 @@ def check_cross_device_compatibility() -> Dict[str, bool]:
 
     for py_file in python_files[:20]:  # Check first 20 Python files
         try:
-            with open(py_file, "r", encoding="utf-8", errors="ignore") as f:
+            with open(py_file, encoding="utf-8", errors="ignore") as f:
                 content = f.read()
 
             # Look for common hardcoded path patterns
@@ -130,14 +129,18 @@ def check_cross_device_compatibility() -> Dict[str, bool]:
     checks["uses_relative_paths"] = True  # Assume true unless proven otherwise
 
     # Check device path resolver
-    resolver_files = ["tools/device_path_resolver.py", "automation/device_resolver.py", "config/path_resolver.py"]
+    resolver_files = [
+        "tools/device_path_resolver.py",
+        "automation/device_resolver.py",
+        "config/path_resolver.py",
+    ]
 
     checks["has_path_resolver"] = any(Path(f).exists() for f in resolver_files)
 
     return checks
 
 
-def check_bootstrap_artifacts() -> Dict[str, bool]:
+def check_bootstrap_artifacts() -> dict[str, bool]:
     """Check artifacts created by bootstrap process."""
     print("📋 Checking bootstrap artifacts...")
 
@@ -169,7 +172,7 @@ def check_bootstrap_artifacts() -> Dict[str, bool]:
     return checks
 
 
-def compare_with_golden_image() -> Dict[str, str]:
+def compare_with_golden_image() -> dict[str, str]:
     """Compare current setup with ASUS golden image requirements."""
     print("🏆 Comparing with ASUS golden image...")
 
@@ -180,7 +183,10 @@ def compare_with_golden_image() -> Dict[str, str]:
 
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pip", "list", "--format=json"], capture_output=True, text=True, check=True
+            [sys.executable, "-m", "pip", "list", "--format=json"],
+            capture_output=True,
+            text=True,
+            check=True,
         )
         installed_packages = json.loads(result.stdout)
         actual_count = len(installed_packages)

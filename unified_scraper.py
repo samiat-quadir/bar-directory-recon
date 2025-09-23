@@ -11,8 +11,8 @@ from pathlib import Path
 # Add the src directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from src.orchestrator import ScrapingOrchestrator, quick_scrape, create_config
 from src.config_loader import ConfigLoader
+from src.orchestrator import ScrapingOrchestrator, create_config, quick_scrape
 
 
 def main() -> None:
@@ -34,58 +34,79 @@ Examples:
 
   # List available configurations
   python unified_scraper.py list
-        """
+        """,
     )
 
     # Global options
-    parser.add_argument('--quiet', '-q', action='store_true', help='Suppress verbose output (errors only)')
-    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose debug output')
-    parser.add_argument('--config-dir', default='config', help='Configuration directory (default: config)')
+    parser.add_argument(
+        "--quiet",
+        "-q",
+        action="store_true",
+        help="Suppress verbose output (errors only)",
+    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose debug output")
+    parser.add_argument(
+        "--config-dir",
+        default="config",
+        help="Configuration directory (default: config)",
+    )
 
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Quick scrape command
-    quick_parser = subparsers.add_parser('quick', help='Quick scrape with minimal configuration')
-    quick_parser.add_argument('--name', required=True, help='Name for the scraping session')
-    quick_parser.add_argument('--url', required=True, help='Base URL to scrape')
-    quick_parser.add_argument('--selector', default='.listing-item', help='CSS selector for listing items')
-    quick_parser.add_argument('--max-pages', type=int, default=5, help='Maximum pages to scrape')
-    quick_parser.add_argument('--headless', action='store_true', default=True, help='Run in headless mode')
-    quick_parser.add_argument('--verbose', action='store_true', help='Enable verbose logging')
+    quick_parser = subparsers.add_parser("quick", help="Quick scrape with minimal configuration")
+    quick_parser.add_argument("--name", required=True, help="Name for the scraping session")
+    quick_parser.add_argument("--url", required=True, help="Base URL to scrape")
+    quick_parser.add_argument(
+        "--selector", default=".listing-item", help="CSS selector for listing items"
+    )
+    quick_parser.add_argument("--max-pages", type=int, default=5, help="Maximum pages to scrape")
+    quick_parser.add_argument(
+        "--headless", action="store_true", default=True, help="Run in headless mode"
+    )
+    quick_parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
     # Configuration command
-    config_parser = subparsers.add_parser('config', help='Create configuration template')
-    config_parser.add_argument('--name', required=True, help='Name for the configuration')
-    config_parser.add_argument('--url', required=True, help='Base URL for scraping')
-    config_parser.add_argument('--output', required=True, help='Output path for configuration file')
-    config_parser.add_argument('--industry', help='Industry type (lawyers, realtors, contractors, etc.)')
+    config_parser = subparsers.add_parser("config", help="Create configuration template")
+    config_parser.add_argument("--name", required=True, help="Name for the configuration")
+    config_parser.add_argument("--url", required=True, help="Base URL for scraping")
+    config_parser.add_argument("--output", required=True, help="Output path for configuration file")
+    config_parser.add_argument(
+        "--industry", help="Industry type (lawyers, realtors, contractors, etc.)"
+    )
 
     # Scrape command
-    scrape_parser = subparsers.add_parser('scrape', help='Run scraping with configuration file')
-    scrape_parser.add_argument('--config', required=True, help='Path to configuration file')
-    scrape_parser.add_argument('--headless', action='store_true', default=True, help='Run in headless mode')
-    scrape_parser.add_argument('--verbose', action='store_true', help='Enable verbose logging')
-    scrape_parser.add_argument('--max-records', type=int, help='Maximum records to extract')
-    scrape_parser.add_argument('--max-pages', type=int, help='Maximum pages to process')
+    scrape_parser = subparsers.add_parser("scrape", help="Run scraping with configuration file")
+    scrape_parser.add_argument("--config", required=True, help="Path to configuration file")
+    scrape_parser.add_argument(
+        "--headless", action="store_true", default=True, help="Run in headless mode"
+    )
+    scrape_parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
+    scrape_parser.add_argument("--max-records", type=int, help="Maximum records to extract")
+    scrape_parser.add_argument("--max-pages", type=int, help="Maximum pages to process")
 
     # List command
-    list_parser = subparsers.add_parser('list', help='List available configurations')
-    list_parser.add_argument('--config-dir', default='config', help='Configuration directory')
+    list_parser = subparsers.add_parser("list", help="List available configurations")
+    list_parser.add_argument("--config-dir", default="config", help="Configuration directory")
 
     # Validate command
-    validate_parser = subparsers.add_parser('validate', help='Validate configuration file')
-    validate_parser.add_argument('--config', required=True, help='Path to configuration file')
+    validate_parser = subparsers.add_parser("validate", help="Validate configuration file")
+    validate_parser.add_argument("--config", required=True, help="Path to configuration file")
 
     # Test command
-    test_parser = subparsers.add_parser('test', help='Test scraping setup without extraction')
-    test_parser.add_argument('--config', required=True, help='Path to configuration file')
-    test_parser.add_argument('--pages', type=int, default=1, help='Number of pages to test')
+    test_parser = subparsers.add_parser("test", help="Test scraping setup without extraction")
+    test_parser.add_argument("--config", required=True, help="Path to configuration file")
+    test_parser.add_argument("--pages", type=int, default=1, help="Number of pages to test")
 
     # Add notification test subcommand
-    notify_parser = subparsers.add_parser('notify-test', help='Send test notification')
-    notify_parser.add_argument('--config', required=True, help='Configuration file path')
-    notify_parser.add_argument('--type', choices=['email', 'sms', 'slack', 'all'],
-                              default='all', help='Type of notification to test')
+    notify_parser = subparsers.add_parser("notify-test", help="Send test notification")
+    notify_parser.add_argument("--config", required=True, help="Configuration file path")
+    notify_parser.add_argument(
+        "--type",
+        choices=["email", "sms", "slack", "all"],
+        default="all",
+        help="Type of notification to test",
+    )
     notify_parser.set_defaults(func=handle_notification_test)
 
     args = parser.parse_args()
@@ -95,19 +116,19 @@ Examples:
         return
 
     try:
-        if args.command == 'quick':
+        if args.command == "quick":
             handle_quick_scrape(args)
-        elif args.command == 'config':
+        elif args.command == "config":
             handle_create_config(args)
-        elif args.command == 'scrape':
+        elif args.command == "scrape":
             handle_scrape(args)
-        elif args.command == 'list':
+        elif args.command == "list":
             handle_list_configs(args)
-        elif args.command == 'validate':
+        elif args.command == "validate":
             handle_validate_config(args)
-        elif args.command == 'test':
+        elif args.command == "test":
             handle_test_config(args)
-        elif args.command == 'notify-test':
+        elif args.command == "notify-test":
             handle_notification_test(args)
 
     except KeyboardInterrupt:
@@ -130,22 +151,22 @@ def handle_quick_scrape(args: argparse.Namespace) -> None:
         name=args.name,
         base_url=args.url,
         list_selector=args.selector,
-        max_pages=args.max_pages
+        max_pages=args.max_pages,
     )
 
-    if result.get('success'):
+    if result.get("success"):
         print("✅ Quick scrape completed successfully!")
         print(f"   Records extracted: {result.get('records_extracted', 0)}")
         print(f"   Runtime: {result.get('runtime_formatted', 'Unknown')}")
 
-        output_files = result.get('output_files', [])
+        output_files = result.get("output_files", [])
         if output_files:
             print("   Output files:")
             for file_path in output_files:
                 print(f"     - {file_path}")
     else:
         print("❌ Quick scrape failed!")
-        error = result.get('error', 'Unknown error')
+        error = result.get("error", "Unknown error")
         print(f"   Error: {error}")
 
 
@@ -198,21 +219,21 @@ def handle_scrape(args: argparse.Namespace) -> None:
         orchestrator = ScrapingOrchestrator(config_path)
         result = orchestrator.run_scraping()
 
-        if result.get('success'):
+        if result.get("success"):
             print("✅ Scraping completed successfully!")
             print(f"   Records extracted: {result.get('records_extracted', 0)}")
             print(f"   URLs processed: {result.get('urls_processed', 0)}")
             print(f"   URLs failed: {result.get('urls_failed', 0)}")
             print(f"   Runtime: {result.get('runtime_formatted', 'Unknown')}")
 
-            output_files = result.get('output_files', [])
+            output_files = result.get("output_files", [])
             if output_files:
                 print("   Output files:")
                 for file_path in output_files:
                     print(f"     - {file_path}")
 
             # Show statistics if available
-            stats = result.get('statistics', {})
+            stats = result.get("statistics", {})
             if stats:
                 print(f"   Pages per minute: {stats.get('pages_per_minute', 0):.2f}")
                 print(f"   Records per minute: {stats.get('records_per_minute', 0):.2f}")
@@ -285,7 +306,7 @@ def handle_validate_config(args: argparse.Namespace) -> None:
         print(f"   Base URL: {config.base_url}")
 
         # Validate selectors
-        selectors = config.data_extraction.get('selectors', {})
+        selectors = config.data_extraction.get("selectors", {})
         if selectors:
             print(f"   Data selectors: {len(selectors)} configured")
 
@@ -299,7 +320,7 @@ def handle_validate_config(args: argparse.Namespace) -> None:
 
         # Check pagination settings
         pagination = config.pagination
-        if pagination.get('enabled'):
+        if pagination.get("enabled"):
             print(f"   Pagination: Enabled (max {pagination.get('max_pages', 'unlimited')} pages)")
         else:
             print("   Pagination: Disabled")
@@ -351,15 +372,16 @@ def handle_notification_test(args: argparse.Namespace) -> None:
 
         # Create notification agent from config
         from src.notification_agent import NotificationAgent
-        notification_config = getattr(config, 'notifications', {})
 
-        if not notification_config or not notification_config.get('enabled'):
+        notification_config = getattr(config, "notifications", {})
+
+        if not notification_config or not notification_config.get("enabled"):
             print("⚠️  Notifications are disabled in configuration")
             return
 
         agent = NotificationAgent(notification_config)
 
-        notification_type = getattr(args, 'type', 'all')
+        notification_type = getattr(args, "type", "all")
         print(f"🔔 Sending test notification ({notification_type})...")
 
         success = agent.send_test_notification_by_type(notification_type)
@@ -367,7 +389,9 @@ def handle_notification_test(args: argparse.Namespace) -> None:
         if success:
             print(f"✅ Test {notification_type} notification sent successfully!")
         else:
-            print(f"❌ Failed to send test {notification_type} notification. Check configuration and logs.")
+            print(
+                f"❌ Failed to send test {notification_type} notification. Check configuration and logs."
+            )
 
     except Exception as e:
         print(f"❌ Error testing notifications: {e}")

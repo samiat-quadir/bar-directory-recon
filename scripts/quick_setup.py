@@ -26,9 +26,7 @@ def setup_autonomous_environment():
 
     # Update pre-commit hooks
     try:
-        subprocess.run(
-            [sys.executable, "-m", "pre_commit", "install"], check=True, cwd=workspace
-        )
+        subprocess.run([sys.executable, "-m", "pre_commit", "install"], check=True, cwd=workspace)
         print("[+] Pre-commit hooks updated")
     except (subprocess.CalledProcessError, FileNotFoundError):
         print("[!] Pre-commit not available, continuing...")
@@ -52,9 +50,7 @@ def setup_autonomous_environment():
         except subprocess.CalledProcessError:
             print(f"[*] Installing {package}...")
             try:
-                subprocess.run(
-                    [sys.executable, "-m", "pip", "install", package], check=True
-                )
+                subprocess.run([sys.executable, "-m", "pip", "install", package], check=True)
                 print(f"[+] {package} installed")
             except subprocess.CalledProcessError:
                 print(f"[-] Failed to install {package}")

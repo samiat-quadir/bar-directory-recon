@@ -6,18 +6,13 @@ Addresses all of Ali's git workflow issues automatically.
 
 import subprocess
 from pathlib import Path
-from typing import List, Tuple
 
 
-def run_command(
-    cmd: List[str], description: str, check: bool = True
-) -> Tuple[bool, str]:
+def run_command(cmd: list[str], description: str, check: bool = True) -> tuple[bool, str]:
     """Run command with error handling."""
     print(f"[*] {description}...")
     try:
-        result = subprocess.run(
-            cmd, check=check, capture_output=True, text=True, timeout=30
-        )
+        result = subprocess.run(cmd, check=check, capture_output=True, text=True, timeout=30)
         print(f"[+] {description} completed successfully")
         return True, result.stdout.strip()
     except subprocess.CalledProcessError as e:
@@ -130,7 +125,7 @@ def setup_vscode_integration() -> bool:
 
     # Check if bulletproof tasks already exist
     try:
-        with open(tasks_file, "r", encoding="utf-8") as f:
+        with open(tasks_file, encoding="utf-8") as f:
             content = f.read()
 
         if "Bulletproof Git" in content:
