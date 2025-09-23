@@ -4,12 +4,12 @@ Hallandale Property Processing Pipeline
 Complete pipeline for processing Hallandale property list PDF and enriching data.
 """
 
-import sys
-import os
-import logging
 import argparse
+import logging
+import os
+import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 # Add src directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
@@ -49,18 +49,15 @@ class HallandalePipeline:
 
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler(log_file),
-                logging.StreamHandler()
-            ]
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
         )
 
         self.logger = logging.getLogger(__name__)
         self.logger.info("STARTING HALLANDALE PROPERTY PROCESSING PIPELINE")
         self.logger.info("=" * 60)
 
-    def _is_success(self, result: Dict[str, Any]) -> bool:
+    def _is_success(self, result: dict[str, Any]) -> bool:
         """Normalize different success/result shapes used across the codebase and tests.
 
         Accepts either {'success': True} or {'status': 'success'} or truthy status values.
@@ -83,10 +80,10 @@ class HallandalePipeline:
             return True
         return False
 
-    def run_pipeline(self, pdf_path: str) -> Dict[str, Any]:
+    def run_pipeline(self, pdf_path: str) -> dict[str, Any]:
         """Run the complete Hallandale processing pipeline."""
         try:
-            results: Dict[str, Any] = {}
+            results: dict[str, Any] = {}
             results["pipeline_status"] = "running"
             results["steps_completed"] = []
             results["errors"] = []
@@ -96,9 +93,7 @@ class HallandalePipeline:
             pdf_result = self.pdf_processor.process_pdf(pdf_path)
 
             if not self._is_success(pdf_result):
-                error_msg = (
-                    f"PDF processing failed: {pdf_result.get('message', pdf_result.get('status', 'Unknown error'))}"
-                )
+                error_msg = f"PDF processing failed: {pdf_result.get('message', pdf_result.get('status', 'Unknown error'))}"
                 self.logger.error(error_msg)
                 results["errors"].append(error_msg)
                 results["pipeline_status"] = "failed"
@@ -106,20 +101,19 @@ class HallandalePipeline:
 
             results["steps_completed"].append("pdf_processing")
             results["pdf_result"] = pdf_result
-            self.logger.info(f"PDF processed successfully: {pdf_result['properties_count']} properties extracted")
+            self.logger.info(
+                f"PDF processed successfully: {pdf_result['properties_count']} properties extracted"
+            )
 
             # Step 2: Enrich properties
             self.logger.info("Step 2: Enriching property data")
             enrichment_result = self.enricher.enrich_properties(pdf_result["output_file"])
 
             if not self._is_success(enrichment_result):
-                error_msg = (
-                    "Property enrichment failed: "
-                    + str(
-                        enrichment_result.get(
-                            "message",
-                            enrichment_result.get("status", "Unknown error"),
-                        )
+                error_msg = "Property enrichment failed: " + str(
+                    enrichment_result.get(
+                        "message",
+                        enrichment_result.get("status", "Unknown error"),
                     )
                 )
                 self.logger.error(error_msg)
@@ -129,7 +123,9 @@ class HallandalePipeline:
 
             results["steps_completed"].append("property_enrichment")
             results["enrichment_result"] = enrichment_result
-            self.logger.info(f"Properties enriched successfully: {enrichment_result['enriched_count']} records")
+            self.logger.info(
+                f"Properties enriched successfully: {enrichment_result['enriched_count']} records"
+            )
 
             # Step 3: Generate enrichment summary
             self.logger.info("Step 3: Generating enrichment summary")
@@ -141,13 +137,10 @@ class HallandalePipeline:
             validation_result = self.validator.validate_properties(enrichment_result["output_file"])
 
             if not self._is_success(validation_result):
-                error_msg = (
-                    "Property validation failed: "
-                    + str(
-                        validation_result.get(
-                            "message",
-                            validation_result.get("status", "Unknown error"),
-                        )
+                error_msg = "Property validation failed: " + str(
+                    validation_result.get(
+                        "message",
+                        validation_result.get("status", "Unknown error"),
                     )
                 )
                 self.logger.error(error_msg)
@@ -183,11 +176,11 @@ class HallandalePipeline:
             results = {
                 "pipeline_status": "failed",
                 "error": error_msg,
-                "errors": [error_msg]
+                "errors": [error_msg],
             }
             return results
 
-    def _export_final_results(self, results: Dict[str, Any]) -> Dict[str, Any]:
+    def _export_final_results(self, results: dict[str, Any]) -> dict[str, Any]:
         """Export final results to Excel and CSV."""
         try:
             export_files = []
@@ -195,11 +188,15 @@ class HallandalePipeline:
             # Export enriched data to Excel
             if "enrichment_result" in results:
                 # Prefer explicit _create_excel_export implementation (tests may monkeypatch this)
-                excel_result = self._create_excel_export(results["enrichment_result"].get("output_file"))
+                excel_result = self._create_excel_export(
+                    results["enrichment_result"].get("output_file")
+                )
                 results["excel_result"] = excel_result
                 if self._is_success(excel_result):
                     results.setdefault("steps_completed", []).append("excel_export")
-                    export_files.append(str(excel_result.get("output_file", self.output_dir / "final_results.xlsx")))
+                    export_files.append(
+                        str(excel_result.get("output_file", self.output_dir / "final_results.xlsx"))
+                    )
 
             # Export to CSV
             csv_file = self.output_dir / "final_results.csv"
@@ -208,51 +205,45 @@ class HallandalePipeline:
             return {
                 "success": True,
                 "export_files": export_files,
-                "message": f"Results exported to {len(export_files)} files"
+                "message": f"Results exported to {len(export_files)} files",
             }
 
         except Exception as e:
             self.logger.error(f"Excel export failed: {e}")
-            return {
-                "success": False,
-                "message": f"Export failed: {e}"
-            }
+            return {"success": False, "message": f"Export failed: {e}"}
 
-    def _upload_to_google_sheets(self, data_file: str) -> Dict[str, Any]:
+    def _upload_to_google_sheets(self, data_file: str) -> dict[str, Any]:
         """Upload results to Google Sheets."""
         try:
             # Placeholder for Google Sheets integration
             self.logger.info("Google Sheets upload simulated (requires API credentials setup)")
             return {
                 "success": True,
-                "message": "Upload simulated - Google Sheets integration not configured"
+                "message": "Upload simulated - Google Sheets integration not configured",
             }
         except Exception as e:
             self.logger.error(f"Google Sheets upload failed: {e}")
-            return {
-                "success": False,
-                "message": f"Google Sheets upload failed: {e}"
-            }
+            return {"success": False, "message": f"Google Sheets upload failed: {e}"}
 
-    def _generate_final_report(self, results: Dict[str, Any]) -> Dict[str, Any]:
+    def _generate_final_report(self, results: dict[str, Any]) -> dict[str, Any]:
         """Generate comprehensive final report."""
         try:
             report_file = self.output_dir / "pipeline_report.txt"
 
-            with open(report_file, 'w') as f:
+            with open(report_file, "w") as f:
                 f.write("HALLANDALE PROPERTY PROCESSING PIPELINE REPORT\n")
                 f.write("=" * 50 + "\n\n")
 
                 f.write(f"Pipeline Status: {results.get('pipeline_status', 'Unknown')}\n")
                 f.write(f"Steps Completed: {', '.join(results.get('steps_completed', []))}\n")
 
-                if results.get('errors'):
+                if results.get("errors"):
                     f.write(f"\nErrors: {len(results['errors'])}\n")
-                    for error in results['errors']:
+                    for error in results["errors"]:
                         f.write(f"  - {error}\n")
 
                 # Add detailed results for each step
-                for step in results.get('steps_completed', []):
+                for step in results.get("steps_completed", []):
                     f.write(f"\n{step.upper()} RESULTS:\n")
                     step_result = results.get(f"{step}_result", {})
                     for key, value in step_result.items():
@@ -278,10 +269,12 @@ def main() -> None:
     """Main function for command-line usage."""
     parser = argparse.ArgumentParser(description="Hallandale Property Processing Pipeline")
     parser.add_argument("pdf_file", help="Path to the PDF file to process")
-    parser.add_argument("--output-dir", default="outputs/hallandale",
-                       help="Output directory for results")
-    parser.add_argument("--export", action="store_true",
-                       help="Export results to Excel and CSV")
+    parser.add_argument(
+        "--output-dir",
+        default="outputs/hallandale",
+        help="Output directory for results",
+    )
+    parser.add_argument("--export", action="store_true", help="Export results to Excel and CSV")
 
     args = parser.parse_args()
 
@@ -293,9 +286,9 @@ def main() -> None:
     print(f"\nPipeline Status: {results['pipeline_status']}")
     print(f"Steps Completed: {len(results.get('steps_completed', []))}")
 
-    if results.get('errors'):
+    if results.get("errors"):
         print(f"Errors: {len(results['errors'])}")
-        for error in results['errors']:
+        for error in results["errors"]:
             print(f"  - {error}")
 
 

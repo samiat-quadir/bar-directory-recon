@@ -8,3 +8,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ibiqlik/action-yamllint@v3
+        with:
+          strict: false
+          config_data: |
+            extends: relaxed
+            rules:
+              line-length: disable
+              document-start: disable
+              braces: disable

@@ -1,31 +1,33 @@
-from typing import Optional, List, Dict, Any
-import time
+import os
 import re
+import time
+from datetime import datetime
+from typing import Any
+
+import pandas as pd
 
 # ✅ Realtor Directory Lead Scraper Plugin - Phase 2 Enhancement
 # Now includes real scraping with Selenium support
-
 import requests
 from bs4 import BeautifulSoup
 from bs4.element import Tag
-import pandas as pd
-import os
-from datetime import datetime
 
 # Selenium imports for dynamic content
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
+
 from webdriver_manager.chrome import ChromeDriverManager
 
 # Google Sheets integration (optional)
 try:
     from google.oauth2.service_account import Credentials
     from googleapiclient.discovery import build
+
     GOOGLE_SHEETS_AVAILABLE = True
 except ImportError:
     GOOGLE_SHEETS_AVAILABLE = False
@@ -45,10 +47,14 @@ class RealtorDirectoryScraperV2:
         self.use_selenium = use_selenium
         self.max_retries = max_retries
         self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                          '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-        })
+        self.session.headers.update(
+            {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                    "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                )
+            }
+        )
         self.driver = None
 
     def setup_selenium_driver(self) -> webdriver.Chrome:
@@ -59,27 +65,29 @@ class RealtorDirectoryScraperV2:
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+        chrome_options.add_argument(
+            "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        )
 
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=chrome_options)
         return driver
 
-    def extract_contact_info(self, text: str) -> Dict[str, str]:
+    def extract_contact_info(self, text: str) -> dict[str, str]:
         """Extract email and phone from text using regex patterns"""
         contact_info = {"email": "", "phone": ""}
 
         # Email patterns
-        email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        email_pattern = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
         email_match = re.search(email_pattern, text)
         if email_match:
             contact_info["email"] = email_match.group()
 
         # Phone patterns (various formats)
         phone_patterns = [
-            r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',  # 123-456-7890 or 123.456.7890
-            r'\(\d{3}\)\s*\d{3}[-.]?\d{4}',   # (123) 456-7890
-            r'\b\d{10}\b'                      # 1234567890
+            r"\b\d{3}[-.]?\d{3}[-.]?\d{4}\b",  # 123-456-7890 or 123.456.7890
+            r"\(\d{3}\)\s*\d{3}[-.]?\d{4}",  # (123) 456-7890
+            r"\b\d{10}\b",  # 1234567890
         ]
 
         for pattern in phone_patterns:
@@ -90,7 +98,7 @@ class RealtorDirectoryScraperV2:
 
         return contact_info
 
-    def scrape_nationalrealtorsdirectory(self, max_records: int = 50) -> List[Dict[str, str]]:
+    def scrape_nationalrealtorsdirectory(self, max_records: int = 50) -> list[dict[str, str]]:
         """Scrape NationalRealtorsDirectory.com with enhanced real-world scraping"""
         url = "https://www.nationalrealtorsdirectory.com"
         log_message(f"Starting enhanced scrape of {url}")
@@ -106,9 +114,11 @@ class RealtorDirectoryScraperV2:
                 # Try to find and click "Search" or "Browse" button if needed
                 try:
                     # Look for search/browse buttons
-                    search_xpath = ("//button[contains(text(), 'Search')] | "
-                                  "//a[contains(text(), 'Browse')] | "
-                                  "//input[@type='submit']")
+                    search_xpath = (
+                        "//button[contains(text(), 'Search')] | "
+                        "//a[contains(text(), 'Browse')] | "
+                        "//input[@type='submit']"
+                    )
                     search_buttons = self.driver.find_elements(By.XPATH, search_xpath)
                     if search_buttons:
                         search_buttons[0].click()
@@ -121,8 +131,13 @@ class RealtorDirectoryScraperV2:
                 try:
                     # Try multiple possible listing selectors
                     listing_found = False
-                    selectors = [".realtor-listing", ".agent-card", ".member-listing",
-                               "[data-agent]", ".directory-entry"]
+                    selectors = [
+                        ".realtor-listing",
+                        ".agent-card",
+                        ".member-listing",
+                        "[data-agent]",
+                        ".directory-entry",
+                    ]
                     for selector in selectors:
                         try:
                             WebDriverWait(self.driver, 8).until(
@@ -135,27 +150,41 @@ class RealtorDirectoryScraperV2:
                             continue
 
                     if not listing_found:
-                        log_message("No listings found with standard selectors - proceeding with page scan")
+                        log_message(
+                            "No listings found with standard selectors - proceeding with page scan"
+                        )
 
                 except Exception as e:
                     log_message(f"Error waiting for listings: {e}")
 
                 # Get page source for parsing
-                soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+                soup = BeautifulSoup(self.driver.page_source, "html.parser")
 
             else:
                 # Enhanced requests approach with better headers
                 response = self.session.get(url, timeout=30)
                 response.raise_for_status()
-                soup = BeautifulSoup(response.text, 'html.parser')
+                soup = BeautifulSoup(response.text, "html.parser")
 
             # Enhanced listing detection with broader selectors
             listing_selectors = [
-                '.realtor-listing', '.agent-card', '.member-listing', '.realtor-card',
-                '.agent-profile', '.listing-item', '.realtor-info', '.agent-item',
-                '.member-card', '.directory-entry', '.realtor-entry', '.agent-listing',
-                '[data-agent]', '[data-realtor]', '[data-member]',
-                '.contact-card', '.professional-listing'
+                ".realtor-listing",
+                ".agent-card",
+                ".member-listing",
+                ".realtor-card",
+                ".agent-profile",
+                ".listing-item",
+                ".realtor-info",
+                ".agent-item",
+                ".member-card",
+                ".directory-entry",
+                ".realtor-entry",
+                ".agent-listing",
+                "[data-agent]",
+                "[data-realtor]",
+                "[data-member]",
+                ".contact-card",
+                ".professional-listing",
             ]
 
             listings = []
@@ -170,19 +199,22 @@ class RealtorDirectoryScraperV2:
                 log_message("No listings found with standard selectors - trying enhanced fallback")
 
                 # Look for any containers with contact info patterns
-                all_divs = soup.find_all('div')
+                all_divs = soup.find_all("div")
                 potential_listings = []
 
                 for div in all_divs:
                     text = div.get_text()
                     # Check if div contains email or phone patterns
-                    if re.search(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', text) or \
-                       re.search(r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b', text):
+                    if re.search(
+                        r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b", text
+                    ) or re.search(r"\b\d{3}[-.]?\d{3}[-.]?\d{4}\b", text):
                         potential_listings.append(div)
 
                 if potential_listings:
                     listings = potential_listings[:max_records]
-                    log_message(f"Found {len(listings)} potential listings via contact pattern matching")
+                    log_message(
+                        f"Found {len(listings)} potential listings via contact pattern matching"
+                    )
 
             for i, listing in enumerate(listings[:max_records]):
                 try:
@@ -209,7 +241,7 @@ class RealtorDirectoryScraperV2:
                         "Phone": contact_info["phone"] or "(555) 123-4567",
                         "Business Name": business,
                         "Office Address": address,
-                        "Website": website
+                        "Website": website,
                     }
 
                     leads.append(lead)
@@ -228,7 +260,7 @@ class RealtorDirectoryScraperV2:
 
         return leads
 
-    def scrape_realtor_com_directory(self, max_records: int = 50) -> List[Dict[str, str]]:
+    def scrape_realtor_com_directory(self, max_records: int = 50) -> list[dict[str, str]]:
         """Scrape realtor.com directory for agent listings"""
         # Using search URL that should show agent listings
         url = "https://www.realtor.com/realestateagents"
@@ -245,27 +277,31 @@ class RealtorDirectoryScraperV2:
                 # Look for agent cards or listings
                 try:
                     WebDriverWait(self.driver, 10).until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                     "[data-testid='agent-card'], .agent-card, .realtor-card"))
+                        EC.presence_of_element_located(
+                            (
+                                By.CSS_SELECTOR,
+                                "[data-testid='agent-card'], .agent-card, .realtor-card",
+                            )
+                        )
                     )
                     log_message("Found agent cards on realtor.com")
                 except TimeoutException:
                     log_message("No agent cards found on realtor.com")
 
-                soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+                soup = BeautifulSoup(self.driver.page_source, "html.parser")
 
             else:
                 response = self.session.get(url, timeout=30)
                 response.raise_for_status()
-                soup = BeautifulSoup(response.text, 'html.parser')
+                soup = BeautifulSoup(response.text, "html.parser")
 
             # Look for agent/realtor cards
             agent_selectors = [
                 '[data-testid="agent-card"]',
-                '.agent-card',
-                '.realtor-card',
-                '.agent-profile',
-                '.agent-item'
+                ".agent-card",
+                ".realtor-card",
+                ".agent-profile",
+                ".agent-item",
             ]
 
             agents = []
@@ -280,11 +316,13 @@ class RealtorDirectoryScraperV2:
                 try:
                     lead = {
                         "Full Name": self._extract_realtor_name(agent, i),
-                        "Email": self.extract_contact_info(agent.get_text())["email"] or f"agent{i+1}@realtor.com",
-                        "Phone": self.extract_contact_info(agent.get_text())["phone"] or "(555) 123-4567",
+                        "Email": self.extract_contact_info(agent.get_text())["email"]
+                        or f"agent{i+1}@realtor.com",
+                        "Phone": self.extract_contact_info(agent.get_text())["phone"]
+                        or "(555) 123-4567",
                         "Business Name": self._extract_business_name(agent),
                         "Office Address": self._extract_address(agent),
-                        "Website": self._extract_website(agent)
+                        "Website": self._extract_website(agent),
                     }
                     leads.append(lead)
                     log_message(f"Extracted realtor.com lead {i+1}: {lead['Full Name']}")
@@ -303,7 +341,7 @@ class RealtorDirectoryScraperV2:
 
         return leads
 
-    def scrape_multiple_sources(self, max_records: int = 50) -> List[Dict[str, str]]:
+    def scrape_multiple_sources(self, max_records: int = 50) -> list[dict[str, str]]:
         """Scrape from multiple real estate directory sources"""
         all_leads = []
         max_per_source = max_records // 2  # Split between sources
@@ -332,14 +370,17 @@ class RealtorDirectoryScraperV2:
 
         for lead in all_leads:
             contact_key = (lead.get("Email", "").lower(), lead.get("Phone", ""))
-            if contact_key not in seen_contacts and lead.get("Email") != f"contact{len(unique_leads)+1}@example.com":
+            if (
+                contact_key not in seen_contacts
+                and lead.get("Email") != f"contact{len(unique_leads)+1}@example.com"
+            ):
                 seen_contacts.add(contact_key)
                 unique_leads.append(lead)
 
         log_message(f"Deduplicated to {len(unique_leads)} unique leads from {len(all_leads)} total")
         return unique_leads[:max_records]
 
-    def scrape_with_retries(self, scraper_func, *args, **kwargs) -> List[Dict[str, str]]:
+    def scrape_with_retries(self, scraper_func, *args, **kwargs) -> list[dict[str, str]]:
         """Scrape with retry logic for failed attempts"""
         for attempt in range(1, self.max_retries + 1):
             try:
@@ -368,8 +409,16 @@ class RealtorDirectoryScraperV2:
 
         # Try different name selectors
         name_selectors = [
-            'h1', 'h2', 'h3', 'h4', '.name', '.agent-name', '.realtor-name',
-            '.contact-name', '.professional-name', '[data-name]'
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            ".name",
+            ".agent-name",
+            ".realtor-name",
+            ".contact-name",
+            ".professional-name",
+            "[data-name]",
         ]
 
         for selector in name_selectors:
@@ -400,9 +449,16 @@ class RealtorDirectoryScraperV2:
 
         # Try different business selectors
         business_selectors = [
-            '.company', '.business', '.agency', '.brokerage', '.firm',
-            '.business-name', '.company-name', '.agency-name',
-            '[data-company]', '[data-business]'
+            ".company",
+            ".business",
+            ".agency",
+            ".brokerage",
+            ".firm",
+            ".business-name",
+            ".company-name",
+            ".agency-name",
+            "[data-company]",
+            "[data-business]",
         ]
 
         for selector in business_selectors:
@@ -415,8 +471,16 @@ class RealtorDirectoryScraperV2:
         # Fallback: look for business keywords in text
         if not business:
             text = listing.get_text().lower()
-            business_keywords = ['realty', 'real estate', 'properties', 'homes',
-                               'brokerage', 'agency', 'group', 'company']
+            business_keywords = [
+                "realty",
+                "real estate",
+                "properties",
+                "homes",
+                "brokerage",
+                "agency",
+                "group",
+                "company",
+            ]
 
             for keyword in business_keywords:
                 if keyword in text:
@@ -425,8 +489,8 @@ class RealtorDirectoryScraperV2:
                     for i, word in enumerate(words):
                         if keyword in word:
                             # Get surrounding words
-                            start = max(0, i-2)
-                            end = min(len(words), i+3)
+                            start = max(0, i - 2)
+                            end = min(len(words), i + 3)
                             business_phrase = " ".join(words[start:end])
                             if len(business_phrase) > 5:
                                 business = business_phrase.title()
@@ -446,8 +510,13 @@ class RealtorDirectoryScraperV2:
 
         # Try different address selectors
         address_selectors = [
-            '.address', '.location', '.office-address', '.contact-address',
-            '.street-address', '[data-address]', '.office-location'
+            ".address",
+            ".location",
+            ".office-address",
+            ".contact-address",
+            ".street-address",
+            "[data-address]",
+            ".office-location",
         ]
 
         for selector in address_selectors:
@@ -462,10 +531,12 @@ class RealtorDirectoryScraperV2:
             text = listing.get_text()
             # Look for address patterns (Street number + name, City, State ZIP)
             address_patterns = [
-                (r'\d+\s+[A-Za-z\s]+(?:St|Street|Ave|Avenue|Rd|Road|Dr|Drive|'
-                 r'Blvd|Boulevard|Ln|Lane)[,\s]+[A-Za-z\s]+[,\s]+[A-Z]{2}[,\s]*\d{5}'),
-                r'\d+\s+[A-Za-z\s]+[,\s]+[A-Za-z\s]+[,\s]+[A-Z]{2}[,\s]*\d{5}',
-                r'[A-Za-z\s]+[,\s]+[A-Z]{2}[,\s]*\d{5}'
+                (
+                    r"\d+\s+[A-Za-z\s]+(?:St|Street|Ave|Avenue|Rd|Road|Dr|Drive|"
+                    r"Blvd|Boulevard|Ln|Lane)[,\s]+[A-Za-z\s]+[,\s]+[A-Z]{2}[,\s]*\d{5}"
+                ),
+                r"\d+\s+[A-Za-z\s]+[,\s]+[A-Za-z\s]+[,\s]+[A-Z]{2}[,\s]*\d{5}",
+                r"[A-Za-z\s]+[,\s]+[A-Z]{2}[,\s]*\d{5}",
             ]
 
             for pattern in address_patterns:
@@ -485,30 +556,30 @@ class RealtorDirectoryScraperV2:
         website = ""
 
         # Try to find links
-        links = listing.find_all('a', href=True)
+        links = listing.find_all("a", href=True)
         for link in links:
-            href = link.get('href', '').lower()
+            href = link.get("href", "").lower()
             # Skip email and phone links
-            if href.startswith(('http', 'www')) and 'mailto:' not in href and 'tel:' not in href:
+            if href.startswith(("http", "www")) and "mailto:" not in href and "tel:" not in href:
                 website = href
-                if not website.startswith('http'):
-                    website = 'http://' + website
+                if not website.startswith("http"):
+                    website = "http://" + website
                 break
 
         # Try to find website text patterns
         if not website:
             text = listing.get_text()
             website_patterns = [
-                r'www\.[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
-                r'https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}[^\s]*'
+                r"www\.[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}",
+                r"https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}[^\s]*",
             ]
 
             for pattern in website_patterns:
                 match = re.search(pattern, text)
                 if match:
                     website = match.group()
-                    if not website.startswith('http'):
-                        website = 'http://' + website
+                    if not website.startswith("http"):
+                        website = "http://" + website
                     break
 
         # Final fallback
@@ -517,10 +588,17 @@ class RealtorDirectoryScraperV2:
 
         return website[:200]  # Limit length
 
-    def export_to_google_sheets(self, data: List[Dict[str, Any]], sheet_id: str, sheet_name: Optional[str] = None) -> bool:
+    def export_to_google_sheets(
+        self,
+        data: list[dict[str, Any]],
+        sheet_id: str,
+        sheet_name: str | None = None,
+    ) -> bool:
         """Export leads to Google Sheets."""
         if not GOOGLE_SHEETS_AVAILABLE:
-            log_message("Google Sheets integration not available. Install google-api-python-client packages.")
+            log_message(
+                "Google Sheets integration not available. Install google-api-python-client packages."
+            )
             return False
 
         if not data:
@@ -538,13 +616,13 @@ class RealtorDirectoryScraperV2:
             from googleapiclient.discovery import build
 
             # Define the required scopes
-            SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+            SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
             # Load credentials
             credentials = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
 
             # Build the service
-            service = build('sheets', 'v4', credentials=credentials)
+            service = build("sheets", "v4", credentials=credentials)
 
             # Set default sheet name
             if not sheet_name:
@@ -558,15 +636,7 @@ class RealtorDirectoryScraperV2:
 
             # Try to create a new sheet
             try:
-                body = {
-                    'requests': [{
-                        'addSheet': {
-                            'properties': {
-                                'title': sheet_name
-                            }
-                        }
-                    }]
-                }
+                body = {"requests": [{"addSheet": {"properties": {"title": sheet_name}}}]}
                 service.spreadsheets().batchUpdate(spreadsheetId=sheet_id, body=body).execute()
                 log_message(f"Created new sheet: {sheet_name}")
             except Exception:
@@ -574,15 +644,13 @@ class RealtorDirectoryScraperV2:
 
             # Upload data
             range_name = f"{sheet_name}!A1"
-            body = {
-                'values': values
-            }
+            body = {"values": values}
 
             service.spreadsheets().values().update(
                 spreadsheetId=sheet_id,
                 range=range_name,
-                valueInputOption='RAW',
-                body=body
+                valueInputOption="RAW",
+                body=body,
             ).execute()
 
             log_message(f"Successfully exported {len(data)} leads to Google Sheets: {sheet_name}")
@@ -598,9 +666,9 @@ def scrape_realtor_directory(
     debug: bool = False,
     use_selenium: bool = True,
     test_mode: bool = False,
-    google_sheet_id: Optional[str] = None,
-    google_sheet_name: Optional[str] = None
-) -> Optional[str]:
+    google_sheet_id: str | None = None,
+    google_sheet_name: str | None = None,
+) -> str | None:
     """
     Enhanced Phase 2 Realtor Directory Scraper
     Now supports real scraping with Selenium and multiple sources
@@ -619,16 +687,14 @@ def scrape_realtor_directory(
         # Enhanced Phase 2: Try multiple sources with retries
         log_message("Attempting multi-source scraping for maximum lead coverage...")
         leads = scraper.scrape_with_retries(
-            scraper.scrape_multiple_sources,
-            max_records=max_records
+            scraper.scrape_multiple_sources, max_records=max_records
         )
 
         # Fallback to single source if multi-source fails
         if not leads:
             log_message("Multi-source failed, trying single source (NationalRealtorsDirectory)...")
             leads = scraper.scrape_with_retries(
-                scraper.scrape_nationalrealtorsdirectory,
-                max_records=max_records
+                scraper.scrape_nationalrealtorsdirectory, max_records=max_records
             )
 
         if not leads:
@@ -645,9 +711,7 @@ def scrape_realtor_directory(
         if google_sheet_id:
             log_message("Exporting to Google Sheets...")
             google_export_success = scraper.export_to_google_sheets(
-                leads,
-                google_sheet_id,
-                google_sheet_name
+                leads, google_sheet_id, google_sheet_name
             )
             if google_export_success:
                 log_message("✅ Google Sheets export completed successfully")
@@ -676,22 +740,36 @@ def scrape_realtor_directory(
         return generate_test_data(max_records, debug)
 
 
-def generate_test_data(max_records: int = 50, debug: bool = False) -> Optional[str]:
+def generate_test_data(max_records: int = 50, debug: bool = False) -> str | None:
     """Generate test data for development and testing"""
 
     test_leads = []
 
     # Enhanced test data with more realistic information
     sample_names = [
-        "Sarah Johnson", "Michael Chen", "Jennifer Davis", "David Rodriguez",
-        "Lisa Thompson", "Robert Kim", "Amanda Wilson", "Christopher Lee",
-        "Maria Garcia", "James Miller", "Emily Brown", "Daniel Taylor"
+        "Sarah Johnson",
+        "Michael Chen",
+        "Jennifer Davis",
+        "David Rodriguez",
+        "Lisa Thompson",
+        "Robert Kim",
+        "Amanda Wilson",
+        "Christopher Lee",
+        "Maria Garcia",
+        "James Miller",
+        "Emily Brown",
+        "Daniel Taylor",
     ]
 
     sample_businesses = [
-        "Sunshine Realty Group", "Metro Property Partners", "Elite Real Estate",
-        "Coastal Properties Inc", "Prime Location Realty", "Golden Gate Homes",
-        "Neighborhood Real Estate", "Premier Property Solutions"
+        "Sunshine Realty Group",
+        "Metro Property Partners",
+        "Elite Real Estate",
+        "Coastal Properties Inc",
+        "Prime Location Realty",
+        "Golden Gate Homes",
+        "Neighborhood Real Estate",
+        "Premier Property Solutions",
     ]
 
     sample_addresses = [
@@ -699,12 +777,14 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> Optional[s
         "456 Oak Avenue, Dallas, TX 75201",
         "789 Pine Road, Miami, FL 33101",
         "321 Elm Drive, Seattle, WA 98101",
-        "654 Maple Lane, Denver, CO 80201"
+        "654 Maple Lane, Denver, CO 80201",
     ]
 
     for i in range(min(max_records, len(sample_names))):
-        name_clean = sample_names[i % len(sample_names)].lower().replace(' ', '.')
-        business_clean = sample_businesses[i % len(sample_businesses)].lower().replace(' ', '').replace('.', '')
+        name_clean = sample_names[i % len(sample_names)].lower().replace(" ", ".")
+        business_clean = (
+            sample_businesses[i % len(sample_businesses)].lower().replace(" ", "").replace(".", "")
+        )
 
         lead = {
             "Full Name": sample_names[i % len(sample_names)],
@@ -712,7 +792,7 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> Optional[s
             "Phone": f"(555) {str(100 + i).zfill(3)}-{str(1000 + i).zfill(4)}",
             "Business Name": sample_businesses[i % len(sample_businesses)],
             "Office Address": sample_addresses[i % len(sample_addresses)],
-            "Website": f"www.{business_clean}.com"
+            "Website": f"www.{business_clean}.com",
         }
         test_leads.append(lead)
 
@@ -725,7 +805,7 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> Optional[s
             "Phone": f"(555) {str(100 + i).zfill(3)}-{str(1000 + i).zfill(4)}",
             "Business Name": "Test Realty Company",
             "Office Address": f"{100 + i} Test Street, Test City, ST 12345",
-            "Website": f"www.testrealty{i+1}.com"
+            "Website": f"www.testrealty{i+1}.com",
         }
         test_leads.append(lead)
 
@@ -775,13 +855,13 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> Optional[s
 
         # Try various selectors that might contain member data
         selectors_to_try = [
-            '.member-listing',
-            '.realtor-card',
-            '.agent-listing',
-            '.directory-entry',
-            '[data-member]',
-            '.member',
-            '.agent'
+            ".member-listing",
+            ".realtor-card",
+            ".agent-listing",
+            ".directory-entry",
+            "[data-member]",
+            ".member",
+            ".agent",
         ]
 
         for selector in selectors_to_try:
@@ -803,7 +883,7 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> Optional[s
             for i, element in enumerate(member_elements[:max_records]):
                 try:
                     # Look for name
-                    name_elem = element.find(['h1', 'h2', 'h3', 'h4'], string=True)
+                    name_elem = element.find(["h1", "h2", "h3", "h4"], string=True)
                     name = name_elem.get_text(strip=True) if name_elem else f"Realtor {i+1}"
 
                     # Look for email - simplified approach
@@ -818,13 +898,15 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> Optional[s
                     # Extract address
                     address = "123 Main St, City, State"
 
-                    leads.append({
-                        "Name": name,
-                        "Business": business,
-                        "Email": email,
-                        "Phone": phone,
-                        "Address": address
-                    })
+                    leads.append(
+                        {
+                            "Name": name,
+                            "Business": business,
+                            "Email": email,
+                            "Phone": phone,
+                            "Address": address,
+                        }
+                    )
 
                 except Exception as e:
                     log_message(f"Error extracting data from element {i}: {e}")
@@ -833,13 +915,15 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> Optional[s
         # Fallback: Generate simulated data for Phase 1
         if len(leads) == 0:
             for i in range(min(max_records, 10)):
-                leads.append({
-                    "Name": f"Sample Realtor {i + 1}",
-                    "Business": "Sample Realty Inc",
-                    "Email": f"sample{i+1}@realtor.com",
-                    "Phone": "(555) 123-4567",
-                    "Address": "123 Main St, Florida"
-                })
+                leads.append(
+                    {
+                        "Name": f"Sample Realtor {i + 1}",
+                        "Business": "Sample Realty Inc",
+                        "Email": f"sample{i+1}@realtor.com",
+                        "Phone": "(555) 123-4567",
+                        "Address": "123 Main St, Florida",
+                    }
+                )
 
         # Step 4: Save to CSV
         df = pd.DataFrame(leads)
@@ -879,8 +963,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Realtor Directory Lead Scraper - Phase 2")
     parser.add_argument("--max-records", type=int, default=50, help="Maximum records to scrape")
     parser.add_argument("--debug", action="store_true", help="Enable debug output")
-    parser.add_argument("--test-mode", action="store_true", help="Run in test mode (simulated data)")
-    parser.add_argument("--no-selenium", action="store_true", help="Disable Selenium (use requests only)")
+    parser.add_argument(
+        "--test-mode", action="store_true", help="Run in test mode (simulated data)"
+    )
+    parser.add_argument(
+        "--no-selenium",
+        action="store_true",
+        help="Disable Selenium (use requests only)",
+    )
 
     args = parser.parse_args()
 
@@ -896,6 +986,6 @@ if __name__ == "__main__":
         max_records=args.max_records,
         debug=args.debug,
         use_selenium=not args.no_selenium,
-        test_mode=args.test_mode
+        test_mode=args.test_mode,
     )
 

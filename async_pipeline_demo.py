@@ -13,21 +13,21 @@ Usage:
     python async_pipeline_demo.py --demo-mode
 """
 
+import argparse
 import asyncio
 import logging
-import argparse
+import sys
 import time
 from pathlib import Path
-from typing import List, Dict, Any
-import sys
+from typing import Any
 
 # Add project root to path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 try:
-    from automation.pipeline_executor import PipelineExecutor
     from automation.enhanced_config_loader import load_automation_config
+    from automation.pipeline_executor import PipelineExecutor
 
     AUTOMATION_AVAILABLE = True
 except ImportError:
@@ -35,7 +35,9 @@ except ImportError:
     print("Warning: Automation modules not available. Using demo mode.")
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -47,7 +49,7 @@ class AsyncPipelineExecutor:
     through asyncio-based concurrent execution.
     """
 
-    def __init__(self, config: Dict[str, Any]) -> None:
+    def __init__(self, config: dict[str, Any]) -> None:
         self.config = config
         self.timeout = config.get("timeout", 3600)
         self.max_concurrent = config.get("max_concurrent_sites", 5)
@@ -60,9 +62,11 @@ class AsyncPipelineExecutor:
         # Demo mode for testing
         self.demo_mode = config.get("demo_mode", True)
 
-        logger.info(f"AsyncPipelineExecutor initialized with {self.max_concurrent} concurrent slots")
+        logger.info(
+            f"AsyncPipelineExecutor initialized with {self.max_concurrent} concurrent slots"
+        )
 
-    async def run_all_async(self, sites: List[str]) -> Dict[str, bool]:
+    async def run_all_async(self, sites: list[str]) -> dict[str, bool]:
         """
         Run pipeline for all sites asynchronously with asyncio.gather.
 
@@ -94,7 +98,9 @@ class AsyncPipelineExecutor:
         success_count = sum(1 for success in site_results.values() if success)
 
         logger.info(f"Async execution completed in {execution_time:.2f}s")
-        logger.info(f"Success rate: {success_count}/{len(sites)} ({success_count/len(sites)*100:.1f}%)")
+        logger.info(
+            f"Success rate: {success_count}/{len(sites)} ({success_count/len(sites)*100:.1f}%)"
+        )
 
         return site_results
 
@@ -128,7 +134,9 @@ class AsyncPipelineExecutor:
                     # Real pipeline execution
                     loop = asyncio.get_event_loop()
                     result = await loop.run_in_executor(
-                        None, self._run_pipeline_subprocess, site  # Use default executor
+                        None,
+                        self._run_pipeline_subprocess,
+                        site,  # Use default executor
                     )
 
                     if result:
@@ -152,10 +160,19 @@ class AsyncPipelineExecutor:
         """Run the actual subprocess (blocking operation)."""
         import subprocess
 
-        cmd = [sys.executable, "-m", "universal_recon.main", "--site", site, "--schema-matrix", "--emit-status"]
+        cmd = [
+            sys.executable,
+            "-m",
+            "universal_recon.main",
+            "--site",
+            site,
+            "--schema-matrix",
+            "--emit-status",
+        ]
 
         try:
             result = subprocess.run(cmd, timeout=self.timeout, capture_output=True, text=True, cwd=self.project_root, timeout=60)
+
             return result.returncode == 0
         except subprocess.TimeoutExpired:
             logger.error(f"Site {site} timed out after {self.timeout}s")
@@ -164,11 +181,12 @@ class AsyncPipelineExecutor:
             logger.error(f"Site {site} subprocess error: {e}")
             return False
 
-    async def run_with_progress(self, sites: List[str]) -> Dict[str, bool]:
+    async def run_with_progress(self, sites: list[str]) -> dict[str, bool]:
         """Run with real-time progress reporting."""
         completed = {}
         pending_tasks = {
-            asyncio.create_task(self._execute_site_with_semaphore(site), name=site): site for site in sites
+            asyncio.create_task(self._execute_site_with_semaphore(site), name=site): site
+            for site in sites
         }
 
         print(f"🚀 Starting processing of {len(sites)} sites...")
@@ -193,14 +211,20 @@ class AsyncPipelineExecutor:
         return completed
 
 
-def create_demo_config() -> Dict[str, Any]:
+def create_demo_config() -> dict[str, Any]:
     """Create demo configuration for testing."""
     return {
         "max_concurrent_sites": 3,
         "timeout": 30,
         "retry_count": 2,
         "demo_mode": True,
-        "sites": ["demo-site-1.com", "demo-site-2.com", "demo-site-3.com", "demo-site-4.com", "demo-site-5.com"],
+        "sites": [
+            "demo-site-1.com",
+            "demo-site-2.com",
+            "demo-site-3.com",
+            "demo-site-4.com",
+            "demo-site-5.com",
+        ],
     }
 
 
@@ -209,7 +233,14 @@ async def demo_sync_vs_async():
     print("🔄 Sync vs Async Performance Demo")
     print("=" * 40)
 
-    demo_sites = ["example-1.com", "example-2.com", "example-3.com", "example-4.com", "example-5.com", "example-6.com"]
+    demo_sites = [
+        "example-1.com",
+        "example-2.com",
+        "example-3.com",
+        "example-4.com",
+        "example-5.com",
+        "example-6.com",
+    ]
 
     config = create_demo_config()
 
@@ -241,7 +272,7 @@ async def demo_sync_vs_async():
     print(f"Success rate: {success_rate:.1f}%")
 
 
-async def main_async(sites: List[str], demo_mode: bool = True):
+async def main_async(sites: list[str], demo_mode: bool = True):
     """Main async execution function."""
     print("🚀 Async Pipeline Demo - Bar Directory Recon")
     print("=" * 50)
@@ -278,7 +309,7 @@ async def main_async(sites: List[str], demo_mode: bool = True):
 
     # Summary
     success_count = sum(1 for success in results.values() if success)
-    print(f"\n📊 Execution Summary:")
+    print("\n📊 Execution Summary:")
     print(f"  Total sites: {len(sites)}")
     print(f"  Successful: {success_count}")
     print(f"  Failed: {len(sites) - success_count}")
@@ -292,7 +323,9 @@ def main():
     parser = argparse.ArgumentParser(description="Async Pipeline Demo")
     parser.add_argument("--sites", nargs="*", help="Sites to process")
     parser.add_argument("--demo-mode", action="store_true", help="Run in demo mode")
-    parser.add_argument("--sync-vs-async", action="store_true", help="Demo sync vs async performance")
+    parser.add_argument(
+        "--sync-vs-async", action="store_true", help="Demo sync vs async performance"
+    )
 
     args = parser.parse_args()
 

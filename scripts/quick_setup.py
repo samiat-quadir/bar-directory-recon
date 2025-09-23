@@ -29,6 +29,7 @@ def setup_autonomous_environment():
         subprocess.run(
             [sys.executable, "-m", "pre_commit", "install"], check=True, cwd=workspace
         , timeout=60)
+
         print("[+] Pre-commit hooks updated")
     except (subprocess.CalledProcessError, FileNotFoundError):
         print("[!] Pre-commit not available, continuing...")

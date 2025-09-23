@@ -6,9 +6,8 @@ Handles git push conflicts and branch synchronization automatically.
 
 import subprocess
 import sys
-from pathlib import Path
-from typing import List, Tuple, Optional
 import time
+from pathlib import Path
 
 
 class AdvancedGitWorkflow:
@@ -18,7 +17,7 @@ class AdvancedGitWorkflow:
         self.workspace_path = workspace_path
         self.remote_name = "origin"
 
-    def run_command(self, cmd: List[str], description: str) -> Tuple[bool, str]:
+    def run_command(self, cmd: list[str], description: str) -> tuple[bool, str]:
         """Run a command and return success status and output."""
         print(f"[*] {description}...")
         try:
@@ -36,7 +35,7 @@ class AdvancedGitWorkflow:
             print(error_msg)
             return False, error_msg
 
-    def get_current_branch(self) -> Optional[str]:
+    def get_current_branch(self) -> str | None:
         """Get the current branch name."""
         success, output = self.run_command(
             ["git", "branch", "--show-current"], "Getting current branch"
@@ -55,9 +54,7 @@ class AdvancedGitWorkflow:
         print(f"[*] Smart push for branch: {branch_name}")
 
         # Step 1: Fetch latest changes
-        success, _ = self.run_command(
-            ["git", "fetch", self.remote_name], "Fetching latest changes"
-        )
+        success, _ = self.run_command(["git", "fetch", self.remote_name], "Fetching latest changes")
         if not success:
             print("[!] Fetch failed, attempting push anyway...")
 
@@ -153,7 +150,7 @@ class AdvancedGitWorkflow:
 
         return success
 
-    def autonomous_sync_and_push(self, commit_message: Optional[str] = None) -> bool:
+    def autonomous_sync_and_push(self, commit_message: str | None = None) -> bool:
         """Complete autonomous workflow: format, commit, and push."""
         print("[*] Starting autonomous sync and push workflow...")
 
@@ -163,9 +160,7 @@ class AdvancedGitWorkflow:
             print("[!] Code formatting failed, continuing anyway...")
 
         # Step 2: Check for changes
-        success, output = self.run_command(
-            ["git", "status", "--porcelain"], "Checking for changes"
-        )
+        success, output = self.run_command(["git", "status", "--porcelain"], "Checking for changes")
 
         if not success:
             return False
@@ -213,9 +208,7 @@ def main() -> None:
         action="store_true",
         help="Reset local branch to match remote",
     )
-    parser.add_argument(
-        "--auto-sync", action="store_true", help="Autonomous sync, commit and push"
-    )
+    parser.add_argument("--auto-sync", action="store_true", help="Autonomous sync, commit and push")
     parser.add_argument("--message", "-m", help="Commit message for auto-sync")
 
     args = parser.parse_args()

@@ -4,10 +4,10 @@ DevContainer Setup Validation Script
 Verifies that the development environment is properly configured
 """
 
-import sys
-import subprocess
 import importlib
 import os
+import subprocess
+import sys
 from pathlib import Path
 
 
@@ -27,8 +27,8 @@ def check_python_environment():
         success = False
 
     # Check PYTHONPATH
-    pythonpath = os.environ.get('PYTHONPATH', '')
-    if '/workspaces/bar-directory-recon' in pythonpath:
+    pythonpath = os.environ.get("PYTHONPATH", "")
+    if "/workspaces/bar-directory-recon" in pythonpath:
         print("✅ PYTHONPATH configured correctly")
     else:
         print("⚠️  PYTHONPATH may need adjustment")
@@ -42,15 +42,15 @@ def check_core_dependencies():
     print("=" * 50)
 
     core_deps = [
-        ('selenium', 'selenium'),
-        ('beautifulsoup4', 'bs4'),
-        ('pandas', 'pandas'),
-        ('requests', 'requests'),
-        ('python-dotenv', 'dotenv'),
-        ('typer', 'typer'),
-        ('pydantic', 'pydantic'),
-        ('aiohttp', 'aiohttp'),
-        ('loguru', 'loguru'),
+        ("selenium", "selenium"),
+        ("beautifulsoup4", "bs4"),
+        ("pandas", "pandas"),
+        ("requests", "requests"),
+        ("python-dotenv", "dotenv"),
+        ("typer", "typer"),
+        ("pydantic", "pydantic"),
+        ("aiohttp", "aiohttp"),
+        ("loguru", "loguru"),
     ]
 
     success = True
@@ -71,14 +71,14 @@ def check_development_tools():
     print("=" * 50)
 
     dev_tools = [
-        ('pytest', 'pytest'),
-        ('black', 'black'),
-        ('flake8', 'flake8'),
-        ('mypy', 'mypy'),
-        ('coverage', 'coverage'),
-        ('pre-commit', 'pre_commit'),
-        ('isort', 'isort'),
-        ('bandit', 'bandit'),
+        ("pytest", "pytest"),
+        ("black", "black"),
+        ("flake8", "flake8"),
+        ("mypy", "mypy"),
+        ("coverage", "coverage"),
+        ("pre-commit", "pre_commit"),
+        ("isort", "isort"),
+        ("bandit", "bandit"),
     ]
 
     success = True
@@ -99,14 +99,14 @@ def check_project_structure():
     print("=" * 50)
 
     required_paths = [
-        'src/',
-        'universal_recon/',
-        'requirements.txt',
-        'requirements-dev.txt',
-        'pyproject.toml',
-        '.devcontainer/devcontainer.json',
-        '.devcontainer/Dockerfile',
-        '.pre-commit-config.yaml',
+        "src/",
+        "universal_recon/",
+        "requirements.txt",
+        "requirements-dev.txt",
+        "pyproject.toml",
+        ".devcontainer/devcontainer.json",
+        ".devcontainer/Dockerfile",
+        ".pre-commit-config.yaml",
     ]
 
     success = True
@@ -136,7 +136,7 @@ def check_browser_setup():
         chrome_ok = False
 
     # Check container-safe Chrome
-    container_chrome = Path('/usr/local/bin/chrome-no-sandbox')
+    container_chrome = Path("/usr/local/bin/chrome-no-sandbox")
     if container_chrome.exists():
         print("✅ Container-safe Chrome binary available")
     else:
@@ -147,9 +147,9 @@ def check_browser_setup():
         from selenium.webdriver.chrome.options import Options
 
         options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
 
         # Quick test
         print("✅ Selenium WebDriver options configured")
@@ -176,6 +176,7 @@ def check_git_setup():
         result = subprocess.run(['git', 'config', '--global', '--get-all', 'safe.directory'],
                               capture_output=True, text=True, timeout=60)
         if '/workspaces/bar-directory-recon' in result.stdout:
+
             print("✅ Git safe directory configured")
         else:
             print("⚠️  Git safe directory may need configuration")
@@ -195,12 +196,12 @@ def check_ports_and_services():
 
     print("Expected port forwards:")
     port_names = {
-        3000: 'Grafana',
-        5432: 'PostgreSQL',
-        8000: 'App Metrics',
-        8080: 'cAdvisor',
-        9090: 'Prometheus',
-        9182: 'Windows Exporter'
+        3000: "Grafana",
+        5432: "PostgreSQL",
+        8000: "App Metrics",
+        8080: "cAdvisor",
+        9090: "Prometheus",
+        9182: "Windows Exporter",
     }
     for port in expected_ports:
         print(f"  - {port}: {port_names.get(port, 'Unknown Service')}")
@@ -222,6 +223,7 @@ def run_test_suite():
         # Try to run a quick collection test
         result = subprocess.run(['python', '-m', 'pytest', '--collect-only', '-q'],
                               capture_output=True, text=True, timeout=30, timeout=60)
+
         if result.returncode == 0:
             print("✅ Test collection successful")
         else:

@@ -3,6 +3,7 @@
 safe_commit_push.py - A script to safely commit and push changes.
 Validates that all necessary checks pass before committing and pushing.
 """
+
 import argparse
 import os
 import subprocess
