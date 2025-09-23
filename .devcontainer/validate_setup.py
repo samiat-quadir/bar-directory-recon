@@ -128,7 +128,7 @@ def check_browser_setup():
     # Check Chrome
     try:
         result = subprocess.run(['google-chrome', '--version'],
-                              capture_output=True, text=True, check=True)
+                              capture_output=True, text=True, check=True, timeout=60)
         print(f"✅ Chrome: {result.stdout.strip()}")
         chrome_ok = True
     except (subprocess.CalledProcessError, FileNotFoundError):
@@ -169,12 +169,12 @@ def check_git_setup():
     try:
         # Check git version
         result = subprocess.run(['git', '--version'],
-                              capture_output=True, text=True, check=True)
+                              capture_output=True, text=True, check=True, timeout=60)
         print(f"✅ Git: {result.stdout.strip()}")
 
         # Check safe directory
         result = subprocess.run(['git', 'config', '--global', '--get-all', 'safe.directory'],
-                              capture_output=True, text=True)
+                              capture_output=True, text=True, timeout=60)
         if '/workspaces/bar-directory-recon' in result.stdout:
             print("✅ Git safe directory configured")
         else:
@@ -216,12 +216,12 @@ def run_test_suite():
 
     try:
         result = subprocess.run(['python', '-m', 'pytest', '--version'],
-                              capture_output=True, text=True, check=True)
+                              capture_output=True, text=True, check=True, timeout=60)
         print(f"✅ Pytest: {result.stdout.strip()}")
 
         # Try to run a quick collection test
         result = subprocess.run(['python', '-m', 'pytest', '--collect-only', '-q'],
-                              capture_output=True, text=True, timeout=30)
+                              capture_output=True, text=True, timeout=30, timeout=60)
         if result.returncode == 0:
             print("✅ Test collection successful")
         else:
@@ -293,3 +293,4 @@ def main():
 if __name__ == "__main__":
     success = main()
     sys.exit(0 if success else 1)
+

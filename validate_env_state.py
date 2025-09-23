@@ -40,7 +40,7 @@ def check_python_packages() -> Tuple[List[str], List[str]]:
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pip", "list", "--format=json"], capture_output=True, text=True, check=True
-        )
+        , timeout=60)
         installed_data = json.loads(result.stdout)
         installed_packages = {pkg["name"].lower().replace("-", "_"): pkg["version"] for pkg in installed_data}
     except Exception as e:
@@ -145,7 +145,7 @@ def check_external_tools() -> Dict[str, bool]:
             tool_checks[tool] = any(Path(p).exists() for p in chrome_paths)
         else:
             try:
-                subprocess.run(cmd, capture_output=True, check=True)
+                subprocess.run(cmd, capture_output=True, check=True, timeout=60)
                 tool_checks[tool] = True
             except (subprocess.CalledProcessError, FileNotFoundError):
                 tool_checks[tool] = False
@@ -283,3 +283,4 @@ def generate_validation_report():
 if __name__ == "__main__":
     success = generate_validation_report()
     sys.exit(0 if success else 1)
+

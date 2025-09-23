@@ -103,7 +103,7 @@ def check_system_requirements() -> bool:
     # Git and PowerShell
     for tool in ["git", "powershell"]:
         try:
-            result = subprocess.run(f"{tool} --version", shell=True, capture_output=True, text=True)
+            result = subprocess.run(f"{tool} --version", shell=True, capture_output=True, text=True, timeout=60)
             if result.returncode == 0:
                 print(f"✅ {tool.title()} - Available")
             else:
@@ -248,3 +248,4 @@ def main() -> bool:
 if __name__ == "__main__":
     success = main()
     sys.exit(0 if success else 1)
+

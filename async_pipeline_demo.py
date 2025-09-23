@@ -155,7 +155,7 @@ class AsyncPipelineExecutor:
         cmd = [sys.executable, "-m", "universal_recon.main", "--site", site, "--schema-matrix", "--emit-status"]
 
         try:
-            result = subprocess.run(cmd, timeout=self.timeout, capture_output=True, text=True, cwd=self.project_root)
+            result = subprocess.run(cmd, timeout=self.timeout, capture_output=True, text=True, cwd=self.project_root, timeout=60)
             return result.returncode == 0
         except subprocess.TimeoutExpired:
             logger.error(f"Site {site} timed out after {self.timeout}s")
@@ -304,3 +304,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -13,7 +13,7 @@ from pathlib import Path
 def run_command(cmd, check=True, capture_output=True):
     """Run a shell command and return the output."""
     print(f"Running: {' '.join(cmd)}")
-    result = subprocess.run(cmd, capture_output=capture_output, text=True, check=False)
+    result = subprocess.run(cmd, capture_output=capture_output, text=True, check=False, timeout=60)
 
     if check and result.returncode != 0:
         print(f"Error running command: {' '.join(cmd)}")
@@ -120,3 +120,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

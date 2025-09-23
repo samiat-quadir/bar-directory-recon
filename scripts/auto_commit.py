@@ -22,7 +22,7 @@ class GitWorkflow:
         try:
             result = subprocess.run(
                 cmd, check=True, capture_output=True, text=True, cwd=self.workspace_path
-            )
+            , timeout=60)
             print(f"[+] {description} completed successfully")
             return True, result.stdout
         except subprocess.CalledProcessError as e:
@@ -80,7 +80,7 @@ class GitWorkflow:
             if advanced_script.exists():
                 print("[*] Using advanced git workflow...")
                 subprocess.run(
-                    [sys.executable, str(advanced_script)],
+                    [sys.executable, str(advanced_script, timeout=60)],
                     check=True,
                     capture_output=True,
                     text=True,
@@ -99,7 +99,7 @@ class GitWorkflow:
                 capture_output=True,
                 text=True,
                 cwd=self.workspace_path,
-            )
+            , timeout=60)
             print("[+] Push successful")
             return True
         except subprocess.CalledProcessError as e:
@@ -118,7 +118,7 @@ class GitWorkflow:
                         capture_output=True,
                         text=True,
                         cwd=self.workspace_path,
-                    )
+                    , timeout=60)
                     print("[+] Push with upstream successful")
                     return True
             except subprocess.CalledProcessError as e2:
@@ -216,3 +216,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

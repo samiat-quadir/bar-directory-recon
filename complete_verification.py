@@ -38,7 +38,7 @@ def check_system_tools():
 
     for tool, command in tools.items():
         try:
-            result = subprocess.run(command.split(), capture_output=True, text=True, timeout=10)
+            result = subprocess.run(command.split(, timeout=60), capture_output=True, text=True, timeout=10)
             if result.returncode == 0:
                 print(f"✅ {tool} - Available")
                 available.append(tool)
@@ -100,7 +100,7 @@ def check_cli_functionality():
     try:
         # Test CLI help
         result = subprocess.run([sys.executable, "unified_scraper.py", "--help"],
-                              capture_output=True, text=True, timeout=30)
+                              capture_output=True, text=True, timeout=30, timeout=60)
 
         if result.returncode == 0 and "usage:" in result.stdout.lower():
             print("✅ CLI help working")
@@ -224,3 +224,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

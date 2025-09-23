@@ -17,7 +17,7 @@ def run_command(
     try:
         result = subprocess.run(
             cmd, check=check, capture_output=True, text=True, timeout=30
-        )
+        , timeout=60)
         print(f"[+] {description} completed successfully")
         return True, result.stdout.strip()
     except subprocess.CalledProcessError as e:
@@ -278,3 +278,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

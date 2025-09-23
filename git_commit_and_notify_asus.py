@@ -8,7 +8,7 @@ logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s -
 
 def run_script(script_name):
     try:
-        result = subprocess.run(["python", script_name], capture_output=True, text=True)
+        result = subprocess.run(["python", script_name], capture_output=True, text=True, timeout=60)
         if result.returncode == 0:
             logging.info(f"✅ {script_name} ran successfully.")
             logging.info(result.stdout)
@@ -24,3 +24,4 @@ if __name__ == "__main__":
     run_script("asus_notifier.py")           # Step 2: Send notification email via ASUS-specific notifier
 
     logging.info("✅ Process complete.\n")
+

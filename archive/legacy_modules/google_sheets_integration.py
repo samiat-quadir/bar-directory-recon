@@ -317,7 +317,7 @@ class GoogleSheetsIntegration:
 
         # Create hash from key identifying fields
         hash_string = f"{email}|{phone_digits}|{company}"
-        return hashlib.md5(hash_string.encode()).hexdigest()
+        return hashlib.sha256(hash_string.encode()).hexdigest()
 
     def batch_upsert_leads(
         self,
@@ -576,3 +576,4 @@ if __name__ == "__main__":
         print(f"Stats: {stats}")
     else:
         print("Please provide --csv-file or use --setup-only")
+

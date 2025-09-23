@@ -41,7 +41,7 @@ def find_git_repository() -> Path:
             capture_output=True,
             text=True,
             check=True,
-        )
+        , timeout=60)
         return Path(result.stdout.strip())
     except subprocess.CalledProcessError:
         print("❌ Error: Not in a git repository or git repository not found.")
@@ -57,7 +57,7 @@ def get_conflicted_files() -> List[str]:
             capture_output=True,
             text=True,
             check=True,
-        )
+        , timeout=60)
         return result.stdout.strip().splitlines()
     except subprocess.CalledProcessError as e:
         print(f"❌ Error retrieving conflicted files: {e.stderr}")
@@ -71,7 +71,7 @@ def resolve_file(file: str, primary_strategy: str, fallback_strategy: str) -> bo
             ["git", "checkout", f"--{primary_strategy}", file],
             check=True,
             capture_output=True,
-        )
+        , timeout=60)
         print(f"✅ Resolved {file} using '{primary_strategy}' strategy.")
     except subprocess.CalledProcessError:
         print(f"⚠️ '{primary_strategy}' failed for {file}, trying '{fallback_strategy}'...")
@@ -80,7 +80,7 @@ def resolve_file(file: str, primary_strategy: str, fallback_strategy: str) -> bo
                 ["git", "checkout", f"--{fallback_strategy}", file],
                 check=True,
                 capture_output=True,
-            )
+            , timeout=60)
             print(f"✅ Resolved {file} using '{fallback_strategy}' strategy.")
         except subprocess.CalledProcessError as e:
             print(f"❌ Both strategies failed for {file}: {e.stderr}")
@@ -88,7 +88,7 @@ def resolve_file(file: str, primary_strategy: str, fallback_strategy: str) -> bo
 
     # Add the resolved file to staging
     try:
-        subprocess.run(["git", "add", file], check=True, capture_output=True)
+        subprocess.run(["git", "add", file], check=True, capture_output=True, timeout=60)
     except subprocess.CalledProcessError as e:
         print(f"❌ Failed to add {file} to staging: {e.stderr}")
         return False
@@ -173,3 +173,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

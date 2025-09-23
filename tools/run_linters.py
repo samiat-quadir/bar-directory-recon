@@ -28,7 +28,7 @@ def run_command(command, description):
         result = subprocess.run(command,
                                check=True,
                                capture_output=True,
-                               text=True)
+                               text=True, timeout=60)
         print(f"✅ {description} passed")
         return True
     except subprocess.CalledProcessError as e:
@@ -52,7 +52,7 @@ def get_staged_python_files():
             check=True,
             capture_output=True,
             text=True
-        )
+        , timeout=60)
         files = result.stdout.strip().split('\n')
         return [f for f in files if f.endswith('.py') and os.path.exists(f)]
     except subprocess.CalledProcessError:
@@ -63,7 +63,7 @@ def get_staged_python_files():
             check=True,
             capture_output=True,
             text=True
-        )
+        , timeout=60)
         return result.stdout.strip().split('\n')
 
 
@@ -139,3 +139,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

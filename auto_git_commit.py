@@ -17,18 +17,18 @@ def git_commit_and_push():
 
     try:
         status_output = subprocess.run([GIT_EXE, "status", "--porcelain"],
-                                       capture_output=True, text=True, check=True)
+                                       capture_output=True, text=True, check=True, timeout=60)
 
         if not status_output.stdout.strip():
             logging.info("No changes detected. Forcing an empty commit.")
             subprocess.run([GIT_EXE, "commit", "--allow-empty", "-m", f"Auto-commit: No changes detected"],
-                           check=True)
+                           check=True, timeout=60)
         else:
-            subprocess.run([GIT_EXE, "add", "."], check=True)
+            subprocess.run([GIT_EXE, "add", "."], check=True, timeout=60)
             commit_msg = f"Auto-commit: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-            subprocess.run([GIT_EXE, "commit", "-m", commit_msg], check=True)
+            subprocess.run([GIT_EXE, "commit", "-m", commit_msg], check=True, timeout=60)
 
-        subprocess.run([GIT_EXE, "push", "origin", "main"], check=True)
+        subprocess.run([GIT_EXE, "push", "origin", "main"], check=True, timeout=60)
         logging.info("Git push successful.")
 
     except subprocess.CalledProcessError as e:
@@ -38,3 +38,4 @@ def git_commit_and_push():
 
 if __name__ == "__main__":
     git_commit_and_push()
+
