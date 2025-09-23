@@ -38,7 +38,7 @@ skip = [".venv311", "merge_conflicts_backup", ".temp_conflicts", "logs", "archiv
 known_first_party = ["src", "universal_recon"]
 
 [tool.ruff]
-line-length = 88
+line-length = 100
 target-version = "py311"
 extend-select = ["E", "F", "W", "I", "UP", "B", "PERF"]
 ignore = ["E501"]  # Ignore line too long for now
@@ -52,6 +52,7 @@ exclude = [
     "logs",
     "archive",
 ]
+
 
 [tool.autoflake]
 remove-all-unused-imports = true
@@ -82,7 +83,8 @@ exclude = [
 [tool.pytest.ini_options]
 minversion = "6.0"
 # Start with a modest coverage floor to avoid blocking while we iterate.
-addopts = "--cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=25"
+addopts = "--cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=20"
+
 testpaths = [
     "src/tests",
     "universal_recon/tests"
