@@ -77,7 +77,7 @@ exclude = [
 [tool.pytest.ini_options]
 minversion = "6.0"
 # Start with a modest coverage floor to avoid blocking while we iterate.
-addopts = "--cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=16"
+addopts = "--cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=20"
 
 testpaths = [
     "src/tests",
