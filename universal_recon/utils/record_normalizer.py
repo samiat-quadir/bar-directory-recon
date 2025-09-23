@@ -16,7 +16,8 @@ def normalize(records, strict=False, logger=None):
             rec.setdefault(key, OPTIONAL_DEFAULTS[key])
         if missing and not strict and logger:
             logger(
-                f"[Normalizer] Warning: Record #{i} missing required fields {missing}", level="WARN"
+                f"[Normalizer] Warning: Record #{i} missing required fields {missing}",
+                level="WARN",
             )
         normalized.append(rec)
     return normalized

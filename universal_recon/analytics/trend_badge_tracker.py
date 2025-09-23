@@ -3,7 +3,6 @@
 import argparse
 import json
 from pathlib import Path
-from typing import Dict
 
 
 def regenerate_site_score_trend(
@@ -29,7 +28,7 @@ def regenerate_site_score_trend(
     return str(save_path)
 
 
-def run_analysis(config: Dict = None) -> Dict:
+def run_analysis(config: dict = None) -> dict:
     site = config.get("site_name", "unknown")
     output_dir = config.get("output_dir", "output/reports")
 
@@ -37,7 +36,12 @@ def run_analysis(config: Dict = None) -> Dict:
     trend_path = root / output_dir / f"{site}_trend.json"
     badge_path = root / "output" / "badge_matrix.json"
 
-    result = {"plugin": "trend_badge_tracker", "site": site, "regressions": [], "status": "ok"}
+    result = {
+        "plugin": "trend_badge_tracker",
+        "site": site,
+        "regressions": [],
+        "status": "ok",
+    }
 
     try:
         if not trend_path.exists():
@@ -77,7 +81,7 @@ def run_analysis(config: Dict = None) -> Dict:
     return result
 
 
-def print_summary(results: Dict):
+def print_summary(results: dict):
     print(f"\n📉 Badge Regression Report – {results.get('site')}")
     if results.get("status") != "ok":
         print("  ❌ Error:", results.get("error"))

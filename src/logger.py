@@ -9,7 +9,7 @@ import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class ScrapingLogger:
@@ -36,9 +36,7 @@ class ScrapingLogger:
         simple_formatter = logging.Formatter("%(levelname)s: %(message)s")
 
         # File handler for detailed logs
-        log_file = (
-            self.log_dir / f"{name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        )
+        log_file = self.log_dir / f"{name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         file_handler = logging.FileHandler(log_file, encoding="utf-8")
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(detailed_formatter)
@@ -51,7 +49,7 @@ class ScrapingLogger:
         self.logger.addHandler(console_handler)
 
         # Statistics tracking
-        self.stats: Dict[str, Any] = {
+        self.stats: dict[str, Any] = {
             "start_time": datetime.now(),
             "pages_processed": 0,
             "records_extracted": 0,
@@ -61,8 +59,8 @@ class ScrapingLogger:
         }
 
         # Error tracking
-        self.errors: List[Dict[str, Any]] = []
-        self.warnings: List[Dict[str, Any]] = []
+        self.errors: list[dict[str, Any]] = []
+        self.warnings: list[dict[str, Any]] = []
 
         self.info(f"Logger initialized for {name}")
 
@@ -84,9 +82,7 @@ class ScrapingLogger:
             }
         )
 
-    def error(
-        self, message: str, exception: Optional[Exception] = None, **kwargs: Any
-    ) -> None:
+    def error(self, message: str, exception: Exception | None = None, **kwargs: Any) -> None:
         """Log error message."""
         self.logger.error(message, **kwargs)
         errors_count = self.stats.get("errors", 0)
@@ -109,9 +105,7 @@ class ScrapingLogger:
         """Log debug message."""
         self.logger.debug(message, **kwargs)
 
-    def critical(
-        self, message: str, exception: Optional[Exception] = None, **kwargs: Any
-    ) -> None:
+    def critical(self, message: str, exception: Exception | None = None, **kwargs: Any) -> None:
         """Log critical error."""
         self.logger.critical(message, **kwargs)
         errors_count = self.stats.get("errors", 0)
@@ -142,7 +136,7 @@ class ScrapingLogger:
         else:
             self.warning(f"Page processing failed: {url}", **kwargs)
 
-    def log_record_extracted(self, record: Dict[str, Any], url: str = "") -> None:
+    def log_record_extracted(self, record: dict[str, Any], url: str = "") -> None:
         """Log successful record extraction."""
         records_count = self.stats.get("records_extracted", 0)
         if isinstance(records_count, int):
@@ -156,9 +150,7 @@ class ScrapingLogger:
             self.stats["screenshots"] = screenshots_count + 1
         self.info(f"Screenshot saved: {screenshot_path} ({context})")
 
-    def log_pagination(
-        self, current_page: int, total_pages: Optional[int] = None
-    ) -> None:
+    def log_pagination(self, current_page: int, total_pages: int | None = None) -> None:
         """Log pagination progress."""
         if total_pages:
             self.info(f"Processing page {current_page}/{total_pages}")
@@ -182,7 +174,7 @@ class ScrapingLogger:
         self.debug(message)
 
     def log_data_validation(
-        self, record: Dict[str, Any], valid: bool, issues: Optional[List[str]] = None
+        self, record: dict[str, Any], valid: bool, issues: list[str] | None = None
     ) -> None:
         """Log data validation results."""
         if valid:
@@ -193,7 +185,7 @@ class ScrapingLogger:
                 f"Record validation failed: {record.get('name', 'Unknown')} - {issues_str}"
             )
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get current statistics."""
         current_time = datetime.now()
         runtime = current_time - self.stats["start_time"]
@@ -242,12 +234,11 @@ Performance:
 
         return summary
 
-    def save_session_report(self, output_path: Optional[str] = None) -> str:
+    def save_session_report(self, output_path: str | None = None) -> str:
         """Save detailed session report to file."""
         if not output_path:
             report_path = (
-                self.log_dir
-                / f"{self.name}_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                self.log_dir / f"{self.name}_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
             )
             output_path = str(report_path)
 
@@ -287,9 +278,7 @@ Performance:
             handler.close()
             self.logger.removeHandler(handler)
 
-    def configure_logging_level(
-        self, quiet: bool = False, verbose: bool = False
-    ) -> None:
+    def configure_logging_level(self, quiet: bool = False, verbose: bool = False) -> None:
         """Configure logging level based on quiet/verbose flags."""
         if quiet:
             # Suppress all but critical messages
@@ -320,9 +309,7 @@ Performance:
                 self.logger.info("Standard logging level set")
 
 
-def create_logger(
-    name: str, log_dir: str = "logs", log_level: str = "INFO"
-) -> ScrapingLogger:
+def create_logger(name: str, log_dir: str = "logs", log_level: str = "INFO") -> ScrapingLogger:
     """Create a new scraping logger instance."""
     return ScrapingLogger(name, log_dir, log_level)
 
@@ -331,7 +318,7 @@ def log_function_call(
     logger: ScrapingLogger,
     func_name: str,
     args: tuple = (),
-    kwargs: Optional[dict] = None,
+    kwargs: dict | None = None,
 ) -> None:
     """Log function call with parameters."""
     kwargs = kwargs or {}
@@ -341,9 +328,7 @@ def log_function_call(
     logger.debug(f"Calling {func_name}({params})")
 
 
-def log_exception(
-    logger: ScrapingLogger, exception: Exception, context: str = ""
-) -> None:
+def log_exception(logger: ScrapingLogger, exception: Exception, context: str = "") -> None:
     """Log exception with context."""
     context_msg = f" in {context}" if context else ""
     logger.error(f"Exception{context_msg}: {str(exception)}", exception=exception)
