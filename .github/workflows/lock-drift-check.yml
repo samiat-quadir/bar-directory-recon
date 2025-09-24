@@ -1,0 +1,20 @@
+name: lock-drift-check
+on:
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pip-tools
+        run: pip install pip-tools
+      - name: Re-compile lockfile
+        run: pip-compile pyproject.toml -o requirements-lock.generated.txt
+      - name: Detect drift
+        run: |
+          diff -u requirements-lock.txt requirements-lock.generated.txt || (echo "❗ Lockfile out of date. Run: pip-compile --generate-hashes pyproject.toml -o requirements-lock.txt" ; exit 1)

@@ -82,10 +82,12 @@ def run_all_checks():
         try_import(mod)
     # Overlay awareness
     check_overlay_status(
-        "universal_recon.analytics.plugin_decay_overlay", "output/plugin_decay_overlay.html"
+        "universal_recon.analytics.plugin_decay_overlay",
+        "output/plugin_decay_overlay.html",
     )
     check_overlay_status(
-        "universal_recon.analytics.validator_drift_overlay", "output/validator_drift_overlay.html"
+        "universal_recon.analytics.validator_drift_overlay",
+        "output/validator_drift_overlay.html",
     )
 
 
