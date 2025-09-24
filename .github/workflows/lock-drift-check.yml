@@ -12,9 +12,9 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install pip-tools
-        run: pip install pip-tools
+        run: pip install "pip-tools>=7,<8"
       - name: Re-compile lockfile
-        run: pip-compile pyproject.toml -o requirements-lock.generated.txt
+        run: pip-compile --generate-hashes pyproject.toml -o requirements-lock.generated.txt
       - name: Detect drift
         run: |
           diff -u requirements-lock.txt requirements-lock.generated.txt || (echo "❗ Lockfile out of date. Run: pip-compile --generate-hashes pyproject.toml -o requirements-lock.txt" ; exit 1)
