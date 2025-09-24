@@ -1,4 +1,4 @@
-name: verify-scripts
+﻿name: verify-scripts
 on: [push]
 permissions:
   contents: read

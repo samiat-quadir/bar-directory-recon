@@ -1,4 +1,4 @@
-name: Agent Auto-Merge (guarded)
+﻿name: Agent Auto-Merge (guarded)
 on:
   pull_request:
     types: [labeled, reopened, synchronize]
