@@ -22,10 +22,14 @@ jobs:
           cache-dependency-path: |
             pyproject.toml
             requirements*.txt
-      - name: Install dev deps
+      - name: Install dev deps and pytest
         run: |
           python -m pip install -U pip
-          pip install -e .[dev]
+          python -m pip install -r requirements-dev.txt
+          python -m pip install pytest pytest-cov pyyaml pandas hypothesis beautifulsoup4 requests selenium dnspython
+          pip list | grep pytest
       - name: Fast pytest subset
+        shell: bash
         run: |
-          pytest -p no:cacheprovider -o addopts="" -k "not slow and not e2e and not integration" -q
+          python -m pytest -p no:cacheprovider -o addopts="" -k "not slow and not e2e and not integration" -q
+

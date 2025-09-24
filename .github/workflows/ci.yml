@@ -7,38 +7,60 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: ['3.11']
+        os: [ubuntu-latest, windows-latest]
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - name: Install
-        run: pip install -U pip && pip install -r requirements.txt -r requirements-dev.txt || true
-      - name: Pytest + coverage
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
         run: |
-          pytest -q --maxfail=1 --disable-warnings --cov=src --cov-report=xml
-      - name: Check coverage gate (12% minimum)
+          python -m pip install -U pip
+          python -m pip install -r requirements-dev.txt
+          python -m pip install pytest pytest-cov pyyaml pandas hypothesis beautifulsoup4 requests selenium dnspython
+          pip list | grep pytest
+
+      - name: Run pre-commit hooks
+        run: pre-commit run --all-files
+
+      - name: Type check with mypy
+        run: mypy . --ignore-missing-imports
+
+      - name: Run Tests and Coverage
+        shell: bash
         run: |
-          python - << 'PY'
-          import sys, xml.etree.ElementTree as ET
-          try:
-              tree = ET.parse('coverage.xml')
-              pct = float(tree.getroot().attrib['line-rate']) * 100
-              print(f"Observed coverage: {pct:.2f}%")
-              if pct < 12.0:
-                  print("Coverage below 12% threshold — failing build.")
-                  sys.exit(1)
-          except FileNotFoundError:
-              print("ERROR: coverage.xml not found")
-              sys.exit(2)
-          except ET.ParseError:
-              print("ERROR: coverage.xml is malformed")
-              sys.exit(3)
-          except KeyError as e:
-              print(f"ERROR: attribute '{e.args[0]}' not found in coverage.xml")
-              sys.exit(4)
-          PY
-      - name: Upload coverage XML
-        uses: actions/upload-artifact@v4
-        with: { name: coverage-xml, path: coverage.xml }
+          # Display Python and pip information
+          python --version
+          pip --version
+          pip list
+          # Make sure pytest is found
+          python -c "import pytest; print(f'pytest version: {pytest.__version__}')"
+          # Run tests with the python -m syntax to ensure correct module resolution
+          python -m pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=35
+          
+      - name: Fast pytest subset
+        shell: bash
+        run: |
+          # Ensure pytest is in PATH and working
+          python -m pytest -p no:cacheprovider -o addopts="" -k "not slow and not e2e and not integration" -q
+
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+
+      - name: Security scan
+        if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
+        run: python tools/secrets_scan.py --path . --report-path security_check.json
