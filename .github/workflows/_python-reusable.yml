@@ -65,4 +65,4 @@ jobs:
       - name: Run fast tests
         if: ${{ inputs.run-fast-tests }}
         run: |
-          python -m pytest -v -m "not slow and not e2e and not integration" --tb=short
+          python -m pytest -v -k "not slow and not e2e and not integration" --tb=short
