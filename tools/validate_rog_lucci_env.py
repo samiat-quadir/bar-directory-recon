@@ -7,13 +7,13 @@ This script performs a comprehensive validation of the ROG-Lucci environment
 to ensure it's properly configured for cross-device development.
 """
 
-import os
-import sys
 import json
+import os
 import platform
 import subprocess
-from pathlib import Path
+import sys
 from datetime import datetime
+from pathlib import Path
 
 
 def success(message):
@@ -46,7 +46,7 @@ def banner(message):
 def run_command(cmd):
     """Run a command and return the output."""
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True, shell=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True, shell=True, timeout=60)
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         error(f"Command failed: {cmd}")
@@ -66,7 +66,7 @@ def check_device_profile():
         return False
 
     try:
-        with open(profile_path, "r") as f:
+        with open(profile_path) as f:
             profile = json.load(f)
 
         info(f"Device profile found: {profile_path}")
@@ -93,7 +93,11 @@ def check_virtual_env():
         error("Virtual environment not found at .venv")
         return False
 
-    activate_scripts = [".venv/Scripts/activate.bat", ".venv/Scripts/activate.ps1", ".venv/Scripts/activate"]
+    activate_scripts = [
+        ".venv/Scripts/activate.bat",
+        ".venv/Scripts/activate.ps1",
+        ".venv/Scripts/activate",
+    ]
 
     all_found = True
     for script in activate_scripts:
@@ -232,22 +236,28 @@ def check_vs_code_settings():
         return False
 
     try:
-        with open(settings_path, "r") as f:
+        with open(settings_path) as f:
             settings = json.load(f)
 
         # Check if chatAttention is set to "never"
-        chat_attention = settings.get("github.copilot.chat.promptsUserData", {}).get("chatAttention")
+        chat_attention = settings.get("github.copilot.chat.promptsUserData", {}).get(
+            "chatAttention"
+        )
         if chat_attention != "never":
             warning("github.copilot.chat.promptsUserData.chatAttention is not set to 'never'")
         else:
             success("github.copilot.chat.promptsUserData.chatAttention is properly configured")
 
         # Check if terminal execution is enabled
-        terminal_execution = settings.get("github.copilot.chat.server.security.enableTerminalExecution")
+        terminal_execution = settings.get(
+            "github.copilot.chat.server.security.enableTerminalExecution"
+        )
         if not terminal_execution:
             warning("github.copilot.chat.server.security.enableTerminalExecution is not enabled")
         else:
-            success("github.copilot.chat.server.security.enableTerminalExecution is properly configured")
+            success(
+                "github.copilot.chat.server.security.enableTerminalExecution is properly configured"
+            )
 
         success("VS Code settings are properly configured")
         return True
@@ -303,7 +313,9 @@ The ROG-Lucci environment is {"fully validated and ready for development" if all
     Path("logs/validation").mkdir(parents=True, exist_ok=True)
 
     # Generate report file
-    report_path = Path(f"logs/validation/validation_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md")
+    report_path = Path(
+        f"logs/validation/validation_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+    )
     report_path.write_text(report_content)
 
     success(f"Validation report generated: {report_path}")
@@ -334,3 +346,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

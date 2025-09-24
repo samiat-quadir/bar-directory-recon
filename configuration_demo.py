@@ -61,7 +61,9 @@ def demo_template_generation():
         print(f"✅ Generated automation template: {template_path}")
 
         # Generate list discovery template
-        template_path = generate_config_template("list_discovery", "list_discovery/config.template.yaml")
+        template_path = generate_config_template(
+            "list_discovery", "list_discovery/config.template.yaml"
+        )
         print(f"✅ Generated list discovery template: {template_path}")
 
     except Exception as e:
@@ -134,7 +136,9 @@ pipeline:
         config = loader.load_automation_config(str(temp_config))
 
         print("✅ Environment variable substitution working:")
-        print(f"   - Discord webhook: {'✅ Set' if config.notifications.discord_webhook else '❌ Not set'}")
+        print(
+            f"   - Discord webhook: {'✅ Set' if config.notifications.discord_webhook else '❌ Not set'}"
+        )
         print(f"   - Email enabled: {config.notifications.email.enabled}")
         print(f"   - Pipeline timeout: {config.pipeline.timeout} seconds")
 
@@ -145,7 +149,11 @@ pipeline:
         print(f"❌ Environment variable demo error: {e}")
     finally:
         # Clean up environment variables
-        for key in ["AUTOMATION_DISCORD_WEBHOOK", "AUTOMATION_EMAIL_ENABLED", "AUTOMATION_PIPELINE_TIMEOUT"]:
+        for key in [
+            "AUTOMATION_DISCORD_WEBHOOK",
+            "AUTOMATION_EMAIL_ENABLED",
+            "AUTOMATION_PIPELINE_TIMEOUT",
+        ]:
             os.environ.pop(key, None)
 
 

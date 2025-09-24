@@ -7,7 +7,7 @@ Extracts property data from PDF files using multiple extraction methods.
 import logging
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import pandas as pd
 
@@ -59,7 +59,7 @@ class HallandalePropertyProcessor:
             ],
         )
 
-    def process_pdf(self, pdf_path: str) -> Dict[str, Any]:
+    def process_pdf(self, pdf_path: str) -> dict[str, Any]:
         """Process the PDF and extract property data."""
         try:
             pdf_file = Path(pdf_path)
@@ -109,7 +109,7 @@ class HallandalePropertyProcessor:
             logger.error(f"Error processing PDF: {e}")
             return {"status": "error", "message": str(e)}
 
-    def _extract_with_pdfplumber(self, pdf_path: str) -> List[Dict[str, Any]]:
+    def _extract_with_pdfplumber(self, pdf_path: str) -> list[dict[str, Any]]:
         """Extract data using pdfplumber."""
         try:
             properties = []
@@ -143,7 +143,7 @@ class HallandalePropertyProcessor:
             logger.error(f"PDFPlumber extraction failed: {e}")
             return []
 
-    def _extract_with_tabula(self, pdf_path: str) -> List[Dict[str, Any]]:
+    def _extract_with_tabula(self, pdf_path: str) -> list[dict[str, Any]]:
         """Extract data using tabula-py."""
         try:
             # Use tabula to extract tables
@@ -163,7 +163,7 @@ class HallandalePropertyProcessor:
             logger.error(f"Tabula extraction failed: {e}")
             return []
 
-    def _extract_with_pypdf2(self, pdf_path: str) -> List[Dict[str, Any]]:
+    def _extract_with_pypdf2(self, pdf_path: str) -> list[dict[str, Any]]:
         """Extract data using PyPDF2."""
         try:
             properties = []
@@ -171,9 +171,7 @@ class HallandalePropertyProcessor:
                 pdf_reader = PyPDF2.PdfReader(file)
 
                 for page_num, page in enumerate(pdf_reader.pages):
-                    logger.info(
-                        f"Processing page {page_num + 1}/{len(pdf_reader.pages)}"
-                    )
+                    logger.info(f"Processing page {page_num + 1}/{len(pdf_reader.pages)}")
 
                     text = page.extract_text()
                     if text:
@@ -186,7 +184,7 @@ class HallandalePropertyProcessor:
             logger.error(f"PyPDF2 extraction failed: {e}")
             return []
 
-    def _parse_table_row(self, row: List[Any]) -> Optional[Dict[str, Any]]:
+    def _parse_table_row(self, row: list[Any]) -> dict[str, Any] | None:
         """Parse a single table row into property data."""
         try:
             # Standard property record format
@@ -206,7 +204,7 @@ class HallandalePropertyProcessor:
             logger.error(f"Error parsing table row: {e}")
             return None
 
-    def _parse_dataframe_row(self, row: pd.Series) -> Optional[Dict[str, Any]]:
+    def _parse_dataframe_row(self, row: pd.Series) -> dict[str, Any] | None:
         """Parse a pandas dataframe row into property data."""
         try:
             # Map common column names
@@ -238,7 +236,7 @@ class HallandalePropertyProcessor:
             logger.error(f"Error parsing dataframe row: {e}")
             return None
 
-    def _parse_text_content(self, text: str) -> List[Dict[str, Any]]:
+    def _parse_text_content(self, text: str) -> list[dict[str, Any]]:
         """Parse text content for property information."""
         try:
             properties = []
@@ -286,7 +284,7 @@ class HallandalePropertyProcessor:
 
         return False
 
-    def _split_line_into_parts(self, line: str) -> List[str]:
+    def _split_line_into_parts(self, line: str) -> list[str]:
         """Split a line into property data parts."""
         # Try different splitting strategies
         delimiters = ["\t", "  ", ",", "|"]
@@ -315,9 +313,7 @@ class HallandalePropertyProcessor:
 
         return text
 
-    def _standardize_properties(
-        self, properties: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+    def _standardize_properties(self, properties: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Standardize property data format."""
         standardized = []
 
@@ -381,9 +377,7 @@ class HallandalePropertyProcessor:
 
         return year
 
-    def _deduplicate_properties(
-        self, properties: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+    def _deduplicate_properties(self, properties: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Remove duplicate properties."""
         seen_addresses = set()
         unique_properties = []
@@ -396,7 +390,7 @@ class HallandalePropertyProcessor:
 
         return unique_properties
 
-    def _create_sample_data(self) -> List[Dict[str, Any]]:
+    def _create_sample_data(self) -> list[dict[str, Any]]:
         """Create sample data for testing."""
         logger.info("Creating sample Hallandale property data")
 
