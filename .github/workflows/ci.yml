@@ -33,7 +33,7 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -r requirements-dev.txt
-          pip list | grep pytest
+          python -m pip list | python -c "import sys; print('\n'.join([line for line in sys.stdin if 'pytest' in line]))"
 
       - name: Run pre-commit hooks
         run: pre-commit run --all-files || true
