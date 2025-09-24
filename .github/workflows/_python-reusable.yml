@@ -1,4 +1,6 @@
 name: Python Reusable Workflow
+permissions:
+  contents: read
 
 on:
   workflow_call:
