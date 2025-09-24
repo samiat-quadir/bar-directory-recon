@@ -38,9 +38,9 @@ jobs:
           python -m pip install -U pip
           if test -f requirements-lock.txt; then
             pip install -r requirements-lock.txt
-            pip install -e .[dev] --no-deps
+            pip install -e .
           else
-            pip install -e .[dev]
+            pip install -e .
           fi
       - name: Pre-commit (all)
         if: ${{ inputs['run-precommit'] }}
@@ -49,4 +49,4 @@ jobs:
       - name: Fast pytest subset (markers)
         if: ${{ inputs['run-fast-tests'] }}
         shell: bash
-        run: pytest -p no:cacheprovider -o addopts="" -m "not slow and not e2e and not integration" -q
+        run: python -m pytest -p no:cacheprovider -o addopts="" -m "not slow and not e2e and not integration" -q
