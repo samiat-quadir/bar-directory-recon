@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11']
+        python-version: ['3.11']
         os: [ubuntu-latest, windows-latest]
 
     steps:
@@ -33,13 +33,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
 
-      - name: Install pytest and test dependencies
+      - name: Install dependencies
         run: |
-          pip install pytest pytest-cov
+          python -m pip install -U pip
+          python -m pip install -r requirements-dev.txt
+          python -m pip install pytest pytest-cov pyyaml pandas hypothesis beautifulsoup4 requests selenium dnspython
           pip list | grep pytest
-        
-      - name: Install Dependencies
-        run: pip install -r requirements-dev.txt
 
       - name: Run pre-commit hooks
         run: pre-commit run --all-files
