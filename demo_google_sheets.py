@@ -12,6 +12,7 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
+
 def demo_oauth_flow():
     """Demonstrate the OAuth authentication flow."""
 
@@ -35,7 +36,7 @@ def demo_oauth_flow():
         # Initialize the integration (this will trigger OAuth if needed)
         print("🔑 Initializing Google Sheets integration...")
         print("   This may open a browser window for authentication...")
-        print(f"   Please authenticate with: sam@optimizeprimeconsulting.com")
+        print("   Please authenticate with: sam@optimizeprimeconsulting.com")
 
         sheets = GoogleSheetsIntegration(credentials_path=credentials_path)
 
@@ -46,29 +47,29 @@ def demo_oauth_flow():
             # Test creating sample data
             sample_leads = [
                 {
-                    'name': 'John Smith',
-                    'company': 'ABC Real Estate',
-                    'email': 'john@abcrealestate.com',
-                    'phone': '(555) 123-4567',
-                    'city': 'Miami',
-                    'state': 'FL',
-                    'industry': 'real_estate',
-                    'lead_score': 85,
-                    'urgency_flag': True,
-                    'urgency_reason': 'High lead score and recent activity'
+                    "name": "John Smith",
+                    "company": "ABC Real Estate",
+                    "email": "john@abcrealestate.com",
+                    "phone": "(555) 123-4567",
+                    "city": "Miami",
+                    "state": "FL",
+                    "industry": "real_estate",
+                    "lead_score": 85,
+                    "urgency_flag": True,
+                    "urgency_reason": "High lead score and recent activity",
                 },
                 {
-                    'name': 'Sarah Johnson',
-                    'company': 'Sunshine Pools',
-                    'email': 'sarah@sunshinepool.com',
-                    'phone': '(555) 987-6543',
-                    'city': 'Tampa',
-                    'state': 'FL',
-                    'industry': 'pool_contractors',
-                    'lead_score': 92,
-                    'urgency_flag': True,
-                    'urgency_reason': 'Highest scoring lead with verified contact'
-                }
+                    "name": "Sarah Johnson",
+                    "company": "Sunshine Pools",
+                    "email": "sarah@sunshinepool.com",
+                    "phone": "(555) 987-6543",
+                    "city": "Tampa",
+                    "state": "FL",
+                    "industry": "pool_contractors",
+                    "lead_score": 92,
+                    "urgency_flag": True,
+                    "urgency_reason": "Highest scoring lead with verified contact",
+                },
             ]
 
             print(f"📊 Created {len(sample_leads)} sample leads for testing")
@@ -97,7 +98,7 @@ def demo_oauth_flow():
                         sheet_id, sample_leads, sheet_name, avoid_duplicates=True
                     )
 
-                    print(f"📊 Export Results:")
+                    print("📊 Export Results:")
                     print(f"   📝 Inserted: {inserted}")
                     print(f"   🔄 Updated: {updated}")
                     print(f"   ⏭️ Skipped: {skipped}")
@@ -130,6 +131,7 @@ def demo_oauth_flow():
         print(f"❌ Error: {e}")
         return False
 
+
 def demo_cli_integration():
     """Demonstrate the CLI integration with the new export flags."""
 
@@ -145,13 +147,19 @@ def demo_cli_integration():
     print("📝 Example Commands:")
     print("")
     print("1. Export to Google Sheets only:")
-    print("   python universal_automation.py --industry pool_contractors --city Miami --state FL --export google_sheets")
+    print(
+        "   python universal_automation.py --industry pool_contractors --city Miami --state FL --export google_sheets"
+    )
     print("")
     print("2. Export to both CSV and Google Sheets:")
-    print("   python universal_automation.py --industry real_estate --city Tampa --state FL --export both")
+    print(
+        "   python universal_automation.py --industry real_estate --city Tampa --state FL --export both"
+    )
     print("")
     print("3. Use custom credentials file:")
-    print("   python universal_automation.py --industry lawyers --city Orlando --state FL --export google_sheets --credentials path/to/creds.json")
+    print(
+        "   python universal_automation.py --industry lawyers --city Orlando --state FL --export google_sheets --credentials path/to/creds.json"
+    )
     print("")
     print("📊 Environment Variables:")
     print("   DEFAULT_GOOGLE_SHEET_ID=your-sheet-id-here")
@@ -159,6 +167,7 @@ def demo_cli_integration():
     print("")
 
     return True
+
 
 def demo_automation_script():
     """Demonstrate the PowerShell automation script."""
@@ -180,7 +189,9 @@ def demo_automation_script():
         print("   ✓ Google Sheets link extraction")
         print("")
         print("📝 Example Usage:")
-        print(f'   PowerShell -ExecutionPolicy Bypass -File "{script_path}" -Industry "pool_contractors" -City "Miami" -State "FL" -GoogleSheetId "your-sheet-id"')
+        print(
+            f'   PowerShell -ExecutionPolicy Bypass -File "{script_path}" -Industry "pool_contractors" -City "Miami" -State "FL" -GoogleSheetId "your-sheet-id"'
+        )
         print("")
         print("⏰ For scheduled runs, use Windows Task Scheduler to run this PowerShell script")
 
@@ -188,6 +199,7 @@ def demo_automation_script():
     else:
         print(f"❌ Automation script not found: {script_path}")
         return False
+
 
 if __name__ == "__main__":
     print("🚀 Google Sheets Integration Complete Demo")
@@ -211,7 +223,9 @@ if __name__ == "__main__":
         print("")
         print("📋 Next Steps:")
         print("1. Run your first automation:")
-        print("   python universal_automation.py --industry pool_contractors --city Miami --state FL --export google_sheets")
+        print(
+            "   python universal_automation.py --industry pool_contractors --city Miami --state FL --export google_sheets"
+        )
         print("")
         print("2. Set up scheduled automation:")
         print("   Use Windows Task Scheduler with Automated-GoogleSheets-Export.ps1")

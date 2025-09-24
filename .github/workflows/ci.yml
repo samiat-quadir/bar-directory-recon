@@ -1,20 +1,11 @@
-name: CI
-
+name: ci
 on:
-  push:
-    branches: [ "main", "feature/**", "prep/**" ]
   pull_request:
-    branches: [ "main", "feature/**", "prep/**" ]
-  workflow_dispatch:
-
+  push:
+    branches: [main]
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
-
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}

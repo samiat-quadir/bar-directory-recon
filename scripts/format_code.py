@@ -13,7 +13,7 @@ def run_command(cmd: list[str], description: str) -> bool:
     """Run a command and return success status."""
     print(f"[*] {description}...")
     try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True, cwd=Path.cwd())
+        subprocess.run(cmd, check=True, capture_output=True, text=True, cwd=Path.cwd(, timeout=60))
         print(f"[+] {description} completed successfully")
         return True
     except subprocess.CalledProcessError as e:
@@ -86,9 +86,7 @@ def format_codebase():
         print("\n[+] Code formatting completed successfully!")
         print("[*] Next steps:")
         print("   1. Review changes with: git diff")
-        print(
-            "   2. Commit with: git add . && git commit --no-verify -m 'Auto-format code'"
-        )
+        print("   2. Commit with: git add . && git commit --no-verify -m 'Auto-format code'")
     else:
         print("\n[-] Some formatting steps failed. Please review the errors above.")
         return False
@@ -98,3 +96,4 @@ def format_codebase():
 
 if __name__ == "__main__":
     format_codebase()
+
