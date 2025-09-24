@@ -3,19 +3,18 @@
 import argparse
 import json
 import os
-from typing import Set
 
 from universal_recon.core.logger import get_logger
 
 logger = get_logger("plugin_diff")
 
 
-def load_plugins(schema_path: str) -> Set[str]:
+def load_plugins(schema_path: str) -> set[str]:
     if not os.path.exists(schema_path):
         logger.warning(f"Missing schema: {schema_path}")
         return set()
     try:
-        with open(schema_path, "r", encoding="utf-8") as f:
+        with open(schema_path, encoding="utf-8") as f:
             data = json.load(f)
             plugins = set(data.get("plugins_used", [])) if isinstance(data, dict) else set()
     except json.JSONDecodeError:

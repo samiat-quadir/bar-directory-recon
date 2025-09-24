@@ -1,7 +1,7 @@
+import json
+import os
 import platform
 import sys
-import os
-import json
 from datetime import datetime
 from pathlib import Path
 

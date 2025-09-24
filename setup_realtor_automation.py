@@ -13,7 +13,7 @@ def run_command(command: str, description: str = "") -> bool:
     """Run a command and handle errors."""
     print(f"🔧 {description}")
     try:
-        _ = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+        _ = subprocess.run(command, shell=True, check=True, capture_output=True, text=True, timeout=60)
         print(f"✅ {description} - Success")
         return True
     except subprocess.CalledProcessError as e:
@@ -38,7 +38,7 @@ def setup_virtual_environment() -> bool:
             return False
 
     # Activate and upgrade pip
-    if os.name == 'nt':  # Windows
+    if os.name == "nt":  # Windows
         activate_cmd = ".venv\\Scripts\\python -m pip install --upgrade pip"
     else:  # Linux/Mac
         activate_cmd = ".venv/bin/python -m pip install --upgrade pip"
@@ -48,7 +48,7 @@ def setup_virtual_environment() -> bool:
 
 def install_dependencies() -> bool:
     """Install required Python packages."""
-    if os.name == 'nt':  # Windows
+    if os.name == "nt":  # Windows
         pip_cmd = ".venv\\Scripts\\pip install -r requirements.txt"
     else:  # Linux/Mac
         pip_cmd = ".venv/bin/pip install -r requirements.txt"
@@ -103,7 +103,7 @@ def create_task_scheduler_script() -> bool:
     """Create Windows Task Scheduler XML for weekly automation."""
     script_path = os.path.abspath("realtor_automation_scheduler.ps1")
     working_dir = os.path.abspath(".")
-    xml_content = f'''<?xml version="1.0" encoding="UTF-16"?>
+    xml_content = f"""<?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
   <RegistrationInfo>
     <Date>2025-06-30T00:00:00</Date>
@@ -154,25 +154,29 @@ def create_task_scheduler_script() -> bool:
       <WorkingDirectory>{working_dir}</WorkingDirectory>
     </Exec>
   </Actions>
-</Task>'''
+</Task>"""
 
     with open("realtor_automation_task.xml", "w") as f:
         f.write(xml_content)
 
     print("📅 Created Task Scheduler XML file: realtor_automation_task.xml")
-    print("   To install: `schtasks /create /xml realtor_automation_task.xml /tn \"Realtor Directory Automation\"`")
+    print(
+        '   To install: `schtasks /create /xml realtor_automation_task.xml /tn "Realtor Directory Automation"`'
+    )
 
     return True
+
+
 def test_installation() -> bool:
     """Test the installation by running a quick scrape."""
     print("\n🧪 Testing installation...")
 
-    if os.name == 'nt':  # Windows
+    if os.name == "nt":  # Windows
         python_cmd = ".venv\\Scripts\\python"
     else:  # Linux/Mac
         python_cmd = ".venv/bin/python"
 
-    test_cmd = f'{python_cmd} realtor_automation.py --mode once --max-records 5'
+    test_cmd = f"{python_cmd} realtor_automation.py --mode once --max-records 5"
 
     print("Running test scrape with 5 records...")
     if run_command(test_cmd, "Test scrape"):
@@ -181,6 +185,8 @@ def test_installation() -> bool:
     else:
         print("❌ Installation test failed. Please check the logs.")
         return False
+
+
 def main() -> bool:
     """Main setup function."""
     print("🏠 Realtor Directory Automation Setup")
@@ -196,7 +202,7 @@ def main() -> bool:
         ("Dependencies", install_dependencies),
         ("Directories", create_directories),
         ("Configuration", create_env_file),
-        ("Task Scheduler", create_task_scheduler_script)
+        ("Task Scheduler", create_task_scheduler_script),
     ]
 
     for step_name, step_function in setup_steps:
@@ -211,7 +217,9 @@ def main() -> bool:
     print("1. Review and update the .env file with your configuration")
     print("2. Run 'RunRealtorAutomation.bat' to start using the system")
     print("3. For weekly automation, import the Task Scheduler XML:")
-    print('   `schtasks /create /xml realtor_automation_task.xml /tn "Realtor Directory Automation"`')
+    print(
+        '   `schtasks /create /xml realtor_automation_task.xml /tn "Realtor Directory Automation"`'
+    )
     print("\n🧪 Running installation test...")
 
     # Run test and capture its result
@@ -224,3 +232,4 @@ if __name__ == "__main__":
     success = main()
     if not success:
         sys.exit(1)
+

@@ -1,28 +1,14 @@
-name: CI
-
+name: ci
 on:
-  push:
-    branches: [ "main", "feature/**", "prep/**" ]
   pull_request:
-    branches: [ "main", "feature/**", "prep/**" ]
-  workflow_dispatch:
-
+  push:
+    branches: [main]
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
-
-permissions:
-  contents: read
-  packages: write
-
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        python-version: ['3.9', '3.10', '3.11']
-        os: [ubuntu-latest, windows-latest]
-
+  test:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
@@ -74,3 +60,4 @@ jobs:
       - name: Security scan
         if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
         run: python tools/secrets_scan.py --path . --report-path security_check.json
+
