@@ -5,8 +5,6 @@ Simple test and demonstration of the automated discovery system
 """
 
 import sys
-import os
-from pathlib import Path
 
 # Add src to path
 sys.path.append('src')

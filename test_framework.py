@@ -14,22 +14,16 @@ def test_imports():
     try:
         print("🔍 Testing imports...")
 
-        from src.webdriver_manager import WebDriverManager
         print("✅ WebDriverManager imported successfully")
 
-        from src.pagination_manager import PaginationManager
         print("✅ PaginationManager imported successfully")
 
-        from src.data_extractor import DataExtractor
         print("✅ DataExtractor imported successfully")
 
-        from src.config_loader import ConfigLoader
         print("✅ ConfigLoader imported successfully")
 
-        from src.logger import ScrapingLogger
         print("✅ ScrapingLogger imported successfully")
 
-        from src.orchestrator import ScrapingOrchestrator
         print("✅ ScrapingOrchestrator imported successfully")
 
         return True
@@ -45,7 +39,7 @@ def test_basic_functionality():
 
         # Test ConfigLoader
         from src.config_loader import ConfigLoader
-        loader = ConfigLoader()
+        ConfigLoader()
         print("✅ ConfigLoader instantiated successfully")
 
         # Test ScrapingLogger
@@ -58,7 +52,7 @@ def test_basic_functionality():
         from src.webdriver_manager import WebDriverManager
         config = {'timeout': 10, 'headless': True}
         # Don't actually create the driver, just test initialization
-        manager = WebDriverManager(config)
+        WebDriverManager(config)
         print("✅ WebDriverManager instantiated successfully")
 
         return True

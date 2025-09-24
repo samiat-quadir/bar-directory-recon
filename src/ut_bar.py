@@ -12,7 +12,7 @@ import random
 import logging
 import argparse
 from datetime import datetime
-from typing import List, Dict, Optional, Callable
+from typing import Callable
 from concurrent.futures import ThreadPoolExecutor
 
 from dotenv import load_dotenv

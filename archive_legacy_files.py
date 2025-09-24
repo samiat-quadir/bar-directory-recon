@@ -4,7 +4,6 @@ Archive Legacy Files - Phase 5 Cleanup
 Move legacy scripts and modules to archive directory
 """
 
-import os
 import shutil
 from pathlib import Path
 from datetime import datetime

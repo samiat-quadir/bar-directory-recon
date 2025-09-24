@@ -529,12 +529,12 @@ DEFAULT_GOOGLE_SHEET_ID="your-sheet-id"
 
 # Email Notifications (Optional)
 EMAIL_USERNAME="your-email@gmail.com"
-EMAIL_PASSWORD="your-app-password"
+EMAIL_PASSWORD="PASSWORD_PLACEHOLDER" # pragma: allowlist secret
 TO_EMAILS="recipient@example.com"
 
 # SMS Notifications (Optional)
-TWILIO_ACCOUNT_SID="your-twilio-sid"
-TWILIO_AUTH_TOKEN="your-twilio-token"
+TWILIO_ACCOUNT_SID="SID_PLACEHOLDER" # pragma: allowlist secret
+TWILIO_AUTH_TOKEN="TOKEN_PLACEHOLDER" # pragma: allowlist secret
 TWILIO_FROM_NUMBER="+1234567890"
 TO_PHONE_NUMBERS="+1987654321"
 

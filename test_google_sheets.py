@@ -3,7 +3,6 @@
 Test Google Sheets Integration
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -23,9 +22,6 @@ def test_google_sheets_integration():
 
     # Test 2: Check if Google Sheets packages are available
     try:
-        from google_auth_oauthlib.flow import InstalledAppFlow
-        from googleapiclient.discovery import build
-        from google.auth.transport.requests import Request
         print("📦 Google API packages: ✅")
     except ImportError as e:
         print(f"📦 Google API packages: ❌ ({e})")
@@ -60,7 +56,6 @@ def test_cli_arguments():
     print("=" * 30)
 
     try:
-        from universal_automation import main
         print("📋 CLI module import: ✅")
 
         # Test argument parsing

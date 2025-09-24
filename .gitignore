@@ -48,6 +48,15 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 .isort.cfg.bak
+# Logs directory
+logs/
+
+############################################################
+# 5 · Generated artifacts that may contain sensitive data
+############################################################
+artifacts/
+*_api_status_*.txt
+*_bandit_report.json
 .pre-commit-cache/
 
 # Logs and temporary files
@@ -155,4 +164,3 @@ secrets_scan_report_*.json
 
 # smoke-test 2025-07-29T16:36:28
 REPO_HYGIENE_COMPLETION_REPORT.md
-

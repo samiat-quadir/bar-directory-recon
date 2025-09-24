@@ -1,7 +1,7 @@
 # utils/score_predictor.py
 
 """Score prediction for validation records."""
-from typing import Dict, List, Union
+from typing import Dict, List
 
 from universal_recon.core.logger import get_logger
 

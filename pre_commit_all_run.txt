@@ -1,0 +1,268 @@
+trim trailing whitespace.................................................Failed
+- hook id: trailing-whitespace
+- exit code: 1
+- files were modified by this hook
+
+Fixing SERVER_SIDE_TRUTH_VERIFICATION_REPORT.md
+Fixing ALIENWARE_SSH_TEST_RESULTS_20250813.md
+Fixing vscode_insiders_keybindings_status.txt
+Fixing ASUS_SSH_TEST_RESULTS_20250813.md
+Fixing vscode_insiders_version.txt
+Fixing git_user_info.txt
+Fixing vscode_insiders_snippets_status.txt
+Fixing test_git_asus.txt
+Fixing SSH_AUTO_SELECTION_REPORT_20250813.md
+Fixing workspace_files_status.txt
+Fixing ALIENWARE_SSH_RETRY_RESULTS_20250813.md
+
+fix end of files.........................................................Failed
+- hook id: end-of-file-fixer
+- exit code: 1
+- files were modified by this hook
+
+Fixing vscode_insiders_settings.json
+Fixing .github/chatmodes/Azure_function_codegen_and_deployment.chatmode.md
+Fixing .github/workflows/verify-scripts.yml
+Fixing .gitignore
+Fixing fix_precommit_cache.ps1
+Fixing automation/cross_device_tasks.yaml
+Fixing universal_recon/plugins/social_link_parser_plugin.py
+Fixing tools/EnsureSshd.ps1
+Fixing tools/Harden-AdminAuthKeys.ps1
+
+check yaml...............................................................Failed
+- hook id: check-yaml
+- exit code: 1
+
+while constructing a mapping
+  in ".pre-commit-config.yaml", line 36, column 9
+found duplicate key "exclude" with value "^(archive/|.*test.*\.py$|tools/|scripts/|src/hallandale_pipeline\.py$)" (original value: "^(archive/|.*test.*\.py$|tools/|scripts/|src/hallandale_pipeline\.py$)")
+  in ".pre-commit-config.yaml", line 40, column 9
+
+To suppress this check see:
+    https://yaml.dev/doc/ruamel.yaml/api/#Duplicate_keys
+
+check for added large files..............................................Passed
+flake8...................................................................Failed
+- hook id: flake8
+- exit code: 1
+
+archive/legacy_modules/google_sheets_integration.py:10:1: F401 'datetime.datetime' imported but unused
+archive/legacy_modules/google_sheets_integration.py:10:1: F401 'datetime.timedelta' imported but unused
+archive/legacy_modules/google_sheets_integration.py:13:1: F401 'json' imported but unused
+archive/legacy_modules/google_sheets_integration.py:14:1: F401 'dataclasses.asdict' imported but unused
+archive/legacy_modules/google_sheets_integration.py:19:5: F401 'google.oauth2.credentials.Credentials' imported but unused
+archive/legacy_modules/google_sheets_integration.py:348:9: F841 local variable 'updated_leads' is assigned to but never used
+archive/legacy_modules/google_sheets_integration.py:439:13: F841 local variable 'industry_col_index' is assigned to but never used
+archive/legacy_modules/realtor_directory_scraper.py:22:1: F401 'selenium.common.exceptions.NoSuchElementException' imported but unused
+archive/legacy_modules/realtor_directory_scraper.py:27:5: F401 'google.oauth2.service_account.Credentials' imported but unused
+archive/legacy_modules/realtor_directory_scraper.py:28:5: F401 'googleapiclient.discovery.build' imported but unused
+archive_legacy_files.py:7:1: F401 'os' imported but unused
+archive_legacy_files.py:104:11: F541 f-string is missing placeholders
+archive_legacy_files.py:106:11: F541 f-string is missing placeholders
+asus_notifier.py:9:1: F401 'google.oauth2.credentials.Credentials' imported but unused
+async_pipeline_demo.py:29:5: F401 'automation.pipeline_executor.PipelineExecutor' imported but unused
+async_pipeline_demo.py:281:11: F541 f-string is missing placeholders
+auto_git_commit.py:24:71: F541 f-string is missing placeholders
+automation/ops_queue.py:1:1: F401 'time' imported but unused
+automation/run_cross_device_task.py:68:19: F541 f-string is missing placeholders
+check_dev_tools.py:36:15: F541 f-string is missing placeholders
+check_enhancements.py:68:19: F541 f-string is missing placeholders
+check_enhancements.py:71:15: F541 f-string is missing placeholders
+check_enhancements.py:101:5: F841 local variable 'missing_optional' is assigned to but never used
+complete_installation_check.py:10:1: F401 'os' imported but unused
+create_bootstrap_bundle.py:9:1: F401 'pathlib.Path' imported but unused
+create_bootstrap_bundle.py:48:15: F541 f-string is missing placeholders
+create_bootstrap_bundle.py:53:15: F541 f-string is missing placeholders
+create_bootstrap_bundle_final.py:10:1: F401 'pathlib.Path' imported but unused
+create_bootstrap_bundle_final.py:37:15: F541 f-string is missing placeholders
+debug_enrichment.py:9:1: E402 module level import not at top of file
+debug_enrichment.py:10:1: E402 module level import not at top of file
+demo_google_sheets.py:38:15: F541 f-string is missing placeholders
+demo_google_sheets.py:100:27: F541 f-string is missing placeholders
+final_hallandale_pipeline.py:10:1: F401 'time' imported but unused
+final_hallandale_pipeline.py:189:9: E722 do not use bare 'except'
+final_hallandale_pipeline.py:341:11: F541 f-string is missing placeholders
+final_hallandale_pipeline.py:385:11: F541 f-string is missing placeholders
+final_hallandale_pipeline.py:396:11: F541 f-string is missing placeholders
+final_hallandale_pipeline.py:401:11: F541 f-string is missing placeholders
+final_hallandale_pipeline.py:402:11: F541 f-string is missing placeholders
+final_hallandale_pipeline.py:403:11: F541 f-string is missing placeholders
+final_hallandale_pipeline.py:404:11: F541 f-string is missing placeholders
+final_hallandale_pipeline.py:405:11: F541 f-string is missing placeholders
+final_integration_test.py:7:1: F401 'os' imported but unused
+final_integration_test.py:70:15: F541 f-string is missing placeholders
+final_integration_test.py:81:9: F401 'universal_automation.UniversalLeadAutomation' imported but unused
+final_integration_test.py:104:9: F401 'google_sheets_integration.GoogleSheetsIntegration' imported but unused
+git_commit_and_notify_asus.py:3:1: F401 'datetime.datetime' imported but unused
+lead_enrichment_plugin.py:9:1: F401 'urllib.parse' imported but unused
+lead_enrichment_plugin.py:13:1: F401 'json' imported but unused
+lead_enrichment_plugin.py:468:15: F541 f-string is missing placeholders
+list_discovery/demo.py:21:1: E402 module level import not at top of file
+list_scripts.py:4:1: F401 'os' imported but unused
+local_test_hallandale_pipeline.py:12:1: E402 module level import not at top of file
+local_test_hallandale_pipeline.py:13:1: E402 module level import not at top of file
+local_test_hallandale_pipeline.py:14:1: E402 module level import not at top of file
+local_test_hallandale_pipeline.py:51:15: F541 f-string is missing placeholders
+local_test_hallandale_pipeline.py:54:15: F541 f-string is missing placeholders
+local_test_hallandale_pipeline.py:72:15: F541 f-string is missing placeholders
+local_test_hallandale_pipeline.py:119:11: F541 f-string is missing placeholders
+realtor_scheduler.py:18:1: E402 module level import not at top of file
+realtor_scheduler.py:50:25: F541 f-string is missing placeholders
+realtor_scheduler.py:105:11: F541 f-string is missing placeholders
+realtor_scheduler.py:118:19: F541 f-string is missing placeholders
+score_leads.py:12:1: F401 'datetime.datetime' imported but unused
+score_leads.py:13:1: F401 'pathlib.Path' imported but unused
+score_leads.py:14:1: F401 'typing.Optional' imported but unused
+score_leads.py:16:1: F401 'urllib.parse.urlparse' imported but unused
+score_leads.py:276:11: F541 f-string is missing placeholders
+score_leads.py:281:11: F541 f-string is missing placeholders
+score_leads.py:291:15: F541 f-string is missing placeholders
+scripts/merge_documentation.py:165:31: F541 f-string is missing placeholders
+scripts/merge_documentation.py:167:13: F541 f-string is missing placeholders
+scripts/merge_documentation.py:174:15: F541 f-string is missing placeholders
+scripts/merge_documentation.py:231:11: F541 f-string is missing placeholders
+simple_enhanced_processing.py:29:15: F541 f-string is missing placeholders
+simple_enhanced_processing.py:52:15: F541 f-string is missing placeholders
+src/hallandale_pipeline_fixed.py:11:1: F401 'typing.List' imported but unused
+src/hallandale_pipeline_fixed.py:11:1: F401 'typing.Optional' imported but unused
+src/ut_bar.py:15:1: F401 'typing.List' imported but unused
+src/ut_bar.py:15:1: F401 'typing.Dict' imported but unused
+src/ut_bar.py:15:1: F401 'typing.Optional' imported but unused
+test_cross_device_env.py.new:18:5: F401 'device_path_resolver.get_current_device' imported but unused
+test_cross_device_env.py.new:65:5: E722 do not use bare 'except'
+test_cross_device_env.py.new:170:31: F541 f-string is missing placeholders
+test_cross_device_env.py.new:172:29: F541 f-string is missing placeholders
+test_data_hunter.py:8:1: F401 'os' imported but unused
+test_data_hunter.py:9:1: F401 'pathlib.Path' imported but unused
+test_data_hunter.py:14:1: E402 module level import not at top of file
+test_data_hunter.py:41:11: F541 f-string is missing placeholders
+test_data_hunter.py:48:11: F541 f-string is missing placeholders
+test_data_hunter.py:59:15: F541 f-string is missing placeholders
+test_framework.py:17:9: F401 'src.webdriver_manager.WebDriverManager' imported but unused
+test_framework.py:20:9: F401 'src.pagination_manager.PaginationManager' imported but unused
+test_framework.py:23:9: F401 'src.data_extractor.DataExtractor' imported but unused
+test_framework.py:26:9: F401 'src.config_loader.ConfigLoader' imported but unused
+test_framework.py:29:9: F401 'src.logger.ScrapingLogger' imported but unused
+test_framework.py:32:9: F401 'src.orchestrator.ScrapingOrchestrator' imported but unused
+test_framework.py:48:9: F841 local variable 'loader' is assigned to but never used
+test_framework.py:61:9: F841 local variable 'manager' is assigned to but never used
+test_google_sheets.py:6:1: F401 'os' imported but unused
+test_google_sheets.py:26:9: F401 'google_auth_oauthlib.flow.InstalledAppFlow' imported but unused
+test_google_sheets.py:27:9: F401 'googleapiclient.discovery.build' imported but unused
+test_google_sheets.py:28:9: F401 'google.auth.transport.requests.Request' imported but unused
+test_google_sheets.py:63:9: F401 'universal_automation.main' imported but unused
+test_system.py:10:1: F401 'os' imported but unused
+test_system.py:12:1: F401 'datetime.datetime' imported but unused
+tools/analyze_legacy_scripts.py:118:15: F541 f-string is missing placeholders
+tools/analyze_legacy_scripts.py:122:15: F541 f-string is missing placeholders
+tools/analyze_legacy_scripts.py:125:15: F541 f-string is missing placeholders
+tools/analyze_legacy_scripts.py:133:11: F541 f-string is missing placeholders
+tools/device_path_resolver-SalesRep.py:6:1: F401 'sys' imported but unused
+tools/device_path_resolver.py.fixed:15:1: F401 'typing.List' imported but unused
+tools/device_path_resolver.py.fixed:530:15: F541 f-string is missing placeholders
+tools/device_path_resolver.py.fixed:531:15: F541 f-string is missing placeholders
+tools/device_path_resolver.py.fixed:535:9: E722 do not use bare 'except'
+tools/fix_path_resolver.py:13:1: F401 'pathlib.Path' imported but unused
+tools/fix_whitespace.py:1:1: F401 'os' imported but unused
+tools/resolve_device_profile.py:108:28: F541 f-string is missing placeholders
+tools/resolve_device_profile.py:170:28: F541 f-string is missing placeholders
+tools/run_linters.py:28:9: F841 local variable 'result' is assigned to but never used
+tools/run_linters.py:90:9: F401 'black' imported but unused
+tools/run_linters.py:101:9: F401 'flake8' imported but unused
+tools/run_linters.py:112:9: F401 'isort' imported but unused
+tools/run_linters.py:123:9: F401 'mypy' imported but unused
+tools/scan_hardcoded_paths.py:14:1: F401 'typing.Tuple' imported but unused
+tools/scan_hardcoded_paths.py:19:5: F401 'device_path_resolver.get_project_root_path' imported but unused
+tools/scan_hardcoded_paths.py:19:5: F401 'device_path_resolver.get_onedrive_path' imported but unused
+tools/validate_requirements.py:215:15: F541 f-string is missing placeholders
+tools/validate_requirements.py:223:15: F541 f-string is missing placeholders
+unified_scraper.py:14:1: E402 module level import not at top of file
+unified_scraper.py:15:1: E402 module level import not at top of file
+universal_automation.py:23:5: F401 'google.oauth2.service_account.Credentials' imported but unused
+universal_automation.py:24:5: F401 'googleapiclient.discovery.build' imported but unused
+universal_automation.py:269:13: F841 local variable 'result' is assigned to but never used
+universal_recon/analytics/export_csv_summary.py:29:11: F541 f-string is missing placeholders
+universal_recon/analytics/export_csv_summary.py:51:11: F541 f-string is missing placeholders
+universal_recon/analytics/export_csv_summary.py:63:11: F541 f-string is missing placeholders
+universal_recon/analytics/plugin_decay_overlay.py:102:5: F841 local variable 'args' is assigned to but never used
+universal_recon/analytics/risk_overlay_emitter.py:6:1: F401 'typing.Union' imported but unused
+universal_recon/analytics/schema_matrix_collector.py:4:1: F401 'os' imported but unused
+universal_recon/analytics/template_health_flagger.py:20:9: F841 local variable 'error' is assigned to but never used
+universal_recon/analytics/trend_dashboard_stub.py:3:1: F401 'typing.Dict' imported but unused
+universal_recon/analytics/trend_dashboard_stub.py:3:1: F401 'typing.List' imported but unused
+universal_recon/analytics/validator_drift_overlay.py:36:21: F541 f-string is missing placeholders
+universal_recon/core/batch_site_runner.py:5:1: F401 'utils.output_manager.save_summary' imported but unused
+universal_recon/core/batch_site_runner.py:6:1: F401 'utils.recon_summary_builder.print_summary' imported but unused
+universal_recon/core/batch_site_runner.py:6:1: F401 'utils.recon_summary_builder.summarize_records' imported but unused
+universal_recon/core/snapshot_manager.py:3:1: F401 'os' imported but unused
+universal_recon/main.py:7:1: F401 'universal_recon.plugin_loader.load_plugins_by_type' imported but unused
+universal_recon/plugin_aggregator.py:8:1: F401 'universal_recon.core.config_loader.ConfigManager' imported but unused
+universal_recon/plugin_aggregator.py:15:1: F401 'universal_recon.plugin_loader.load_plugins_by_type' imported but unused
+universal_recon/plugin_loader.py:7:1: F401 'typing.Union' imported but unused
+universal_recon/plugins/ai_template_indexer.py:3:1: F401 'collections.defaultdict' imported but unused
+universal_recon/plugins/angi_plugin.py:9:1: F401 're' imported but unused
+universal_recon/plugins/angi_plugin.py:11:1: F401 'pandas as pd' imported but unused
+universal_recon/plugins/angi_plugin.py:13:1: F401 'bs4.BeautifulSoup' imported but unused
+universal_recon/plugins/angi_plugin.py:14:1: F401 'selenium.webdriver' imported but unused
+universal_recon/plugins/angi_plugin.py:15:1: F401 'selenium.webdriver.chrome.options.Options' imported but unused
+universal_recon/plugins/angi_plugin.py:16:1: F401 'selenium.webdriver.chrome.service.Service' imported but unused
+universal_recon/plugins/angi_plugin.py:17:1: F401 'webdriver_manager.chrome.ChromeDriverManager' imported but unused
+universal_recon/plugins/form_autofill.py:42:21: E722 do not use bare 'except'
+universal_recon/plugins/form_autofill.py:50:17: E722 do not use bare 'except'
+universal_recon/plugins/form_autofill.py:51:28: F541 f-string is missing placeholders
+universal_recon/plugins/google_sheets_utils.py:15:5: F401 'google.oauth2.service_account.Credentials' imported but unused
+universal_recon/plugins/google_sheets_utils.py:16:5: F401 'googleapiclient.discovery.build' imported but unused
+universal_recon/plugins/homeadvisor_plugin.py:11:1: F401 'pandas as pd' imported but unused
+universal_recon/plugins/homeadvisor_plugin.py:13:1: F401 'bs4.BeautifulSoup' imported but unused
+universal_recon/plugins/houzz_plugin.py:9:1: F401 're' imported but unused
+universal_recon/plugins/houzz_plugin.py:11:1: F401 'pandas as pd' imported but unused
+universal_recon/plugins/houzz_plugin.py:13:1: F401 'bs4.BeautifulSoup' imported but unused
+universal_recon/plugins/houzz_plugin.py:14:1: F401 'selenium.webdriver' imported but unused
+universal_recon/plugins/houzz_plugin.py:15:1: F401 'selenium.webdriver.chrome.options.Options' imported but unused
+universal_recon/plugins/houzz_plugin.py:16:1: F401 'selenium.webdriver.chrome.service.Service' imported but unused
+universal_recon/plugins/houzz_plugin.py:17:1: F401 'webdriver_manager.chrome.ChromeDriverManager' imported but unused
+universal_recon/plugins/record_field_validator_v3.py:25:9: F841 local variable 'confidence' is assigned to but never used
+universal_recon/plugins/thumbtack_plugin.py:11:1: F401 'pandas as pd' imported but unused
+universal_recon/plugins/thumbtack_plugin.py:13:1: F401 'bs4.BeautifulSoup' imported but unused
+universal_recon/tests/analytics/conftest.py:3:1: F401 'os' imported but unused
+universal_recon/tests/conftest.py:1:1: F401 'os' imported but unused
+universal_recon/tests/plugins/test_firm_parser.py:40:13: F841 local variable 'normalized' is assigned to but never used
+universal_recon/tests/plugins/test_ml_labeler.py:39:13: F841 local variable 'normalized' is assigned to but never used
+universal_recon/tests/plugins/test_social_link_parser.py:40:13: F841 local variable 'normalized' is assigned to but never used
+universal_recon/tests/test_risk_overlay_emitter.py:2:1: F401 'os' imported but unused
+universal_recon/tests/test_risk_overlay_emitter.py:3:1: F401 'tempfile' imported but unused
+universal_recon/tests/test_risk_overlay_emitter.py:4:1: F401 'pathlib.Path' imported but unused
+universal_recon/tests/test_risk_overlay_emitter.py:6:1: F401 'pytest' imported but unused
+universal_recon/utils/health_bootstrap.py:11:1: E402 module level import not at top of file
+universal_recon/utils/health_bootstrap.py:12:1: E402 module level import not at top of file
+universal_recon/utils/phase_27_health_report.py:6:1: F401 'datetime.datetime' imported but unused
+universal_recon/utils/phase_27_health_report.py:6:1: F401 'datetime.timedelta' imported but unused
+universal_recon/utils/phase_27_health_report.py:7:1: F401 'pathlib.Path' imported but unused
+universal_recon/utils/score_predictor.py:4:1: F401 'typing.Union' imported but unused
+universal_recon/utils/template_clusterer.py:12:5: F841 local variable 'seen' is assigned to but never used
+validate_alienware_bootstrap.py:17:1: F401 'typing.List' imported but unused
+validate_alienware_bootstrap.py:17:1: F401 'typing.Tuple' imported but unused
+validate_alienware_bootstrap.py:17:1: F401 'typing.Optional' imported but unused
+verify_bootstrap_bundle.py:11:1: F401 'pathlib.Path' imported but unused
+verify_bootstrap_bundle.py:75:11: F541 f-string is missing placeholders
+verify_bootstrap_bundle.py:78:11: F541 f-string is missing placeholders
+verify_bootstrap_bundle.py:79:11: F541 f-string is missing placeholders
+verify_bootstrap_bundle.py:80:11: F541 f-string is missing placeholders
+verify_dependencies.py:7:1: F401 'sys' imported but unused
+verify_dependencies.py:8:1: F401 'subprocess' imported but unused
+verify_dependencies.py:9:1: F401 'pathlib.Path' imported but unused
+
+mypy.....................................................................Failed
+- hook id: mypy
+- exit code: 2
+
+run_cross_device_task.py: error: Duplicate module named "run_cross_device_task" (also at "automation\run_cross_device_task.py")
+run_cross_device_task.py: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#mapping-file-paths-to-modules for more info
+run_cross_device_task.py: note: Common resolutions include: a) using `--exclude` to avoid checking one of them, b) adding `__init__.py` somewhere, c) using `--explicit-package-bases` or adjusting MYPYPATH
+Found 1 error in 1 file (errors prevented further checking)
+
+autoflake................................................................Failed
+- hook id: autoflake
+- files were modified by this hook
+Detect secrets...........................................................Passed

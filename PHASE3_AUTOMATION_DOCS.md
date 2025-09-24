@@ -135,7 +135,7 @@ notifications:
     smtp_server: "smtp.gmail.com"
     smtp_port: 587
     username: "your-email@gmail.com"
-    password: "your-app-password"
+    password: "PASSWORD_PLACEHOLDER" # pragma: allowlist secret
     recipients:
       - "admin@yourcompany.com"
 

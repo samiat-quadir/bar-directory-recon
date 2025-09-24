@@ -3,7 +3,6 @@ Cross-device path resolver for the bar-directory-recon repository
 """
 
 import os
-import sys
 import json
 import platform
 from pathlib import Path

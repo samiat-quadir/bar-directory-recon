@@ -195,7 +195,7 @@ python universal_automation.py \
   --industry pool_contractors \
   --city Orlando \
   --state FL \
-  --google-sheet-id "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms" \
+  --google-sheet-id "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms" # pragma: allowlist secret
   --google-sheet-name "Orlando_Pool_Contractors"
 ```
 

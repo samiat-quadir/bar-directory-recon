@@ -1,0 +1,140 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.6, pytest-8.4.2, pluggy-1.6.0
+rootdir: C:\Code\bar-directory-recon
+configfile: pytest.ini
+plugins: cov-7.0.0
+collected 105 items / 5 deselected / 100 selected
+
+src\tests\test_core_modules.py ..........                                [ 10%]
+src\tests\test_hallandale_pipeline.py .                                  [ 11%]
+src\tests\test_hallandale_pipeline_success.py .                          [ 12%]
+src\tests\test_security_manager.py ...................                   [ 31%]
+test_data_hunter.py .                                                    [ 32%]
+test_framework.py ...                                                    [ 35%]
+test_google_sheets.py ..                                                 [ 37%]
+test_plugin_architecture.py .                                            [ 38%]
+test_plugin_architecture_fixed.py .                                      [ 39%]
+test_realtor_system.py s...                                              [ 43%]
+test_system.py ......                                                    [ 49%]
+tests\test_security_manager_local.py .                                   [ 50%]
+universal_recon\tests\analytics\test_plugin_usage_diff.py ......         [ 56%]
+universal_recon\tests\analytics\test_risk_overlay_emitter.py .....       [ 61%]
+universal_recon\tests\auto_smoke\test_auto_01.py .                       [ 62%]
+universal_recon\tests\auto_smoke\test_auto_02.py .                       [ 63%]
+universal_recon\tests\auto_smoke\test_auto_03.py .                       [ 64%]
+universal_recon\tests\auto_smoke\test_auto_04.py .                       [ 65%]
+universal_recon\tests\auto_smoke\test_auto_05.py .                       [ 66%]
+universal_recon\tests\auto_smoke\test_auto_06.py .                       [ 67%]
+universal_recon\tests\auto_smoke\test_auto_07.py .                       [ 68%]
+universal_recon\tests\auto_smoke\test_auto_08.py .                       [ 69%]
+universal_recon\tests\auto_smoke\test_auto_09.py .                       [ 70%]
+universal_recon\tests\auto_smoke\test_auto_10.py .                       [ 71%]
+universal_recon\tests\infrastructure\test_chromedriver.py s              [ 72%]
+universal_recon\tests\infrastructure\test_network_connectivity.py s      [ 73%]
+universal_recon\tests\plugins\test_firm_parser.py ...                    [ 76%]
+universal_recon\tests\plugins\test_firm_plugin.py ..                     [ 78%]
+universal_recon\tests\plugins\test_loader.py .                           [ 79%]
+universal_recon\tests\plugins\test_ml_labeler.py ..                      [ 81%]
+universal_recon\tests\plugins\test_social_link_parser.py ..              [ 83%]
+universal_recon\tests\plugins\test_social_plugin.py ..                   [ 85%]
+universal_recon\tests\test_basic.py .                                    [ 86%]
+universal_recon\tests\test_risk_overlay_emitter.py ...                   [ 89%]
+universal_recon\tests\utils\test_audit_report_generator.py ....          [ 93%]
+universal_recon\tests\utils\test_score_predictor.py ....                 [ 97%]
+universal_recon\tests\utils\test_score_visualizer.py ...                 [100%]
+
+============================== warnings summary ===============================
+universal_recon\tests\analytics\test_plugin_usage_diff.py:14
+  C:\Code\bar-directory-recon\universal_recon\tests\analytics\test_plugin_usage_diff.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.analytics - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.analytics
+
+universal_recon\tests\analytics\test_risk_overlay_emitter.py:18
+  C:\Code\bar-directory-recon\universal_recon\tests\analytics\test_risk_overlay_emitter.py:18: PytestUnknownMarkWarning: Unknown pytest.mark.analytics - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.analytics
+
+test_data_hunter.py::test_discovery
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_data_hunter.py::test_discovery returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_framework.py::test_imports
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_framework.py::test_imports returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_framework.py::test_basic_functionality
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_framework.py::test_basic_functionality returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_framework.py::test_config_validation
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_framework.py::test_config_validation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_google_sheets.py::test_cli_arguments
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_google_sheets.py::test_cli_arguments returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_google_sheets.py::test_logs_directory
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_google_sheets.py::test_logs_directory returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_plugin_architecture.py::test_plugin_architecture
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_plugin_architecture.py::test_plugin_architecture returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_plugin_architecture_fixed.py::test_plugin_architecture
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_plugin_architecture_fixed.py::test_plugin_architecture returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_plugin_registry
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_plugin_registry returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_new_plugins
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_new_plugins returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_universal_automation
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_universal_automation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_lead_scoring
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_lead_scoring returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_google_sheets_utils
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_google_sheets_utils returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_file_structure
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:161: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_file_structure returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========== 97 passed, 3 skipped, 5 deselected, 16 warnings in 6.80s ===========
