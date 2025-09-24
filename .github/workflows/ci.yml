@@ -48,6 +48,7 @@ jobs:
         run: mypy . --ignore-missing-imports
 
       - name: Run Tests and Coverage
+        shell: bash
         run: |
           # Display Python and pip information
           python --version
@@ -57,6 +58,12 @@ jobs:
           python -c "import pytest; print(f'pytest version: {pytest.__version__}')"
           # Run tests with the python -m syntax to ensure correct module resolution
           python -m pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=35
+          
+      - name: Fast pytest subset
+        shell: bash
+        run: |
+          # Ensure pytest is in PATH and working
+          python -m pytest -p no:cacheprovider -o addopts="" -k "not slow and not e2e and not integration" -q
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
