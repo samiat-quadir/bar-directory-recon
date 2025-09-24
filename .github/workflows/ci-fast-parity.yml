@@ -10,46 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-          cache-dependency-path: |
-            pyproject.toml
-            requirements*.txt
-      - name: Install deps (lockfile + editable)
-        shell: bash
-        run: |
-          python -m pip install -U pip
-          if test -f requirements-lock.txt; then
-            python -m pip install -r requirements-lock.txt
-            python -m pip install -e .
-          else
-            python -m pip install -e .
-          fi
-      - name: Diagnose Python environment
-        shell: bash
-        run: |
-          echo "--- python version and executable"
-          python -V || true
-          python -c "import sys; print('executable:', sys.executable)" || true
-          echo "--- which/python location"
-          which python || which python3 || echo "no which for python"
-          echo "--- pip version and list (top)"
-          python -m pip --version || true
-          python -m pip list --format=columns | sed -n '1,200p' || true
-          echo "--- show pytest (if installed)"
-          python -m pip show pytest || true
-          echo "--- verify pytest importability"
-          python -c "import importlib.util as iu; print('pytest spec:', iu.find_spec('pytest'))" || true
-      - name: Pre-commit (all)
-        shell: bash
-        run: python -m pre_commit run -a || true
-      - name: Fast pytest subset (markers)
-        shell: bash
-        run: python -m pytest -p no:cacheprovider -o addopts="" -m "not slow and not e2e and not integration" -q
+    uses: ./.github/workflows/_python-reusable.yml
+    with:
+      os: ${{ matrix.os }}
+      python-version: "3.11"
+      run-precommit: true
+      run-fast-tests: true

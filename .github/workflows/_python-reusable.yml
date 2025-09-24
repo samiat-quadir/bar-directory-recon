@@ -37,15 +37,15 @@ jobs:
         run: |
           python -m pip install -U pip
           if test -f requirements-lock.txt; then
-            pip install -r requirements-lock.txt
-            pip install -e .
+            python -m pip install -r requirements-lock.txt
+            python -m pip install -e .
           else
-            pip install -e .
+            python -m pip install -e .
           fi
       - name: Pre-commit (all)
         if: ${{ inputs['run-precommit'] }}
         shell: bash
-        run: pre-commit run -a || true
+        run: python -m pre_commit run -a || true
       - name: Fast pytest subset (markers)
         if: ${{ inputs['run-fast-tests'] }}
         shell: bash
