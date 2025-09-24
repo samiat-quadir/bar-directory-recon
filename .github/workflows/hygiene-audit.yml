@@ -1,0 +1,52 @@
+name: Hygiene Audit
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene-audit:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-lock.txt
+          
+      - name: Run pre-commit (non-blocking)
+        run: |
+          pre-commit run --all-files || true
+          
+      - name: Run mypy (non-blocking)
+        run: |
+          python -m mypy . --ignore-missing-imports || true
+          
+      - name: Run detect-secrets (non-blocking)
+        run: |
+          detect-secrets scan --all-files || true
+          
+      - name: Upload hygiene audit results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: hygiene-audit
+          path: |
+            .pre-commit-log.txt
+            mypy-report.txt
+            secrets-baseline.json
+          retention-days: 7
