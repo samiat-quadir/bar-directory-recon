@@ -11,19 +11,20 @@ Demonstrates the capabilities of the List Discovery Agent including:
 - Notification systems
 """
 
-
 import asyncio
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent
 import sys
+
 sys.path.insert(0, str(PROJECT_ROOT))
 
 try:
-    from list_discovery.agent import ListDiscoveryAgent
     from automation.universal_runner import UniversalRunner
+    from list_discovery.agent import ListDiscoveryAgent
+
     LIST_DISCOVERY_AVAILABLE = True
 except ImportError as e:
     print(f"❌ Error importing modules: {e}")
@@ -31,42 +32,33 @@ except ImportError as e:
     LIST_DISCOVERY_AVAILABLE = False
 
 
-
-
 class ListDiscoveryDemo:
     """Demo class for the List Discovery Agent."""
-    demo_config: Dict[str, Any]
+
+    demo_config: dict[str, Any]
 
     def __init__(self) -> None:
         self.demo_config = {
-            'monitored_urls': [
-                {
-                    'url': 'https://httpbin.org/json',
-                    'name': 'Demo API Endpoint'
-                }
-            ],
-            'download_dir': 'input/demo_discovered',
-            'file_extensions': ['.pdf', '.csv', '.json', '.txt'],
-            'check_interval': 300,  # 5 minutes for demo
-            'notifications': {
-                'discord_webhook': None,
-                'email': {'enabled': False}
-            }
+            "monitored_urls": [{"url": "https://httpbin.org/json", "name": "Demo API Endpoint"}],
+            "download_dir": "input/demo_discovered",
+            "file_extensions": [".pdf", ".csv", ".json", ".txt"],
+            "check_interval": 300,  # 5 minutes for demo
+            "notifications": {"discord_webhook": None, "email": {"enabled": False}},
         }
 
     def show_banner(self) -> None:
         """Show demo banner."""
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("🔍 LIST DISCOVERY AGENT DEMO - PHASE 4")
-        print("="*70)
+        print("=" * 70)
         print("Bar Directory Reconnaissance - Web Monitoring Capabilities")
-        print("-"*70)
+        print("-" * 70)
         print()
 
     def demo_configuration(self) -> None:
         """Demonstrate configuration management."""
         print("📋 CONFIGURATION DEMO")
-        print("-"*30)
+        print("-" * 30)
 
         if not LIST_DISCOVERY_AVAILABLE:
             print("❌ List Discovery Agent not available")
@@ -84,10 +76,7 @@ class ListDiscoveryDemo:
 
         # Add demo URL
         print("\n➕ Adding demo URL...")
-        success = agent.add_url(
-            "https://example.com/licenses",
-            "Demo County Licenses"
-        )
+        success = agent.add_url("https://example.com/licenses", "Demo County Licenses")
 
         if success:
             print("✅ Demo URL added successfully")
@@ -106,7 +95,7 @@ class ListDiscoveryDemo:
     async def demo_monitoring(self) -> None:
         """Demonstrate web monitoring capabilities."""
         print("🌐 WEB MONITORING DEMO")
-        print("-"*30)
+        print("-" * 30)
 
         if not LIST_DISCOVERY_AVAILABLE:
             print("❌ List Discovery Agent not available")
@@ -118,14 +107,9 @@ class ListDiscoveryDemo:
         print("Setting up demo monitoring...")
 
         # Configure with demo URLs that we can control
-        demo_urls = [
-            {
-                'url': 'https://httpbin.org/html',
-                'name': 'Demo HTML Page'
-            }
-        ]
+        demo_urls = [{"url": "https://httpbin.org/html", "name": "Demo HTML Page"}]
 
-        agent.config['monitored_urls'] = demo_urls
+        agent.config["monitored_urls"] = demo_urls
 
         print(f"📡 Monitoring {len(demo_urls)} demo URL(s)...")
 
@@ -149,7 +133,7 @@ class ListDiscoveryDemo:
     def demo_integration(self) -> None:
         """Demonstrate integration with Universal Project Runner."""
         print("🔗 INTEGRATION DEMO")
-        print("-"*30)
+        print("-" * 30)
 
         if not LIST_DISCOVERY_AVAILABLE:
             print("❌ List Discovery Agent not available")
@@ -174,9 +158,9 @@ class ListDiscoveryDemo:
             # Show scheduler status
             try:
                 config = runner.config
-                discovery_config = config.get('schedules', {}).get('list_discovery', {})
-                if discovery_config.get('enabled', True):
-                    frequency = discovery_config.get('frequency', 'hourly')
+                discovery_config = config.get("schedules", {}).get("list_discovery", {})
+                if discovery_config.get("enabled", True):
+                    frequency = discovery_config.get("frequency", "hourly")
                     print(f"\n⏰ Discovery scheduled to run: {frequency}")
                 else:
                     print("\n⚠️ Discovery scheduling disabled")
@@ -191,21 +175,27 @@ class ListDiscoveryDemo:
     def demo_file_processing(self) -> None:
         """Demonstrate file processing capabilities."""
         print("📁 FILE PROCESSING DEMO")
-        print("-"*30)
+        print("-" * 30)
 
         # Create demo directory
         demo_dir = Path("input/demo_discovered")
         demo_dir.mkdir(parents=True, exist_ok=True)
         # Create demo files
         demo_files = [
-            ("demo_licenses.csv", "name,address,license_type\nDemo Bar,123 Main St,Liquor"),
-            ("demo_permits.json", '{"permits": [{"name": "Demo Restaurant", "type": "Food"}]}'),
-            ("demo_list.txt", "Demo file for list discovery")
+            (
+                "demo_licenses.csv",
+                "name,address,license_type\nDemo Bar,123 Main St,Liquor",
+            ),
+            (
+                "demo_permits.json",
+                '{"permits": [{"name": "Demo Restaurant", "type": "Food"}]}',
+            ),
+            ("demo_list.txt", "Demo file for list discovery"),
         ]
         created_files = []
         for filename, content in demo_files:
             file_path = demo_dir / filename
-            with open(file_path, 'w') as f:
+            with open(file_path, "w") as f:
                 f.write(content)
             created_files.append(file_path)
             print(f"📄 Created demo file: {file_path}")
@@ -224,7 +214,7 @@ class ListDiscoveryDemo:
     def demo_notifications(self) -> None:
         """Demonstrate notification capabilities."""
         print("📢 NOTIFICATION DEMO")
-        print("-"*30)
+        print("-" * 30)
 
         if LIST_DISCOVERY_AVAILABLE:
             agent = ListDiscoveryAgent()
@@ -233,12 +223,14 @@ class ListDiscoveryDemo:
                 print("Notification system available:")
 
                 # Show configured channels
-                config = agent.config.get('notifications', {})
-                discord = config.get('discord_webhook')
-                email = config.get('email', {})
+                config = agent.config.get("notifications", {})
+                discord = config.get("discord_webhook")
+                email = config.get("email", {})
 
                 print(f"  Discord: {'✅ Configured' if discord else '❌ Not configured'}")
-                print(f"  Email: {'✅ Configured' if email.get('enabled') else '❌ Not configured'}")
+                print(
+                    f"  Email: {'✅ Configured' if email.get('enabled') else '❌ Not configured'}"
+                )
 
                 # Demo notification content
                 print("\nExample discovery notification:")
@@ -260,11 +252,14 @@ class ListDiscoveryDemo:
     def show_usage_examples(self) -> None:
         """Show usage examples."""
         print("💡 USAGE EXAMPLES")
-        print("-"*30)
+        print("-" * 30)
 
         examples = [
             ("Setup List Discovery", "python list_discovery/agent.py setup"),
-            ("Add monitoring URL", "python list_discovery/agent.py add \"https://county.gov/licenses\""),
+            (
+                "Add monitoring URL",
+                'python list_discovery/agent.py add "https://county.gov/licenses"',
+            ),
             ("Run single check", "python list_discovery/agent.py check"),
             ("Start monitoring", "python list_discovery/agent.py monitor"),
             ("Show status", "python list_discovery/agent.py status"),
@@ -282,7 +277,7 @@ class ListDiscoveryDemo:
     def show_summary(self) -> None:
         """Show demo summary."""
         print("📋 DEMO SUMMARY")
-        print("-"*30)
+        print("-" * 30)
 
         print("List Discovery Agent Phase 4 Features:")
         print("  ✅ Web page monitoring with change detection")
@@ -302,7 +297,7 @@ class ListDiscoveryDemo:
         print("  5. Enable scheduling: RunAutomation.bat schedule")
 
         print("\n🎉 List Discovery Agent ready for production use!")
-        print("="*70)
+        print("=" * 70)
 
 
 async def main() -> None:

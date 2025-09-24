@@ -1,26 +1,19 @@
 ﻿name: CI
 
 on:
-  push:
-    branches: [ "main", "feature/**", "prep/**" ]
   pull_request:
-    branches: [ "main", "feature/**", "prep/**" ]
-  workflow_dispatch:
-
+  push:
+    branches: [main]
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
-
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         python-version: ["3.11"]
+        python-version: ['3.11']
         os: [ubuntu-latest, windows-latest]
 
     steps:
@@ -42,6 +35,7 @@ jobs:
           pip install -r requirements-lock.txt
           pip install -e .[dev] --no-deps
 
+
       - name: Run pre-commit hooks
         run: pre-commit run --all-files || true
 
@@ -49,8 +43,22 @@ jobs:
         run: mypy . --ignore-missing-imports
 
       - name: Run Tests and Coverage
+        shell: bash
+        run: |
+          # Display Python and pip information
+          python --version
+          pip --version
+          pip list
+          # Make sure pytest is found
+          python -c "import pytest; print(f'pytest version: {pytest.__version__}')"
+          # Run tests with the python -m syntax to ensure correct module resolution
+          python -m pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=35
+          
+      - name: Fast pytest subset
+        shell: bash
         run: |
           pytest -p no:cacheprovider -o addopts="" -m "not slow and not e2e and not integration" -q --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=35
+
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'

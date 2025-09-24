@@ -12,7 +12,7 @@ BADGE_COLORS = {
 
 def load_status(path="output/output_status.json"):
     if os.path.exists(path):
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             return json.load(f)
     return {}
 
@@ -33,7 +33,7 @@ def export_html(status, path="output/validator_drift_overlay.html"):
             if not drift
             else BADGE_COLORS.get("critical" if suppress >= 10 else "warning")
         )
-        html.append(f"<div style='border:1px solid #ccc;margin:10px;padding:10px;'>")
+        html.append("<div style='border:1px solid #ccc;margin:10px;padding:10px;'>")
         html.append(f"<h2>{site} - <span style='color:{color}'>{health.upper()}</span></h2>")
         if not drift:
             html.append("<p>✅ All validator plugins present.</p>")
