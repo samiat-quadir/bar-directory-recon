@@ -19,15 +19,15 @@ def setup_demo_environment() -> dict:
         "DATABASE_PORT": "DEMO_DB_PORT",
         "DATABASE_NAME": "DEMO_DB_NAME",
         "DATABASE_USERNAME": "DEMO_DB_USER",
-        "DATABASE_PASSWORD": "DEMO_DB_PASSWORD_PLACEHOLDER",
+    "DATABASE_PASSWORD": "DEMO_DB_PASSWORD_PLACEHOLDER",  # pragma: allowlist secret
         "EMAIL_SMTP_SERVER": "DEMO_SMTP_SERVER",
         "EMAIL_SMTP_PORT": "DEMO_SMTP_PORT",
         "EMAIL_USERNAME": "DEMO_EMAIL_USER",
-        "EMAIL_PASSWORD": "DEMO_EMAIL_PASSWORD_PLACEHOLDER",
+    "EMAIL_PASSWORD": "DEMO_EMAIL_PASSWORD_PLACEHOLDER",  # pragma: allowlist secret
         "EMAIL_FROM_ADDRESS": "noreply@example.com",
-        "ENRICHMENT_API_KEY": "ENRICHMENT_TEST_KEY",
-        "GEOCODING_API_KEY": "GEOCODING_TEST_KEY",
-        "WEBHOOK_SECRET": "WEBHOOK_TEST_SECRET",
+    "ENRICHMENT_API_KEY": "ENRICHMENT_TEST_KEY",  # pragma: allowlist secret
+    "GEOCODING_API_KEY": "GEOCODING_TEST_KEY",  # pragma: allowlist secret
+    "WEBHOOK_SECRET": "WEBHOOK_TEST_SECRET",  # pragma: allowlist secret
         "TEST_CONNECTION": "DEMO_CONNECTION",
     }
 

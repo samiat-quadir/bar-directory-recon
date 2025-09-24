@@ -50,7 +50,7 @@ class TestSecurityManager:
         test_url = "https://test-vault.vault.azure.net/"
     tenant_id = "TEST_TENANT"
     client_id = "TEST_CLIENT"
-    client_secret = "TEST_CLIENT_SECRET_PLACEHOLDER"
+    client_secret = "TEST_CLIENT_SECRET_PLACEHOLDER"  # pragma: allowlist secret
 
         mock_credential_instance = Mock()
         mock_credential.return_value = mock_credential_instance
