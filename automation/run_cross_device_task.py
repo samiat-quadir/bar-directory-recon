@@ -4,25 +4,27 @@ Cross-Device Task Runner for ROG-LUCCI Control
 Loads tasks from YAML configuration and executes them via SSH
 """
 
-import yaml
+import argparse
 import subprocess
 import sys
-import argparse
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Any
+
+import yaml
+
 
 class CrossDeviceTaskRunner:
     def __init__(self, config_path: str = "cross_device_tasks.yaml"):
         """Initialize the task runner with configuration file."""
         self.config_path = config_path
         self.config = self._load_config()
-        self.remote_host = self.config.get('remote_host', 'ROG-LUCCI')
-        self.base_path = self.config.get('base_path', 'C:/Code/bar-directory-recon')
+        self.remote_host = self.config.get("remote_host", "ROG-LUCCI")
+        self.base_path = self.config.get("base_path", "C:/Code/bar-directory-recon")
 
-    def _load_config(self) -> Dict[str, Any]:
+    def _load_config(self) -> dict[str, Any]:
         """Load configuration from YAML file."""
         try:
-            with open(self.config_path, 'r', encoding='utf-8') as f:
+            with open(self.config_path, encoding="utf-8") as f:
                 return yaml.safe_load(f)
         except FileNotFoundError:
             print(f"❌ Configuration file not found: {self.config_path}")
@@ -35,9 +37,9 @@ class CrossDeviceTaskRunner:
         """Format command string with provided parameters."""
         # Add default formatting variables
         format_vars = {
-            'date': datetime.now().strftime('%Y%m%d'),
-            'timestamp': datetime.now().strftime('%Y%m%d_%H%M%S'),
-            **kwargs
+            "date": datetime.now().strftime("%Y%m%d"),
+            "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S"),
+            **kwargs,
         }
 
         try:
@@ -46,9 +48,11 @@ class CrossDeviceTaskRunner:
             print(f"⚠️  Missing variable in command template: {e}")
             return command
 
-    def _execute_ssh_command(self, command: str, capture_output: bool = True) -> subprocess.CompletedProcess:
+    def _execute_ssh_command(
+        self, command: str, capture_output: bool = True
+    ) -> subprocess.CompletedProcess:
         """Execute command on remote host via SSH."""
-        ssh_command = ['ssh', self.remote_host, command]
+        ssh_command = ["ssh", self.remote_host, command]
 
         print(f"🔄 Executing on {self.remote_host}: {command}")
 
@@ -59,27 +63,28 @@ class CrossDeviceTaskRunner:
                     capture_output=True,
                     text=True,
                     timeout=300  # 5 minute timeout
-                )
+                , timeout=60)
+
             else:
-                result = subprocess.run(ssh_command, timeout=300)
+                result = subprocess.run(ssh_command, timeout=300, timeout=60)
 
             return result
         except subprocess.TimeoutExpired:
-            print(f"⏱️  Command timed out after 5 minutes")
+            print("⏱️  Command timed out after 5 minutes")
             return subprocess.CompletedProcess(ssh_command, 124, "", "Command timed out")
         except Exception as e:
             print(f"❌ Error executing SSH command: {e}")
             return subprocess.CompletedProcess(ssh_command, 1, "", str(e))
 
-    def _find_task(self, task_name: str) -> Optional[Dict[str, Any]]:
+    def _find_task(self, task_name: str) -> dict[str, Any] | None:
         """Find task configuration by name across all categories."""
         for category, tasks in self.config.items():
-            if category in ['remote_host', 'base_path']:
+            if category in ["remote_host", "base_path"]:
                 continue
 
             if isinstance(tasks, dict) and task_name in tasks:
                 task_config = tasks[task_name].copy()
-                task_config['category'] = category
+                task_config["category"] = category
                 return task_config
 
         return None
@@ -96,16 +101,16 @@ class CrossDeviceTaskRunner:
         print(f"📝 Description: {task_config.get('description', 'No description')}")
 
         # Check if task requires admin privileges
-        if task_config.get('requires_admin', False):
+        if task_config.get("requires_admin", False):
             print("⚠️  This task requires administrator privileges on the remote machine")
 
         # Handle workflow tasks (multiple steps)
-        if 'steps' in task_config:
-            return self._run_workflow(task_config['steps'], **kwargs)
+        if "steps" in task_config:
+            return self._run_workflow(task_config["steps"], **kwargs)
 
         # Handle single command tasks
-        if 'command' in task_config:
-            command = self._format_command(task_config['command'], **kwargs)
+        if "command" in task_config:
+            command = self._format_command(task_config["command"], **kwargs)
             result = self._execute_ssh_command(command)
 
             if result.returncode == 0:
@@ -124,7 +129,7 @@ class CrossDeviceTaskRunner:
         print(f"❌ Task '{task_name}' has no executable command")
         return False
 
-    def _run_workflow(self, steps: List[str], **kwargs) -> bool:
+    def _run_workflow(self, steps: list[str], **kwargs) -> bool:
         """Run a workflow consisting of multiple tasks."""
         print(f"🔄 Running workflow with {len(steps)} steps")
 
@@ -143,14 +148,14 @@ class CrossDeviceTaskRunner:
         print("=" * 50)
 
         for category, tasks in self.config.items():
-            if category in ['remote_host', 'base_path']:
+            if category in ["remote_host", "base_path"]:
                 continue
 
             if isinstance(tasks, dict):
                 print(f"\n🏷️  {category.upper()}:")
                 for task_name, task_config in tasks.items():
                     if isinstance(task_config, dict):
-                        description = task_config.get('description', 'No description')
+                        description = task_config.get("description", "No description")
                         print(f"  • {task_name}: {description}")
 
     def test_connection(self) -> bool:
@@ -165,6 +170,7 @@ class CrossDeviceTaskRunner:
             print("❌ Connection test failed")
             return False
 
+
 def main():
     """Main entry point for the task runner."""
     parser = argparse.ArgumentParser(
@@ -177,27 +183,31 @@ Examples:
   python run_cross_device_task.py connection_test
   python run_cross_device_task.py run_script --script_name main.py
   python run_cross_device_task.py health_check
-        """
+        """,
     )
 
-    parser.add_argument('task', nargs='?', help='Task name to execute')
-    parser.add_argument('--list', '-l', action='store_true', help='List all available tasks')
-    parser.add_argument('--test', '-t', action='store_true', help='Test SSH connection')
-    parser.add_argument('--config', '-c', default='cross_device_tasks.yaml',
-                       help='Path to configuration file (default: cross_device_tasks.yaml)')
+    parser.add_argument("task", nargs="?", help="Task name to execute")
+    parser.add_argument("--list", "-l", action="store_true", help="List all available tasks")
+    parser.add_argument("--test", "-t", action="store_true", help="Test SSH connection")
+    parser.add_argument(
+        "--config",
+        "-c",
+        default="cross_device_tasks.yaml",
+        help="Path to configuration file (default: cross_device_tasks.yaml)",
+    )
 
     # Dynamic arguments for task parameters
-    parser.add_argument('--script_name', help='Script name for run_script task')
-    parser.add_argument('--service_name', help='Service name for admin tasks')
+    parser.add_argument("--script_name", help="Script name for run_script task")
+    parser.add_argument("--service_name", help="Service name for admin tasks")
 
     args, unknown_args = parser.parse_known_args()
 
     # Handle unknown arguments as key=value pairs
     kwargs = {}
     for arg in unknown_args:
-        if '=' in arg:
-            key, value = arg.split('=', 1)
-            kwargs[key.lstrip('-')] = value
+        if "=" in arg:
+            key, value = arg.split("=", 1)
+            kwargs[key.lstrip("-")] = value
 
     # Initialize task runner
     try:
@@ -215,7 +225,7 @@ Examples:
     elif args.task:
         # Add command line arguments to kwargs
         for key, value in vars(args).items():
-            if value is not None and key not in ['task', 'list', 'test', 'config']:
+            if value is not None and key not in ["task", "list", "test", "config"]:
                 kwargs[key] = value
 
         success = runner.run_task(args.task, **kwargs)
@@ -223,5 +233,7 @@ Examples:
     else:
         parser.print_help()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
+
