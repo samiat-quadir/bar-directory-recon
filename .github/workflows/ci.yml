@@ -33,6 +33,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
 
+      - name: Install pytest
+        run: pip install pytest pytest-cov
+        
       - name: Install Dependencies
         run: pip install -r requirements-dev.txt
 
