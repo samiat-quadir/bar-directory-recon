@@ -13,21 +13,22 @@ from src.security_manager import get_secret, get_security_manager
 
 def setup_demo_environment() -> dict:
     """Set up demo environment variables for testing."""
+    # Use clearly non-sensitive placeholder values so repository doesn't contain secrets.
     demo_vars = {
-        "DATABASE_HOST": "demo-db-server.local",
-        "DATABASE_PORT": "5432",
-        "DATABASE_NAME": "demo_recon_db",
-        "DATABASE_USERNAME": "demo_user",
-        "DATABASE_PASSWORD": "super_secure_password_123",
-        "EMAIL_SMTP_SERVER": "smtp.demo.com",
-        "EMAIL_SMTP_PORT": "587",
-        "EMAIL_USERNAME": "automation@demo.com",
-        "EMAIL_PASSWORD": "email_secure_pass_456",
-        "EMAIL_FROM_ADDRESS": "noreply@demo-recon.com",
-        "ENRICHMENT_API_KEY": "demo_enrich_key_789abc",
-        "GEOCODING_API_KEY": "demo_geo_key_def123",
-        "WEBHOOK_SECRET": "demo_webhook_secret_456ghi",
-        "TEST_CONNECTION": "demo_connection_success",
+        "DATABASE_HOST": "DEMO_DB_HOST",
+        "DATABASE_PORT": "DEMO_DB_PORT",
+        "DATABASE_NAME": "DEMO_DB_NAME",
+        "DATABASE_USERNAME": "DEMO_DB_USER",
+        "DATABASE_PASSWORD": "DEMO_DB_PASSWORD_PLACEHOLDER",
+        "EMAIL_SMTP_SERVER": "DEMO_SMTP_SERVER",
+        "EMAIL_SMTP_PORT": "DEMO_SMTP_PORT",
+        "EMAIL_USERNAME": "DEMO_EMAIL_USER",
+        "EMAIL_PASSWORD": "DEMO_EMAIL_PASSWORD_PLACEHOLDER",
+        "EMAIL_FROM_ADDRESS": "noreply@example.com",
+        "ENRICHMENT_API_KEY": "ENRICHMENT_TEST_KEY",
+        "GEOCODING_API_KEY": "GEOCODING_TEST_KEY",
+        "WEBHOOK_SECRET": "WEBHOOK_TEST_SECRET",
+        "TEST_CONNECTION": "DEMO_CONNECTION",
     }
 
     for key, value in demo_vars.items():

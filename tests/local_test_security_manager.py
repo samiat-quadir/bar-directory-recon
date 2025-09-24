@@ -48,9 +48,9 @@ class TestSecurityManager:
     def test_init_with_service_principal(self, mock_credential, mock_client):
         """Test initialization with service principal authentication."""
         test_url = "https://test-vault.vault.azure.net/"
-        tenant_id = "test-tenant"
-        client_id = "test-client"
-        client_secret = "test-secret"
+    tenant_id = "TEST_TENANT"
+    client_id = "TEST_CLIENT"
+    client_secret = "TEST_CLIENT_SECRET_PLACEHOLDER"
 
         mock_credential_instance = Mock()
         mock_credential.return_value = mock_credential_instance
