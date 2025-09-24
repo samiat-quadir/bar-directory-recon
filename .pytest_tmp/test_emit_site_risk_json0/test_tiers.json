@@ -1,0 +1,1 @@
+{"validator_tiers": {"critical": {"badge": "\ud83d\udfe5", "color": "#e74c3c", "suppression_factor": 0.8}, "warning": {"badge": "\ud83d\udfe7", "color": "#f39c12", "suppression_factor": 0.9}, "info": {"badge": "\ud83d\udfe9", "color": "#2ecc71", "suppression_factor": 1.0}}}

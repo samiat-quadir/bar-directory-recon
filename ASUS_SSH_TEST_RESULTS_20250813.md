@@ -1,8 +1,8 @@
 # ASUS SSH Authentication Test Results - August 13, 2025
 
 ## Task Execution Summary
-**Goal**: Sync to main, auto-select matching SSH key for ASUS, prove 'Accepted publickey', then run infra validation  
-**Expected Outcome**: Alienware proves 'Accepted publickey' to ASUS  
+**Goal**: Sync to main, auto-select matching SSH key for ASUS, prove 'Accepted publickey', then run infra validation
+**Expected Outcome**: Alienware proves 'Accepted publickey' to ASUS
 **Actual Outcome**: ❌ **NO SSH KEY ACCEPTED BY ASUS**
 
 ## Environment Preparation ✅
@@ -55,7 +55,7 @@ samqu@100.89.12.61: Permission denied (publickey).
 - **Key Rejection**: ❌ Both ED25519 keys explicitly rejected
 
 ### Expected vs Actual Behavior
-**Task Precondition**: _"ASUS sshd is restarted and trusts both Ali pubkeys (per Ace summary)"_  
+**Task Precondition**: _"ASUS sshd is restarted and trusts both Ali pubkeys (per Ace summary)"_
 **Actual Result**: ASUS SSH daemon rejecting both Ali public keys
 
 ## Fallback Action: Local Testing ✅
@@ -66,7 +66,7 @@ Since SSH authentication failed, executed local pytest smoke test per task speci
 .\.venv\Scripts\pytest.exe -q
 ```
 
-**Results**: 
+**Results**:
 - ✅ **65 tests passed**
 - ❌ 3 tests failed (pipeline and security manager tests)
 - ⚠️ 2 tests skipped
@@ -80,7 +80,7 @@ Since SSH authentication failed, executed local pytest smoke test per task speci
 3. **Configuration Mismatch**: Possible authorized_keys file issues or SSH daemon configuration
 
 ### Missing 'Accepted publickey' Evidence
-**Expected Debug Lines**: `debug1: Accepted publickey for samqu from 100.89.12.61`  
+**Expected Debug Lines**: `debug1: Accepted publickey for samqu from 100.89.12.61`
 **Actual Debug Lines**: `debug1: Authentications that can continue: publickey`
 
 This pattern indicates the server is not finding our public keys in its authorized_keys file.
