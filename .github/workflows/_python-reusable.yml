@@ -69,4 +69,4 @@ jobs:
         if: ${{ inputs.run-fast-tests }}
         shell: bash
         run: |
-          python -m pytest -v -m "not slow and not e2e and not integration" --tb=short
+          python -m pytest -v -k "not slow and not e2e and not integration" --tb=short
