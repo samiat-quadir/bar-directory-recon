@@ -297,8 +297,11 @@ class NotificationAgent:
                 return False
 
             response = requests.post(
-                webhook_url, data=message, headers={"Content-Type": "application/json"}
-            , timeout=30)
+                webhook_url,
+                data=message,
+                headers={"Content-Type": "application/json"},
+                timeout=30,
+            )
             response.raise_for_status()
 
             self.logger.info("Slack notification sent")
@@ -370,4 +373,3 @@ def create_sample_notification_config() -> dict[str, Any]:
         },
         "slack": {"enabled": False, "webhook_url": ""},
     }
-

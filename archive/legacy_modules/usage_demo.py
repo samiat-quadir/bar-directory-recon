@@ -40,7 +40,9 @@ print("      ⏭️ Skipped: 0")
 print(
     "   ✅ Google Sheets export successful: https://docs.google.com/spreadsheets/d/1ABC...xyz/edit#gid=0"
 )
-print("   📊 Google Sheets Link: https://docs.google.com/spreadsheets/d/1ABC...xyz/edit#gid=0")
+print(
+    "   📊 Google Sheets Link: https://docs.google.com/spreadsheets/d/1ABC...xyz/edit#gid=0"
+)
 print("   📁 Saved to: outputs/pool_contractors/miami/leads_2025-07-02_19-54-18.csv")
 print("")
 
@@ -58,4 +60,6 @@ print("   📊 Automatic log management and cleanup")
 print("")
 
 print("✅ INTEGRATION COMPLETE!")
-print("Your Universal Lead Generation System now automatically exports to Google Sheets! 🎉")
+print(
+    "Your Universal Lead Generation System now automatically exports to Google Sheets! 🎉"
+)

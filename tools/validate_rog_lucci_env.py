@@ -46,7 +46,9 @@ def banner(message):
 def run_command(cmd):
     """Run a command and return the output."""
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True, shell=True, timeout=60)
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, check=True, shell=True, timeout=60
+        )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         error(f"Command failed: {cmd}")
@@ -346,4 +348,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
