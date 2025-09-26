@@ -45,7 +45,7 @@ def run_one(name, cmd, verbose=False, timeout=None, identity_file=None):
     if verbose:
         print("[RUN]", name, "=>", real)
     try:
-        cp = subprocess.run(real, shell=True, timeout=timeout, timeout=60)
+        cp = subprocess.run(real, shell=True, timeout=timeout)
         return cp.returncode
     except subprocess.TimeoutExpired:
         print("[TIMEOUT]", name)
@@ -145,4 +145,3 @@ if args.json:
 
 # exit non-zero if any failed
 sys.exit(max(rc for _, rc in results))
-

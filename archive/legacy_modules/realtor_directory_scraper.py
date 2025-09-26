@@ -882,7 +882,7 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> str | None
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
         }
-        response = requests.get(url, headers=headers, timeout=30, timeout=30)
+        response = requests.get(url, headers=headers, timeout=30)
 
         if response.status_code != 200:
             log_message(f"ERROR: Failed to load page ({response.status_code})")

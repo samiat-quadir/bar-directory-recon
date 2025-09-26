@@ -36,7 +36,7 @@ class BulletproofGitWorkflow:
                 text=True,
                 cwd=self.workspace_path,
                 timeout=30,  # Prevent hanging
-            , timeout=60)
+            )
             if capture_output:
                 print(f"[+] {description} completed successfully")
                 return True, result.stdout.strip()
@@ -452,4 +452,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

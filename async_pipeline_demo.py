@@ -27,12 +27,11 @@ sys.path.insert(0, str(project_root))
 
 try:
     from automation.enhanced_config_loader import load_automation_config
-    from automation.pipeline_executor import PipelineExecutor
 
     AUTOMATION_AVAILABLE = True
 except ImportError:
+    print("❌ Automation modules not available - skipping pipeline demo")
     AUTOMATION_AVAILABLE = False
-    print("Warning: Automation modules not available. Using demo mode.")
 
 # Configure logging
 logging.basicConfig(
@@ -87,7 +86,7 @@ class AsyncPipelineExecutor:
 
         # Process results
         site_results = {}
-        for site, result in zip(sites, results):
+        for site, result in zip(sites, results, strict=False):
             if isinstance(result, Exception):
                 logger.error(f"Site {site} failed with exception: {result}")
                 site_results[site] = False
@@ -171,7 +170,13 @@ class AsyncPipelineExecutor:
         ]
 
         try:
-            result = subprocess.run(cmd, timeout=self.timeout, capture_output=True, text=True, cwd=self.project_root, timeout=60)
+            result = subprocess.run(
+                cmd,
+                timeout=self.timeout,
+                capture_output=True,
+                text=True,
+                cwd=self.project_root,
+            )
 
             return result.returncode == 0
         except subprocess.TimeoutExpired:
@@ -337,4 +342,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
