@@ -12,9 +12,7 @@ def run_command(cmd: list[str], description: str, check: bool = True) -> tuple[b
     """Run command with error handling."""
     print(f"[*] {description}...")
     try:
-        result = subprocess.run(
-            cmd, check=check, capture_output=True, text=True, timeout=30
-        , timeout=60)
+        result = subprocess.run(cmd, check=check, capture_output=True, text=True, timeout=30)
 
         print(f"[+] {description} completed successfully")
         return True, result.stdout.strip()
@@ -276,4 +274,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
