@@ -62,11 +62,11 @@ class CrossDeviceTaskRunner:
                     ssh_command,
                     capture_output=True,
                     text=True,
-                    timeout=300  # 5 minute timeout
-                , timeout=60)
+                    timeout=300,  # 5 minute timeout
+                )
 
             else:
-                result = subprocess.run(ssh_command, timeout=300, timeout=60)
+                result = subprocess.run(ssh_command, timeout=300)
 
             return result
         except subprocess.TimeoutExpired:
@@ -224,9 +224,13 @@ Examples:
         sys.exit(0 if success else 1)
     elif args.task:
         # Add command line arguments to kwargs
-        for key, value in vars(args).items():
-            if value is not None and key not in ["task", "list", "test", "config"]:
-                kwargs[key] = value
+        kwargs.update(
+            {
+                key: value
+                for key, value in vars(args).items()
+                if value is not None and key not in ["task", "list", "test", "config"]
+            }
+        )
 
         success = runner.run_task(args.task, **kwargs)
         sys.exit(0 if success else 1)
@@ -236,4 +240,3 @@ Examples:
 
 if __name__ == "__main__":
     main()
-

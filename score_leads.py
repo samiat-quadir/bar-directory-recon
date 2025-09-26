@@ -129,8 +129,7 @@ class LeadScoringEngine:
             response = requests.get(
                 website,
                 timeout=10,
-                headers={"User-Agent": "Mozilla/5.0 (compatible; LeadScorer/1.0, timeout=30)"}
-
+                headers={"User-Agent": "Mozilla/5.0 (compatible; LeadScorer/1.0, timeout=30)"},
             )
             return response.status_code == 200
         except Exception:
@@ -146,7 +145,7 @@ class LeadScoringEngine:
                 "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15"
             }
 
-            response = requests.get(website, timeout=10, headers=mobile_headers, timeout=30)
+            response = requests.get(website, timeout=10, headers=mobile_headers)
             content = response.text.lower()
 
             # Look for mobile-friendly indicators
@@ -234,10 +233,10 @@ class LeadScoringEngine:
         scores = [lead.get("Score", 0) for lead in scored_leads]
 
         priority_counts = {
-            "HIGH": len([l for l in scored_leads if l.get("Priority") == "HIGH"]),
-            "MEDIUM": len([l for l in scored_leads if l.get("Priority") == "MEDIUM"]),
-            "LOW": len([l for l in scored_leads if l.get("Priority") == "LOW"]),
-            "MINIMAL": len([l for l in scored_leads if l.get("Priority") == "MINIMAL"]),
+            "HIGH": len([lead for lead in scored_leads if lead.get("Priority") == "HIGH"]),
+            "MEDIUM": len([lead for lead in scored_leads if lead.get("Priority") == "MEDIUM"]),
+            "LOW": len([lead for lead in scored_leads if lead.get("Priority") == "LOW"]),
+            "MINIMAL": len([lead for lead in scored_leads if lead.get("Priority") == "MINIMAL"]),
         }
 
         return {
@@ -316,4 +315,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

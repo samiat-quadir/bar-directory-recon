@@ -12,34 +12,47 @@ jobs:
   hygiene-audit:
     runs-on: ubuntu-latest
     continue-on-error: true
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
           cache: 'pip'
-          
+
       - name: Install dependencies
+        shell: bash
         run: |
+          set -e
           python -m pip install --upgrade pip
-          pip install -r requirements-lock.txt
-          
+          if [ -f requirements-lock.txt ]; then
+            pip install -r requirements-lock.txt || true
+          elif [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt || true
+          else
+            pip install -r requirements.txt || true
+          fi
+          pip install pre-commit mypy detect-secrets pytest || true
+          [ -f pyproject.toml ] && pip install -e . || true
+
       - name: Run pre-commit (non-blocking)
+        shell: bash
         run: |
-          pre-commit run --all-files || true
-          
+          pre-commit run --all-files 2>&1 | tee .pre-commit-log.txt || true
+
       - name: Run mypy (non-blocking)
+        shell: bash
         run: |
-          python -m mypy . --ignore-missing-imports || true
-          
+          python -m mypy . --ignore-missing-imports | tee mypy-report.txt || true
+
       - name: Run detect-secrets (non-blocking)
+        shell: bash
         run: |
-          detect-secrets scan --all-files || true
-          
+          detect-secrets scan --all-files > secrets-baseline.json 2>&1 || true
+
       - name: Upload hygiene audit results
         if: always()
         uses: actions/upload-artifact@v3

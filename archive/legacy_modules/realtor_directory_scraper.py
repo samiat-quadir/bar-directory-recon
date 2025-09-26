@@ -98,7 +98,9 @@ class RealtorDirectoryScraperV2:
 
         return contact_info
 
-    def scrape_nationalrealtorsdirectory(self, max_records: int = 50) -> list[dict[str, str]]:
+    def scrape_nationalrealtorsdirectory(
+        self, max_records: int = 50
+    ) -> list[dict[str, str]]:
         """Scrape NationalRealtorsDirectory.com with enhanced real-world scraping"""
         url = "https://www.nationalrealtorsdirectory.com"
         log_message(f"Starting enhanced scrape of {url}")
@@ -141,7 +143,9 @@ class RealtorDirectoryScraperV2:
                     for selector in selectors:
                         try:
                             WebDriverWait(self.driver, 8).until(
-                                EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+                                EC.presence_of_element_located(
+                                    (By.CSS_SELECTOR, selector)
+                                )
                             )
                             listing_found = True
                             log_message(f"Found listings with selector: {selector}")
@@ -191,12 +195,16 @@ class RealtorDirectoryScraperV2:
             for selector in listing_selectors:
                 listings = soup.select(selector)
                 if listings:
-                    log_message(f"Found {len(listings)} listings with selector: {selector}")
+                    log_message(
+                        f"Found {len(listings)} listings with selector: {selector}"
+                    )
                     break
 
             # Enhanced fallback: look for structured data
             if not listings:
-                log_message("No listings found with standard selectors - trying enhanced fallback")
+                log_message(
+                    "No listings found with standard selectors - trying enhanced fallback"
+                )
 
                 # Look for any containers with contact info patterns
                 all_divs = soup.find_all("div")
@@ -260,7 +268,9 @@ class RealtorDirectoryScraperV2:
 
         return leads
 
-    def scrape_realtor_com_directory(self, max_records: int = 50) -> list[dict[str, str]]:
+    def scrape_realtor_com_directory(
+        self, max_records: int = 50
+    ) -> list[dict[str, str]]:
         """Scrape realtor.com directory for agent listings"""
         # Using search URL that should show agent listings
         url = "https://www.realtor.com/realestateagents"
@@ -325,7 +335,9 @@ class RealtorDirectoryScraperV2:
                         "Website": self._extract_website(agent),
                     }
                     leads.append(lead)
-                    log_message(f"Extracted realtor.com lead {i+1}: {lead['Full Name']}")
+                    log_message(
+                        f"Extracted realtor.com lead {i+1}: {lead['Full Name']}"
+                    )
 
                 except Exception as e:
                     log_message(f"Error extracting realtor.com lead {i+1}: {e}")
@@ -377,10 +389,14 @@ class RealtorDirectoryScraperV2:
                 seen_contacts.add(contact_key)
                 unique_leads.append(lead)
 
-        log_message(f"Deduplicated to {len(unique_leads)} unique leads from {len(all_leads)} total")
+        log_message(
+            f"Deduplicated to {len(unique_leads)} unique leads from {len(all_leads)} total"
+        )
         return unique_leads[:max_records]
 
-    def scrape_with_retries(self, scraper_func, *args, **kwargs) -> list[dict[str, str]]:
+    def scrape_with_retries(
+        self, scraper_func, *args, **kwargs
+    ) -> list[dict[str, str]]:
         """Scrape with retry logic for failed attempts"""
         for attempt in range(1, self.max_retries + 1):
             try:
@@ -433,7 +449,9 @@ class RealtorDirectoryScraperV2:
             text = listing.get_text()
             # Look for name patterns (Title Case words)
             words = text.split()
-            potential_names = [w for w in words if w.istitle() and len(w) > 2 and w.isalpha()]
+            potential_names = [
+                w for w in words if w.istitle() and len(w) > 2 and w.isalpha()
+            ]
             if potential_names:
                 name = " ".join(potential_names[:2])
 
@@ -560,7 +578,11 @@ class RealtorDirectoryScraperV2:
         for link in links:
             href = link.get("href", "").lower()
             # Skip email and phone links
-            if href.startswith(("http", "www")) and "mailto:" not in href and "tel:" not in href:
+            if (
+                href.startswith(("http", "www"))
+                and "mailto:" not in href
+                and "tel:" not in href
+            ):
                 website = href
                 if not website.startswith("http"):
                     website = "http://" + website
@@ -609,7 +631,9 @@ class RealtorDirectoryScraperV2:
             # Set up credentials
             credentials_path = "config/google_service_account.json"
             if not os.path.exists(credentials_path):
-                log_message(f"Google Sheets credentials not found at: {credentials_path}")
+                log_message(
+                    f"Google Sheets credentials not found at: {credentials_path}"
+                )
                 return False
 
             from google.oauth2.service_account import Credentials
@@ -619,7 +643,9 @@ class RealtorDirectoryScraperV2:
             SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
             # Load credentials
-            credentials = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
+            credentials = Credentials.from_service_account_file(
+                credentials_path, scopes=SCOPES
+            )
 
             # Build the service
             service = build("sheets", "v4", credentials=credentials)
@@ -636,8 +662,12 @@ class RealtorDirectoryScraperV2:
 
             # Try to create a new sheet
             try:
-                body = {"requests": [{"addSheet": {"properties": {"title": sheet_name}}}]}
-                service.spreadsheets().batchUpdate(spreadsheetId=sheet_id, body=body).execute()
+                body = {
+                    "requests": [{"addSheet": {"properties": {"title": sheet_name}}}]
+                }
+                service.spreadsheets().batchUpdate(
+                    spreadsheetId=sheet_id, body=body
+                ).execute()
                 log_message(f"Created new sheet: {sheet_name}")
             except Exception:
                 log_message(f"Using existing sheet: {sheet_name}")
@@ -653,7 +683,9 @@ class RealtorDirectoryScraperV2:
                 body=body,
             ).execute()
 
-            log_message(f"Successfully exported {len(data)} leads to Google Sheets: {sheet_name}")
+            log_message(
+                f"Successfully exported {len(data)} leads to Google Sheets: {sheet_name}"
+            )
             return True
 
         except Exception as e:
@@ -692,13 +724,17 @@ def scrape_realtor_directory(
 
         # Fallback to single source if multi-source fails
         if not leads:
-            log_message("Multi-source failed, trying single source (NationalRealtorsDirectory)...")
+            log_message(
+                "Multi-source failed, trying single source (NationalRealtorsDirectory)..."
+            )
             leads = scraper.scrape_with_retries(
                 scraper.scrape_nationalrealtorsdirectory, max_records=max_records
             )
 
         if not leads:
-            log_message("⚠️ No leads found from any real sources - falling back to test data")
+            log_message(
+                "⚠️ No leads found from any real sources - falling back to test data"
+            )
             return generate_test_data(max_records, debug)
 
         # Step 4: Save to CSV with enhanced structure
@@ -718,13 +754,17 @@ def scrape_realtor_directory(
             else:
                 log_message("⚠️ Google Sheets export failed")
 
-        log_message(f"✅ Phase 2 scraping completed: {len(leads)} records saved to {output_file}")
+        log_message(
+            f"✅ Phase 2 scraping completed: {len(leads)} records saved to {output_file}"
+        )
         print("✅ Phase 2 Enhanced Scraping completed!")
         print(f"📊 Found {len(leads)} leads from real sources")
         print(f"📁 Saved to: {output_file}")
 
         if google_sheet_id and google_export_success:
-            print(f"☁️ Also exported to Google Sheets: {google_sheet_name or 'Realtor Leads'}")
+            print(
+                f"☁️ Also exported to Google Sheets: {google_sheet_name or 'Realtor Leads'}"
+            )
 
         if debug:
             print("\n📋 Sample data:")
@@ -783,7 +823,10 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> str | None
     for i in range(min(max_records, len(sample_names))):
         name_clean = sample_names[i % len(sample_names)].lower().replace(" ", ".")
         business_clean = (
-            sample_businesses[i % len(sample_businesses)].lower().replace(" ", "").replace(".", "")
+            sample_businesses[i % len(sample_businesses)]
+            .lower()
+            .replace(" ", "")
+            .replace(".", "")
         )
 
         lead = {
@@ -815,7 +858,9 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> str | None
     output_file = os.path.join(OUTPUT_DIR, f"realtor_leads_test_{timestamp}.csv")
     df.to_csv(output_file, index=False)
 
-    log_message(f"✅ Generated {len(test_leads)} test records and saved to {output_file}")
+    log_message(
+        f"✅ Generated {len(test_leads)} test records and saved to {output_file}"
+    )
     print(f"✅ Test data generated: {len(test_leads)} records")
     print(f"📁 Saved to: {output_file}")
 
@@ -835,9 +880,9 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> str | None
     try:
         # Step 1: Download page
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
         }
-        response = requests.get(url, headers=headers, timeout=30, timeout=30)
+        response = requests.get(url, headers=headers, timeout=30)
 
         if response.status_code != 200:
             log_message(f"ERROR: Failed to load page ({response.status_code})")
@@ -872,8 +917,12 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> str | None
                 break
 
         if not member_elements:
-            log_message("No member elements found with common selectors - using simulated data")
-            print("⚠️  No member elements found - generating simulated data for Phase 1")
+            log_message(
+                "No member elements found with common selectors - using simulated data"
+            )
+            print(
+                "⚠️  No member elements found - generating simulated data for Phase 1"
+            )
 
         # Step 3: Extract lead data (simulated for Phase 1)
         leads = []
@@ -884,7 +933,11 @@ def generate_test_data(max_records: int = 50, debug: bool = False) -> str | None
                 try:
                     # Look for name
                     name_elem = element.find(["h1", "h2", "h3", "h4"], string=True)
-                    name = name_elem.get_text(strip=True) if name_elem else f"Realtor {i+1}"
+                    name = (
+                        name_elem.get_text(strip=True)
+                        if name_elem
+                        else f"Realtor {i+1}"
+                    )
 
                     # Look for email - simplified approach
                     email = f"contact{i+1}@realtor.com"
@@ -960,8 +1013,12 @@ def log_message(message: str) -> None:
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Realtor Directory Lead Scraper - Phase 2")
-    parser.add_argument("--max-records", type=int, default=50, help="Maximum records to scrape")
+    parser = argparse.ArgumentParser(
+        description="Realtor Directory Lead Scraper - Phase 2"
+    )
+    parser.add_argument(
+        "--max-records", type=int, default=50, help="Maximum records to scrape"
+    )
     parser.add_argument("--debug", action="store_true", help="Enable debug output")
     parser.add_argument(
         "--test-mode", action="store_true", help="Run in test mode (simulated data)"
@@ -988,4 +1045,3 @@ if __name__ == "__main__":
         use_selenium=not args.no_selenium,
         test_mode=args.test_mode,
     )
-
