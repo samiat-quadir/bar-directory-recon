@@ -60,7 +60,7 @@ jobs:
           pip install -r requirements-lock.txt
           
       - name: Install pre-commit
-        run: pip install pre-commit
+        run: pip install pre-commit==3.6.0
   
       - name: Run pre-commit
         if: ${{ inputs.run-precommit }}
