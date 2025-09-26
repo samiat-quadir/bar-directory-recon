@@ -36,17 +36,17 @@ on:
 jobs:
   python-workflow:
     runs-on: ${{ inputs.os }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Set up Python ${{ inputs.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.python-version }}
           cache: 'pip'
-          
+
       - name: Diagnostics (if enabled)
         if: ${{ inputs.diag }}
         shell: bash
@@ -57,7 +57,7 @@ jobs:
           echo "OS: ${{ runner.os }}"
           echo "Python path: $(command -v python || where python || echo 'not found')"
           echo "Pip cache dir: $(pip cache dir 2>/dev/null || echo 'n/a')"
-          
+
       - name: Install dependencies
         shell: bash
         run: |
@@ -76,7 +76,7 @@ jobs:
           if [ -f pyproject.toml ] || [ -f setup.cfg ]; then
             pip install -e . || true
           fi
-          
+
       - name: Run pre-commit
         if: ${{ inputs.run-precommit }}
         shell: bash
@@ -93,7 +93,7 @@ jobs:
           else
             pre-commit run --all-files
           fi
-          
+
       - name: Run fast tests
         if: ${{ inputs.run-fast-tests }}
         shell: bash
