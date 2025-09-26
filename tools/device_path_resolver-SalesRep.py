@@ -2,10 +2,11 @@
 Cross-device path resolver for the bar-directory-recon repository
 """
 
-import os
 import json
+import os
 import platform
 from pathlib import Path
+
 
 def get_device_name():
     """Detect the current device based on hostname"""
@@ -18,6 +19,7 @@ def get_device_name():
         # Default to current username
         return f"Unknown ({os.getlogin()})"
 
+
 def get_config_path():
     """Get the path to device_config.json"""
     script_dir = Path(__file__).parent.absolute()
@@ -28,13 +30,14 @@ def get_config_path():
         return config_path
     return None
 
+
 def get_onedrive_path():
     """Get the path to OneDrive based on current device"""
     # Try to load config
     config_path = get_config_path()
     if config_path:
         try:
-            with open(config_path, "r") as f:
+            with open(config_path) as f:
                 config = json.load(f)
 
             device = get_device_name()
@@ -50,7 +53,7 @@ def get_onedrive_path():
     # Check common OneDrive paths
     potential_paths = [
         f"C:\\Users\\{username}\\OneDrive - Digital Age Marketing Group",
-        f"C:\\Users\\{username}\\OneDrive"
+        f"C:\\Users\\{username}\\OneDrive",
     ]
 
     for path in potential_paths:
@@ -58,6 +61,7 @@ def get_onedrive_path():
             return path
 
     return None
+
 
 def get_project_path():
     """Get the path to the project directory"""
@@ -71,7 +75,7 @@ def get_project_path():
 
     if config_path:
         try:
-            with open(config_path, "r") as f:
+            with open(config_path) as f:
                 config = json.load(f)
 
             if device in config["devices"]:
@@ -82,7 +86,7 @@ def get_project_path():
     # Fallback to common locations
     potential_paths = [
         os.path.join(onedrive, "Desktop", "Local Py", "Work Projects", "bar-directory-recon"),
-        os.path.join(onedrive, "Documents", "Projects", "bar-directory-recon")
+        os.path.join(onedrive, "Documents", "Projects", "bar-directory-recon"),
     ]
 
     for path in potential_paths:
@@ -90,6 +94,7 @@ def get_project_path():
             return path
 
     return None
+
 
 def resolve_path(path):
     """Resolve a path to be compatible with the current device"""
@@ -113,6 +118,7 @@ def resolve_path(path):
             return os.path.join(project_path, parts[1].lstrip("\\/"))
 
     return path
+
 
 if __name__ == "__main__":
     print(f"Current device: {get_device_name()}")

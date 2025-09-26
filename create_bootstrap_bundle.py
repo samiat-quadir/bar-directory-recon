@@ -44,12 +44,12 @@ def create_bootstrap_bundle():
     # Verify the bundle
     if os.path.exists(bundle_path):
         file_size = os.path.getsize(bundle_path) / 1024  # KB
-        print(f"\n✅ Bundle created successfully!")
+        print("\n✅ Bundle created successfully!")
         print(f"📦 File: {bundle_path}")
         print(f"📏 Size: {file_size:.1f} KB")
 
         # List contents
-        print(f"\n📋 Bundle Contents:")
+        print("\n📋 Bundle Contents:")
         with zipfile.ZipFile(bundle_path, "r") as zipf:
             for info in zipf.infolist():
                 print(f"   - {info.filename} ({info.file_size} bytes)")

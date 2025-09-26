@@ -6,16 +6,19 @@ Hardcoded Path Scanner
 Scans the codebase for hardcoded paths and suggests replacements.
 """
 
+import argparse
 import os
 import re
 import sys
-import argparse
 from pathlib import Path
-from typing import List, Dict, Optional
 
 # Import our device path resolver if possible
 try:
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+    sys.path.insert(
+        0,
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"),
+    )
+    from device_path_resolver import get_onedrive_path, get_project_root_path
 
     RESOLVER_AVAILABLE = True
 except ImportError:
@@ -57,7 +60,17 @@ EXCLUDE_PATTERNS = [
 ]
 
 # File extensions to scan
-SCAN_EXTENSIONS = {".py", ".md", ".txt", ".json", ".yml", ".yaml", ".bat", ".ps1", ".sh"}
+SCAN_EXTENSIONS = {
+    ".py",
+    ".md",
+    ".txt",
+    ".json",
+    ".yml",
+    ".yaml",
+    ".bat",
+    ".ps1",
+    ".sh",
+}
 
 
 class HardcodedPathScanner:
@@ -66,7 +79,7 @@ class HardcodedPathScanner:
     def __init__(self, root_dir: str = None, fix: bool = False):
         self.root_dir = Path(root_dir or os.getcwd())
         self.fix = fix
-        self.findings: List[Dict[str, str]] = []
+        self.findings: list[dict[str, str]] = []
         self.files_fixed = 0
 
     def should_exclude_file(self, file_path: Path) -> bool:
@@ -77,7 +90,7 @@ class HardcodedPathScanner:
                 return True
         return False
 
-    def scan_file(self, file_path: Path) -> List[Dict[str, str]]:
+    def scan_file(self, file_path: Path) -> list[dict[str, str]]:
         """Scan a single file for hardcoded paths."""
         findings = []
 
@@ -86,7 +99,7 @@ class HardcodedPathScanner:
             return findings
 
         try:
-            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+            with open(file_path, encoding="utf-8", errors="ignore") as f:
                 content = f.read()
                 lines = content.splitlines()
 
@@ -150,7 +163,7 @@ class HardcodedPathScanner:
         else:
             return "Use relative path or environment variable"
 
-    def _get_replacement(self, hardcoded_path: str) -> Optional[str]:
+    def _get_replacement(self, hardcoded_path: str) -> str | None:
         """Get replacement text for hardcoded path."""
         if not RESOLVER_AVAILABLE:
             return None
@@ -235,8 +248,17 @@ def main():
     parser = argparse.ArgumentParser(
         description="Scan for hardcoded paths that cause cross-device compatibility issues"
     )
-    parser.add_argument("--fix", action="store_true", help="Automatically fix detected issues where possible")
-    parser.add_argument("--directory", type=str, default=".", help="Directory to scan (default: current directory)")
+    parser.add_argument(
+        "--fix",
+        action="store_true",
+        help="Automatically fix detected issues where possible",
+    )
+    parser.add_argument(
+        "--directory",
+        type=str,
+        default=".",
+        help="Directory to scan (default: current directory)",
+    )
 
     args = parser.parse_args()
 

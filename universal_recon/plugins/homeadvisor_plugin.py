@@ -4,14 +4,15 @@ Scrapes lead data from HomeAdvisor pro directory
 """
 
 import logging
-import time
-from typing import Any, Dict, List, Optional
 import re
+import time
+from typing import Any
 
 import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+
 from webdriver_manager.chrome import ChromeDriverManager
 
 # Import Google Sheets utilities
@@ -25,16 +26,20 @@ logger = logging.getLogger(__name__)
 class HomeAdvisorScraper:
     """Scraper for HomeAdvisor professional directories."""
 
-    def __init__(self, city: str = "", state: str = "", max_records: Optional[int] = None):
+    def __init__(self, city: str = "", state: str = "", max_records: int | None = None):
         self.city = city
         self.state = state
         self.max_records = max_records or 50
         self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                          '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-        })
-        self.leads_data: List[Dict[str, str]] = []
+        self.session.headers.update(
+            {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                    "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                )
+            }
+        )
+        self.leads_data: list[dict[str, str]] = []
 
     def setup_selenium_driver(self) -> webdriver.Chrome:
         """Setup Chrome WebDriver with appropriate options."""
@@ -44,27 +49,29 @@ class HomeAdvisorScraper:
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+        chrome_options.add_argument(
+            "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        )
 
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=chrome_options)
         return driver
 
-    def extract_contact_info(self, text: str) -> Dict[str, str]:
+    def extract_contact_info(self, text: str) -> dict[str, str]:
         """Extract email and phone from text using regex patterns."""
         contact_info = {"email": "", "phone": ""}
 
         # Email patterns
-        email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        email_pattern = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
         email_match = re.search(email_pattern, text)
         if email_match:
             contact_info["email"] = email_match.group()
 
         # Phone patterns (various formats)
         phone_patterns = [
-            r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',  # 123-456-7890 or 123.456.7890
-            r'\(\d{3}\)\s*\d{3}[-.]?\d{4}',   # (123) 456-7890
-            r'\b\d{10}\b'                      # 1234567890
+            r"\b\d{3}[-.]?\d{3}[-.]?\d{4}\b",  # 123-456-7890 or 123.456.7890
+            r"\(\d{3}\)\s*\d{3}[-.]?\d{4}",  # (123) 456-7890
+            r"\b\d{10}\b",  # 1234567890
         ]
 
         for pattern in phone_patterns:
@@ -75,23 +82,40 @@ class HomeAdvisorScraper:
 
         return contact_info
 
-    def scrape_test_data(self) -> List[Dict[str, str]]:
+    def scrape_test_data(self) -> list[dict[str, str]]:
         """Generate test data for development and testing."""
 
         test_contractors = []
 
         # Enhanced test data with HomeAdvisor specifics
         sample_names = [
-            "Tom Wilson", "Rachel Green", "Steve Martin", "Diana Prince",
-            "Kevin Hart", "Laura Palmer", "Marcus Johnson", "Nina Rodriguez",
-            "Paul Anderson", "Grace Kelly", "Ryan O'Connor", "Sophia Turner"
+            "Tom Wilson",
+            "Rachel Green",
+            "Steve Martin",
+            "Diana Prince",
+            "Kevin Hart",
+            "Laura Palmer",
+            "Marcus Johnson",
+            "Nina Rodriguez",
+            "Paul Anderson",
+            "Grace Kelly",
+            "Ryan O'Connor",
+            "Sophia Turner",
         ]
 
         sample_businesses = [
-            "Elite Home Solutions", "ProFix Contractors", "HomeAdvisor Pro Services",
-            "Quality Home Repair", "TrustPro Contractors", "Premier Home Care",
-            "Reliable Home Solutions", "Expert Fix Services", "Home Masters Pro",
-            "Professional Home Services", "Top Rated Contractors", "HomeAdvisor Elite"
+            "Elite Home Solutions",
+            "ProFix Contractors",
+            "HomeAdvisor Pro Services",
+            "Quality Home Repair",
+            "TrustPro Contractors",
+            "Premier Home Care",
+            "Reliable Home Solutions",
+            "Expert Fix Services",
+            "Home Masters Pro",
+            "Professional Home Services",
+            "Top Rated Contractors",
+            "HomeAdvisor Elite",
         ]
 
         sample_addresses = [
@@ -100,20 +124,37 @@ class HomeAdvisorScraper:
             f"789 Repair Drive, {self.city or 'Austin'}, {self.state or 'TX'} 73301",
             f"321 Fix Way, {self.city or 'Seattle'}, {self.state or 'WA'} 98101",
             f"654 Professional St, {self.city or 'Portland'}, {self.state or 'OR'} 97201",
-            f"987 Expert Blvd, {self.city or 'Atlanta'}, {self.state or 'GA'} 30301"
+            f"987 Expert Blvd, {self.city or 'Atlanta'}, {self.state or 'GA'} 30301",
         ]
 
         sample_websites = [
-            "www.elitehomesolutions.com", "www.profixcontractors.com", "www.homeadvisorpro.com",
-            "www.qualityhomerepair.com", "www.trustprocontractors.com", "www.premierhomecare.com",
-            "www.reliablehomesolutions.com", "www.expertfixservices.com", "www.homemasterspro.com",
-            "www.professionalhomeservices.com", "www.topratedcontractors.com", "www.homeadvisorelite.com"
+            "www.elitehomesolutions.com",
+            "www.profixcontractors.com",
+            "www.homeadvisorpro.com",
+            "www.qualityhomerepair.com",
+            "www.trustprocontractors.com",
+            "www.premierhomecare.com",
+            "www.reliablehomesolutions.com",
+            "www.expertfixservices.com",
+            "www.homemasterspro.com",
+            "www.professionalhomeservices.com",
+            "www.topratedcontractors.com",
+            "www.homeadvisorelite.com",
         ]
 
         service_types = [
-            "General Contracting", "Plumbing", "Electrical", "HVAC",
-            "Roofing", "Flooring", "Kitchen Remodeling", "Bathroom Renovation",
-            "Landscaping", "Painting", "Handyman Services", "Home Inspection"
+            "General Contracting",
+            "Plumbing",
+            "Electrical",
+            "HVAC",
+            "Roofing",
+            "Flooring",
+            "Kitchen Remodeling",
+            "Bathroom Renovation",
+            "Landscaping",
+            "Painting",
+            "Handyman Services",
+            "Home Inspection",
         ]
 
         # Generate test data
@@ -128,14 +169,14 @@ class HomeAdvisorScraper:
                 "Service Type": service_types[i % len(service_types)],
                 "Industry": "home_services",
                 "Source": "homeadvisor_test",
-                "Tag": f"{(self.city or 'unknown').lower().replace(' ', '_')}_homeadvisor"
+                "Tag": f"{(self.city or 'unknown').lower().replace(' ', '_')}_homeadvisor",
             }
             test_contractors.append(contractor)
 
         logger.info(f"Generated {len(test_contractors)} test HomeAdvisor contractors")
         return test_contractors
 
-    def scrape_live_data(self) -> List[Dict[str, str]]:
+    def scrape_live_data(self) -> list[dict[str, str]]:
         """Scrape live data from HomeAdvisor (placeholder implementation)."""
 
         logger.info("Starting live HomeAdvisor scraping...")
@@ -161,7 +202,7 @@ class HomeAdvisorScraper:
             return self.scrape_test_data()
 
 
-def run_plugin(config: Dict[str, Any]) -> Dict[str, Any]:
+def run_plugin(config: dict[str, Any]) -> dict[str, Any]:
     """Main plugin entry point."""
 
     city = config.get("city", "")
@@ -191,7 +232,7 @@ def run_plugin(config: Dict[str, Any]) -> Dict[str, Any]:
                 leads,
                 google_sheet_id,
                 google_sheet_name or f"HomeAdvisor_Leads_{city}",
-                "HomeAdvisor"
+                "HomeAdvisor",
             )
 
         return {
@@ -200,7 +241,7 @@ def run_plugin(config: Dict[str, Any]) -> Dict[str, Any]:
             "count": len(leads),
             "source": "homeadvisor",
             "test_mode": test_mode,
-            "google_export_success": google_export_success
+            "google_export_success": google_export_success,
         }
 
     except Exception as e:
@@ -212,22 +253,17 @@ def run_plugin(config: Dict[str, Any]) -> Dict[str, Any]:
             "count": 0,
             "source": "homeadvisor",
             "test_mode": test_mode,
-            "google_export_success": False
+            "google_export_success": False,
         }
 
 
 if __name__ == "__main__":
     # Test the plugin
-    test_config = {
-        "city": "Miami",
-        "state": "FL",
-        "max_records": 5,
-        "test_mode": True
-    }
+    test_config = {"city": "Miami", "state": "FL", "max_records": 5, "test_mode": True}
 
     result = run_plugin(test_config)
     print(f"Result: {result['count']} leads found")
 
-    if result['leads']:
+    if result["leads"]:
         print("Sample lead:")
-        print(result['leads'][0])
+        print(result["leads"][0])

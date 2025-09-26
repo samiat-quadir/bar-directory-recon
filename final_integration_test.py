@@ -5,12 +5,13 @@ Tests end-to-end functionality with OAuth credentials
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
+
 
 def main():
     """Run the final integration test."""
@@ -25,12 +26,12 @@ def main():
     print("-" * 45)
 
     components = {
-        'OAuth Credentials': 'client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json',
-        'Google Sheets Integration': 'google_sheets_integration.py',
-        'Universal Automation': 'universal_automation.py',
-        'PowerShell Script': 'Automated-GoogleSheets-Export.ps1',
-        'Logs Directory': 'logs/',
-        'Demo Script': 'demo_google_sheets.py'
+        "OAuth Credentials": "client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json",
+        "Google Sheets Integration": "google_sheets_integration.py",
+        "Universal Automation": "universal_automation.py",
+        "PowerShell Script": "Automated-GoogleSheets-Export.ps1",
+        "Logs Directory": "logs/",
+        "Demo Script": "demo_google_sheets.py",
     }
 
     all_present = True
@@ -49,11 +50,11 @@ def main():
     print("-" * 40)
 
     required_packages = [
-        'google.auth.transport.requests',
-        'google.oauth2.credentials',
-        'google_auth_oauthlib.flow',
-        'googleapiclient.discovery',
-        'googleapiclient.errors'
+        "google.auth.transport.requests",
+        "google.oauth2.credentials",
+        "google_auth_oauthlib.flow",
+        "googleapiclient.discovery",
+        "googleapiclient.errors",
     ]
 
     missing_packages = []
@@ -66,7 +67,7 @@ def main():
             missing_packages.append(package)
 
     if missing_packages:
-        print(f"\n⚠️ Missing packages. Install with:")
+        print("\n⚠️ Missing packages. Install with:")
         print("pip install google-api-python-client google-auth-oauthlib google-auth-httplib2")
         print("   (You can continue the test - packages will be installed when needed)")
 
@@ -106,7 +107,10 @@ def main():
         print("   🔧 Integration class available: ✅")
 
         # Test OAuth credentials file
-        creds_file = project_root / "client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json"
+        creds_file = (
+            project_root
+            / "client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json"
+        )
         if creds_file.exists():
             print("   📁 OAuth credentials file: ✅")
         else:
@@ -131,12 +135,12 @@ def main():
         # Check if script contains key functionality
         script_content = ps_script.read_text()
         checks = {
-            'OAuth credentials discovery': 'client_secret_*.json',
-            'Export parameter': '--export',
-            'Credentials parameter': '--credentials',
-            'Log management': 'logs/',
-            'Environment variables': '$env:',
-            'Error handling': 'try {'
+            "OAuth credentials discovery": "client_secret_*.json",
+            "Export parameter": "--export",
+            "Credentials parameter": "--credentials",
+            "Log management": "logs/",
+            "Environment variables": "$env:",
+            "Error handling": "try {",
         }
 
         for check_name, check_string in checks.items():
@@ -188,7 +192,9 @@ def main():
     print("")
     print("🚀 NEXT STEPS:")
     print("   1. Run first automation:")
-    print("      python universal_automation.py --industry pool_contractors --city Miami --state FL --export google_sheets")
+    print(
+        "      python universal_automation.py --industry pool_contractors --city Miami --state FL --export google_sheets"
+    )
     print("")
     print("   2. On first run, authenticate with: sam@optimizeprimeconsulting.com")
     print("")
@@ -199,10 +205,13 @@ def main():
     print("")
     print("📊 SAMPLE GOOGLE SHEET LINK:")
     print("   After successful run, you'll see output like:")
-    print("   📊 Google Sheets Link: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit#gid=0")
+    print(
+        "   📊 Google Sheets Link: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit#gid=0"
+    )
     print("")
 
     return True
+
 
 if __name__ == "__main__":
     success = main()

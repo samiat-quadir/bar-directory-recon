@@ -29,7 +29,10 @@ def aggregate_and_print(records, site_name, config, cli_flags):
     os.makedirs(output_dir, exist_ok=True)
 
     summary = {"total_records": len(records)}
-    audit_results = {"plugin": "audit_score_matrix_generator", "total_records": len(records)}
+    audit_results = {
+        "plugin": "audit_score_matrix_generator",
+        "total_records": len(records),
+    }
     trend = {"plugin": "trend_dashboard_stub", "site": site_name}
     health = {"plugin": "template_health_flagger", "site": site_name}
 

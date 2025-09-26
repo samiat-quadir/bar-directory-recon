@@ -25,10 +25,8 @@ def run_command(command, description):
     """
     print(f"Running {description}...")
     try:
-        result = subprocess.run(command,
-                               check=True,
-                               capture_output=True,
-                               text=True)
+        result = subprocess.run(command, check=True, capture_output=True, text=True, timeout=60)
+
         print(f"✅ {description} passed")
         return True
     except subprocess.CalledProcessError as e:
@@ -48,23 +46,26 @@ def get_staged_python_files():
     """
     try:
         result = subprocess.run(
-            ['git', 'diff', '--cached', '--name-only', '--diff-filter=ACMR'],
+            ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMR"],
             check=True,
             capture_output=True,
-            text=True
+            text=True,
+            timeout=60,
         )
-        files = result.stdout.strip().split('\n')
-        return [f for f in files if f.endswith('.py') and os.path.exists(f)]
+        files = result.stdout.strip().split("\n")
+        return [f for f in files if f.endswith(".py") and os.path.exists(f)]
+
     except subprocess.CalledProcessError:
         print("⚠️ Warning: Unable to get staged files. Running linters on all Python files.")
         # Fallback to all Python files in the repo
         result = subprocess.run(
-            ['git', 'ls-files', '*.py'],
+            ["git", "ls-files", "*.py"],
             check=True,
             capture_output=True,
-            text=True
+            text=True,
+            timeout=60,
         )
-        return result.stdout.strip().split('\n')
+        return result.stdout.strip().split("\n")
 
 
 def main():
@@ -87,7 +88,9 @@ def main():
 
     # Optional: Run Black (code formatter)
     try:
-        if run_command(['black', '--check'] + files, "Black code formatter"):
+        import black
+
+        if run_command(["black", "--check"] + files, "Black code formatter"):
             print("💯 Code formatting looks good!")
         else:
             print("⚠️ Code formatting issues found. Run 'black .' to format your code.")
@@ -97,7 +100,9 @@ def main():
 
     # Optional: Run Flake8 (linter)
     try:
-        if run_command(['flake8'] + files, "Flake8 linter"):
+        import flake8
+
+        if run_command(["flake8"] + files, "Flake8 linter"):
             print("💯 No linting issues found!")
         else:
             print("⚠️ Linting issues found. Please fix them before pushing.")
@@ -107,7 +112,9 @@ def main():
 
     # Optional: Run isort (import sorter)
     try:
-        if run_command(['isort', '--check-only'] + files, "isort import checker"):
+        import isort
+
+        if run_command(["isort", "--check-only"] + files, "isort import checker"):
             print("💯 Imports are properly sorted!")
         else:
             print("⚠️ Import sorting issues found. Run 'isort .' to sort imports.")
@@ -117,7 +124,9 @@ def main():
 
     # Optional: Run mypy (type checker)
     try:
-        if run_command(['mypy'] + files, "mypy type checker"):
+        import mypy
+
+        if run_command(["mypy"] + files, "mypy type checker"):
             print("💯 Type checking passed!")
         else:
             print("⚠️ Type checking issues found. Please fix them before pushing.")
