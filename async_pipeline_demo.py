@@ -87,7 +87,7 @@ class AsyncPipelineExecutor:
 
         # Process results
         site_results = {}
-        for site, result in zip(sites, results, strict=False):
+        for site, result in zip(sites, results, strict=True):
             if isinstance(result, Exception):
                 logger.error(f"Site {site} failed with exception: {result}")
                 site_results[site] = False
