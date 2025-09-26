@@ -183,8 +183,12 @@ def compare_with_golden_image() -> dict[str, str]:
 
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pip", "list", "--format=json"], capture_output=True, text=True, check=True
-        , timeout=60)
+            [sys.executable, "-m", "pip", "list", "--format=json"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=60,
+        )
 
         installed_packages = json.loads(result.stdout)
         actual_count = len(installed_packages)
@@ -336,4 +340,3 @@ def generate_alienware_report():
 if __name__ == "__main__":
     success = generate_alienware_report()
     sys.exit(0 if success else 1)
-

@@ -82,7 +82,9 @@ class GoogleSheetsIntegration:
     def _initialize_service(self) -> bool:
         """Initialize Google Sheets API service with OAuth authentication."""
         if not GOOGLE_SHEETS_AVAILABLE:
-            logger.error("Google Sheets integration not available. Install required packages:")
+            logger.error(
+                "Google Sheets integration not available. Install required packages:"
+            )
             logger.error(
                 "pip install google-api-python-client google-auth-oauthlib google-auth-httplib2 pandas"
             )
@@ -108,7 +110,9 @@ class GoogleSheetsIntegration:
                     )
 
                     if not os.path.exists(self.credentials_path):
-                        logger.error(f"OAuth credentials file not found: {self.credentials_path}")
+                        logger.error(
+                            f"OAuth credentials file not found: {self.credentials_path}"
+                        )
                         return False
 
                     flow = InstalledAppFlow.from_client_secrets_file(
@@ -127,7 +131,9 @@ class GoogleSheetsIntegration:
 
         except FileNotFoundError:
             logger.error(f"OAuth credentials file not found: {self.credentials_path}")
-            logger.error("Please ensure the OAuth credentials JSON file is in the project root")
+            logger.error(
+                "Please ensure the OAuth credentials JSON file is in the project root"
+            )
             return False
 
         except Exception as e:
@@ -148,9 +154,13 @@ class GoogleSheetsIntegration:
     def _handle_api_error(self, error: HttpError, operation: str) -> bool:
         """Handle Google Sheets API errors with retry logic."""
         error_code = error.resp.status
-        error_reason = error.error_details[0].get("reason", "") if error.error_details else ""
+        error_reason = (
+            error.error_details[0].get("reason", "") if error.error_details else ""
+        )
 
-        logger.error(f"Google Sheets API error during {operation}: {error_code} - {error_reason}")
+        logger.error(
+            f"Google Sheets API error during {operation}: {error_code} - {error_reason}"
+        )
 
         # Handle rate limiting
         if error_code == 429 or "quota" in error_reason.lower():
@@ -183,7 +193,9 @@ class GoogleSheetsIntegration:
             logger.error(f"Error creating/finding spreadsheet: {e}")
             return None
 
-    def setup_sheet_headers(self, spreadsheet_id: str, sheet_name: str = "Leads") -> bool:
+    def setup_sheet_headers(
+        self, spreadsheet_id: str, sheet_name: str = "Leads"
+    ) -> bool:
         """Setup the sheet with proper headers and formatting."""
         if not self.service:
             return False
@@ -194,16 +206,23 @@ class GoogleSheetsIntegration:
             # Check if sheet exists, create if not
             try:
                 sheet_metadata = (
-                    self.service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+                    self.service.spreadsheets()
+                    .get(spreadsheetId=spreadsheet_id)
+                    .execute()
                 )
 
                 sheet_exists = any(
-                    sheet["properties"]["title"] == sheet_name for sheet in sheet_metadata["sheets"]
+                    sheet["properties"]["title"] == sheet_name
+                    for sheet in sheet_metadata["sheets"]
                 )
 
                 if not sheet_exists:
                     # Create new sheet
-                    body = {"requests": [{"addSheet": {"properties": {"title": sheet_name}}}]}
+                    body = {
+                        "requests": [
+                            {"addSheet": {"properties": {"title": sheet_name}}}
+                        ]
+                    }
                     self.service.spreadsheets().batchUpdate(
                         spreadsheetId=spreadsheet_id, body=body
                     ).execute()
@@ -358,7 +377,9 @@ class GoogleSheetsIntegration:
 
         if avoid_duplicates:
             existing_leads = self.get_existing_leads(spreadsheet_id, sheet_name)
-            existing_hashes = {self._generate_lead_hash(lead) for lead in existing_leads}
+            existing_hashes = {
+                self._generate_lead_hash(lead) for lead in existing_leads
+            }
 
         # Process new leads
         new_leads = []
@@ -370,7 +391,9 @@ class GoogleSheetsIntegration:
 
             if avoid_duplicates and lead_hash in existing_hashes:
                 skipped_count += 1
-                logger.debug(f"Skipping duplicate lead: {lead_data.get('company', 'Unknown')}")
+                logger.debug(
+                    f"Skipping duplicate lead: {lead_data.get('company', 'Unknown')}"
+                )
                 continue
 
             # Ensure all schema fields are present
@@ -411,19 +434,25 @@ class GoogleSheetsIntegration:
             ).execute()
 
             inserted_count = len(new_leads)
-            logger.info(f"Successfully inserted {inserted_count} new leads to Google Sheets")
+            logger.info(
+                f"Successfully inserted {inserted_count} new leads to Google Sheets"
+            )
 
             return inserted_count, 0, skipped_count
 
         except HttpError as e:
             if self._handle_api_error(e, "batch upsert"):
-                return self.batch_upsert_leads(spreadsheet_id, leads, sheet_name, avoid_duplicates)
+                return self.batch_upsert_leads(
+                    spreadsheet_id, leads, sheet_name, avoid_duplicates
+                )
             return 0, 0, skipped_count
         except Exception as e:
             logger.error(f"Error during batch upsert: {e}")
             return 0, 0, skipped_count
 
-    def tag_leads_by_industry(self, spreadsheet_id: str, sheet_name: str = "Leads") -> bool:
+    def tag_leads_by_industry(
+        self, spreadsheet_id: str, sheet_name: str = "Leads"
+    ) -> bool:
         """Add conditional formatting and filters for industry-based tagging."""
         if not self.service:
             return False
@@ -432,7 +461,9 @@ class GoogleSheetsIntegration:
             self._rate_limit()
 
             # Get sheet ID
-            sheet_metadata = self.service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+            sheet_metadata = (
+                self.service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+            )
 
             sheet_id = None
             for sheet in sheet_metadata["sheets"]:
@@ -446,7 +477,9 @@ class GoogleSheetsIntegration:
 
             # Industry column index (assuming it's in the schema)
             industry_col_index = (
-                self.lead_schema.index("industry") if "industry" in self.lead_schema else None
+                self.lead_schema.index("industry")
+                if "industry" in self.lead_schema
+                else None
             )
             urgency_col_index = (
                 self.lead_schema.index("urgency_flag")
@@ -593,10 +626,11 @@ if __name__ == "__main__":
         df = pd.read_csv(args.csv_file)
         leads = df.to_dict("records")
 
-        success, stats = export_leads_to_sheets(leads, args.spreadsheet_id, args.sheet_name)
+        success, stats = export_leads_to_sheets(
+            leads, args.spreadsheet_id, args.sheet_name
+        )
 
         print(f"Export result: {'✅' if success else '❌'}")
         print(f"Stats: {stats}")
     else:
         print("Please provide --csv-file or use --setup-only")
-

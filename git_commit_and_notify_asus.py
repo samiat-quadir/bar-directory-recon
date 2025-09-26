@@ -29,4 +29,3 @@ if __name__ == "__main__":
     run_script("asus_notifier.py")  # Step 2: Send notification email via ASUS-specific notifier
 
     logging.info("✅ Process complete.\n")
-

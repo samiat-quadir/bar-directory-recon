@@ -21,7 +21,7 @@ def validate_records(
     for rec in records:
         missing = [f for f in REQUIRED_FIELDS if not rec.get(f)]
         score = rec.get("score") or rec.get("predicted_score") or 0
-        confidence = rec.get("template_confidence") or "medium"
+        rec.get("template_confidence") or "medium"
 
         if missing:
             rec["valid"] = False

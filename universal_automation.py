@@ -404,7 +404,11 @@ class UniversalLeadAutomation:
                             sheets_integration.setup_sheet_headers(sheet_id, sheet_name_final)
 
                             # Batch upsert leads with deduplication
-                            inserted, updated, skipped = sheets_integration.batch_upsert_leads(
+                            (
+                                inserted,
+                                updated,
+                                skipped,
+                            ) = sheets_integration.batch_upsert_leads(
                                 sheet_id,
                                 enriched_leads,
                                 sheet_name_final,
