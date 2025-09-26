@@ -12,8 +12,6 @@ import pandas as pd
 
 # Google Sheets integration (optional)
 try:
-    from google.oauth2.service_account import Credentials
-    from googleapiclient.discovery import build
     GOOGLE_SHEETS_AVAILABLE = True
 except ImportError:
     GOOGLE_SHEETS_AVAILABLE = False

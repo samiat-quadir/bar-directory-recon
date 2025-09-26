@@ -7,7 +7,6 @@ import sys
 import pandas as pd
 from pathlib import Path
 import json
-import time
 import random
 
 # Add src to path

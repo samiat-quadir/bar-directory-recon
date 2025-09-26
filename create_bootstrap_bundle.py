@@ -6,7 +6,6 @@ Creates alienware_bootstrap_bundle.zip with all necessary bootstrap artifacts
 
 import os
 import zipfile
-from pathlib import Path
 
 
 def create_bootstrap_bundle():

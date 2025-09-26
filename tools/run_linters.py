@@ -87,7 +87,6 @@ def main():
 
     # Optional: Run Black (code formatter)
     try:
-        import black
         if run_command(['black', '--check'] + files, "Black code formatter"):
             print("💯 Code formatting looks good!")
         else:
@@ -98,7 +97,6 @@ def main():
 
     # Optional: Run Flake8 (linter)
     try:
-        import flake8
         if run_command(['flake8'] + files, "Flake8 linter"):
             print("💯 No linting issues found!")
         else:
@@ -109,7 +107,6 @@ def main():
 
     # Optional: Run isort (import sorter)
     try:
-        import isort
         if run_command(['isort', '--check-only'] + files, "isort import checker"):
             print("💯 Imports are properly sorted!")
         else:
@@ -120,7 +117,6 @@ def main():
 
     # Optional: Run mypy (type checker)
     try:
-        import mypy
         if run_command(['mypy'] + files, "mypy type checker"):
             print("💯 Type checking passed!")
         else:

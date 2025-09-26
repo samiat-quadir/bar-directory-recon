@@ -17,7 +17,7 @@ def flag_template_health(records):
     flagged = []
     for record in records:
         score = record.get("score", 0)
-        error = record.get("error")
+        record.get("error")
         severity = record.get("severity", "none")
 
         if severity == "critical" or score <= 2:

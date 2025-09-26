@@ -6,11 +6,9 @@ Only includes verified emails/phones, no pattern guessing
 
 import logging
 import re
-import urllib.parse
 from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 from datetime import datetime
-import json
 
 # Optional API validation hooks (requires API keys)
 try:

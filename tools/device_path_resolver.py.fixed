@@ -12,7 +12,7 @@ import json
 import platform
 import sys
 from pathlib import Path
-from typing import Dict, Optional, Union, List, Any
+from typing import Dict, Optional, Union, Any
 
 # Known device configurations
 DEVICE_CONFIGS = {

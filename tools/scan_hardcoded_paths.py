@@ -11,12 +11,11 @@ import re
 import sys
 import argparse
 from pathlib import Path
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Optional
 
 # Import our device path resolver if possible
 try:
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
-    from device_path_resolver import get_project_root_path, get_onedrive_path
 
     RESOLVER_AVAILABLE = True
 except ImportError:

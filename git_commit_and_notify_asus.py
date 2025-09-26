@@ -1,6 +1,5 @@
 import subprocess
 import logging
-from datetime import datetime
 
 # Log file setup (optional, can be reused across systems)
 LOG_FILE = "git_commit_notify.log"
