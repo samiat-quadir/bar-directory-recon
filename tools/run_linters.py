@@ -25,10 +25,7 @@ def run_command(command, description):
     """
     print(f"Running {description}...")
     try:
-        result = subprocess.run(command,
-                               check=True,
-                               capture_output=True,
-                               text=True, timeout=60)
+        result = subprocess.run(command, check=True, capture_output=True, text=True, timeout=60)
 
         print(f"✅ {description} passed")
         return True
@@ -52,22 +49,23 @@ def get_staged_python_files():
             ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMR"],
             check=True,
             capture_output=True,
-            text=True
-        , timeout=60)
-        files = result.stdout.strip().split('\n')
-        return [f for f in files if f.endswith('.py') and os.path.exists(f)]
+            text=True,
+            timeout=60,
+        )
+        files = result.stdout.strip().split("\n")
+        return [f for f in files if f.endswith(".py") and os.path.exists(f)]
 
     except subprocess.CalledProcessError:
         print("⚠️ Warning: Unable to get staged files. Running linters on all Python files.")
         # Fallback to all Python files in the repo
         result = subprocess.run(
-            ['git', 'ls-files', '*.py'],
+            ["git", "ls-files", "*.py"],
             check=True,
             capture_output=True,
-            text=True
-        , timeout=60)
-        return result.stdout.strip().split('\n')
-
+            text=True,
+            timeout=60,
+        )
+        return result.stdout.strip().split("\n")
 
 
 def main():
@@ -146,4 +144,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-

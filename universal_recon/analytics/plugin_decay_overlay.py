@@ -99,7 +99,7 @@ def main():
     parser.add_argument("--matrix", default=MATRIX_PATH)
     parser.add_argument("--status", default=STATUS_PATH)
     parser.add_argument("--yaml", default=YAML_PATH)
-    args = parser.parse_args()
+    parser.parse_args()
     generate_overlay()
 
 

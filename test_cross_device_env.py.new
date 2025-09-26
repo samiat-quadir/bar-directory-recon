@@ -15,7 +15,7 @@ from pathlib import Path
 # Try to import device path resolver
 try:
     sys.path.append(str(Path(__file__).parent / "tools"))
-    from device_path_resolver import get_project_root_path, to_project_relative_path, get_current_device
+    from device_path_resolver import get_project_root_path, to_project_relative_path
     RESOLVER_AVAILABLE = True
 except ImportError as e:
     print(f"⚠️ Warning: device_path_resolver.py not found or couldn't be imported. Error: {e}")

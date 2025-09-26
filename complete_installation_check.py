@@ -53,8 +53,7 @@ def check_system_tools():
     for tool, command in tools.items():
         try:
             result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=60)
-            if result.returncode == 0 or (tool == 'chrome' and 'Program Files' in result.stderr):
-
+            if result.returncode == 0 or (tool == "chrome" and "Program Files" in result.stderr):
                 print(f"✅ {tool} - Available")
                 results[tool] = True
             else:
@@ -249,4 +248,3 @@ def main():
 if __name__ == "__main__":
     success = main()
     sys.exit(0 if success else 1)
-

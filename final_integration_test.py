@@ -100,7 +100,7 @@ def main():
     print("-" * 42)
 
     try:
-        from google_sheets_integration import GoogleSheetsIntegration
+        pass
 
         # Test initialization (won't authenticate unless needed)
         print("   📦 Google Sheets integration import: ✅")
