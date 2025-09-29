@@ -63,4 +63,3 @@ def test_analyze_trends():
 
 if __name__ == "__main__":
     unittest.main()
-
