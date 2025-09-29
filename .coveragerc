@@ -1,0 +1,11 @@
+[run]
+omit =
+  archive/*
+  automation/*
+  scripts/*
+  async_*.py
+  complete_verification.py
+  run_cross_device_task.py
+  tools/auto_conflict_resolver.py
+[report]
+skip_empty = True
