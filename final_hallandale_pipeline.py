@@ -202,7 +202,7 @@ def enrich_property_data(properties):
             year = int(enriched["year_built"])
             if 1980 <= year <= 1990:
                 priority_factors.append("age_priority")
-        except:
+        except Exception:
             pass
 
         if "priority" in enriched["notes"].lower():
@@ -270,15 +270,15 @@ def create_excel_summary(enriched_df, output_dir):
         enriched_df.to_excel(writer, sheet_name="All Properties", index=False)
 
         # Priority properties
-        priority_df = enriched_df[enriched_df["priority_flag"] == True]
+        priority_df = enriched_df[enriched_df["priority_flag"]]
         priority_df.to_excel(writer, sheet_name="Priority Properties", index=False)
 
         # Corporate entities
-        corporate_df = enriched_df[enriched_df["is_corporate"] == True]
+        corporate_df = enriched_df[enriched_df["is_corporate"]]
         corporate_df.to_excel(writer, sheet_name="Corporate Entities", index=False)
 
         # Individual owners
-        individual_df = enriched_df[enriched_df["is_corporate"] == False]
+        individual_df = enriched_df[~enriched_df["is_corporate"]]
         individual_df.to_excel(writer, sheet_name="Individual Owners", index=False)
 
         # Missing contact info
@@ -306,9 +306,9 @@ def create_excel_summary(enriched_df, output_dir):
                 len(enriched_df),
                 len(enriched_df[enriched_df["owner_email"] != ""]),
                 len(enriched_df[enriched_df["owner_phone"] != ""]),
-                len(enriched_df[enriched_df["priority_flag"] == True]),
-                len(enriched_df[enriched_df["is_corporate"] == True]),
-                len(enriched_df[enriched_df["is_corporate"] == False]),
+                len(enriched_df[enriched_df["priority_flag"]]),
+                len(enriched_df[enriched_df["is_corporate"]]),
+                len(enriched_df[~enriched_df["is_corporate"]]),
                 round(enriched_df["data_quality_score"].mean(), 1),
                 len(enriched_df[enriched_df["data_quality_score"] >= 80]),
                 len(enriched_df[enriched_df["data_quality_score"] < 50]),
@@ -356,9 +356,9 @@ def main():
     total_records = len(enriched_df)
     records_with_email = len(enriched_df[enriched_df["owner_email"] != ""])
     records_with_phone = len(enriched_df[enriched_df["owner_phone"] != ""])
-    priority_records = len(enriched_df[enriched_df["priority_flag"] == True])
-    corporate_entities = len(enriched_df[enriched_df["is_corporate"] == True])
-    individual_owners = len(enriched_df[enriched_df["is_corporate"] == False])
+    priority_records = len(enriched_df[enriched_df["priority_flag"]])
+    corporate_entities = len(enriched_df[enriched_df["is_corporate"]])
+    individual_owners = len(enriched_df[~enriched_df["is_corporate"]])
     avg_quality_score = enriched_df["data_quality_score"].mean()
     high_quality_records = len(enriched_df[enriched_df["data_quality_score"] >= 80])
     needs_manual_review = len(enriched_df[enriched_df["data_quality_score"] < 50])

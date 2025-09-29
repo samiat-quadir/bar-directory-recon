@@ -12,7 +12,7 @@ import os
 import platform
 import sys
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 # Known device configurations
 DEVICE_CONFIGS = {
@@ -528,7 +528,7 @@ if __name__ == "__main__":
         print(f"Current device: {platform.node()}")
         try:
             print(f"Current user: {os.getlogin()}")
-        except:
+        except Exception:
             print(
                 f"Current user: {os.environ.get('USERNAME') or os.environ.get('USER', 'Unknown')}"
             )

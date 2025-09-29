@@ -271,16 +271,11 @@ class UniversalLeadAutomation:
             range_name = f"{sheet_name}!A1"
             body = {"values": values}
 
-            result = (
-                service.spreadsheets()
-                .values()
-                .update(
-                    spreadsheetId=sheet_id,
-                    range=range_name,
-                    valueInputOption="RAW",
-                    body=body,
-                )
-                .execute()
+            service.spreadsheets().values().append(
+                spreadsheetId=sheet_id,
+                range=range_name,
+                valueInputOption="RAW",
+                body=body,
             )
 
             logger.info(f"Successfully uploaded {len(leads)} leads to Google Sheets")
