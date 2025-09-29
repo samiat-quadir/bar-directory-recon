@@ -40,6 +40,7 @@ def test_import_setup_check():
 def test_import_universal_automation():
     _import("universal_automation")
 
+
 def test_import_usage_demo():
     _import("usage_demo")
 
@@ -54,4 +55,3 @@ def test_import_universal_recon_plugins_reference_realtor():
 
 def test_import_universal_recon_plugins_social_link_parser():
     _import("universal_recon.plugins.social_link_parser")
-
