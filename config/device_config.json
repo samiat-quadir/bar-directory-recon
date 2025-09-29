@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
     "device_mapping": {
         "SALESREP": {
             "computer_name_patterns": [
@@ -28,8 +27,8 @@
         "copy_device_specific_files_on_detect": true
     },
     "onedrive_paths": {
-        "SALESREP": "C:\\\\Users\\\\samq\\\\OneDrive - Digital Age Marketing Group",
-        "ROG-LUCCI": "C:\\\\Users\\\\samqu\\\\OneDrive - Digital Age Marketing Group"
+        "SALESREP": "C:\\Users\\samq\\OneDrive - Digital Age Marketing Group",
+        "ROG-LUCCI": "C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group"
     },
     "python_environments": {
         "SALESREP": ".venv\\\\Scripts\\\\python.exe",
@@ -39,17 +38,4 @@
     "last_updated": "2025-05-20T15:28:13.4599599-04:00",
     "DeviceId": "SalesRep",
     "LastUpdated": "2025-05-21T17:30:03.362130"
-=======
-    "DeviceId": "ROG-LUCCI",
-    "Username": "samqu",
-    "Settings": {
-        "DefaultEditor": "code"
-    },
-    "Paths": {
-        "ProjectRoot": "C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group\\Desktop\\Local Py\\Work Projects\\bar-directory-recon",
-        "OneDrive": "C:\\Users\\samqu\\OneDrive - Digital Age Marketing Group"
-    },
-    "FirstRegistered": "2025-05-16T10:23:18.9648999-04:00",
-    "LastUpdated": "2025-05-16T10:23:19.0073322-04:00"
->>>>>>> origin/main
 }
