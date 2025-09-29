@@ -22,7 +22,7 @@ def validate_records(
     for rec in records:
         missing = [f for f in REQUIRED_FIELDS if not rec.get(f)]
         score = rec.get("score") or rec.get("predicted_score") or 0
-        confidence = rec.get("template_confidence") or "medium"
+        rec.get("template_confidence") or "medium"
 
         if missing:
             rec["valid"] = False
@@ -44,7 +44,9 @@ def validate_records(
         passed.append(rec)
 
     if verbose or not strict:
-        logger.info(f"✅ Validation Complete: {len(passed)} passed, {len(failed)} failed")
+        logger.info(
+            f"✅ Validation Complete: {len(passed)} passed, {len(failed)} failed"
+        )
         if verbose and failed:
             for f in failed:
                 logger.warning(f"[!] Warning: Failed Record: {f.get('error')}")

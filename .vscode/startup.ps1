@@ -159,3 +159,4 @@ Write-Host "  Scan-Paths           - Scan for problematic hardcoded paths" -Fore
 Write-Host "  Switch-DeviceContext - Switch to another device configuration" -ForegroundColor White
 Write-Host ""
 >>>>>>> origin/main
+

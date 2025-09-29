@@ -8,14 +8,14 @@ This script performs additional checks beyond the standard validate_env_state.py
 to ensure complete parity with the ASUS golden image.
 """
 
-import os
-import sys
 import json
-import subprocess
+import os
 import platform
-from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+import subprocess
+import sys
 from datetime import datetime
+from pathlib import Path
+from typing import Dict
 
 
 def get_device_info() -> Dict[str, str]:
@@ -65,7 +65,9 @@ def check_alienware_specific_config() -> Dict[str, bool]:
 
             # Validate paths exist
             if "project_root" in profile:
-                checks["profile_project_root_exists"] = Path(profile["project_root"]).exists()
+                checks["profile_project_root_exists"] = Path(
+                    profile["project_root"]
+                ).exists()
             if "virtual_env" in profile:
                 checks["profile_venv_exists"] = Path(profile["virtual_env"]).exists()
 
@@ -130,7 +132,11 @@ def check_cross_device_compatibility() -> Dict[str, bool]:
     checks["uses_relative_paths"] = True  # Assume true unless proven otherwise
 
     # Check device path resolver
-    resolver_files = ["tools/device_path_resolver.py", "automation/device_resolver.py", "config/path_resolver.py"]
+    resolver_files = [
+        "tools/device_path_resolver.py",
+        "automation/device_resolver.py",
+        "config/path_resolver.py",
+    ]
 
     checks["has_path_resolver"] = any(Path(f).exists() for f in resolver_files)
 
@@ -180,15 +186,22 @@ def compare_with_golden_image() -> Dict[str, str]:
 
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pip", "list", "--format=json"], capture_output=True, text=True, check=True
+            [sys.executable, "-m", "pip", "list", "--format=json"],
+            capture_output=True,
+            text=True,
+            check=True,
         )
         installed_packages = json.loads(result.stdout)
         actual_count = len(installed_packages)
 
         if actual_count >= expected_packages:
-            comparison["package_count"] = f"✅ {actual_count}/{expected_packages} packages"
+            comparison["package_count"] = (
+                f"✅ {actual_count}/{expected_packages} packages"
+            )
         else:
-            comparison["package_count"] = f"❌ {actual_count}/{expected_packages} packages"
+            comparison["package_count"] = (
+                f"❌ {actual_count}/{expected_packages} packages"
+            )
 
     except Exception as e:
         comparison["package_count"] = f"❌ Error checking packages: {e}"
@@ -209,7 +222,9 @@ def compare_with_golden_image() -> Dict[str, str]:
 
     missing_golden = []
     try:
-        installed_names = {pkg["name"].lower().replace("-", "_") for pkg in installed_packages}
+        installed_names = {
+            pkg["name"].lower().replace("-", "_") for pkg in installed_packages
+        }
 
         for pkg in golden_packages:
             pkg_normalized = pkg.lower().replace("-", "_")
@@ -246,7 +261,9 @@ def generate_alienware_report():
     device_info = get_device_info()
     print(f"Device: {device_info['hostname']}")
     print(f"System: {device_info['system']} {device_info['release']}")
-    print(f"Python: {device_info['python_version']} ({device_info['python_implementation']})")
+    print(
+        f"Python: {device_info['python_version']} ({device_info['python_implementation']})"
+    )
     print(f"Working Directory: {os.getcwd()}")
     print(f"Validation Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)

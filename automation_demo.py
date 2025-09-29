@@ -7,10 +7,10 @@ and the List Discovery Agent automation systems. It showcases all major
 features in a guided demo.
 """
 
-import time
-import sys
-from pathlib import Path
 import json
+import sys
+import time
+from pathlib import Path
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent
@@ -18,14 +18,17 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Import automation modules
 try:
-    from automation.universal_runner import UniversalRunner
-    from automation.notifier import NotificationManager
     from automation.dashboard import DashboardManager
+    from automation.notifier import NotificationManager
     from automation.pipeline_executor import PipelineExecutor
+    from automation.universal_runner import UniversalRunner
+
     AUTOMATION_AVAILABLE = True
 except ImportError as e:
     print(f"❌ Failed to import automation modules: {e}")
-    print("Please run 'RunAutomation.bat install' and 'pip install -r list_discovery/requirements.txt' first")
+    print(
+        "Please run 'RunAutomation.bat install' and 'pip install -r list_discovery/requirements.txt' first"
+    )
     sys.exit(1)
 
 
@@ -61,14 +64,18 @@ def demo_configuration() -> None:
     print(f"   • File patterns: {len(config['monitoring']['file_patterns'])}")
 
     # Split long notification line for readability
-    discord_status = '✅' if config['notifications']['discord_webhook'] else '❌'
-    email_status = '✅' if config['notifications']['email']['enabled'] else '❌'
-    print(f"   • Notification channels: Discord: {discord_status}, Email: {email_status}")
+    discord_status = "✅" if config["notifications"]["discord_webhook"] else "❌"
+    email_status = "✅" if config["notifications"]["email"]["enabled"] else "❌"
+    print(
+        f"   • Notification channels: Discord: {discord_status}, Email: {email_status}"
+    )
 
     # Show List Discovery config
     if runner.list_discovery:
         discovery_config = runner.list_discovery.config
-        print(f"   • List Discovery URLs: {len(discovery_config.get('monitored_urls', []))}")
+        print(
+            f"   • List Discovery URLs: {len(discovery_config.get('monitored_urls', []))}"
+        )
 
     wait_for_user()
 
@@ -80,14 +87,21 @@ def demo_dashboard() -> None:
     print_step("Generating status dashboard...")
 
     # Create sample status data
-    dashboard = DashboardManager({
-        'local_html': {'enabled': True, 'output_path': 'output/demo_dashboard.html'},
-        'google_sheets': {'enabled': False}
-    })
+    dashboard = DashboardManager(
+        {
+            "local_html": {
+                "enabled": True,
+                "output_path": "output/demo_dashboard.html",
+            },
+            "google_sheets": {"enabled": False},
+        }
+    )
 
     # Add some sample data
     dashboard.update_site_status("demo-site-1.com", "success", {"score": 85.2})
-    dashboard.update_site_status("demo-site-2.com", "failed", {"error": "Connection timeout"})
+    dashboard.update_site_status(
+        "demo-site-2.com", "failed", {"error": "Connection timeout"}
+    )
     dashboard.update_site_status("demo-site-3.com", "success", {"score": 92.1})
     # dashboard.update_log_event("List Discovery", "Downloaded 3 new files from 'County Licenses'")
     # If you want to log an event, use the correct method if available, e.g.:
@@ -108,8 +122,9 @@ def demo_dashboard() -> None:
         print(f"   ✅ Success rate: {stats['success_rate']:.1f}%")
 
         open_dashboard = input("\n🌐 Open dashboard in browser? (y/n): ")
-        if open_dashboard.lower() == 'y':
+        if open_dashboard.lower() == "y":
             import webbrowser
+
             webbrowser.open(f"file://{dashboard_path.absolute()}")
     else:
         print("❌ Failed to generate dashboard")
@@ -124,10 +139,12 @@ def demo_notifications() -> None:
     print_step("Initializing notification manager...")
 
     # Create notification manager with demo config
-    notifier = NotificationManager({
-        'discord_webhook': None,  # Set to None for demo
-        'email': {'enabled': False}  # Disabled for demo
-    })
+    notifier = NotificationManager(
+        {
+            "discord_webhook": None,  # Set to None for demo
+            "email": {"enabled": False},  # Disabled for demo
+        }
+    )
 
     print("✅ Notification manager initialized")
     print("   ℹ️ Demo mode: notifications will be logged but not sent")
@@ -136,12 +153,23 @@ def demo_notifications() -> None:
 
     # Demonstrate different notification types
     notifications = [
-        ("success", "Pipeline Completed Successfully", "Processed 3 sites with 100% success rate"),
+        (
+            "success",
+            "Pipeline Completed Successfully",
+            "Processed 3 sites with 100% success rate",
+        ),
         ("warning", "Validation Issues Detected", "2 minor validation warnings found"),
-        ("error", "Pipeline Execution Failed", "Site example.com failed due to timeout"),
+        (
+            "error",
+            "Pipeline Execution Failed",
+            "Site example.com failed due to timeout",
+        ),
         ("info", "Scheduled Task Started", "Daily scraping task initiated"),
-        ("discovery", "New Lists Discovered: County Licenses",
-         "Downloaded 3 new files: licenses.pdf, permits.csv, data.xlsx")
+        (
+            "discovery",
+            "New Lists Discovered: County Licenses",
+            "Downloaded 3 new files: licenses.pdf, permits.csv, data.xlsx",
+        ),
     ]
 
     for notif_type, title, message in notifications:
@@ -179,8 +207,14 @@ def demo_input_monitoring() -> None:
     # Create sample input files
     sample_files = [
         ("sites.json", {"sites": ["demo-bar-1.com", "demo-bar-2.com"]}),
-        ("config.csv", "site,type,priority\ndemo-bar-3.com,restaurant,high\ndemo-bar-4.com,bar,medium"),
-        ("snapshot.html", "<html><head><title>Demo Snapshot</title></head><body><h1>Demo Bar</h1></body></html>")
+        (
+            "config.csv",
+            "site,type,priority\ndemo-bar-3.com,restaurant,high\ndemo-bar-4.com,bar,medium",
+        ),
+        (
+            "snapshot.html",
+            "<html><head><title>Demo Snapshot</title></head><body><h1>Demo Bar</h1></body></html>",
+        ),
     ]
 
     print("✅ Input monitoring configured")
@@ -192,10 +226,10 @@ def demo_input_monitoring() -> None:
     for filename, content in sample_files:
         file_path = input_dir / filename
         if isinstance(content, dict):
-            with open(file_path, 'w') as f:
+            with open(file_path, "w") as f:
                 json.dump(content, f, indent=2)
         else:
-            with open(file_path, 'w') as f:
+            with open(file_path, "w") as f:
                 f.write(str(content))
 
         print(f"   📄 Created: {filename}")
@@ -213,12 +247,14 @@ def demo_pipeline_validation() -> None:
 
     print_step("Validating pipeline environment...")
 
-    executor = PipelineExecutor({
-        'sites': ['demo-site.com'],
-        'default_flags': ['--schema-matrix', '--emit-status'],
-        'timeout': 300,
-        'retry_count': 2
-    })
+    executor = PipelineExecutor(
+        {
+            "sites": ["demo-site.com"],
+            "default_flags": ["--schema-matrix", "--emit-status"],
+            "timeout": 300,
+            "retry_count": 2,
+        }
+    )
 
     # Test environment validation
     print("🔍 Checking environment...")
@@ -267,7 +303,7 @@ def demo_system_status() -> None:
         ("Input directory", "input/"),
         ("Output directory", "output/"),
         ("Dashboard", "output/dashboard.html"),
-        ("Discovery Config", "list_discovery/config.yaml")
+        ("Discovery Config", "list_discovery/config.yaml"),
     ]
 
     print("\n📁 File System Status:")
@@ -290,7 +326,7 @@ def demo_system_status() -> None:
         "2025-07-12 10:00 - List Discovery found 2 new files from 'City Permits'",
         "2025-07-12 09:15 - Pipeline completed for demo-site.com",
         "2025-07-12 08:00 - Scheduled scraping task started",
-        "2025-07-12 06:00 - Daily health check passed"
+        "2025-07-12 06:00 - Daily health check passed",
     ]
 
     for activity in recent_activities:

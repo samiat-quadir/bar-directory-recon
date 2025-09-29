@@ -7,16 +7,12 @@ import logging
 import time
 import os
 import pickle
-from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 import hashlib
-import json
-from dataclasses import asdict
 
 # Google Sheets API imports
 try:
     from google.auth.transport.requests import Request
-    from google.oauth2.credentials import Credentials
     from google_auth_oauthlib.flow import InstalledAppFlow
     from googleapiclient.discovery import build
     from googleapiclient.errors import HttpError
@@ -345,7 +341,6 @@ class GoogleSheetsIntegration:
 
         # Process new leads
         new_leads = []
-        updated_leads = []
         skipped_count = 0
 
         for lead_data in leads:
@@ -436,7 +431,7 @@ class GoogleSheetsIntegration:
                 return False
 
             # Industry column index (assuming it's in the schema)
-            industry_col_index = self.lead_schema.index('industry') if 'industry' in self.lead_schema else None
+            self.lead_schema.index('industry') if 'industry' in self.lead_schema else None
             urgency_col_index = self.lead_schema.index('urgency_flag') if 'urgency_flag' in self.lead_schema else None
 
             format_requests = []

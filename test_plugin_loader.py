@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Quick smoke test for plugin loader functionality."""
 
-import sys
 import os
+import sys
 
 # Add current directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 try:
     import universal_recon.plugins.loader as loader
+
     print("✅ Plugin loader module imported successfully")
 
     # Test plugin discovery
@@ -20,7 +21,7 @@ try:
     print(f"📦 Discovered plugins: {plugin_names}")
 
     # Test that reference plugin is found
-    reference_found = any('reference_realtor' in name for name in plugin_names)
+    reference_found = any("reference_realtor" in name for name in plugin_names)
     if reference_found:
         print("✅ Reference plugin (reference_realtor) discovered correctly")
     else:

@@ -37,7 +37,12 @@ def run_analysis(config: Dict = None) -> Dict:
     trend_path = root / output_dir / f"{site}_trend.json"
     badge_path = root / "output" / "badge_matrix.json"
 
-    result = {"plugin": "trend_badge_tracker", "site": site, "regressions": [], "status": "ok"}
+    result = {
+        "plugin": "trend_badge_tracker",
+        "site": site,
+        "regressions": [],
+        "status": "ok",
+    }
 
     try:
         if not trend_path.exists():

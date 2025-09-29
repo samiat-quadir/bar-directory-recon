@@ -9,7 +9,7 @@ Finds PowerShell and Batch scripts that aren't referenced anywhere in the codeba
 import os
 import re
 from pathlib import Path
-from typing import Set, List, Dict
+from typing import Dict, List, Set
 
 
 def find_all_scripts(root_dir: str) -> Set[str]:
@@ -20,7 +20,10 @@ def find_all_scripts(root_dir: str) -> Set[str]:
     for pattern in ["**/*.bat", "**/*.ps1"]:
         for file_path in root_path.glob(pattern):
             # Skip files in excluded directories
-            if any(excluded in str(file_path) for excluded in [".git", "__pycache__", ".venv", "node_modules"]):
+            if any(
+                excluded in str(file_path)
+                for excluded in [".git", "__pycache__", ".venv", "node_modules"]
+            ):
                 continue
             scripts.add(file_path.name)
 
@@ -39,9 +42,11 @@ def find_script_references(root_dir: str, scripts: Set[str]) -> Dict[str, List[s
         if (
             file_path.is_file()
             and file_path.suffix in search_extensions
-            and not any(excluded in str(file_path) for excluded in [".git", "__pycache__", ".venv", "node_modules"])
+            and not any(
+                excluded in str(file_path)
+                for excluded in [".git", "__pycache__", ".venv", "node_modules"]
+            )
         ):
-
             try:
                 with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                     content = f.read()
@@ -53,9 +58,13 @@ def find_script_references(root_dir: str, scripts: Set[str]) -> Dict[str, List[s
                     # Look for script name (with or without extension)
                     if script in content or script_base in content:
                         # Verify it's actually a reference (not just part of another word)
-                        pattern = r"\b" + re.escape(script_base) + r"(?:\.(?:bat|ps1))?\b"
+                        pattern = (
+                            r"\b" + re.escape(script_base) + r"(?:\.(?:bat|ps1))?\b"
+                        )
                         if re.search(pattern, content, re.IGNORECASE):
-                            references[script].append(str(file_path.relative_to(root_path)))
+                            references[script].append(
+                                str(file_path.relative_to(root_path))
+                            )
 
             except Exception as e:
                 print(f"Error reading {file_path}: {e}")
@@ -115,14 +124,14 @@ def main():
         for script in sorted(unreferenced_scripts):
             print(f"📄 {script}")
 
-        print(f"\n🛠️  RECOMMENDED ACTIONS:")
+        print("\n🛠️  RECOMMENDED ACTIONS:")
         print("1. Review each unreferenced script to confirm it's not needed")
         print("2. Move legacy scripts to archive/legacy_scripts/ directory")
         print("3. Document any scripts that should be kept for manual use")
-        print(f"4. Consider deleting truly obsolete scripts")
+        print("4. Consider deleting truly obsolete scripts")
 
         # Show command to create archive directory and move files
-        print(f"\n📁 To archive unreferenced scripts:")
+        print("\n📁 To archive unreferenced scripts:")
         print("mkdir archive\\legacy_scripts")
         for script in sorted(unreferenced_scripts):
             print(f"move {script} archive\\legacy_scripts\\")
@@ -130,7 +139,7 @@ def main():
     else:
         print("✅ All scripts are referenced somewhere in the codebase!")
 
-    print(f"\n📈 SUMMARY:")
+    print("\n📈 SUMMARY:")
     print(f"   Total scripts: {len(scripts)}")
     print(f"   Referenced: {len(referenced_scripts)}")
     print(f"   Unreferenced: {len(unreferenced_scripts)}")

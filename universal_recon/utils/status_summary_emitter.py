@@ -82,7 +82,9 @@ def emit_status(matrix_path, export_path, verbose=False):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Emit status summary for Universal Recon.")
+    parser = argparse.ArgumentParser(
+        description="Emit status summary for Universal Recon."
+    )
     parser.add_argument(
         "--matrix_path",
         type=str,

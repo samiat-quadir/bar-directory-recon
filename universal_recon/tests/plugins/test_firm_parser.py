@@ -16,7 +16,6 @@ def mock_driver_with_html(html):
 
 
 class TestFirmParserPlugin(unittest.TestCase):
-
     def setUp(self):
         with open("snapshots/sample.html", "r", encoding="utf-8") as f:
             self.sample_html = f.read()

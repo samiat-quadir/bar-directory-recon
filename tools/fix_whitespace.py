@@ -1,6 +1,3 @@
-import os
-
-
 def fix_file(file_path):
     """Fix trailing whitespace and ensure file ends with a newline."""
     with open(file_path, "r", encoding="utf-8", errors="ignore") as f:

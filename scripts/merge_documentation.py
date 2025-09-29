@@ -49,7 +49,12 @@ class DocumentationMerger:
         date_match = re.search(r"(\d{4}-\d{2}-\d{2})", content)
         date = date_match.group(1) if date_match else "unknown"
 
-        return {"title": title, "phase": phase, "date": date, "filename": file_path.name}
+        return {
+            "title": title,
+            "phase": phase,
+            "date": date,
+            "filename": file_path.name,
+        }
 
     def adjust_heading_levels(self, content: str, base_level: int = 2) -> str:
         """Adjust heading levels to fit into document hierarchy."""
@@ -83,7 +88,9 @@ class DocumentationMerger:
             by_phase[phase].append(meta)
 
         # Generate TOC
-        for phase in sorted(by_phase.keys(), key=lambda x: int(x) if x.isdigit() else 999):
+        for phase in sorted(
+            by_phase.keys(), key=lambda x: int(x) if x.isdigit() else 999
+        ):
             if phase != "0":
                 toc.append(f"## Phase {phase}")
             else:
@@ -121,8 +128,12 @@ class DocumentationMerger:
 
         # Header
         merged_content.append("# Bar Directory Recon - Complete Documentation")
-        merged_content.append(f"*Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n")
-        merged_content.append("This document consolidates all project documentation from multiple README files.\n")
+        merged_content.append(
+            f"*Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n"
+        )
+        merged_content.append(
+            "This document consolidates all project documentation from multiple README files.\n"
+        )
 
         # Table of contents
         merged_content.append(self.create_table_of_contents(files_metadata))
@@ -160,18 +171,20 @@ class DocumentationMerger:
 
         # Add footer
         merged_content.append("## Document Information")
-        merged_content.append(f"- **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        merged_content.append(f"- **Source Files**: {len(readme_files)} README files")
-        merged_content.append(f"- **Project**: Bar Directory Recon")
         merged_content.append(
-            f"- **Repository**: [bar-directory-recon](https://github.com/samiat-quadir/bar-directory-recon)"
+            f"- **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
+        merged_content.append(f"- **Source Files**: {len(readme_files)} README files")
+        merged_content.append("- **Project**: Bar Directory Recon")
+        merged_content.append(
+            "- **Repository**: [bar-directory-recon](https://github.com/samiat-quadir/bar-directory-recon)"
         )
 
         # Write merged file
         final_content = "\n".join(merged_content)
         output_path.write_text(final_content, encoding="utf-8")
 
-        print(f"\n✅ Documentation merged successfully!")
+        print("\n✅ Documentation merged successfully!")
         print(f"📄 Output: {output_path}")
         print(f"📊 Size: {len(final_content):,} characters")
 
@@ -195,7 +208,9 @@ class DocumentationMerger:
         content = ["# API Reference\n"]
         for file_path in sorted(api_files):
             content.append(f"## {file_path.stem}")
-            content.append(f"[View Documentation]({file_path.relative_to(self.docs_dir)})\n")
+            content.append(
+                f"[View Documentation]({file_path.relative_to(self.docs_dir)})\n"
+            )
 
         (self.docs_dir / "API.md").write_text("\n".join(content))
 
@@ -211,10 +226,21 @@ class DocumentationMerger:
 
 def main():
     """Main entry point for documentation merger."""
-    parser = argparse.ArgumentParser(description="Merge README files into unified documentation")
-    parser.add_argument("--project-root", type=Path, default=".", help="Root directory of the project")
-    parser.add_argument("--output", type=Path, default=None, help="Output file path (default: docs/README.md)")
-    parser.add_argument("--create-indexes", action="store_true", help="Create additional index files")
+    parser = argparse.ArgumentParser(
+        description="Merge README files into unified documentation"
+    )
+    parser.add_argument(
+        "--project-root", type=Path, default=".", help="Root directory of the project"
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Output file path (default: docs/README.md)",
+    )
+    parser.add_argument(
+        "--create-indexes", action="store_true", help="Create additional index files"
+    )
 
     args = parser.parse_args()
 
@@ -228,7 +254,7 @@ def main():
         merger.create_index_files()
         print("📚 Additional index files created")
 
-    print(f"\n🎉 Documentation consolidation complete!")
+    print("\n🎉 Documentation consolidation complete!")
     print(f"📖 View merged docs: {output_path}")
 
 

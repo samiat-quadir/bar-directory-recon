@@ -3,7 +3,7 @@
 import json
 import os
 import tempfile
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple
 
 from universal_recon.core.logger import get_logger
 
@@ -32,7 +32,11 @@ def calculate_risk_level(
 
 
 def emit_site_risk_json(
-    site_name: str, drift_score: float, health: float, suppression_factor: float, tier_path: str
+    site_name: str,
+    drift_score: float,
+    health: float,
+    suppression_factor: float,
+    tier_path: str,
 ) -> Dict[str, Any]:
     """Generate risk overlay JSON for a site."""
     try:
@@ -40,7 +44,9 @@ def emit_site_risk_json(
         if not validator_tiers:
             raise ValueError("Validator tiers could not be loaded")
 
-        risk_level, message = calculate_risk_level(drift_score, health, suppression_factor)
+        risk_level, message = calculate_risk_level(
+            drift_score, health, suppression_factor
+        )
         return {
             "site": site_name,
             "risk_level": risk_level,
@@ -52,7 +58,9 @@ def emit_site_risk_json(
         return {"site": site_name, "risk_level": "error", "message": str(e)}
 
 
-def emit_risk_overlay(matrix_path: Optional[str] = None, validator_tiers_path: Optional[str] = None) -> Dict[str, Any]:
+def emit_risk_overlay(
+    matrix_path: Optional[str] = None, validator_tiers_path: Optional[str] = None
+) -> Dict[str, Any]:
     """Generate risk overlay data and return badge counts with site analysis."""
     if not matrix_path or not validator_tiers_path:
         # Return the minimal required format for basic tests
@@ -112,7 +120,7 @@ def emit_risk_overlay(matrix_path: Optional[str] = None, validator_tiers_path: O
                         "risk_level": risk_level,
                         "message": message,
                         "badge": badge,
-                        "health": health
+                        "health": health,
                     }
 
                 risk_badges[site_name] = site_badges
@@ -120,7 +128,9 @@ def emit_risk_overlay(matrix_path: Optional[str] = None, validator_tiers_path: O
             result = {"risk_badges": risk_badges}
 
             # For tests, write to the same directory as the input files
-            output_path = os.path.join(os.path.dirname(matrix_path), "risk_overlay.json")
+            output_path = os.path.join(
+                os.path.dirname(matrix_path), "risk_overlay.json"
+            )
 
         except Exception as e:
             logger.error(f"Error generating risk overlay: {e}")

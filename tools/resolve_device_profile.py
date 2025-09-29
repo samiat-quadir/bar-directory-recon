@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 resolve_device_profile.py
 
@@ -10,16 +10,16 @@ It creates a symlink or copy from the appropriate device-specific profile
 be used by all scripts.
 """
 
-import os
-import sys
 import json
-import socket
+import logging
+import os
 import platform
 import shutil
-import logging
+import socket
+import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
-import subprocess
 
 # Set up logging
 log_dir = Path(__file__).parent.parent / "logs"
@@ -105,7 +105,7 @@ def update_device_config(device_name):
             with open(config_path, "r") as f:
                 config = json.load(f)
         else:
-            logger.warning(f"No device_config.json found. Creating a new one.")
+            logger.warning("No device_config.json found. Creating a new one.")
             config = {
                 "DeviceId": device_name,
                 "Username": os.getlogin(),
@@ -143,7 +143,10 @@ def link_device_profile(device_name):
     try:
         # If the target already exists, backup first
         if target_profile.exists():
-            backup_file = config_dir / f"device_profile.json.bak.{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            backup_file = (
+                config_dir
+                / f"device_profile.json.bak.{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            )
             shutil.copy2(target_profile, backup_file)
             logger.info(f"Backed up existing device_profile.json to {backup_file.name}")
             target_profile.unlink()
@@ -163,11 +166,13 @@ def link_device_profile(device_name):
             else:
                 # Unix-style symlink
                 os.symlink(source_profile, target_profile)
-            logger.info(f"Created symlink from {source_profile.name} to {target_profile.name}")
+            logger.info(
+                f"Created symlink from {source_profile.name} to {target_profile.name}"
+            )
         except Exception as e:
             # If symlink fails, fall back to copy
             logger.warning(f"Symlink creation failed: {e}")
-            logger.warning(f"Falling back to file copy method.")
+            logger.warning("Falling back to file copy method.")
             shutil.copy2(source_profile, target_profile)
             logger.info(f"Copied {source_profile.name} to {target_profile.name}")
 

@@ -5,13 +5,12 @@ Simple test and demonstration of the automated discovery system
 """
 
 import sys
-import os
-from pathlib import Path
 
 # Add src to path
-sys.path.append('src')
+sys.path.append("src")
 
 from data_hunter import DataHunter
+
 
 def test_discovery():
     """Test the discovery system."""
@@ -30,22 +29,22 @@ def test_discovery():
     print("\n🔧 CURRENT CONFIGURATION:")
     print(f"Sources configured: {len(hunter.config['sources'])}")
 
-    for source in hunter.config['sources']:
-        status = "✅ Enabled" if source['enabled'] else "❌ Disabled"
+    for source in hunter.config["sources"]:
+        status = "✅ Enabled" if source["enabled"] else "❌ Disabled"
         print(f"  • {source['name']}: {status}")
         print(f"    URL: {source['url']}")
         print(f"    Patterns: {len(source['patterns'])} defined")
 
     # Show notification settings
-    notifications = hunter.config['notifications']
-    print(f"\n📧 NOTIFICATIONS:")
+    notifications = hunter.config["notifications"]
+    print("\n📧 NOTIFICATIONS:")
     print(f"  • Console: {'✅' if notifications['console']['enabled'] else '❌'}")
     print(f"  • Email: {'✅' if notifications['email']['enabled'] else '❌'}")
     print(f"  • Slack: {'✅' if notifications['slack']['enabled'] else '❌'}")
 
     # Show download settings
-    download = hunter.config['download_settings']
-    print(f"\n⬇️ DOWNLOAD SETTINGS:")
+    download = hunter.config["download_settings"]
+    print("\n⬇️ DOWNLOAD SETTINGS:")
     print(f"  • Max file size: {download['max_file_size_mb']}MB")
     print(f"  • Timeout: {download['timeout_seconds']}s")
     print(f"  • Retry attempts: {download['retry_attempts']}")
@@ -56,7 +55,7 @@ def test_discovery():
         # Run discovery
         new_files = hunter.run_discovery()
 
-        print(f"\n✅ Discovery completed successfully!")
+        print("\n✅ Discovery completed successfully!")
         print(f"📄 New files found: {len(new_files)}")
 
         if new_files:
@@ -64,7 +63,9 @@ def test_discovery():
             for file in new_files:
                 print(f"  📄 {file}")
         else:
-            print("   (No new files found - this is normal if sources haven't been updated)")
+            print(
+                "   (No new files found - this is normal if sources haven't been updated)"
+            )
 
         # Show files in input directory
         input_files = list(hunter.input_dir.glob("*"))
@@ -85,6 +86,7 @@ def test_discovery():
         return False
 
     return True
+
 
 def show_usage():
     """Show usage instructions."""
@@ -134,6 +136,7 @@ def show_usage():
     print("   • patterns: Regex patterns for file matching")
     print("   • enabled: true")
 
+
 def main():
     """Main function."""
     if not test_discovery():
@@ -151,6 +154,7 @@ def main():
     print("4. Process new files with existing pipeline scripts")
 
     return 0
+
 
 if __name__ == "__main__":
     exit(main())

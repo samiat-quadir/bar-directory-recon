@@ -23,5 +23,7 @@ def load_validation_matrix(yaml_path: Optional[str] = None) -> Dict[str, Any]:
         try:
             return yaml.safe_load(f)
         except yaml.YAMLError as e:
-            print(f"[load_validation_matrix] Failed to parse validation matrix YAML: {e}")
+            print(
+                f"[load_validation_matrix] Failed to parse validation matrix YAML: {e}"
+            )
             return {}

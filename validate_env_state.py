@@ -7,12 +7,12 @@ Validates the current environment state and checks for missing dependencies
 or configuration mismatches across devices.
 """
 
-import os
-import sys
 import json
+import os
 import subprocess
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional, Tuple
 
 
 def check_python_packages() -> Tuple[List[str], List[str]]:
@@ -39,10 +39,16 @@ def check_python_packages() -> Tuple[List[str], List[str]]:
     # Get installed packages
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pip", "list", "--format=json"], capture_output=True, text=True, check=True
+            [sys.executable, "-m", "pip", "list", "--format=json"],
+            capture_output=True,
+            text=True,
+            check=True,
         )
         installed_data = json.loads(result.stdout)
-        installed_packages = {pkg["name"].lower().replace("-", "_"): pkg["version"] for pkg in installed_data}
+        installed_packages = {
+            pkg["name"].lower().replace("-", "_"): pkg["version"]
+            for pkg in installed_data
+        }
     except Exception as e:
         print(f"❌ Failed to get installed packages: {e}")
         return [], []
@@ -80,7 +86,12 @@ def check_configuration_files() -> Dict[str, bool]:
     config_checks = {}
 
     # Required config files
-    required_configs = ["config/device_profile.json", ".env", ".venv/pyvenv.cfg", "automation/config.yaml"]
+    required_configs = [
+        "config/device_profile.json",
+        ".env",
+        ".venv/pyvenv.cfg",
+        "automation/config.yaml",
+    ]
 
     for config_path in required_configs:
         path = Path(config_path)
@@ -157,7 +168,13 @@ def check_environment_variables() -> Dict[str, Optional[str]]:
     """Check important environment variables."""
     print("🔍 Checking environment variables...")
 
-    important_vars = ["PYTHONPATH", "PATH", "VIRTUAL_ENV", "PROJECT_ROOT", "ONEDRIVE_PATH"]
+    important_vars = [
+        "PYTHONPATH",
+        "PATH",
+        "VIRTUAL_ENV",
+        "PROJECT_ROOT",
+        "ONEDRIVE_PATH",
+    ]
 
     env_checks = {}
     for var in important_vars:
@@ -229,7 +246,11 @@ def generate_validation_report():
 
     for var, value in env_checks.items():
         if value:
-            print(f"✅ {var} = {value[:50]}..." if len(str(value)) > 50 else f"✅ {var} = {value}")
+            print(
+                f"✅ {var} = {value[:50]}..."
+                if len(str(value)) > 50
+                else f"✅ {var} = {value}"
+            )
         else:
             print(f"❌ {var} = (not set)")
 

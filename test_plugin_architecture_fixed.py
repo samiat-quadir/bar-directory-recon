@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Simplified plugin architecture validation test."""
 
-import sys
 import os
+import sys
 
 # Add current directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 
 def test_plugin_architecture():
     """Test the complete plugin architecture with proper instantiation."""
@@ -13,12 +14,14 @@ def test_plugin_architecture():
 
     try:
         # Direct import and test our reference plugins
+        from universal_recon.plugins.ai_template_indexer_v2 import (
+            AITemplateIndexerPlugin,
+        )
         from universal_recon.plugins.reference_realtor import RealtorPlugin
-        from universal_recon.plugins.ai_template_indexer_v2 import AITemplateIndexerPlugin
 
         plugins_to_test = [
             ("Reference Realtor", RealtorPlugin),
-            ("AI Template Indexer v2", AITemplateIndexerPlugin)
+            ("AI Template Indexer v2", AITemplateIndexerPlugin),
         ]
 
         tested_plugins = 0
@@ -35,7 +38,9 @@ def test_plugin_architecture():
                 record_count = 0
                 for raw_data in plugin.fetch():
                     record_count += 1
-                    print(f"📦 Fetched record {record_count}: {raw_data.get('id', 'no-id')}")
+                    print(
+                        f"📦 Fetched record {record_count}: {raw_data.get('id', 'no-id')}"
+                    )
 
                     # Transform the data
                     transformed = plugin.transform(raw_data)
@@ -61,13 +66,16 @@ def test_plugin_architecture():
         print("🔍 Testing Plugin Discovery")
         try:
             import universal_recon.plugins.loader as loader
+
             plugins = list(loader.load_plugins())
             print(f"✅ Plugin loader discovered {len(plugins)} plugins")
 
             # Check our plugins are in the discovered list
             plugin_names = [plugin.__name__ for plugin in plugins]
-            reference_found = any('reference_realtor' in name for name in plugin_names)
-            ai_template_found = any('ai_template_indexer_v2' in name for name in plugin_names)
+            reference_found = any("reference_realtor" in name for name in plugin_names)
+            ai_template_found = any(
+                "ai_template_indexer_v2" in name for name in plugin_names
+            )
 
             print(f"✅ Reference plugin discovered: {reference_found}")
             print(f"✅ AI Template plugin discovered: {ai_template_found}")
@@ -77,13 +85,16 @@ def test_plugin_architecture():
 
         print("\n🏆 Plugin Architecture Test Summary:")
         print(f"   📊 Plugins tested directly: {tested_plugins}")
-        print(f"   🎯 Architecture validation: {'PASSED' if tested_plugins >= 2 else 'FAILED'}")
+        print(
+            f"   🎯 Architecture validation: {'PASSED' if tested_plugins >= 2 else 'FAILED'}"
+        )
 
         return tested_plugins >= 2
 
     except Exception as e:
         print(f"❌ Critical error: {e}")
         return False
+
 
 if __name__ == "__main__":
     success = test_plugin_architecture()

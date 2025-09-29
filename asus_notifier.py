@@ -1,17 +1,19 @@
+import logging
 import os
 import pickle
-import logging
-from email.mime.text import MIMEText
+from base64 import urlsafe_b64encode
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+from dotenv import load_dotenv
+from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from base64 import urlsafe_b64encode
-from dotenv import load_dotenv
 
 # Load environment variables
-env_path = r"C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
+env_path = (
+    r"C:\Users\samqu\OneDrive - Digital Age Marketing Group\Desktop\Local Py\.env"
+)
 load_dotenv(env_path)
 
 TOKEN_PATH = os.getenv("GMAIL_TOKEN_PATH")
@@ -20,7 +22,12 @@ SENDER_EMAIL = "sam.quadir@gmail.com"  # Must match the token sender
 LOG_FILE = "email_notifier.log"
 
 # Logging Setup
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
 
 def load_credentials():
     try:
@@ -37,6 +44,7 @@ def load_credentials():
     except Exception as e:
         logging.error(f"Error loading credentials: {e}")
         return None
+
 
 def send_email(subject, body_html):
     creds = load_credentials()
@@ -69,6 +77,7 @@ def send_email(subject, body_html):
     except Exception as e:
         logging.error(f"❌ Unexpected error: {e}")
         print(f" Unexpected error: {e}")
+
 
 if __name__ == "__main__":
     html_content = """

@@ -6,9 +6,9 @@ Handles git push conflicts and branch synchronization automatically.
 
 import subprocess
 import sys
-from pathlib import Path
-from typing import List, Tuple, Optional
 import time
+from pathlib import Path
+from typing import List, Optional, Tuple
 
 
 class AdvancedGitWorkflow:

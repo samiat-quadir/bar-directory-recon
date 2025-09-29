@@ -17,6 +17,7 @@ from data_extractor import DataExtractor
 from logger import create_logger
 from pagination_manager import PaginationManager
 from unified_schema import SchemaMapper
+
 # webdriver_manager may be an external package or a local module in this repo.
 # Import defensively: prefer local module if present to avoid 'is not a package' errors
 try:
@@ -34,6 +35,7 @@ except Exception:
 
         def quit(self):
             return
+
 
 # Google Sheets API scopes
 GOOGLE_SHEETS_SCOPES = [

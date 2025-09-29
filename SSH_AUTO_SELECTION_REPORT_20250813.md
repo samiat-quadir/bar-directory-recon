@@ -1,6 +1,6 @@
 # SSH Key Auto-Selection and ASUS Authentication Test Results
-**Date**: August 13, 2025  
-**Task**: Auto-select matching SSH key for ASUS and prove 'Accepted publickey'  
+**Date**: August 13, 2025
+**Task**: Auto-select matching SSH key for ASUS and prove 'Accepted publickey'
 **Status**: **COMPLETED** - Authentication Issue Confirmed ❌🔍
 
 ## Environment Setup ✅

@@ -51,7 +51,7 @@
 - **Quality assurance**: Implemented comprehensive testing and linting pipeline
 =======
 
-## [v3.0] — TBD
+## [v3.0] ΓÇö TBD
 
 ### Planned
 
@@ -72,7 +72,7 @@
 
 ### Added
 
-- **🎯 Alienware Bootstrap Bundle** - Complete deployment package for cross-device parity
+- **≡ƒÄ» Alienware Bootstrap Bundle** - Complete deployment package for cross-device parity
   - **Bootstrap Bundle**: `alienware_bootstrap_bundle.zip` (27.4KB, 8 files) for immediate deployment
   - **PowerShell Script**: `bootstrap_alienware.ps1` (529 lines) for Windows deployment
   - **Bash Script**: `bootstrap_alienware.sh` (523 lines) for Linux/macOS deployment
@@ -82,7 +82,7 @@
   - **Automation Playbook**: `alienware_playbook.ps1` (675 lines) for end-to-end setup
   - **Access Guide**: `ALI_BOOTSTRAP_ACCESS_GUIDE.md` with deployment instructions
 
-- **🤝 Cross-Device Parity Achievements**
+- **≡ƒñ¥ Cross-Device Parity Achievements**
   - **95%+ Environment Parity**: Verified compatibility between ASUS and Alienware platforms
   - **Unified PowerShell Scripts**: Combined Unicode fixes (ACE) with 64-bit handling (ALI)
   - **Cross-Platform Validation**: Audit reports from both `audits/ace/` and `audits/ali/`
@@ -105,7 +105,7 @@
 
 ### Added
 
-- **🏠 Realtor Directory Automation System** for automated lead extraction
+- **≡ƒÅá Realtor Directory Automation System** for automated lead extraction
   - **Plugin system integration**: New `realtor_directory_plugin.py` for scraping directories.apps.realtor.com
   - **Multiple execution modes**: Single run, interactive mode, and weekly scheduling
   - **CSV export functionality**: Structured output with name, email, phone, business name, and address
@@ -152,7 +152,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.1.1 – Rotated credentials & hardened CI
+## 0.1.1 ΓÇô Rotated credentials & hardened CI
 
 ### Security
 
@@ -165,7 +165,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated PyPI publishing workflow for better security practices
 - Enhanced authentication mechanisms
 
-## 0.1.0 – Initial Preview
+## 0.1.0 ΓÇô Initial Preview
 
 ### Added
 

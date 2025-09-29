@@ -3,13 +3,13 @@
 Test Google Sheets Integration
 """
 
-import os
 import sys
 from pathlib import Path
 
 # Add project root to Python path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
+
 
 def test_google_sheets_integration():
     """Test the Google Sheets integration setup."""
@@ -18,14 +18,14 @@ def test_google_sheets_integration():
     print("=" * 40)
 
     # Test 1: Check if credentials file exists
-    credentials_file = project_root / "client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json"
+    credentials_file = (
+        project_root
+        / "client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json"
+    )
     print(f"📁 Credentials file: {'✅' if credentials_file.exists() else '❌'}")
 
     # Test 2: Check if Google Sheets packages are available
     try:
-        from google_auth_oauthlib.flow import InstalledAppFlow
-        from googleapiclient.discovery import build
-        from google.auth.transport.requests import Request
         print("📦 Google API packages: ✅")
     except ImportError as e:
         print(f"📦 Google API packages: ❌ ({e})")
@@ -34,12 +34,11 @@ def test_google_sheets_integration():
     # Test 3: Try to initialize Google Sheets integration
     try:
         from google_sheets_integration import GoogleSheetsIntegration
+
         print("🔧 Google Sheets Integration import: ✅")
 
         # Try to initialize (this will prompt for auth if needed)
-        sheets = GoogleSheetsIntegration(
-            credentials_path=str(credentials_file)
-        )
+        sheets = GoogleSheetsIntegration(credentials_path=str(credentials_file))
 
         if sheets.service:
             print("🔐 Google Sheets service initialized: ✅")
@@ -53,6 +52,7 @@ def test_google_sheets_integration():
         print(f"🔧 Google Sheets Integration: ❌ ({e})")
         return False
 
+
 def test_cli_arguments():
     """Test the CLI arguments parsing."""
 
@@ -60,19 +60,26 @@ def test_cli_arguments():
     print("=" * 30)
 
     try:
-        from universal_automation import main
         print("📋 CLI module import: ✅")
 
         # Test argument parsing
         import argparse
+
         parser = argparse.ArgumentParser()
 
         # Add the arguments we expect
-        parser.add_argument("--export", choices=["csv", "google_sheets", "both"], default="both")
+        parser.add_argument(
+            "--export", choices=["csv", "google_sheets", "both"], default="both"
+        )
         parser.add_argument("--credentials", help="Path to credentials file")
 
         # Test parsing
-        test_args = ["--export", "google_sheets", "--credentials", str(credentials_file)]
+        test_args = [
+            "--export",
+            "google_sheets",
+            "--credentials",
+            str(credentials_file),
+        ]
         args = parser.parse_args(test_args)
 
         print(f"📋 Export format: {args.export} ✅")
@@ -83,6 +90,7 @@ def test_cli_arguments():
     except Exception as e:
         print(f"📋 CLI test: ❌ ({e})")
         return False
+
 
 def test_logs_directory():
     """Test logs directory setup."""
@@ -104,12 +112,16 @@ def test_logs_directory():
         print(f"📝 Log file writing: ❌ ({e})")
         return False
 
+
 if __name__ == "__main__":
     print("🚀 Google Sheets Integration Test Suite")
     print("=" * 50)
 
     # Get credentials file path
-    credentials_file = project_root / "client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json"
+    credentials_file = (
+        project_root
+        / "client_secret_1020100796152-n6l4bloev9ha8to4mcbc6h3p8e1n1t3e.apps.googleusercontent.com.json"
+    )
 
     # Run all tests
     test_results = []

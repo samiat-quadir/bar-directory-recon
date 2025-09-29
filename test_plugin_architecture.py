@@ -7,11 +7,12 @@ This demonstrates the complete plugin workflow:
 3. Data processing pipeline (fetch -> transform -> validate)
 """
 
-import sys
 import os
+import sys
 
 # Add current directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 
 def test_plugin_architecture():
     """Test the complete plugin architecture."""
@@ -20,6 +21,7 @@ def test_plugin_architecture():
     # Step 1: Import plugin loader
     try:
         import universal_recon.plugins.loader as loader
+
         print("✅ Plugin loader imported successfully")
     except ImportError as e:
         print(f"❌ Failed to import plugin loader: {e}")
@@ -30,11 +32,11 @@ def test_plugin_architecture():
     print(f"✅ Discovered {len(plugins)} plugins")
 
     # Step 3: Test specific plugins that don't require external dependencies
-    target_plugins = ['reference_realtor', 'ai_template_indexer_v2']
+    target_plugins = ["reference_realtor", "ai_template_indexer_v2"]
     tested_plugins = 0
 
     for plugin_module in plugins:
-        module_name = plugin_module.__name__.split('.')[-1]
+        module_name = plugin_module.__name__.split(".")[-1]
 
         if module_name not in target_plugins:
             continue
@@ -46,21 +48,28 @@ def test_plugin_architecture():
             plugin_class = None
             for attr_name in dir(plugin_module):
                 attr = getattr(plugin_module, attr_name)
-                if (hasattr(attr, '__class__') and
-                    hasattr(attr, 'name') and hasattr(attr, 'fetch') and
-                    hasattr(attr, 'transform') and hasattr(attr, 'validate')):
+                if (
+                    hasattr(attr, "__class__")
+                    and hasattr(attr, "name")
+                    and hasattr(attr, "fetch")
+                    and hasattr(attr, "transform")
+                    and hasattr(attr, "validate")
+                ):
                     # This looks like a plugin instance
                     plugin_instance = attr
                     break
-                elif (isinstance(attr, type) and
-                      hasattr(attr, 'name') and hasattr(attr, 'fetch')):
+                elif (
+                    isinstance(attr, type)
+                    and hasattr(attr, "name")
+                    and hasattr(attr, "fetch")
+                ):
                     # This looks like a plugin class
                     plugin_class = attr
                     break
 
             if plugin_class:
                 plugin_instance = plugin_class()
-            elif 'plugin_instance' not in locals():
+            elif "plugin_instance" not in locals():
                 print(f"⚠️  No plugin class or instance found in {module_name}")
                 continue
 
@@ -83,7 +92,9 @@ def test_plugin_architecture():
                 if record_count >= 2:  # Limit output per plugin
                     break
 
-            print(f"🎯 Plugin {module_name} processed {record_count} records successfully")
+            print(
+                f"🎯 Plugin {module_name} processed {record_count} records successfully"
+            )
             tested_plugins += 1
 
         except Exception as e:
@@ -93,9 +104,12 @@ def test_plugin_architecture():
     print("\n🏆 Plugin Architecture Test Summary:")
     print(f"   📊 Total plugins discovered: {len(plugins)}")
     print(f"   ✅ Plugins tested successfully: {tested_plugins}")
-    print(f"   🎯 Architecture validation: {'PASSED' if tested_plugins > 0 else 'FAILED'}")
+    print(
+        f"   🎯 Architecture validation: {'PASSED' if tested_plugins > 0 else 'FAILED'}"
+    )
 
     return tested_plugins > 0
+
 
 if __name__ == "__main__":
     success = test_plugin_architecture()

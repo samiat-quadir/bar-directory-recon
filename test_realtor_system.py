@@ -7,10 +7,12 @@ import os
 import sys
 from pathlib import Path
 
+
 def test_imports():
     """Test if all required modules can be imported (pytest friendly)."""
     # core third-party deps
     import importlib
+
     import pytest
 
     required = [
@@ -30,16 +32,21 @@ def test_imports():
     # project import
     sys.path.insert(0, str(Path(__file__).parent))
     try:
-        from universal_recon.plugins.realtor_directory_plugin import scrape_realtor_directory  # type: ignore
+        from universal_recon.plugins.realtor_directory_plugin import (
+            scrape_realtor_directory,  # type: ignore
+        )
+
         _ = scrape_realtor_directory
     except Exception as e:
         pytest.skip(f"Plugin import failed: {e}")
+
 
 def test_directories():
     """Test if required directories exist."""
     required_dirs = ["outputs", "logs", "universal_recon/plugins"]
     for directory in required_dirs:
         assert os.path.exists(directory), f"Missing directory: {directory}"
+
 
 def test_files():
     """Test if required files exist."""
@@ -52,9 +59,11 @@ def test_files():
     for file_path in required_files:
         assert os.path.exists(file_path), f"Missing file: {file_path}"
 
+
 def test_plugin_registry():
     """Test plugin registry configuration."""
     import json
+
     with open("universal_recon/plugin_registry.json", "r") as f:
         registry = json.load(f)
 
@@ -66,7 +75,10 @@ def test_plugin_registry():
 
     assert realtor_plugin is not None, "Realtor directory plugin not found in registry"
     assert isinstance(realtor_plugin.get("module"), str), "Plugin module not defined"
-    assert isinstance(realtor_plugin.get("function"), str), "Plugin function not defined"
+    assert isinstance(
+        realtor_plugin.get("function"), str
+    ), "Plugin function not defined"
+
 
 def main():
     """Convenience runner when executed directly."""

@@ -46,7 +46,8 @@ def summarize_records(records: List[Dict]) -> Dict:
     # Aggregate stats
     summary["score_distribution"].sort(reverse=True)
     summary["average_score"] = round(
-        sum(summary["score_distribution"]) / max(1, len(summary["score_distribution"])), 2
+        sum(summary["score_distribution"]) / max(1, len(summary["score_distribution"])),
+        2,
     )
     summary["completeness_rate"] = round(
         (len(records) - summary["incomplete_records"]) / max(1, len(records)), 2

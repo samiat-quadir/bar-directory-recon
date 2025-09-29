@@ -6,17 +6,21 @@ Hardcoded Path Scanner
 Scans the codebase for hardcoded paths and suggests replacements.
 """
 
+import argparse
 import os
 import re
 import sys
-import argparse
 from pathlib import Path
-from typing import List, Dict, Tuple, Optional
+from typing import Dict, List, Optional
 
 # Import our device path resolver if possible
 try:
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
-    from device_path_resolver import get_project_root_path, get_onedrive_path
+    sys.path.insert(
+        0,
+        os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"
+        ),
+    )
 
     RESOLVER_AVAILABLE = True
 except ImportError:
@@ -58,7 +62,17 @@ EXCLUDE_PATTERNS = [
 ]
 
 # File extensions to scan
-SCAN_EXTENSIONS = {".py", ".md", ".txt", ".json", ".yml", ".yaml", ".bat", ".ps1", ".sh"}
+SCAN_EXTENSIONS = {
+    ".py",
+    ".md",
+    ".txt",
+    ".json",
+    ".yml",
+    ".yaml",
+    ".bat",
+    ".ps1",
+    ".sh",
+}
 
 
 class HardcodedPathScanner:
@@ -128,7 +142,9 @@ class HardcodedPathScanner:
                 with open(file_path, "w", encoding="utf-8") as f:
                     f.write(content)
                 self.files_fixed += 1
-                print(f"✅ Fixed hardcoded paths in {file_path.relative_to(self.root_dir)}")
+                print(
+                    f"✅ Fixed hardcoded paths in {file_path.relative_to(self.root_dir)}"
+                )
             except Exception as e:
                 print(f"Error writing fixed content to {file_path}: {e}")
 
@@ -236,13 +252,24 @@ def main():
     parser = argparse.ArgumentParser(
         description="Scan for hardcoded paths that cause cross-device compatibility issues"
     )
-    parser.add_argument("--fix", action="store_true", help="Automatically fix detected issues where possible")
-    parser.add_argument("--directory", type=str, default=".", help="Directory to scan (default: current directory)")
+    parser.add_argument(
+        "--fix",
+        action="store_true",
+        help="Automatically fix detected issues where possible",
+    )
+    parser.add_argument(
+        "--directory",
+        type=str,
+        default=".",
+        help="Directory to scan (default: current directory)",
+    )
 
     args = parser.parse_args()
 
     if not RESOLVER_AVAILABLE:
-        print("⚠️  Warning: device_path_resolver.py not available. Fix mode will be limited.")
+        print(
+            "⚠️  Warning: device_path_resolver.py not available. Fix mode will be limited."
+        )
 
     scanner = HardcodedPathScanner(args.directory, args.fix)
     scanner.scan_all_files()

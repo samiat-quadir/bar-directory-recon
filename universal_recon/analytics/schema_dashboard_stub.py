@@ -23,7 +23,9 @@ def summarize_sites(matrix_path: str, export_path: str = None, verbose: bool = F
     if verbose:
         print("\n📊 Schema Dashboard Summary:")
         for item in summary:
-            print(f"  • {item['site']}: {item['field_score']} pts, {item['plugin_count']} plugins")
+            print(
+                f"  • {item['site']}: {item['field_score']} pts, {item['plugin_count']} plugins"
+            )
 
     if export_path:
         Path(export_path).write_text(json.dumps(summary, indent=2))
@@ -33,7 +35,9 @@ def summarize_sites(matrix_path: str, export_path: str = None, verbose: bool = F
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Schema Dashboard Stub")
-    parser.add_argument("--matrix-path", required=True, help="Path to schema_matrix.json")
+    parser.add_argument(
+        "--matrix-path", required=True, help="Path to schema_matrix.json"
+    )
     parser.add_argument("--export-json", help="Output path for dashboard summary")
     parser.add_argument("--verbose", action="store_true", help="Verbose printout")
     args = parser.parse_args()

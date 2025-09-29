@@ -2,4 +2,3 @@ ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]
 __main__.py: error: unrecognized arguments: --cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=35
   inifile: C:\Code\bar-directory-recon\pyproject.toml
   rootdir: C:\Code\bar-directory-recon
-

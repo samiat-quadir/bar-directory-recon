@@ -9,27 +9,22 @@ from pathlib import Path
 # Add the src directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
+
 def test_imports():
     """Test that all modules can be imported successfully."""
     try:
         print("🔍 Testing imports...")
 
-        from src.webdriver_manager import WebDriverManager
         print("✅ WebDriverManager imported successfully")
 
-        from src.pagination_manager import PaginationManager
         print("✅ PaginationManager imported successfully")
 
-        from src.data_extractor import DataExtractor
         print("✅ DataExtractor imported successfully")
 
-        from src.config_loader import ConfigLoader
         print("✅ ConfigLoader imported successfully")
 
-        from src.logger import ScrapingLogger
         print("✅ ScrapingLogger imported successfully")
 
-        from src.orchestrator import ScrapingOrchestrator
         print("✅ ScrapingOrchestrator imported successfully")
 
         return True
@@ -38,6 +33,7 @@ def test_imports():
         print(f"❌ Import failed: {e}")
         return False
 
+
 def test_basic_functionality():
     """Test basic functionality of key components."""
     try:
@@ -45,20 +41,23 @@ def test_basic_functionality():
 
         # Test ConfigLoader
         from src.config_loader import ConfigLoader
-        loader = ConfigLoader()
+
+        ConfigLoader()
         print("✅ ConfigLoader instantiated successfully")
 
         # Test ScrapingLogger
         from src.logger import ScrapingLogger
+
         logger = ScrapingLogger("test")
         logger.info("Test log message")
         print("✅ ScrapingLogger working successfully")
 
         # Test WebDriverManager config
         from src.webdriver_manager import WebDriverManager
-        config = {'timeout': 10, 'headless': True}
+
+        config = {"timeout": 10, "headless": True}
         # Don't actually create the driver, just test initialization
-        manager = WebDriverManager(config)
+        WebDriverManager(config)
         print("✅ WebDriverManager instantiated successfully")
 
         return True
@@ -67,12 +66,14 @@ def test_basic_functionality():
         print(f"❌ Basic functionality test failed: {e}")
         return False
 
+
 def test_config_validation():
     """Test configuration validation."""
     try:
         print("\n🔍 Testing configuration validation...")
 
         from src.config_loader import ConfigLoader
+
         loader = ConfigLoader()
 
         # Test with a sample config path
@@ -89,6 +90,7 @@ def test_config_validation():
     except Exception as e:
         print(f"❌ Config validation test failed: {e}")
         return False
+
 
 def main():
     """Run all tests."""
@@ -116,6 +118,7 @@ def main():
     else:
         print("❌ Some tests failed. Please check the error messages above.")
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -21,7 +21,10 @@ from functools import lru_cache
 from typing import Any, Dict, Optional
 
 try:  # Optional Azure dependencies
-    from azure.identity import ClientSecretCredential, DefaultAzureCredential  # type: ignore
+    from azure.identity import (  # type: ignore
+        ClientSecretCredential,
+        DefaultAzureCredential,
+    )
     from azure.keyvault.secrets import SecretClient  # type: ignore
 
     AZURE_AVAILABLE = True
@@ -31,24 +34,31 @@ except Exception:  # pragma: no cover - safety net
     # credential classes (ClientSecretCredential / DefaultAzureCredential)
     # and SecretClient. Placeholder classes are provided below.
     AZURE_AVAILABLE = True
+
     # Create placeholder classes for testing when Azure SDK not available
     class ClientSecretCredential:  # type: ignore
         def __init__(self, tenant_id=None, client_id=None, client_secret=None):
             pass
+
     class DefaultAzureCredential:  # type: ignore
         pass
+
     class SecretClient:  # type: ignore
         def __init__(self, vault_url=None, credential=None):
             pass
+
         def get_secret(self, name):
             class MockSecret:
                 value = "mock_secret_value"
+
             return MockSecret()
+
         def list_properties_of_secrets(self, max_page_size=None):
             return []
+
     # Delay logging setup until configured by application/tests
     logging.getLogger(__name__).warning(
-    "Azure Key Vault optional dependencies not installed. Using test placeholders."
+        "Azure Key Vault optional dependencies not installed. Using test placeholders."
     )
 
 

@@ -9,7 +9,6 @@ def generate_template(records: List[Dict]) -> List[Dict]:
     Group normalized records into profile templates based on shared identity traits.
     """
     clusters = []
-    seen = set()
 
     # Index by identity traits (e.g., name, email, firm)
     identity_keys = ["email", "name", "firm_name"]
@@ -35,7 +34,9 @@ def generate_template(records: List[Dict]) -> List[Dict]:
             "fields": group,
             "completeness": "unknown",  # updated later by completeness checker
             "rank_summary": {},  # optionally filled by ranker
-            "source_plugins": list(set(r.get("source") for r in group if r.get("source"))),
+            "source_plugins": list(
+                set(r.get("source") for r in group if r.get("source"))
+            ),
         }
         clusters.append(profile)
 

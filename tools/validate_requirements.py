@@ -15,9 +15,9 @@ Usage:
     python validate_requirements.py --fix
 """
 
-import sys
-import re
 import argparse
+import re
+import sys
 from pathlib import Path
 from typing import List, Tuple
 
@@ -70,11 +70,23 @@ def validate_file(file_path: Path) -> List[Tuple[str, str, str]]:
         # Check for forbidden dependencies
         for forbidden in FORBIDDEN_DEPENDENCIES:
             if forbidden in line:
-                issues.append((str(line_num), f"Forbidden dependency found: {forbidden}", "Remove this line entirely"))
+                issues.append(
+                    (
+                        str(line_num),
+                        f"Forbidden dependency found: {forbidden}",
+                        "Remove this line entirely",
+                    )
+                )
 
         # Check for watchdog version issues specifically
         if re.search(r"watchdog>=3\.\d+\.\d+", line):
-            issues.append((str(line_num), "Outdated dependency: watchdog>=3.x.x", "Change to: watchdog>=6.0.0,<7.0.0"))
+            issues.append(
+                (
+                    str(line_num),
+                    "Outdated dependency: watchdog>=3.x.x",
+                    "Change to: watchdog>=6.0.0,<7.0.0",
+                )
+            )
 
         # Check for specific fixes from our known patterns
         for old_pattern, new_pattern in file_fixes.items():
@@ -84,7 +96,9 @@ def validate_file(file_path: Path) -> List[Tuple[str, str, str]]:
                 else:
                     fix_msg = f"Change to: {new_pattern}"
 
-                issues.append((str(line_num), f"Outdated dependency: {old_pattern}", fix_msg))
+                issues.append(
+                    (str(line_num), f"Outdated dependency: {old_pattern}", fix_msg)
+                )
 
     return issues
 
@@ -158,9 +172,17 @@ def fix_file(file_path: Path) -> bool:
 
 def main():
     """Main function to validate and optionally fix requirements files."""
-    parser = argparse.ArgumentParser(description="Validate requirements files for known issues")
-    parser.add_argument("--fix", action="store_true", help="Automatically fix detected issues")
-    parser.add_argument("--files", nargs="*", help="Specific files to check (default: all known requirements files)")
+    parser = argparse.ArgumentParser(
+        description="Validate requirements files for known issues"
+    )
+    parser.add_argument(
+        "--fix", action="store_true", help="Automatically fix detected issues"
+    )
+    parser.add_argument(
+        "--files",
+        nargs="*",
+        help="Specific files to check (default: all known requirements files)",
+    )
 
     args = parser.parse_args()
 
@@ -212,7 +234,7 @@ def main():
 
     # Summary
     if args.fix:
-        print(f"📊 Summary:")
+        print("📊 Summary:")
         print(f"   Files processed: {len(files_to_check)}")
         print(f"   Files with fixes applied: {files_with_fixes}")
         if files_with_fixes > 0:
@@ -220,7 +242,7 @@ def main():
         else:
             print("🎉 All files were already valid!")
     else:
-        print(f"📊 Summary:")
+        print("📊 Summary:")
         print(f"   Files checked: {len(files_to_check)}")
         print(f"   Total issues found: {total_issues}")
         if total_issues == 0:

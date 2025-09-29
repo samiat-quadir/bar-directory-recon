@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Test the converted AI Template Indexer plugin."""
 
-import sys
 import os
+import sys
 
 # Add current directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 try:
     from universal_recon.plugins.ai_template_indexer_v2 import AITemplateIndexerPlugin
+
     print("✅ AI Template Indexer plugin imported successfully")
 
     # Create plugin instance
@@ -23,7 +24,9 @@ try:
 
         # Test transform method
         transformed = plugin.transform(record)
-        print(f"🔄 Transformed to type: {transformed['template_type']} (confidence: {transformed['template_confidence']})")
+        print(
+            f"🔄 Transformed to type: {transformed['template_type']} (confidence: {transformed['template_confidence']})"
+        )
 
         # Test validate method
         is_valid = plugin.validate(transformed)
@@ -33,7 +36,9 @@ try:
         if fetch_count >= 3:  # Limit output
             break
 
-    print(f"🎯 AI Template Indexer plugin test COMPLETED - processed {fetch_count} records")
+    print(
+        f"🎯 AI Template Indexer plugin test COMPLETED - processed {fetch_count} records"
+    )
 
 except ImportError as e:
     print(f"❌ Import error: {e}")

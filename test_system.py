@@ -7,9 +7,7 @@ Tests all new plugins, Google Sheets integration, lead scoring, and automation f
 import argparse
 import json
 import logging
-import os
 import sys
-from datetime import datetime
 from pathlib import Path
 
 # Add project path for imports
@@ -17,8 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -33,13 +30,19 @@ def test_plugin_registry():
         return False
 
     try:
-        with open(registry_path, 'r') as f:
+        with open(registry_path, "r") as f:
             plugins = json.load(f)
 
         expected_plugins = [
-            "realtor_directory", "pool_contractors", "lawyers",
-            "hvac_plumbers", "auto_dealers", "homeadvisor",
-            "thumbtack", "houzz", "angi"
+            "realtor_directory",
+            "pool_contractors",
+            "lawyers",
+            "hvac_plumbers",
+            "auto_dealers",
+            "homeadvisor",
+            "thumbtack",
+            "houzz",
+            "angi",
         ]
 
         registered_plugins = [p["site_name"] for p in plugins]
@@ -67,7 +70,7 @@ def test_new_plugins():
         ("homeadvisor", "home_services", "Phoenix"),
         ("thumbtack", "professional_services", "Austin"),
         ("houzz", "design_services", "Denver"),
-        ("angi", "home_services", "Seattle")
+        ("angi", "home_services", "Seattle"),
     ]
 
     success_count = 0
@@ -80,20 +83,19 @@ def test_new_plugins():
             module_path = f"universal_recon.plugins.{plugin_name}_plugin"
             module = __import__(module_path, fromlist=[plugin_name])
 
-            config = {
-                "city": city,
-                "state": "",
-                "max_records": 5,
-                "test_mode": True
-            }
+            config = {"city": city, "state": "", "max_records": 5, "test_mode": True}
 
             result = module.run_plugin(config)
 
             if result["success"] and result["count"] > 0:
-                logger.info(f"  ✅ {plugin_name} - {result['count']} test leads generated")
+                logger.info(
+                    f"  ✅ {plugin_name} - {result['count']} test leads generated"
+                )
                 success_count += 1
             else:
-                logger.error(f"  ❌ {plugin_name} - failed: {result.get('error', 'Unknown error')}")
+                logger.error(
+                    f"  ❌ {plugin_name} - failed: {result.get('error', 'Unknown error')}"
+                )
 
         except Exception as e:
             logger.error(f"  ❌ {plugin_name} - exception: {e}")
@@ -110,18 +112,24 @@ def test_universal_automation():
         {
             "args": ["--industry", "home_services", "--city", "Miami", "--test"],
             "expected_plugins": 2,  # homeadvisor + angi
-            "description": "Home services industry test"
+            "description": "Home services industry test",
         },
         {
-            "args": ["--industry", "professional_services", "--city", "Boston", "--test"],
+            "args": [
+                "--industry",
+                "professional_services",
+                "--city",
+                "Boston",
+                "--test",
+            ],
             "expected_plugins": 1,  # thumbtack
-            "description": "Professional services industry test"
+            "description": "Professional services industry test",
         },
         {
             "args": ["--industry", "design_services", "--city", "Portland", "--test"],
             "expected_plugins": 1,  # houzz
-            "description": "Design services industry test"
-        }
+            "description": "Design services industry test",
+        },
     ]
 
     success_count = 0
@@ -140,7 +148,7 @@ def test_universal_automation():
                 "city": test_case["args"][3],
                 "state": "",
                 "max_records": 5,
-                "test_mode": True
+                "test_mode": True,
             }
 
             result = automation.scrape_industry(
@@ -148,14 +156,18 @@ def test_universal_automation():
                 city=config["city"],
                 state=config["state"],
                 max_records=config["max_records"],
-                test_mode=config["test_mode"]
+                test_mode=config["test_mode"],
             )
 
             if result["success"] and result["count"] > 0:
-                logger.info(f"  ✅ Generated {result['count']} leads from {result['plugins_run']} plugins")
+                logger.info(
+                    f"  ✅ Generated {result['count']} leads from {result['plugins_run']} plugins"
+                )
                 success_count += 1
             else:
-                logger.error(f"  ❌ Automation failed: {result.get('error', 'No leads generated')}")
+                logger.error(
+                    f"  ❌ Automation failed: {result.get('error', 'No leads generated')}"
+                )
 
         except Exception as e:
             logger.error(f"  ❌ Exception in {test_case['description']}: {e}")
@@ -178,6 +190,7 @@ def test_lead_scoring():
 
             # Generate some test data
             from universal_automation import UniversalLeadAutomation
+
             automation = UniversalLeadAutomation()
 
             config = {
@@ -185,7 +198,7 @@ def test_lead_scoring():
                 "city": "Tampa",
                 "state": "FL",
                 "max_records": 10,
-                "test_mode": True
+                "test_mode": True,
             }
 
             result = automation.scrape_industry(
@@ -193,7 +206,7 @@ def test_lead_scoring():
                 city=config["city"],
                 state=config["state"],
                 max_records=config["max_records"],
-                test_mode=config["test_mode"]
+                test_mode=config["test_mode"],
             )
             if not result["success"]:
                 logger.error("Failed to generate test data for scoring")
@@ -205,8 +218,10 @@ def test_lead_scoring():
         # Create test args
         test_args = [
             str(outputs_dir),
-            "--output", "test_priority_leads.csv",
-            "--top", "10"
+            "--output",
+            "test_priority_leads.csv",
+            "--top",
+            "10",
         ]
 
         # Mock sys.argv for the scoring script
@@ -242,31 +257,38 @@ def test_google_sheets_utils():
     logger.info("Testing Google Sheets utilities...")
 
     try:
-        from universal_recon.plugins.google_sheets_utils import export_to_google_sheets, get_sheet_url
+        from universal_recon.plugins.google_sheets_utils import (
+            export_to_google_sheets,
+            get_sheet_url,
+        )
 
         # Test URL generation
         test_sheet_id = "1234567890abcdef"
         test_sheet_name = "Test_Leads"
 
         url = get_sheet_url(test_sheet_id, test_sheet_name)
-        expected_url = f"https://docs.google.com/spreadsheets/d/{test_sheet_id}#gid=Test_Leads"
+        expected_url = (
+            f"https://docs.google.com/spreadsheets/d/{test_sheet_id}#gid=Test_Leads"
+        )
 
         if url == expected_url:
             logger.info("  ✅ Google Sheets URL generation works")
         else:
-            logger.error(f"  ❌ URL generation failed. Expected: {expected_url}, Got: {url}")
+            logger.error(
+                f"  ❌ URL generation failed. Expected: {expected_url}, Got: {url}"
+            )
             return False
 
         # Test export function (will fail without credentials, but should handle gracefully)
-        test_data = [
-            {"Name": "Test Company", "Phone": "555-1234", "City": "Test City"}
-        ]
+        test_data = [{"Name": "Test Company", "Phone": "555-1234", "City": "Test City"}]
 
         result = export_to_google_sheets(test_data, test_sheet_id, test_sheet_name)
 
         # Should return False due to missing credentials, but not crash
         if result is False:
-            logger.info("  ✅ Google Sheets export handled missing credentials gracefully")
+            logger.info(
+                "  ✅ Google Sheets export handled missing credentials gracefully"
+            )
             return True
         else:
             logger.warning("  ⚠️ Unexpected result from Google Sheets export")
@@ -292,15 +314,10 @@ def test_file_structure():
         "universal_recon/plugins/google_sheets_utils.py",
         "weekly_automation.bat",
         "weekly_automation.ps1",
-        "docs/COPILOT_AUTO_CONFIRM_SETUP.md"
+        "docs/COPILOT_AUTO_CONFIRM_SETUP.md",
     ]
 
-    required_dirs = [
-        "outputs",
-        "logs",
-        "universal_recon/plugins",
-        "docs"
-    ]
+    required_dirs = ["outputs", "logs", "universal_recon/plugins", "docs"]
 
     missing_files = []
     missing_dirs = []
@@ -340,7 +357,7 @@ def run_comprehensive_test():
         ("New Plugins", test_new_plugins),
         ("Universal Automation", test_universal_automation),
         ("Lead Scoring", test_lead_scoring),
-        ("Google Sheets Utils", test_google_sheets_utils)
+        ("Google Sheets Utils", test_google_sheets_utils),
     ]
 
     results = {}
@@ -376,16 +393,26 @@ def run_comprehensive_test():
         logger.info("🎉 All tests passed! System is ready for production use.")
         return True
     else:
-        logger.error(f"❌ {total - passed} tests failed. Please fix issues before deployment.")
+        logger.error(
+            f"❌ {total - passed} tests failed. Please fix issues before deployment."
+        )
         return False
 
 
 def main():
     """Main test function."""
-    parser = argparse.ArgumentParser(description="Test Universal Lead Generation System")
-    parser.add_argument("--test", choices=["all", "plugins", "automation", "scoring", "structure"],
-                       default="all", help="Which test to run")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
+    parser = argparse.ArgumentParser(
+        description="Test Universal Lead Generation System"
+    )
+    parser.add_argument(
+        "--test",
+        choices=["all", "plugins", "automation", "scoring", "structure"],
+        default="all",
+        help="Which test to run",
+    )
+    parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
+    )
 
     args = parser.parse_args()
 

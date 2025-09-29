@@ -3,8 +3,6 @@
 import json
 import os
 import time
-from datetime import datetime, timedelta
-from pathlib import Path
 
 OUTPUT_DIR = "output"
 STATUS_JSON = os.path.join(OUTPUT_DIR, "output_status.json")
@@ -41,7 +39,9 @@ def emit_html(status, stale_warnings, missing):
         health = info.get("site_health", "unknown").upper()
         plugins = ", ".join(info.get("plugins_removed", [])) or "None"
         penalty = info.get("score_suppressed_by", 0)
-        color = {"OK": "#2ecc71", "WARNING": "#f1c40f", "DEGRADED": "#e74c3c"}.get(health, "#ccc")
+        color = {"OK": "#2ecc71", "WARNING": "#f1c40f", "DEGRADED": "#e74c3c"}.get(
+            health, "#ccc"
+        )
         drift_badge = "✅" if not drift else "⚠️"
         rows.append(
             f"<tr><td>{site}</td><td style='color:{color}'>{health}</td>"

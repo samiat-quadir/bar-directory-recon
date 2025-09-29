@@ -4,7 +4,7 @@ This plugin classifies grouped records (template blocks) into profile templates
 such as individual, firm, hybrid, or unknown based on field composition.
 """
 
-from typing import Iterator, Dict, Any, List
+from typing import Any, Dict, Iterator, List
 
 
 class AITemplateIndexerPlugin:
@@ -32,16 +32,16 @@ class AITemplateIndexerPlugin:
                     {"type": "name", "value": "John Smith"},
                     {"type": "email", "value": "j.smith@example.com"},
                     {"type": "bar_number", "value": "12345"},
-                    {"type": "phone", "value": "555-0123"}
-                ]
+                    {"type": "phone", "value": "555-0123"},
+                ],
             },
             {
                 "group_id": "template_002",
                 "fields": [
                     {"type": "firm_name", "value": "Smith & Associates"},
                     {"type": "phone", "value": "555-0456"},
-                    {"type": "address", "value": "123 Main St"}
-                ]
+                    {"type": "address", "value": "123 Main St"},
+                ],
             },
             {
                 "group_id": "template_003",
@@ -49,9 +49,9 @@ class AITemplateIndexerPlugin:
                     {"type": "name", "value": "Sarah Johnson"},
                     {"type": "firm_name", "value": "Johnson Law Group"},
                     {"type": "email", "value": "s.johnson@jlg.com"},
-                    {"type": "phone", "value": "555-0789"}
-                ]
-            }
+                    {"type": "phone", "value": "555-0789"},
+                ],
+            },
         ]
 
         for group in sample_groups:
@@ -67,7 +67,9 @@ class AITemplateIndexerPlugin:
             Dict[str, Any]: Template with classification and scoring
         """
         template = raw_data.copy()
-        field_types = {field["type"] for field in raw_data.get("fields", []) if "type" in field}
+        field_types = {
+            field["type"] for field in raw_data.get("fields", []) if "type" in field
+        }
 
         # Classification rules based on field composition
         if {"name", "email", "bar_number"}.issubset(field_types):
@@ -80,7 +82,9 @@ class AITemplateIndexerPlugin:
             template_type = "unknown"
 
         # Calculate template score (completeness signal)
-        template_score = len(field_types) / 8.0  # normalized against expected max fields
+        template_score = (
+            len(field_types) / 8.0
+        )  # normalized against expected max fields
 
         # Determine confidence level
         if template_score > 0.75:
@@ -91,14 +95,16 @@ class AITemplateIndexerPlugin:
             template_confidence = "low"
 
         # Add classification metadata
-        template.update({
-            "template_type": template_type,
-            "template_score": template_score,
-            "template_confidence": template_confidence,
-            "field_count": len(field_types),
-            "field_types": list(field_types),
-            "source": "ai_template_indexer"
-        })
+        template.update(
+            {
+                "template_type": template_type,
+                "template_score": template_score,
+                "template_confidence": template_confidence,
+                "field_count": len(field_types),
+                "field_types": list(field_types),
+                "source": "ai_template_indexer",
+            }
+        )
 
         return template
 
@@ -112,7 +118,12 @@ class AITemplateIndexerPlugin:
             bool: True if template passes validation, False otherwise
         """
         # Check required fields are present
-        required_fields = ["template_type", "template_score", "template_confidence", "source"]
+        required_fields = [
+            "template_type",
+            "template_score",
+            "template_confidence",
+            "source",
+        ]
         if not all(field in transformed_data for field in required_fields):
             return False
 

@@ -1,6 +1,5 @@
 # plugins/ai_template_indexer.py
 
-from collections import defaultdict
 from typing import Dict, List
 
 
@@ -31,7 +30,9 @@ def apply(records: List[Dict], context: str = "ai_template_indexer") -> List[Dic
         template["template_confidence"] = (
             "high"
             if template["template_score"] > 0.75
-            else "medium" if template["template_score"] > 0.5 else "low"
+            else "medium"
+            if template["template_score"] > 0.5
+            else "low"
         )
 
         templates.append(template)

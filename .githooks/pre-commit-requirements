@@ -5,8 +5,8 @@ Pre-commit hook to validate requirements files before committing.
 This hook prevents committing requirements files with known problematic dependencies.
 """
 
-import sys
 import subprocess
+import sys
 from pathlib import Path
 
 
@@ -26,7 +26,10 @@ def main() -> int:
     try:
         # Run the validation script
         result = subprocess.run(
-            [sys.executable, str(validation_script)], capture_output=True, text=True, cwd=project_root
+            [sys.executable, str(validation_script)],
+            capture_output=True,
+            text=True,
+            cwd=project_root,
         )
 
         # Print the output
@@ -37,7 +40,9 @@ def main() -> int:
 
         if result.returncode != 0:
             print("\n❌ Requirements validation failed!")
-            print("💡 Fix the issues above or run: python tools/validate_requirements.py --fix")
+            print(
+                "💡 Fix the issues above or run: python tools/validate_requirements.py --fix"
+            )
             return 1
 
         print("✅ Requirements validation passed!")

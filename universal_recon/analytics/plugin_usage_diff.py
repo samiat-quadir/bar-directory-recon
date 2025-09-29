@@ -17,7 +17,9 @@ def load_plugins(schema_path: str) -> Set[str]:
     try:
         with open(schema_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-            plugins = set(data.get("plugins_used", [])) if isinstance(data, dict) else set()
+            plugins = (
+                set(data.get("plugins_used", [])) if isinstance(data, dict) else set()
+            )
     except json.JSONDecodeError:
         logger.warning(f"Invalid JSON in schema: {schema_path}")
         return set()
@@ -25,10 +27,18 @@ def load_plugins(schema_path: str) -> Set[str]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Compare plugin usage between two schema matrices")
-    parser.add_argument("--before", required=True, help="Path to the before schema matrix JSON")
-    parser.add_argument("--after", required=True, help="Path to the after schema matrix JSON")
-    parser.add_argument("--export-json", required=True, help="Path to export diff results JSON")
+    parser = argparse.ArgumentParser(
+        description="Compare plugin usage between two schema matrices"
+    )
+    parser.add_argument(
+        "--before", required=True, help="Path to the before schema matrix JSON"
+    )
+    parser.add_argument(
+        "--after", required=True, help="Path to the after schema matrix JSON"
+    )
+    parser.add_argument(
+        "--export-json", required=True, help="Path to export diff results JSON"
+    )
 
     args = parser.parse_args()
 
