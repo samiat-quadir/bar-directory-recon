@@ -1,0 +1,36 @@
+name: Fast Parity CI
+on:
+  pull_request: { branches: [ main ] }
+  push: { branches: [ main ] }
+jobs:
+  ubuntu:
+    name: fast-tests (ubuntu-latest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: python -m pip install -U pip
+      - run: |
+          if [ -f requirements-lock.txt ]; then python -m pip install -r requirements-lock.txt && python -m pip install -e .[dev] --no-deps;
+          else python -m pip install -e .[dev]; fi
+      - run: pytest -q -m "not slow and not e2e and not integration"
+  windows:
+    name: fast-tests (windows-latest)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - shell: pwsh
+        run: python -m pip install -U pip
+      - shell: pwsh
+        run: |
+          if (Test-Path 'requirements-lock.txt') {
+            python -m pip install -r requirements-lock.txt
+            python -m pip install -e .[dev] --no-deps
+          } else {
+            python -m pip install -e .[dev]
+          }
+      - shell: pwsh
+        run: pytest -q -m "not slow and not e2e and not integration"
