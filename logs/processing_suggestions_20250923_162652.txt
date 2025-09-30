@@ -1,0 +1,9 @@
+🚀 PIPELINE PROCESSING SUGGESTIONS
+==================================================
+File: ePZB_Portal_Inspection_Information_Guide_20250923_162648_palm_beach.pdf
+  Suggested command: python palm_beach_pipeline.py --input input\ePZB_Portal_Inspection_Information_Guide_20250923_162648_palm_beach.pdf
+  Alternative: python unified_scraper.py --pdf input\ePZB_Portal_Inspection_Information_Guide_20250923_162648_palm_beach.pdf
+
+File: inspectioncodes_20250923_162649_palm_beach.pdf
+  Suggested command: python palm_beach_pipeline.py --input input\inspectioncodes_20250923_162649_palm_beach.pdf
+  Alternative: python unified_scraper.py --pdf input\inspectioncodes_20250923_162649_palm_beach.pdf

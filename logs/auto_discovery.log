@@ -1,0 +1,639 @@
+2025-09-18 17:06:02,081 - DataHunter - INFO - Starting automated discovery run...
+2025-09-18 17:06:02,081 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-18 17:06:02,454 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-18 17:06:02,685 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-18 17:06:05,620 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-18 17:06:05,635 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-18 17:06:05,636 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-18 17:06:05,638 - DataHunter - INFO - Downloading ePZB_Portal_Inspection_Information_Guide.pdf (attempt 1)...
+2025-09-18 17:06:05,913 - DataHunter - INFO - Successfully downloaded: ePZB_Portal_Inspection_Information_Guide_20250918_170605_palm_beach.pdf
+2025-09-18 17:06:05,913 - DataHunter - INFO - Downloading Building_Division_Permit_and_Inspection_Utilization_Report.pdf (attempt 1)...
+2025-09-18 17:06:05,967 - DataHunter - INFO - Successfully downloaded: Building_Division_Permit_and_Inspection_Utilization_Report_20250918_170605_palm_beach.pdf
+2025-09-18 17:06:05,967 - DataHunter - INFO - Downloading inspectioncodes.pdf (attempt 1)...
+2025-09-18 17:06:06,048 - DataHunter - INFO - Successfully downloaded: inspectioncodes_20250918_170605_palm_beach.pdf
+2025-09-18 17:06:06,049 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-18 17:06:06,930 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-18 17:06:06,930 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-18 17:06:07,058 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-18 17:06:07,058 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-18 17:06:08,286 - DataHunter - ERROR - Failed to send email notification: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials 3f1490d57ef6-ea5ce98f56asm1145804276.33 - gsmtp')
+2025-09-18 17:06:08,424 - DataHunter - ERROR - Failed to send Slack notification: 404 Client Error: Not Found for url: https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+2025-09-18 17:06:08,425 - DataHunter - INFO - Pipeline processing suggestions:
+🚀 PIPELINE PROCESSING SUGGESTIONS
+==================================================
+File: ePZB_Portal_Inspection_Information_Guide_20250918_170605_palm_beach.pdf
+  Suggested command: python palm_beach_pipeline.py --input input\ePZB_Portal_Inspection_Information_Guide_20250918_170605_palm_beach.pdf
+  Alternative: python unified_scraper.py --pdf input\ePZB_Portal_Inspection_Information_Guide_20250918_170605_palm_beach.pdf
+
+File: Building_Division_Permit_and_Inspection_Utilization_Report_20250918_170605_palm_beach.pdf
+  Suggested command: python palm_beach_pipeline.py --input input\Building_Division_Permit_and_Inspection_Utilization_Report_20250918_170605_palm_beach.pdf
+  Alternative: python unified_scraper.py --pdf input\Building_Division_Permit_and_Inspection_Utilization_Report_20250918_170605_palm_beach.pdf
+
+2025-09-18 17:06:08,426 - DataHunter - INFO - Discovery run completed. New files: 3
+2025-09-19 00:44:59,908 - DataHunter - INFO - Starting automated discovery run...
+2025-09-19 00:44:59,908 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-19 00:45:00,199 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-19 00:45:00,432 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-19 00:45:03,412 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-19 00:45:03,427 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-19 00:45:03,428 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-19 00:45:03,430 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-19 00:45:04,370 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-19 00:45:04,370 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-19 00:45:04,476 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-19 00:45:04,476 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-19 00:45:05,334 - DataHunter - INFO - No new files discovered
+2025-09-19 00:45:05,334 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-22 14:12:29,051 - DataHunter - INFO - Starting automated discovery run...
+2025-09-22 14:12:29,051 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-22 14:12:29,324 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-22 14:12:29,548 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-22 14:12:32,556 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-22 14:12:32,580 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-22 14:12:32,581 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-22 14:12:32,583 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-22 14:12:33,346 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-22 14:12:33,346 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-22 14:12:33,461 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-22 14:12:33,461 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-22 14:12:34,288 - DataHunter - INFO - No new files discovered
+2025-09-22 14:12:34,288 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-22 21:02:57,054 - DataHunter - INFO - Starting automated discovery run...
+2025-09-22 21:02:57,054 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-22 21:02:57,375 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-22 21:02:57,617 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-22 21:03:00,810 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-22 21:03:00,834 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-22 21:03:00,835 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-22 21:03:00,837 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-22 21:03:01,643 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-22 21:03:01,643 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-22 21:03:01,771 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-22 21:03:01,772 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-22 21:03:02,780 - DataHunter - INFO - No new files discovered
+2025-09-22 21:03:02,780 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-22 21:29:52,719 - DataHunter - INFO - Starting automated discovery run...
+2025-09-22 21:29:52,719 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-22 21:29:53,001 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-22 21:29:53,215 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-22 21:30:00,634 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-22 21:30:00,659 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-22 21:30:00,660 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-22 21:30:00,662 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-22 21:30:01,214 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-22 21:30:01,214 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-22 21:30:01,312 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-22 21:30:01,312 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-22 21:30:01,551 - DataHunter - INFO - No new files discovered
+2025-09-22 21:30:01,551 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-22 21:54:19,016 - DataHunter - INFO - Starting automated discovery run...
+2025-09-22 21:54:19,016 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-22 21:54:19,344 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-22 21:54:19,570 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-22 21:54:22,377 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-22 21:54:22,392 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-22 21:54:22,393 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-22 21:54:22,395 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-22 21:54:23,109 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-22 21:54:23,109 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-22 21:54:23,229 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-22 21:54:23,229 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-22 21:54:23,411 - DataHunter - INFO - No new files discovered
+2025-09-22 21:54:23,411 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-23 16:26:45,963 - DataHunter - INFO - Starting automated discovery run...
+2025-09-23 16:26:45,964 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-23 16:26:46,278 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-23 16:26:46,497 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-23 16:26:48,658 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-23 16:26:48,673 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-23 16:26:48,674 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-23 16:26:48,676 - DataHunter - INFO - Downloading ePZB_Portal_Inspection_Information_Guide.pdf (attempt 1)...
+2025-09-23 16:26:48,965 - DataHunter - INFO - Successfully downloaded: ePZB_Portal_Inspection_Information_Guide_20250923_162648_palm_beach.pdf
+2025-09-23 16:26:48,965 - DataHunter - INFO - Downloading Building_Division_Permit_and_Inspection_Utilization_Report.pdf (attempt 1)...
+2025-09-23 16:26:49,010 - DataHunter - INFO - Successfully downloaded: Building_Division_Permit_and_Inspection_Utilization_Report_20250923_162648_palm_beach.pdf
+2025-09-23 16:26:49,010 - DataHunter - INFO - Downloading inspectioncodes.pdf (attempt 1)...
+2025-09-23 16:26:49,096 - DataHunter - INFO - Successfully downloaded: inspectioncodes_20250923_162649_palm_beach.pdf
+2025-09-23 16:26:49,096 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 16:26:49,898 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 16:26:49,898 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 16:26:50,012 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 16:26:50,012 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-23 16:26:52,599 - DataHunter - ERROR - Failed to send email notification: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials 00721157ae682-739718c651asm43915167b3.66 - gsmtp')
+2025-09-23 16:26:52,745 - DataHunter - ERROR - Failed to send Slack notification: 404 Client Error: Not Found for url: https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+2025-09-23 16:26:52,746 - DataHunter - INFO - Pipeline processing suggestions:
+🚀 PIPELINE PROCESSING SUGGESTIONS
+==================================================
+File: ePZB_Portal_Inspection_Information_Guide_20250923_162648_palm_beach.pdf
+  Suggested command: python palm_beach_pipeline.py --input input\ePZB_Portal_Inspection_Information_Guide_20250923_162648_palm_beach.pdf
+  Alternative: python unified_scraper.py --pdf input\ePZB_Portal_Inspection_Information_Guide_20250923_162648_palm_beach.pdf
+
+File: inspectioncodes_20250923_162649_palm_beach.pdf
+  Suggested command: python palm_beach_pipeline.py --input input\inspectioncodes_20250923_162649_palm_beach.pdf
+  Alternative: python unified_scraper.py --pdf input\inspectioncodes_20250923_162649_palm_beach.pdf
+
+2025-09-23 16:26:52,746 - DataHunter - INFO - Discovery run completed. New files: 3
+2025-09-23 16:36:52,573 - DataHunter - INFO - Starting automated discovery run...
+2025-09-23 16:36:52,573 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-23 16:36:52,895 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-23 16:36:53,130 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-23 16:36:56,097 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-23 16:36:56,122 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-23 16:36:56,124 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-23 16:36:56,126 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 16:36:56,781 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 16:36:56,781 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 16:36:56,873 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 16:36:56,874 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-23 16:36:57,627 - DataHunter - INFO - No new files discovered
+2025-09-23 16:36:57,627 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-23 16:38:15,352 - DataHunter - INFO - Starting automated discovery run...
+2025-09-23 16:38:15,352 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-23 16:38:15,629 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-23 16:38:15,832 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-23 16:38:17,869 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-23 16:38:17,893 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-23 16:38:17,894 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-23 16:38:17,896 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 16:38:18,481 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 16:38:18,481 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 16:38:18,584 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 16:38:18,584 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-23 16:38:18,771 - DataHunter - INFO - No new files discovered
+2025-09-23 16:38:18,772 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-23 16:56:11,893 - DataHunter - INFO - Starting automated discovery run...
+2025-09-23 16:56:11,893 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-23 16:56:12,242 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-23 16:56:12,448 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-23 16:56:15,875 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-23 16:56:15,900 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-23 16:56:15,901 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-23 16:56:15,903 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 16:56:16,769 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 16:56:16,769 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 16:56:16,893 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 16:56:16,893 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-23 16:56:17,075 - DataHunter - INFO - No new files discovered
+2025-09-23 16:56:17,076 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-23 17:23:27,562 - DataHunter - INFO - Starting automated discovery run...
+2025-09-23 17:23:27,563 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-23 17:23:27,857 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-23 17:23:28,090 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-23 17:23:31,395 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-23 17:23:31,419 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-23 17:23:31,421 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-23 17:23:31,423 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 17:23:32,186 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 17:23:32,187 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 17:23:32,300 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 17:23:32,301 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-23 17:23:33,132 - DataHunter - INFO - No new files discovered
+2025-09-23 17:23:33,132 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-23 17:38:51,760 - DataHunter - INFO - Starting automated discovery run...
+2025-09-23 17:38:51,760 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-23 17:38:52,091 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-23 17:38:52,292 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-23 17:38:55,218 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-23 17:38:55,233 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-23 17:38:55,234 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-23 17:38:55,236 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 17:38:55,883 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 17:38:55,883 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 17:38:55,988 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 17:38:55,988 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-23 17:38:56,212 - DataHunter - INFO - No new files discovered
+2025-09-23 17:38:56,212 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-23 17:48:11,357 - DataHunter - INFO - Starting automated discovery run...
+2025-09-23 17:48:11,358 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-23 17:48:11,711 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-23 17:48:11,952 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-23 17:48:18,702 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-23 17:48:18,717 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-23 17:48:18,718 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-23 17:48:18,720 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 17:48:19,326 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-23 17:48:19,326 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 17:48:19,431 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-23 17:48:19,432 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-23 17:48:19,608 - DataHunter - INFO - No new files discovered
+2025-09-23 17:48:19,608 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-24 09:12:10,864 - DataHunter - INFO - Starting automated discovery run...
+2025-09-24 09:12:10,864 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-24 09:12:11,149 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-24 09:12:11,373 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-24 09:12:13,332 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-24 09:12:13,357 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-24 09:12:13,358 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-24 09:12:13,360 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 09:12:14,106 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 09:12:14,106 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 09:12:14,222 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 09:12:14,223 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-24 09:12:15,063 - DataHunter - INFO - No new files discovered
+2025-09-24 09:12:15,063 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-24 09:51:27,943 - DataHunter - INFO - Starting automated discovery run...
+2025-09-24 09:51:27,944 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-24 09:51:28,250 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-24 09:51:28,483 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-24 09:51:31,534 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-24 09:51:31,558 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-24 09:51:31,559 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-24 09:51:31,561 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 09:51:32,090 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 09:51:32,091 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 09:51:32,221 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 09:51:32,222 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-24 09:51:33,142 - DataHunter - INFO - No new files discovered
+2025-09-24 09:51:33,142 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-24 14:02:03,807 - DataHunter - INFO - Starting automated discovery run...
+2025-09-24 14:02:03,807 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-24 14:02:04,078 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-24 14:02:04,292 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-24 14:02:08,906 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-24 14:02:08,930 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-24 14:02:08,932 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-24 14:02:08,934 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 14:02:09,765 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 14:02:09,765 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 14:02:09,884 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 14:02:09,884 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-24 14:02:10,968 - DataHunter - INFO - No new files discovered
+2025-09-24 14:02:10,969 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-24 14:21:09,849 - DataHunter - INFO - Starting automated discovery run...
+2025-09-24 14:21:09,850 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-24 14:21:10,192 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-24 14:21:10,388 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-24 14:21:12,427 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-24 14:21:12,442 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-24 14:21:12,444 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-24 14:21:12,446 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 14:21:13,225 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 14:21:13,225 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 14:21:13,349 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 14:21:13,349 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-24 14:21:14,178 - DataHunter - INFO - No new files discovered
+2025-09-24 14:21:14,178 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-24 16:39:21,411 - DataHunter - INFO - Starting automated discovery run...
+2025-09-24 16:39:21,411 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-24 16:39:21,722 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-24 16:39:21,950 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-24 16:39:26,157 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-24 16:39:26,181 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-24 16:39:26,182 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-24 16:39:26,184 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 16:39:27,118 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-24 16:39:27,118 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 16:39:27,234 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-24 16:39:27,234 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-24 16:39:28,225 - DataHunter - INFO - No new files discovered
+2025-09-24 16:39:28,225 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-25 19:56:34,589 - DataHunter - INFO - Starting automated discovery run...
+2025-09-25 19:56:34,589 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-25 19:56:34,925 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-25 19:56:35,151 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-25 19:56:37,816 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-25 19:56:37,852 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-25 19:56:37,854 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-25 19:56:37,858 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-25 19:56:38,678 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-25 19:56:38,678 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-25 19:56:38,792 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-25 19:56:38,792 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-25 19:56:39,721 - DataHunter - INFO - No new files discovered
+2025-09-25 19:56:39,721 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 16:39:54,648 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 16:39:54,649 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 16:39:54,921 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 16:39:55,169 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 16:39:57,812 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 16:39:57,836 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 16:39:57,838 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 16:39:57,840 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 16:39:58,855 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 16:39:58,855 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 16:39:58,966 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 16:39:58,966 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 16:39:59,736 - DataHunter - INFO - No new files discovered
+2025-09-26 16:39:59,737 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 16:40:28,616 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 16:40:28,616 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 16:40:28,880 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 16:40:29,086 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 16:40:29,231 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 16:40:29,255 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 16:40:29,256 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 16:40:29,258 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 16:40:29,908 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 16:40:29,909 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 16:40:30,017 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 16:40:30,017 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 16:40:30,152 - DataHunter - INFO - No new files discovered
+2025-09-26 16:40:30,152 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 16:41:56,621 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 16:41:56,622 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 16:41:56,917 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 16:41:57,174 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 16:41:57,325 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 16:41:57,348 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 16:41:57,349 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 16:41:57,351 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 16:41:57,918 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 16:41:57,918 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 16:41:58,023 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 16:41:58,023 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 16:41:58,189 - DataHunter - INFO - No new files discovered
+2025-09-26 16:41:58,189 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 16:45:16,490 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 16:45:16,490 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 16:45:16,791 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 16:45:17,014 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 16:45:20,181 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 16:45:20,205 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 16:45:20,206 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 16:45:20,208 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 16:45:20,809 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 16:45:20,809 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 16:45:20,907 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 16:45:20,907 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 16:45:21,070 - DataHunter - INFO - No new files discovered
+2025-09-26 16:45:21,070 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 18:54:55,586 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 18:54:55,586 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 18:54:55,800 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 18:54:56,041 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 18:54:58,929 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 18:54:58,954 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 18:54:58,956 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 18:54:58,958 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 18:54:59,522 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 18:54:59,523 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 18:54:59,638 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 18:54:59,638 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 18:55:00,536 - DataHunter - INFO - No new files discovered
+2025-09-26 18:55:00,537 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 18:55:33,782 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 18:55:33,782 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 18:55:33,958 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 18:55:34,197 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 18:55:37,098 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 18:55:37,113 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 18:55:37,115 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 18:55:37,117 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 18:55:37,629 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 18:55:37,629 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 18:55:37,727 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 18:55:37,728 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 18:55:37,966 - DataHunter - INFO - No new files discovered
+2025-09-26 18:55:37,966 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 21:37:27,825 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 21:37:27,825 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 21:37:28,008 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 21:37:28,269 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 21:37:31,364 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 21:37:31,379 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 21:37:31,381 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 21:37:31,383 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 21:37:32,398 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 21:37:32,398 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 21:37:32,519 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 21:37:32,519 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 21:37:33,426 - DataHunter - INFO - No new files discovered
+2025-09-26 21:37:33,426 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 21:38:17,619 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 21:38:17,620 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 21:38:17,857 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 21:38:18,072 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 21:38:18,233 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 21:38:18,249 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 21:38:18,250 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 21:38:18,253 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 21:38:18,732 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 21:38:18,732 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 21:38:18,848 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 21:38:18,848 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 21:38:19,000 - DataHunter - INFO - No new files discovered
+2025-09-26 21:38:19,000 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 21:38:23,505 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 21:38:23,505 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 21:38:23,696 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 21:38:23,905 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 21:38:27,569 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 21:38:27,584 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 21:38:27,585 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 21:38:27,588 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 21:38:28,025 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 21:38:28,025 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 21:38:28,133 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 21:38:28,133 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 21:38:28,284 - DataHunter - INFO - No new files discovered
+2025-09-26 21:38:28,284 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-26 21:39:15,904 - DataHunter - INFO - Starting automated discovery run...
+2025-09-26 21:39:15,904 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-26 21:39:16,069 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-26 21:39:16,324 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-26 21:39:16,494 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-26 21:39:16,509 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-26 21:39:16,510 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-26 21:39:16,513 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 21:39:17,006 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-26 21:39:17,006 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 21:39:17,105 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-26 21:39:17,105 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-26 21:39:17,271 - DataHunter - INFO - No new files discovered
+2025-09-26 21:39:17,271 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 13:22:03,509 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 13:22:03,510 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 13:22:03,832 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 13:22:04,100 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 13:22:07,174 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 13:22:07,199 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 13:22:07,200 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 13:22:07,204 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 13:22:08,109 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 13:22:08,110 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 13:22:08,217 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 13:22:08,217 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 13:22:09,097 - DataHunter - INFO - No new files discovered
+2025-09-29 13:22:09,098 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 13:29:11,231 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 13:29:11,231 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 13:29:11,428 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 13:29:11,645 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 13:29:15,190 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 13:29:15,206 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 13:29:15,207 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 13:29:15,209 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 13:29:15,846 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 13:29:15,847 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 13:29:15,937 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 13:29:15,937 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 13:29:16,066 - DataHunter - INFO - No new files discovered
+2025-09-29 13:29:16,066 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 15:01:53,224 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 15:01:53,224 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 15:01:53,421 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 15:01:53,649 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 15:01:55,654 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 15:01:55,679 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 15:01:55,680 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 15:01:55,682 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 15:01:56,429 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 15:01:56,429 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 15:01:56,557 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 15:01:56,557 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 15:01:58,289 - DataHunter - INFO - No new files discovered
+2025-09-29 15:01:58,289 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 15:07:46,068 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 15:07:46,068 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 15:07:46,289 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 15:07:46,474 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 15:07:49,201 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 15:07:49,226 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 15:07:49,227 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 15:07:49,229 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 15:07:50,239 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 15:07:50,239 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 15:07:50,368 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 15:07:50,368 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 15:07:50,524 - DataHunter - INFO - No new files discovered
+2025-09-29 15:07:50,524 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 17:22:25,407 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 17:22:25,407 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 17:22:25,605 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 17:22:25,902 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 17:22:28,762 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 17:22:28,776 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 17:22:28,778 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 17:22:28,780 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:22:29,670 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:22:29,671 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:22:29,782 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:22:29,782 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 17:22:30,541 - DataHunter - INFO - No new files discovered
+2025-09-29 17:22:30,541 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 17:24:27,186 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 17:24:27,186 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 17:24:27,343 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 17:24:27,574 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 17:24:27,717 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 17:24:27,732 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 17:24:27,733 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 17:24:27,735 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:24:28,234 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:24:28,234 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:24:28,351 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:24:28,351 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 17:24:28,524 - DataHunter - INFO - No new files discovered
+2025-09-29 17:24:28,524 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 17:35:02,509 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 17:35:02,509 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 17:35:02,687 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 17:35:02,885 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 17:35:06,327 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 17:35:06,352 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 17:35:06,353 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 17:35:06,355 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:35:06,911 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:35:06,911 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:35:07,016 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:35:07,016 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 17:35:07,198 - DataHunter - INFO - No new files discovered
+2025-09-29 17:35:07,199 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 17:35:56,379 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 17:35:56,379 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 17:35:56,529 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 17:35:56,730 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 17:35:59,614 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 17:35:59,638 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 17:35:59,639 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 17:35:59,641 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:36:00,343 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:36:00,343 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:36:00,473 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:36:00,473 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 17:36:00,644 - DataHunter - INFO - No new files discovered
+2025-09-29 17:36:00,644 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 17:39:35,497 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 17:39:35,497 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 17:39:35,676 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 17:39:35,897 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 17:39:38,577 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 17:39:38,592 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 17:39:38,593 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 17:39:38,595 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:39:39,128 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:39:39,128 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:39:39,231 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:39:39,231 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 17:39:39,364 - DataHunter - INFO - No new files discovered
+2025-09-29 17:39:39,365 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 17:41:54,393 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 17:41:54,393 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 17:41:54,599 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 17:41:54,793 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 17:41:56,765 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 17:41:56,790 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 17:41:56,791 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 17:41:56,793 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:41:57,428 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:41:57,429 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:41:57,556 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:41:57,556 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 17:41:57,737 - DataHunter - INFO - No new files discovered
+2025-09-29 17:41:57,737 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 17:47:28,647 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 17:47:28,647 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 17:47:28,849 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 17:47:29,051 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 17:47:31,984 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 17:47:31,998 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 17:47:32,000 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 17:47:32,002 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:47:32,655 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 17:47:32,655 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:47:32,748 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 17:47:32,748 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 17:47:32,901 - DataHunter - INFO - No new files discovered
+2025-09-29 17:47:32,901 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 20:11:10,247 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 20:11:10,247 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 20:11:10,433 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 20:11:10,686 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 20:11:14,962 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 20:11:14,986 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 20:11:14,987 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 20:11:14,989 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 20:11:15,513 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 20:11:15,513 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 20:11:15,628 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 20:11:15,628 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 20:11:16,339 - DataHunter - INFO - No new files discovered
+2025-09-29 20:11:16,339 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 20:24:36,995 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 20:24:36,996 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 20:24:37,241 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 20:24:37,468 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 20:24:40,576 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 20:24:40,601 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 20:24:40,602 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 20:24:40,605 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 20:24:41,175 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 20:24:41,175 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 20:24:41,289 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 20:24:41,290 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 20:25:02,876 - DataHunter - ERROR - Error scanning Pinellas: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+2025-09-29 20:25:02,877 - DataHunter - INFO - No new files discovered
+2025-09-29 20:25:02,877 - DataHunter - INFO - Discovery run completed. New files: 0
+2025-09-29 20:51:06,971 - DataHunter - INFO - Starting automated discovery run...
+2025-09-29 20:51:06,971 - DataHunter - INFO - Scanning Miami-Dade: https://www.miamidade.gov/pa/property_search.asp
+2025-09-29 20:51:07,202 - DataHunter - INFO - Scanning Broward: https://www.broward.org/Building/Pages/default.aspx
+2025-09-29 20:51:07,434 - DataHunter - INFO - Scanning Palm-Beach: https://discover.pbcgov.org/pzb/building/Pages/default.aspx
+2025-09-29 20:51:10,102 - DataHunter - INFO - Found matching file: ePZB_Portal_Inspection_Information_Guide.pdf -> https://discover.pbcgov.org/pzb/building/PDF/ePZB_Portal_Inspection_Information_Guide.pdf
+2025-09-29 20:51:10,117 - DataHunter - INFO - Found matching file: Building_Division_Permit_and_Inspection_Utilization_Report.pdf -> https://discover.pbcgov.org/pzb/building/PDF/Building_Division_Permit_and_Inspection_Utilization_Report.pdf
+2025-09-29 20:51:10,119 - DataHunter - INFO - Found matching file: inspectioncodes.pdf -> https://discover.pbcgov.org/pzb/building/PDF/inspectioncodes.pdf
+2025-09-29 20:51:10,120 - DataHunter - INFO - Scanning Hillsborough: https://www.hillsboroughcounty.org/en/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 20:51:10,742 - DataHunter - ERROR - Error scanning Hillsborough: 404 Client Error: Not Found for url: https://hcfl.gov/residents/property-owners-and-renters/building-development-services/building-inspections
+2025-09-29 20:51:10,742 - DataHunter - INFO - Scanning Orange-County: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 20:51:10,916 - DataHunter - ERROR - Error scanning Orange-County: 404 Client Error: Not Found for url: https://www.orangecountyfl.net/PlanningDevelopment/BuildingDivision.aspx
+2025-09-29 20:51:10,916 - DataHunter - INFO - Scanning Pinellas: https://www.pinellascounty.org/building/
+2025-09-29 20:51:11,106 - DataHunter - INFO - No new files discovered
+2025-09-29 20:51:11,106 - DataHunter - INFO - Discovery run completed. New files: 0

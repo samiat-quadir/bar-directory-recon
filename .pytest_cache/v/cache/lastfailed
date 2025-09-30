@@ -1,0 +1,9 @@
+{
+  "tests/unit/test_http_paths.py::TestHTTPPathHandling::test_content_type_parsing[text/plain-text]": true,
+  "src/tests/test_plugins_example.py::test_example_plugin_runs": true,
+  "universal_recon/tests/fuzz/test_fuzz_data_extractor.py": true,
+  "universal_recon/tests/fuzz/test_fuzz_orchestrator.py": true,
+  "universal_recon/tests/fuzz/test_fuzz_pagination_manager.py": true,
+  "tests/unit/test_import_smoke.py::test_import_automation_demo": true,
+  "tests/unit/test_import_smoke.py::test_import_configuration_demo": true
+}

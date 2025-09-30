@@ -1,0 +1,15 @@
++ set -Eeuo pipefail
++ '[' '!' -f /.dockerenv ']'
++ '[' '!' -d /workspaces ']'
+++ git rev-parse --show-toplevel
++ REPO_ROOT=/workspaces/bar-directory-recon
++ '[' -z /workspaces/bar-directory-recon ']'
++ '[' '!' -d /workspaces/bar-directory-recon/.git ']'
++ cd /workspaces/bar-directory-recon
++ gh auth status
++ git fetch origin --quiet
++ git checkout -q main
+error: Your local changes to the following files would be overwritten by checkout:
+	.devcontainer/devcontainer.json
+Please commit your changes or stash them before you switch branches.
+Aborting

@@ -1,0 +1,11 @@
+[
+  "ci-fast-parity.yml",
+  "security-audit.yml",
+  "pip-audit.yml",
+  "security_audit.yml",
+  "codeql.yml",
+  "codeql-analysis.yml",
+  "codeql.yaml",
+  "lock-drift-check.yml",
+  "lockdrift.yml"
+]

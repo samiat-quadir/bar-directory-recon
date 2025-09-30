@@ -4,9 +4,6 @@ Dependency Verification Script
 Check all dependencies for the unified scraping framework
 """
 
-import sys
-import subprocess
-from pathlib import Path
 
 def check_dependency(package_name, import_name=None, optional=False):
     """Check if a dependency is available."""

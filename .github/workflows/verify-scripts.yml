@@ -1,10 +1,10 @@
-name: verify-scripts
-on: [push]
-permissions:
-  contents: read
+name: manual-utility
+
+on:
+  workflow_dispatch:
+
 jobs:
-  lint-yaml:
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ibiqlik/action-yamllint@v3
+      - run: echo "manual only"

@@ -1,0 +1,11 @@
+# Archived original moved to workflows_archive/auto-merge.yml
+name: archived-auto-merge
+on:
+  workflow_dispatch:
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: noop
+        run: echo "Archived original moved to workflows_archive/auto-merge.yml"
