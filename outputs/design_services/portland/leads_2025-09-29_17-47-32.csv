@@ -1,0 +1,6 @@
+name,company,email,phone,address,city,state,zip_code,website,industry,business_type,description,source,linkedin_url,facebook_url,twitter_url,instagram_url,reviews_count,average_rating,lead_score,urgency_flag,urgency_reason,email_verified,phone_verified,created_date,last_updated,enrichment_version
+,,,,,,,,,design_services,,,houzz,,,,,0,0.0,0.0,False,,False,False,2025-09-29T17:47:32.998771,2025-09-29T17:47:32.998779,4.0
+,,,,,,,,,design_services,,,houzz,,,,,0,0.0,0.0,False,,False,False,2025-09-29T17:47:32.998803,2025-09-29T17:47:32.998805,4.0
+,,,,,,,,,design_services,,,houzz,,,,,0,0.0,0.0,False,,False,False,2025-09-29T17:47:32.998820,2025-09-29T17:47:32.998822,4.0
+,,,,,,,,,design_services,,,houzz,,,,,0,0.0,0.0,False,,False,False,2025-09-29T17:47:32.998838,2025-09-29T17:47:32.998840,4.0
+,,,,,,,,,design_services,,,houzz,,,,,0,0.0,0.0,False,,False,False,2025-09-29T17:47:32.998855,2025-09-29T17:47:32.998857,4.0

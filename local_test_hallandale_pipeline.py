@@ -94,11 +94,11 @@ def test_complete_pipeline():
             enriched_df.to_excel(writer, sheet_name="All Properties", index=False)
 
             # Priority properties
-            priority_df = enriched_df[enriched_df["priority_flag"] == True]
+            priority_df = enriched_df[enriched_df["priority_flag"]]
             priority_df.to_excel(writer, sheet_name="Priority Properties", index=False)
 
             # Corporate entities
-            corporate_df = enriched_df[enriched_df["is_corporate"] == True]
+            corporate_df = enriched_df[enriched_df["is_corporate"]]
             corporate_df.to_excel(writer, sheet_name="Corporate Entities", index=False)
 
             # Missing contact info

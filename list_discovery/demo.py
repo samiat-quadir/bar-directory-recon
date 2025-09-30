@@ -12,12 +12,12 @@ Demonstrates the capabilities of the List Discovery Agent including:
 """
 
 import asyncio
+import sys
 from pathlib import Path
 from typing import Any, Dict
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent
-import sys
 
 sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -136,6 +136,7 @@ class ListDiscoveryDemo:
 
     def demo_integration(self) -> None:
         """Demonstrate integration with Universal Project Runner."""
+
         print("🔗 INTEGRATION DEMO")
         print("-" * 30)
 
@@ -178,6 +179,7 @@ class ListDiscoveryDemo:
 
     def demo_file_processing(self) -> None:
         """Demonstrate file processing capabilities."""
+
         print("📁 FILE PROCESSING DEMO")
         print("-" * 30)
 
@@ -257,6 +259,7 @@ class ListDiscoveryDemo:
 
     def show_usage_examples(self) -> None:
         """Show usage examples."""
+
         print("💡 USAGE EXAMPLES")
         print("-" * 30)
 

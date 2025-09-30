@@ -325,13 +325,13 @@ class SchemaMapper:
         for record in records:
             # Create a tuple of dedup field values
             dedup_values = []
-            for field in dedup_fields:
-                value = getattr(record, field, "")
+            for dedup_field in dedup_fields:
+                value = getattr(record, dedup_field, "")
                 if value:
                     # Normalize for comparison
-                    if field == "email":
+                    if dedup_field == "email":
                         value = value.lower().strip()
-                    elif field == "phone":
+                    elif dedup_field == "phone":
                         import re
 
                         value = re.sub(r"[^\d]", "", value)

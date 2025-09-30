@@ -241,10 +241,18 @@ class LeadScoringEngine:
         scores = [lead.get("Score", 0) for lead in scored_leads]
 
         priority_counts = {
-            "HIGH": len([l for l in scored_leads if l.get("Priority") == "HIGH"]),
-            "MEDIUM": len([l for l in scored_leads if l.get("Priority") == "MEDIUM"]),
-            "LOW": len([l for l in scored_leads if l.get("Priority") == "LOW"]),
-            "MINIMAL": len([l for l in scored_leads if l.get("Priority") == "MINIMAL"]),
+            "HIGH": len(
+                [lead for lead in scored_leads if lead.get("Priority") == "HIGH"]
+            ),
+            "MEDIUM": len(
+                [lead for lead in scored_leads if lead.get("Priority") == "MEDIUM"]
+            ),
+            "LOW": len(
+                [lead for lead in scored_leads if lead.get("Priority") == "LOW"]
+            ),
+            "MINIMAL": len(
+                [lead for lead in scored_leads if lead.get("Priority") == "MINIMAL"]
+            ),
         }
 
         return {

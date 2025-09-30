@@ -36,7 +36,7 @@ class TestFirmParserPlugin(unittest.TestCase):
     def test_plugin_output_strict_mode(self):
         records = parse_firm_data(self.driver, context="test_strict")
         try:
-            normalized = normalize(records, strict=True)
+            normalize(records, strict=True)
         except Exception as e:
             self.fail(f"Strict normalization failed: {e}")
 

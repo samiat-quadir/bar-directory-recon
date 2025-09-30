@@ -562,7 +562,7 @@ if __name__ == "__main__":
         print(f"Current device: {platform.node()}")
         try:
             print(f"Current user: {os.getlogin()}")
-        except:
+        except Exception:
             print(
                 f"Current user: {os.environ.get('USERNAME') or os.environ.get('USER', 'Unknown')}"
             )

@@ -5,8 +5,6 @@ Weekly automated lead extraction script
 
 import logging
 import os
-
-# Add the project root to the Python path
 import sys
 import time
 from datetime import datetime
@@ -17,7 +15,9 @@ import schedule
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from universal_recon.plugins.realtor_directory_plugin import scrape_realtor_directory
+from universal_recon.plugins.realtor_directory_plugin import (  # noqa: E402
+    scrape_realtor_directory,
+)
 
 # Configure logging
 logging.basicConfig(

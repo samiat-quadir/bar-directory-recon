@@ -36,7 +36,7 @@ class TestSocialLinkParser(unittest.TestCase):
     def test_social_links_strict_mode(self):
         records = social_link_parser.apply(self.driver, context="test_strict")
         try:
-            normalized = normalize(records, strict=True)
+            normalize(records, strict=True)
         except Exception as e:
             self.fail(f"Strict normalization failed: {e}")
 

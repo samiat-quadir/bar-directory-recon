@@ -503,7 +503,7 @@ class PropertyValidation:
                 df.to_excel(writer, sheet_name="Properties", index=False)
 
                 # Priority properties sheet
-                priority_df = df[df["priority_flag"] == True]
+                priority_df = df[df["priority_flag"]]
                 priority_df.to_excel(
                     writer, sheet_name="Priority Properties", index=False
                 )
@@ -520,10 +520,10 @@ class PropertyValidation:
                     ],
                     "Count": [
                         len(df),
-                        len(df[df["email_valid"] == True]),
-                        len(df[df["phone_valid"] == True]),
-                        len(df[df["address_valid"] == True]),
-                        len(df[df["priority_flag"] == True]),
+                        len(df[df["email_valid"]]),
+                        len(df[df["phone_valid"]]),
+                        len(df[df["address_valid"]]),
+                        len(df[df["priority_flag"]]),
                         len(df[df["completeness_score"] >= 80]),
                     ],
                 }

@@ -376,8 +376,8 @@ class PropertyEnrichment:
             records_with_phone = len(
                 df[df["owner_phone"].notna() & (df["owner_phone"] != "")]
             )
-            priority_records = len(df[df["priority_flag"] == True])
-            corporate_entities = len(df[df["is_corporate"] == True])
+            priority_records = len(df[df["priority_flag"]])
+            corporate_entities = len(df[df["is_corporate"]])
             individual_owners = total_records - corporate_entities
 
             # Data quality analysis

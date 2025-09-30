@@ -1,15 +1,14 @@
 # universal_recon/utils/health_bootstrap.py
 
+import importlib.util
 import os
 import sys
+from pathlib import Path
 
 # Ensure the project root (parent of universal_recon) is on sys.path
 PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.join(__file__, "../..")))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
-
-import importlib.util
-from pathlib import Path
 
 
 def banner(title):

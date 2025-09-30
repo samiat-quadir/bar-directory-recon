@@ -35,7 +35,7 @@ class TestMLLabelerPlugin(unittest.TestCase):
     def test_plugin_output_strict_mode(self):
         records = ml_labeler.apply(self.driver, context="test_strict")
         try:
-            normalized = normalize(records, strict=True)
+            normalize(records, strict=True)
         except Exception as e:
             self.fail(f"Strict normalization failed: {e}")
 
