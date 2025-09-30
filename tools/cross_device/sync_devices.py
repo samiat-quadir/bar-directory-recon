@@ -1,38 +1,50 @@
-import os
 import json
+import os
 import sys
 from datetime import datetime
+
 
 def get_profiles(config_dir):
     profiles = []
     for fname in os.listdir(config_dir):
-        if fname.endswith('.json') and 'profile' in fname:
+        if fname.endswith(".json") and "profile" in fname:
             profiles.append(os.path.join(config_dir, fname))
     return profiles
 
+
 def load_profile(path):
     try:
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(path, encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:
-        return {'_error': str(e), '_path': path}
+        return {"_error": str(e), "_path": path}
+
 
 def get_python_path(profile):
     try:
-        return profile['python_path']['base']
+        return profile["python_path"]["base"]
     except Exception:
         return None
 
+
 def get_last_synced(profile):
-    for key in ['last_synced', 'LastUpdated', 'last_updated']:
+    for key in ["last_synced", "LastUpdated", "last_updated"]:
         if key in profile:
             return profile[key]
     return None
 
+
 def main():
-    config_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'config')
+    config_dir = os.path.join(os.path.dirname(__file__), "..", "..", "config")
     config_dir = os.path.abspath(config_dir)
-    log_path = os.path.join(os.path.dirname(__file__), '..', '..', 'logs', 'phase_4', 'cross_device_sync.log')
+    log_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "..",
+        "logs",
+        "phase_4",
+        "cross_device_sync.log",
+    )
     log_path = os.path.abspath(log_path)
     profiles = get_profiles(config_dir)
     loaded = [load_profile(p) for p in profiles]
@@ -44,7 +56,7 @@ def main():
     python_paths = {}
     last_synceds = {}
     for prof, path in zip(loaded, profiles):
-        if '_error' in prof:
+        if "_error" in prof:
             summary.append(f"[ERROR] Could not load {path}: {prof['_error']}")
             exit_code = 1
             continue
@@ -71,10 +83,11 @@ def main():
     else:
         summary.append("[OK] All last_synced/LastUpdated values match.")
 
-    with open(log_path, 'a', encoding='utf-8') as log:
-        log.write('\n'.join(summary) + '\n')
+    with open(log_path, "a", encoding="utf-8") as log:
+        log.write("\n".join(summary) + "\n")
 
     sys.exit(exit_code)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
