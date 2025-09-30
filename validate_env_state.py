@@ -38,8 +38,12 @@ def check_python_packages() -> tuple[list[str], list[str]]:
     # Get installed packages
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pip", "list", "--format=json"], capture_output=True, text=True, check=True
-        , timeout=60)
+            [sys.executable, "-m", "pip", "list", "--format=json"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=60,
+        )
 
         installed_data = json.loads(result.stdout)
         installed_packages = {
@@ -296,4 +300,3 @@ def generate_validation_report():
 if __name__ == "__main__":
     success = generate_validation_report()
     sys.exit(0 if success else 1)
-

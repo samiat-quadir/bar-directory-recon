@@ -1,25 +1,8 @@
-﻿name: Agent Auto-Merge (guarded)
+name: auto-merge (manual-only)
 on:
-  pull_request:
-    types: [labeled, reopened, synchronize]
-permissions: { contents: write, pull-requests: write }
+  workflow_dispatch:
 jobs:
-  guarded-auto-merge:
-    if: contains(github.event.pull_request.labels.*.name, 'auto-merge-ok')
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Fail if unsafe paths changed
-        run: |
-          SAFE='^(automation/|monitoring/|docs/|tools/)'
-          git fetch origin '${{ github.event.pull_request.base.ref }}' --depth=1
-          git diff --name-only FETCH_HEAD...HEAD > files.txt
-          if grep -Ev "$SAFE" files.txt; then
-            echo "Unsafe paths changed; manual review required."; exit 1
-          fi
-      - name: Require checks and squash-merge
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr checks ${{ github.event.pull_request.number }} --watch --fail-on-error
-          gh pr merge ${{ github.event.pull_request.number }} --squash --delete-branch
+      - run: echo 'manual-only'

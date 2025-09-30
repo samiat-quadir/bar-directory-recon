@@ -1,13 +1,17 @@
 [run]
-omit =
-  archive/*
-  automation/*
-  audits/*
-  logs/*
-  scripts/*
-  async_*.py
-  complete_verification.py
-  run_cross_device_task.py
-  tools/auto_conflict_resolver.py
+branch = True
+source =
+    .
+
 [report]
 skip_empty = True
+omit =
+    archive/*
+    automation/*
+    audits/*
+    logs/*
+    scratch/*
+    device-specific/*
+    src/hallandale_*
+    src/ut_bar.py
+    test_*.py

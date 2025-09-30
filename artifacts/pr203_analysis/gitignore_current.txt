@@ -131,11 +131,3 @@ outputs/
 # 11 ┬╖ Cross-Device Agent Communication
 # 12 ┬╖ Large Reports & Scans
 
-# --- attic additions (union) ---
-archive/
-automation/
-audits/
-scratch/
-device-specific/
-# venv & coverage hygiene
-.venv/
