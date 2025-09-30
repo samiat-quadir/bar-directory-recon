@@ -1,1 +1,0 @@
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJA9TjjjRU5PjJrhgvZ2siOuqNt3YGKkJyYl+/ntM9Wd sam.quadir@gmail.com
