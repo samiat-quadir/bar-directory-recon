@@ -1,4 +1,6 @@
 name: ci-fast-parity (manual-only)
+permissions:
+  contents: none
 on:
   workflow_dispatch:
 jobs:
