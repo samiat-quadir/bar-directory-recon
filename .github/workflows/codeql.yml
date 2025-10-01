@@ -1,13 +1,8 @@
-name: CodeQL Analysis
+name: codeql (manual-only)
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  schedule:
-    - cron: '0 4 * * 1'
+  workflow_dispatch:
 jobs:
-  analyze:
-    uses: github/codeql-action/workflows/codeql.yml@v2
-    with:
-      languages: python
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'manual-only'

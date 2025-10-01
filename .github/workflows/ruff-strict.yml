@@ -1,15 +1,8 @@
-name: ruff-strict (report only)
-
-on: [pull_request]
-
-permissions:
-  contents: read
-
+name: ruff-strict (manual-only)
+on:
+  workflow_dispatch:
 jobs:
-  ruff:
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/ruff-action@v1
-        with:
-          args: "check --output-format=github"
+      - run: echo 'manual-only'

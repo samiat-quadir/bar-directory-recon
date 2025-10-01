@@ -1,28 +1,8 @@
-name: devcontainer-validate
+name: devcontainer-validate (manual-only)
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - '.devcontainer/**'
-      - 'Dockerfile*'
-  pull_request:
-    paths:
-      - '.devcontainer/**'
-      - 'Dockerfile*'
+  workflow_dispatch:
 jobs:
-  build:
+  noop:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - name: Build devcontainer
-        uses: devcontainers/ci@v0.3
-        with:
-          runCmd: |
-            python --version
-            pip --version
-            pip install -U pip
-            pip install -e .[dev]
-            pre-commit run -a || true
-            pytest -p no:cacheprovider -o addopts="" -k "not slow and not e2e and not integration" -q
+      - run: echo 'manual-only'

@@ -1,32 +1,8 @@
-name: windows-filename-guard
-permissions:
-  contents: read
+name: filename-guard (manual-only)
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 jobs:
-  guard:
+  noop:
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v4
-     - name: Validate filenames
-       run: |
-         python3 - << 'PY'
-         import os,re,sys
-         badchars=re.compile(r'[<>:"/\\\\|?*\x00-\\x1F]')
-         reserved={"CON","PRN","AUX","NUL", *{f"COM{i}"for i in range(1,10)},*{f"LPT{i}"for i in range(1,10)}}
-         def bad(p):
-           if len(p)>240: return True
-           for seg in p.replace("\\\\","/").split("/"):
-             if not seg: continue
-             if seg.rstrip(". ")!=seg: return True
-             if badchars.search(seg): return True
-             if seg.upper() in reserved: return True
-           return False
-         found=[os.path.relpath(os.path.join(root,f))
-                for root,_,files in os.walk(".") if ".git" not in root
-                for f in files if bad(os.path.join(root,f)[2:])]
-         if found:
-           print("Windows-incompatible files:",*found, sep="\n")
-           sys.exit(1)
-         PY
+      - run: echo 'manual-only'

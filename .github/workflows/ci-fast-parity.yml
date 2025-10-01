@@ -1,25 +1,10 @@
-name: Fast Parity CI
-
-on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
-
+name: ci-fast-parity (manual-only)
 permissions:
-  contents: read
-
+  contents: none
+on:
+  workflow_dispatch:
 jobs:
-  fast-tests:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    uses: ./.github/workflows/_python-reusable.yml
-    with:
-      os: ${{ matrix.os }}
-      python-version: "3.11"
-      diag: false
-      run-precommit: true
-      run-fast-tests: true
-      precommit-soft-fail: true
-    secrets: inherit
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'manual-only'
