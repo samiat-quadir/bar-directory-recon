@@ -27,7 +27,7 @@ def test_config_loader_has_functions():
     # Try to instantiate ConfigLoader
     if has_class:
         try:
-            config_cls = getattr(m, "ConfigLoader")
+            config_cls = m.ConfigLoader
             # Just check it's a class, don't instantiate to avoid dependencies
             assert callable(config_cls)
         except Exception:

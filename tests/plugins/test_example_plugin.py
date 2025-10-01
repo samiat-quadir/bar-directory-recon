@@ -15,4 +15,4 @@ def test_example_plugin_smoke():
     from universal_recon.plugins import example_plugin
 
     assert hasattr(example_plugin, "initialize")
-    assert callable(getattr(example_plugin, "initialize"))
+    assert callable(example_plugin.initialize)

@@ -23,6 +23,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 try:
     from automation.universal_runner import UniversalRunner
+
     from list_discovery.agent import ListDiscoveryAgent
 
     LIST_DISCOVERY_AVAILABLE = True

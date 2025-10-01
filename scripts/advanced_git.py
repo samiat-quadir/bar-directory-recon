@@ -22,8 +22,13 @@ class AdvancedGitWorkflow:
         print(f"[*] {description}...")
         try:
             result = subprocess.run(
-                cmd, check=True, capture_output=True, text=True, cwd=self.workspace_path
-            , timeout=60)
+                cmd,
+                check=True,
+                capture_output=True,
+                text=True,
+                cwd=self.workspace_path,
+                timeout=60,
+            )
             print(f"[+] {description} completed successfully")
             return True, result.stdout
         except subprocess.CalledProcessError as e:
@@ -233,4 +238,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

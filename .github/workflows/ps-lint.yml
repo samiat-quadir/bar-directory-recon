@@ -1,0 +1,16 @@
+name: ps-lint
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+jobs:
+  ps-lint:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run apply-attic-review.ps1 in DryRun syntax mode
+        shell: pwsh
+        run: pwsh -NoProfile -File scripts/apply-attic-review.ps1 -DryRun -PrNumber 0

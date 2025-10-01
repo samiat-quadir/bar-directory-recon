@@ -23,13 +23,27 @@ def git_commit_and_push():
     os.chdir(LOCAL_GIT_REPO)
 
     try:
-        status_output = subprocess.run([GIT_EXE, "status", "--porcelain"],
-                                       capture_output=True, text=True, check=True, timeout=60)
+        status_output = subprocess.run(
+            [GIT_EXE, "status", "--porcelain"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=60,
+        )
 
         if not status_output.stdout.strip():
             logging.info("No changes detected. Forcing an empty commit.")
-            subprocess.run([GIT_EXE, "commit", "--allow-empty", "-m", f"Auto-commit: No changes detected"],
-                           check=True, timeout=60)
+            subprocess.run(
+                [
+                    GIT_EXE,
+                    "commit",
+                    "--allow-empty",
+                    "-m",
+                    "Auto-commit: No changes detected",
+                ],
+                check=True,
+                timeout=60,
+            )
 
         else:
             subprocess.run([GIT_EXE, "add", "."], check=True, timeout=60)
@@ -47,4 +61,3 @@ def git_commit_and_push():
 
 if __name__ == "__main__":
     git_commit_and_push()
-

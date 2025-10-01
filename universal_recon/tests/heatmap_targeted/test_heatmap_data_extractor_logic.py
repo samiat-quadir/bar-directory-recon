@@ -51,7 +51,7 @@ def test_extract_basic():
         if isinstance(out, dict):
             url_value = out.get("url")
         elif hasattr(out, "url"):
-            url_value = getattr(out, "url")
+            url_value = out.url
         if url_value:
             parsed = urllib.parse.urlparse(url_value)
             # Accept if host is exactly x.com

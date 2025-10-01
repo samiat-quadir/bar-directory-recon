@@ -55,7 +55,7 @@ def main():
     # Compare python_path and last_synced
     python_paths = {}
     last_synceds = {}
-    for prof, path in zip(loaded, profiles):
+    for prof, path in zip(loaded, profiles, strict=False):
         if "_error" in prof:
             summary.append(f"[ERROR] Could not load {path}: {prof['_error']}")
             exit_code = 1
