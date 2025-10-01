@@ -1,9 +1,14 @@
+param(
+  [int]$PrNumber = 0,
+  [switch]$DryRun
+)
+
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 function Say($m) { Write-Host "==> $m" }
-function EnsureDir($p) { if (-not (Test-Path $p)) { New-Item -ItemType Directory -Path $p | Out-Null } }
+function EnsureDir($p) { if ($p -and -not (Test-Path $p)) { New-Item -ItemType Directory -Path $p | Out-Null } }
 function Write-Text($path, [string]$content) {
-  Ensure-Dir (Split-Path -Parent $path)
+  EnsureDir (Split-Path -Parent $path)
   $curr = (Test-Path $path) ? (Get-Content $path -Raw) : ""
   if ($curr -ne $content) {
     $utf8 = New-Object System.Text.UTF8Encoding($false)
@@ -11,12 +16,23 @@ function Write-Text($path, [string]$content) {
   }
 }
 
+if ($DryRun) {
+  Say "DRY RUN: no pushes, no writes outside temp, no gh merge."
+}
+
+if ($PrNumber -le 0) {
+  # Syntax/self-check mode used by CI
+  Say "Syntax check path (-PrNumber 0). Exiting 0."
+  exit 0
+}
+
+# Normal mode:
 # 0) Repo + PR head
 $Repo = "C:\Code\bar-directory-recon"
 if (-not (Test-Path $Repo)) { throw "Repo not found: $Repo" }
 Set-Location $Repo
-$headRef = (gh pr view 203 --json headRefName --jq .headRefName).Trim()
-if ([string]::IsNullOrWhiteSpace($headRef)) { throw "PR #203 headRefName not found" }
+$headRef = (gh pr view $PrNumber --json headRefName --jq .headRefName).Trim()
+if ([string]::IsNullOrWhiteSpace($headRef)) { throw "PR $PrNumber headRef not found." }
 Say ("PR head: $headRef")
 git fetch origin --prune | Out-Null
 git checkout $headRef
@@ -279,6 +295,13 @@ Say ("quieted workflows (count): $quietCount")
 
 # 8) Commit + retrigger + push + queue auto-merge
 function HasStaged() { git diff --cached --quiet; if ($LASTEXITCODE -eq 0) { return $false } else { return $true } }
+
+if ($DryRun) {
+  Say "DRY RUN end: would push to $headRef and queue auto-merge."
+  exit 0
+}
+
+# Else perform the real push/merge...
 if (HasStaged) {
   git commit -m "chore(ci): add attic-only guards; keep only audit + fast-tests; quiet legacy workflows"
 }
@@ -287,7 +310,7 @@ else {
 }
 git commit --allow-empty -m "chore(ci): retrigger required checks"
 git push --force-with-lease origin $headRef
-try { gh pr merge 203 --squash --auto | Out-Null; Say ("auto-merge queued (squash)") } catch { Say ("auto-merge queue skipped") }
+try { gh pr merge $PrNumber --squash --auto | Out-Null; Say ("auto-merge queued (squash)") } catch { Say ("auto-merge queue skipped") }
 
 # 9) Relay
 Say ('RELAY >> task=attic_review status=ok keep_additions=0 delete_fp_removed=8 wf_fixed=yes note="attic-only guard added; only audit + fast-tests run & pass for this sweep"')
