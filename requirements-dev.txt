@@ -28,3 +28,7 @@ lxml>=4.9
 # Conditional watcher dependencies (align with Ali's implementation)
 watchdog>=4,<7; python_version < "3.13"
 watchfiles>=0.20; python_version >= "3.13"
+
+# Updated development dependencies to address additional security alerts
+black>=24.3.0
+pip>=25.3

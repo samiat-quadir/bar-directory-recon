@@ -6,10 +6,10 @@ python-dotenv==1.0.1
 pyyaml==6.0.2
 
 # Template engine for dashboards
-jinja2==3.1.5
+jinja2>=3.1.6
 
 # HTTP requests and async support
-requests==2.32.3
+requests>=2.32.4
 aiohttp>=3.12.14
 aiofiles==24.1.0
 
