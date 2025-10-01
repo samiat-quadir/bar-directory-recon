@@ -40,8 +40,6 @@ known_first_party = ["src", "universal_recon"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-select = ["E", "F", "W", "I", "UP", "B", "PERF"]
-ignore = ["E501"]  # Ignore line too long for now
 exclude = [
     ".git",
     ".venv",
@@ -52,6 +50,10 @@ exclude = [
     "logs",
     "archive",
 ]
+
+[tool.ruff.lint]
+extend-select = ["E", "F", "W", "I", "UP", "B", "PERF"]
+ignore = ["E501"]  # Ignore line too long for now
 
 
 [tool.autoflake]
