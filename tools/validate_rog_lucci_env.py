@@ -47,10 +47,7 @@ def run_command(cmd):
     """Run a command and return the output."""
     try:
         result = subprocess.run(
-            cmd,
-            capture_output=True, text=True,
-            shell=True, timeout=60,
-            check=True
+            cmd, capture_output=True, text=True, shell=True, timeout=60, check=True
         )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:

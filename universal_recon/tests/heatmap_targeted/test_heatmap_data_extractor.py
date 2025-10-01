@@ -27,7 +27,7 @@ def test_data_extractor_has_functions():
     # Try to check the class
     if has_class:
         try:
-            extractor_cls = getattr(m, "DataExtractor")
+            extractor_cls = m.DataExtractor
             assert callable(extractor_cls)
         except Exception:
             pass  # Some classes might need specific args

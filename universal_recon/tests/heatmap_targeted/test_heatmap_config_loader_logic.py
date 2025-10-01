@@ -32,7 +32,7 @@ def test_config_loader_env_precedence():
         if "PORT" in os.environ:
             del os.environ["PORT"]
 
-        if callable(getcfg) and hasattr(getcfg, "__call__"):
+        if callable(getcfg) and callable(getcfg):
             if hasattr(getcfg, "__code__") and getcfg.__code__.co_argcount == 0:
                 cfg = getcfg()
             else:

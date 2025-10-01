@@ -29,7 +29,7 @@ def test_logger_has_functions():
     # Test create_logger if available
     if has_create:
         try:
-            create_fn = getattr(m, "create_logger")
+            create_fn = m.create_logger
             assert callable(create_fn)
         except Exception:
             pass  # Function might need args

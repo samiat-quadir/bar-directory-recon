@@ -6,12 +6,15 @@ import pytest
 class TestHTTPPathHandling:
     """Test HTTP request handling and path processing"""
 
-    @pytest.mark.parametrize("url,expected_status", [
-        ("http://example.com/api/test", 200),
-        ("https://api.github.com/repos/test", 200),
-        ("http://localhost:8080/health", 200)
-    ])
-    @patch('requests.get')
+    @pytest.mark.parametrize(
+        "url,expected_status",
+        [
+            ("http://example.com/api/test", 200),
+            ("https://api.github.com/repos/test", 200),
+            ("http://localhost:8080/health", 200),
+        ],
+    )
+    @patch("requests.get")
     def test_mock_http_requests(self, mock_get, url, expected_status):
         """Test HTTP requests with mocked responses"""
         # Mock the response
@@ -32,16 +35,16 @@ class TestHTTPPathHandling:
         test_urls = [
             "https://example.com/api/v1/users",
             "http://localhost:3000/data?param=value",
-            "https://github.com/owner/repo/issues/123"
+            "https://github.com/owner/repo/issues/123",
         ]
 
         for url in test_urls:
             parsed = urlparse(url)
-            assert parsed.scheme in ('http', 'https')
+            assert parsed.scheme in ("http", "https")
             assert parsed.netloc
             assert parsed.path
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_subprocess_with_timeout(self, mock_run):
         """Test subprocess calls with timeout handling"""
         # Mock successful subprocess
@@ -55,12 +58,12 @@ class TestHTTPPathHandling:
     def test_file_path_validation(self):
         """Test file path validation and normalization"""
         import os
-        
+
         test_paths = [
             "valid/path/file.txt",
             "./relative/path",
             "/absolute/path",
-            "path\\with\\backslashes"
+            "path\\with\\backslashes",
         ]
 
         for path in test_paths:
@@ -69,13 +72,12 @@ class TestHTTPPathHandling:
             assert isinstance(normalized, str)
             assert len(normalized) > 0
 
-    @pytest.mark.parametrize("content_type,expected", [
-        ("application/json", "json"),
-        ("text/html", "html"),
-        ("text/plain", "plain")
-    ])
+    @pytest.mark.parametrize(
+        "content_type,expected",
+        [("application/json", "json"), ("text/html", "html"), ("text/plain", "plain")],
+    )
     def test_content_type_parsing(self, content_type, expected):
         """Test content type parsing for HTTP responses"""
         # Extract main type from content-type header
-        main_type = content_type.split('/')[1]
+        main_type = content_type.split("/")[1]
         assert expected in main_type or main_type in expected

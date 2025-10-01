@@ -3,11 +3,14 @@ import os
 import pytest
 
 
-@pytest.mark.parametrize("text,year,month,day", [
-    ("Jan 15, 2023", 2023, 1, 15),
-    ("2024-12-31", 2024, 12, 31),
-    ("Mar 5, 2025", 2025, 3, 5)
-])
+@pytest.mark.parametrize(
+    "text,year,month,day",
+    [
+        ("Jan 15, 2023", 2023, 1, 15),
+        ("2024-12-31", 2024, 12, 31),
+        ("Mar 5, 2025", 2025, 3, 5),
+    ],
+)
 def test_parse_date_basic(text, year, month, day):
     """Test basic date parsing - placeholder for real implementation"""
     # TODO: replace with real date parsing function when available

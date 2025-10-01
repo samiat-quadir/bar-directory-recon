@@ -4,22 +4,24 @@ Test script for cross-device environment compatibility.
 This script verifies that paths and environment variables are correctly set up for cross-device usage.
 """
 
-import os
-import sys
-import json
-import platform
 import datetime
+import json
+import os
+import platform
 import subprocess
+import sys
 from pathlib import Path
 
 # Try to import device path resolver
 try:
     sys.path.append(str(Path(__file__).parent / "tools"))
     from device_path_resolver import get_project_root_path, to_project_relative_path
+
     RESOLVER_AVAILABLE = True
 except ImportError as e:
     print(f"⚠️ Warning: device_path_resolver.py not found or couldn't be imported. Error: {e}")
     RESOLVER_AVAILABLE = False
+
 
 def print_header(text):
     """Print a formatted header."""
@@ -27,17 +29,21 @@ def print_header(text):
     print(f" {text}")
     print("=" * 60)
 
+
 def print_success(text):
     """Print a success message."""
     print(f"✅ {text}")
+
 
 def print_warning(text):
     """Print a warning message."""
     print(f"⚠️ {text}")
 
+
 def print_error(text):
     """Print an error message."""
     print(f"❌ {text}")
+
 
 def check_python_environment():
     """Check the Python environment."""
@@ -60,10 +66,13 @@ def check_python_environment():
 
     # Check for pip
     try:
-        pip_version = subprocess.check_output([sys.executable, "-m", "pip", "--version"]).decode().strip()
+        pip_version = (
+            subprocess.check_output([sys.executable, "-m", "pip", "--version"]).decode().strip()
+        )
         print_success(f"Pip available: {pip_version}")
     except:
         print_error("Pip not available")
+
 
 def check_project_structure():
     """Check the project structure."""
@@ -89,7 +98,7 @@ def check_project_structure():
         ".vscode/startup.ps1",
         "config/device_config.json",
         "tools/device_path_resolver.py",
-        "tools/DevicePathResolver.ps1"
+        "tools/DevicePathResolver.ps1",
     ]
 
     for file_path in key_files:
@@ -98,6 +107,7 @@ def check_project_structure():
             print_success(f"Found file: {file_path}")
         else:
             print_warning(f"Missing file: {file_path}")
+
 
 def check_device_configuration():
     """Check the device configuration."""
@@ -111,7 +121,7 @@ def check_device_configuration():
     config_path = Path(__file__).parent / "config" / "device_config.json"
     if config_path.exists():
         try:
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 config = json.load(f)
 
             print_success(f"Device config found: {config_path}")
@@ -119,14 +129,17 @@ def check_device_configuration():
             print(f"Registration date: {config.get('FirstRegistered', 'Unknown')}")
             print(f"Last updated: {config.get('LastUpdated', 'Unknown')}")
 
-            if config.get('DeviceId').upper() == device_name.upper():
+            if config.get("DeviceId").upper() == device_name.upper():
                 print_success("Device ID matches current device (case insensitive)")
             else:
-                print_warning(f"Device ID mismatch: Config has {config.get('DeviceId')}, current is {device_name}")
+                print_warning(
+                    f"Device ID mismatch: Config has {config.get('DeviceId')}, current is {device_name}"
+                )
         except Exception as e:
             print_error(f"Error reading device config: {e}")
     else:
         print_warning(f"Device config not found at {config_path}")
+
 
 def check_path_resolution():
     """Check path resolution functionality."""
@@ -152,7 +165,7 @@ def check_path_resolution():
     test_paths = [
         "tools/device_path_resolver.py",
         ".vscode/settings.json",
-        "config/device_config.json"
+        "config/device_config.json",
     ]
 
     for rel_path in test_paths:
@@ -167,11 +180,12 @@ def check_path_resolution():
             print(f"  Relative: {relative_path}")
 
             if os.path.exists(absolute_path):
-                print_success(f"  Path exists")
+                print_success("  Path exists")
             else:
-                print_error(f"  Path does not exist")
+                print_error("  Path does not exist")
         except Exception as e:
             print_error(f"  Error processing path {rel_path}: {e}")
+
 
 def run_all_tests():
     """Run all tests."""
@@ -190,6 +204,7 @@ def run_all_tests():
     print("Tests completed. Review any warnings or errors above.")
     print("If there are path resolution issues, run ScanPaths.bat --fix to attempt fixes.")
     print("For device registration issues, run Test-CrossDevicePaths.ps1 -RegisterDevice")
+
 
 if __name__ == "__main__":
     run_all_tests()
