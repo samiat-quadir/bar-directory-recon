@@ -29,7 +29,7 @@ def test_live_scraping_limited() -> None:
             max_records=3,  # Very limited for testing
             debug=True,
             use_selenium=True,
-            test_mode=False  # Real live mode
+            test_mode=False,  # Real live mode
         )
 
         if output_file:
@@ -37,6 +37,7 @@ def test_live_scraping_limited() -> None:
 
             # Read and display results
             import pandas as pd
+
             df = pd.read_csv(output_file)
             print(f"\n📊 Results ({len(df)} records):")
             print(df.to_string(index=False))
