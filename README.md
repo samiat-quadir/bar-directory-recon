@@ -278,6 +278,10 @@ python final_hallandale_pipeline.py  # Adapt for other cities
 
 ---
 
+## Security & dependencies
+
+See **SECURITY.md** for constraints → lock flow and refresh cadence.
+
 *This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*
 
 ## Using secrets in GitHub Codespaces
