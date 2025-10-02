@@ -282,4 +282,15 @@ python final_hallandale_pipeline.py  # Adapt for other cities
 
 See **SECURITY_NOTES.md** for constraints → lock flow and refresh cadence.
 
+
 *This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*
+
+## Using secrets in GitHub Codespaces
+
+- Create a Codespaces secret **SCRAPER_API_KEY** in your GitHub user settings and grant access to this repo.
+- Restart the Codespace; the value is available as `$SCRAPER_API_KEY` (Linux) or `$Env:SCRAPER_API_KEY` (PowerShell).
+- In code, read it with:
+```python
+from universal_recon.util.secrets import get_secret
+API_KEY = get_secret("SCRAPER_API_KEY")
+```

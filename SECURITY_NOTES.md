@@ -23,3 +23,4 @@ This document outlines security considerations and dependency management for the
 ## Reporting Security Issues
 
 Please report security vulnerabilities via GitHub Security Advisories or contact the maintainers directly.
+
