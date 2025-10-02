@@ -24,30 +24,34 @@ import re
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Any
 from urllib.parse import urljoin, urlparse
 
 # Optional imports with fallbacks
 try:
     import aiohttp
+
     AIOHTTP_AVAILABLE = True
 except ImportError:
     AIOHTTP_AVAILABLE = False
 
 try:
     import aiofiles
+
     AIOFILES_AVAILABLE = True
 except ImportError:
     AIOFILES_AVAILABLE = False
 
 try:
     from bs4 import BeautifulSoup
+
     BS4_AVAILABLE = True
 except ImportError:
     BS4_AVAILABLE = False
 
 try:
     import yaml
+
     YAML_AVAILABLE = True
 except ImportError:
     YAML_AVAILABLE = False
@@ -59,11 +63,11 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(PROJECT_ROOT / 'logs' / 'automation' / 'list_discovery.log'),
-        logging.StreamHandler(sys.stdout)
-    ]
+        logging.FileHandler(PROJECT_ROOT / "logs" / "automation" / "list_discovery.log"),
+        logging.StreamHandler(sys.stdout),
+    ],
 )
 logger = logging.getLogger(__name__)
 
@@ -78,22 +82,22 @@ except ImportError:
 class WebPageMonitor:
     """Monitors web pages for changes and new file uploads"""
 
-    config: Dict[str, Any]
-    monitored_urls: List[Dict[str, Any]]
+    config: dict[str, Any]
+    monitored_urls: list[dict[str, Any]]
     download_dir: Path
     state_file: Path
-    file_extensions: List[str]
+    file_extensions: list[str]
     check_interval: int
-    notifier: Optional[Any]
-    state: Dict[str, Any]
+    notifier: Any | None
+    state: dict[str, Any]
 
-    def __init__(self, config: Dict[str, Any]) -> None:
+    def __init__(self, config: dict[str, Any]) -> None:
         self.config = config
-        self.monitored_urls = config.get('monitored_urls', [])
-        self.download_dir = Path(config.get('download_dir', 'input/discovered_lists'))
-        self.state_file = Path(config.get('state_file', 'list_discovery/state.json'))
-        self.file_extensions = config.get('file_extensions', ['.pdf', '.csv', '.xls', '.xlsx'])
-        self.check_interval = config.get('check_interval', 3600)  # 1 hour default
+        self.monitored_urls = config.get("monitored_urls", [])
+        self.download_dir = Path(config.get("download_dir", "input/discovered_lists"))
+        self.state_file = Path(config.get("state_file", "list_discovery/state.json"))
+        self.file_extensions = config.get("file_extensions", [".pdf", ".csv", ".xls", ".xlsx"])
+        self.check_interval = config.get("check_interval", 3600)  # 1 hour default
 
         # Ensure directories exist
         self.download_dir.mkdir(parents=True, exist_ok=True)
@@ -102,49 +106,49 @@ class WebPageMonitor:
         # Initialize notification manager
         self.notifier = None
         if NotificationManager:
-            notifications_config = config.get('notifications', {})
+            notifications_config = config.get("notifications", {})
             self.notifier = NotificationManager(notifications_config)
 
         # Load previous state
         self.state = self._load_state()
 
-    def _load_state(self) -> Dict[str, Any]:
+    def _load_state(self) -> dict[str, Any]:
         """Load previous monitoring state"""
         try:
             if self.state_file.exists():
-                with open(self.state_file, 'r') as f:
+                with open(self.state_file) as f:
                     return json.load(f)
         except Exception as e:
             logger.error(f"Failed to load state: {e}")
 
         return {
-            'last_check': None,
-            'discovered_files': {},
-            'page_hashes': {},
-            'download_history': []
+            "last_check": None,
+            "discovered_files": {},
+            "page_hashes": {},
+            "download_history": [],
         }
 
     def _save_state(self) -> None:
         """Save current monitoring state"""
         try:
-            self.state['last_check'] = datetime.now().isoformat()
-            with open(self.state_file, 'w') as f:
+            self.state["last_check"] = datetime.now().isoformat()
+            with open(self.state_file, "w") as f:
                 json.dump(self.state, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to save state: {e}")
 
     def _get_page_hash(self, content: str) -> str:
         """Generate hash of page content for change detection"""
-        return hashlib.md5(content.encode('utf-8')).hexdigest()
+        return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
-    def _extract_file_links(self, url: str, html_content: str) -> List[Tuple[str, str]]:
+    def _extract_file_links(self, url: str, html_content: str) -> list[tuple[str, str]]:
         """Extract file download links from HTML content"""
-        soup = BeautifulSoup(html_content, 'html.parser')
+        soup = BeautifulSoup(html_content, "html.parser")
         file_links = []
 
         # Find all links
-        for link in soup.find_all('a', href=True):
-            href = link['href']
+        for link in soup.find_all("a", href=True):
+            href = link["href"]
 
             # Convert relative URLs to absolute
             full_url = urljoin(url, href)
@@ -165,11 +169,11 @@ class WebPageMonitor:
 
         return file_links
 
-    async def _download_file(self, session: Any, url: str, filename: str) -> Optional[Path]:
+    async def _download_file(self, session: Any, url: str, filename: str) -> Path | None:
         """Download a file to the download directory"""
         try:
             # Sanitize filename
-            safe_filename = re.sub(r'[^\w\s.-]', '_', filename)
+            safe_filename = re.sub(r"[^\w\s.-]", "_", filename)
             if not any(safe_filename.lower().endswith(ext) for ext in self.file_extensions):
                 # Add extension if missing
                 parsed_url = urlparse(url)
@@ -188,7 +192,7 @@ class WebPageMonitor:
 
             async with session.get(url) as response:
                 if response.status == 200:
-                    async with aiofiles.open(file_path, 'wb') as f:
+                    async with aiofiles.open(file_path, "wb") as f:
                         async for chunk in response.content.iter_chunked(8192):
                             await f.write(chunk)
 
@@ -202,10 +206,10 @@ class WebPageMonitor:
             logger.error(f"Error downloading {url}: {e}")
             return None
 
-    async def _check_url(self, session: Any, url_config: Dict[str, Any]) -> List[Path]:
+    async def _check_url(self, session: Any, url_config: dict[str, Any]) -> list[Path]:
         """Check a single URL for new files"""
-        url = url_config['url']
-        name = url_config.get('name', url)
+        url = url_config["url"]
+        name = url_config.get("name", url)
 
         try:
             logger.info(f"Checking {name}: {url}")
@@ -219,14 +223,14 @@ class WebPageMonitor:
 
             # Check if page has changed
             current_hash = self._get_page_hash(html_content)
-            previous_hash = self.state['page_hashes'].get(url)
+            previous_hash = self.state["page_hashes"].get(url)
 
             if previous_hash and current_hash == previous_hash:
                 logger.debug(f"No changes detected for {name}")
                 return []
 
             # Update hash
-            self.state['page_hashes'][url] = current_hash
+            self.state["page_hashes"][url] = current_hash
 
             # Extract file links
             file_links = self._extract_file_links(url, html_content)
@@ -236,7 +240,7 @@ class WebPageMonitor:
                 return []
 
             # Check for new files
-            discovered_files = self.state['discovered_files'].get(url, set())
+            discovered_files = self.state["discovered_files"].get(url, set())
             if isinstance(discovered_files, list):
                 discovered_files = set(discovered_files)
 
@@ -255,17 +259,19 @@ class WebPageMonitor:
                         downloaded_files.append(downloaded_path)
 
                         # Record download in history
-                        self.state['download_history'].append({
-                            'url': file_url,
-                            'filename': filename,
-                            'source_page': url,
-                            'source_name': name,
-                            'downloaded_path': str(downloaded_path),
-                            'timestamp': datetime.now().isoformat()
-                        })
+                        self.state["download_history"].append(
+                            {
+                                "url": file_url,
+                                "filename": filename,
+                                "source_page": url,
+                                "source_name": name,
+                                "downloaded_path": str(downloaded_path),
+                                "timestamp": datetime.now().isoformat(),
+                            }
+                        )
 
             # Update discovered files
-            self.state['discovered_files'][url] = list(discovered_files)
+            self.state["discovered_files"][url] = list(discovered_files)
 
             # Send notifications for new files
             if new_files and self.notifier:
@@ -278,7 +284,10 @@ class WebPageMonitor:
             return []
 
     def _send_discovery_notification(
-        self, source_name: str, new_files: List[Tuple[str, str]], downloaded_files: List[Path]
+        self,
+        source_name: str,
+        new_files: list[tuple[str, str]],
+        downloaded_files: list[Path],
     ) -> None:
         """Send notification about newly discovered files"""
         if not self.notifier:
@@ -303,7 +312,7 @@ Files are ready for processing in the input directory.
 
         self.notifier.send_success_notification(title, message.strip())
 
-    async def check_all_urls(self) -> List[Path]:
+    async def check_all_urls(self) -> list[Path]:
         """Check all monitored URLs for new files"""
         if not self.monitored_urls:
             logger.warning("No URLs configured for monitoring")
@@ -313,9 +322,8 @@ Files are ready for processing in the input directory.
 
         async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=60),
-            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
         ) as session:
-
             for url_config in self.monitored_urls:
                 try:
                     downloaded_files = await self._check_url(session, url_config)
@@ -358,23 +366,26 @@ Files are ready for processing in the input directory.
                 # Wait before retrying
                 await asyncio.sleep(60)
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get monitoring statistics"""
-        total_discovered = sum(len(files) if isinstance(files, list) else len(files)
-                             for files in self.state['discovered_files'].values())
+        total_discovered = sum(
+            len(files) if isinstance(files, list) else len(files)
+            for files in self.state["discovered_files"].values()
+        )
 
         recent_downloads = [
-            item for item in self.state['download_history']
-            if datetime.fromisoformat(item['timestamp']) > datetime.now() - timedelta(days=7)
+            item
+            for item in self.state["download_history"]
+            if datetime.fromisoformat(item["timestamp"]) > datetime.now() - timedelta(days=7)
         ]
 
         return {
-            'monitored_urls': len(self.monitored_urls),
-            'total_files_discovered': total_discovered,
-            'total_downloads': len(self.state['download_history']),
-            'recent_downloads_7days': len(recent_downloads),
-            'last_check': self.state.get('last_check'),
-            'download_directory': str(self.download_dir)
+            "monitored_urls": len(self.monitored_urls),
+            "total_files_discovered": total_discovered,
+            "total_downloads": len(self.state["download_history"]),
+            "recent_downloads_7days": len(recent_downloads),
+            "last_check": self.state.get("last_check"),
+            "download_directory": str(self.download_dir),
         }
 
 
@@ -382,7 +393,7 @@ class ListDiscoveryAgent:
     """Main List Discovery Agent class"""
 
     config_path: Path
-    config: Dict[str, Any]
+    config: dict[str, Any]
     monitor: WebPageMonitor
 
     def __init__(self, config_path: str = "list_discovery/config.yaml") -> None:
@@ -390,38 +401,35 @@ class ListDiscoveryAgent:
         self.config = self._load_config()
         self.monitor = WebPageMonitor(self.config)
 
-    def _load_config(self) -> Dict[str, Any]:
+    def _load_config(self) -> dict[str, Any]:
         """Load configuration from YAML file"""
         try:
             if self.config_path.exists():
-                with open(self.config_path, 'r') as f:
+                with open(self.config_path) as f:
                     return yaml.safe_load(f)
         except Exception as e:
             logger.warning(f"Failed to load config: {e}")
 
         # Return default configuration
         return {
-            'monitored_urls': [],
-            'download_dir': 'input/discovered_lists',
-            'file_extensions': ['.pdf', '.csv', '.xls', '.xlsx'],
-            'check_interval': 3600,  # 1 hour
-            'notifications': {
-                'discord_webhook': None,
-                'email': {'enabled': False}
-            }
+            "monitored_urls": [],
+            "download_dir": "input/discovered_lists",
+            "file_extensions": [".pdf", ".csv", ".xls", ".xlsx"],
+            "check_interval": 3600,  # 1 hour
+            "notifications": {"discord_webhook": None, "email": {"enabled": False}},
         }
 
     def save_config(self) -> None:
         """Save current configuration to file"""
         try:
             self.config_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.config_path, 'w') as f:
+            with open(self.config_path, "w") as f:
                 yaml.dump(self.config, f, default_flow_style=False)
             logger.info(f"Configuration saved to {self.config_path}")
         except Exception as e:
             logger.error(f"Failed to save config: {e}")
 
-    async def run_single_check(self) -> List[Path]:
+    async def run_single_check(self) -> list[Path]:
         """Run a single check of all monitored URLs"""
         logger.info("Running single check for new files...")
         downloaded_files = await self.monitor.check_all_urls()
@@ -443,9 +451,9 @@ class ListDiscoveryAgent:
         """Show current status and statistics"""
         stats = self.monitor.get_statistics()
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("📋 LIST DISCOVERY AGENT STATUS")
-        print("="*60)
+        print("=" * 60)
 
         print(f"Monitored URLs: {stats['monitored_urls']}")
         print(f"Total files discovered: {stats['total_files_discovered']}")
@@ -453,41 +461,38 @@ class ListDiscoveryAgent:
         print(f"Recent downloads (7 days): {stats['recent_downloads_7days']}")
         print(f"Download directory: {stats['download_directory']}")
 
-        if stats['last_check']:
-            last_check = datetime.fromisoformat(stats['last_check'])
+        if stats["last_check"]:
+            last_check = datetime.fromisoformat(stats["last_check"])
             print(f"Last check: {last_check.strftime('%Y-%m-%d %H:%M:%S')}")
         else:
             print("Last check: Never")
 
         # Show configured URLs
-        if self.config['monitored_urls']:
+        if self.config["monitored_urls"]:
             print(f"\n📍 Configured URLs ({len(self.config['monitored_urls'])}):")
-            for i, url_config in enumerate(self.config['monitored_urls'], 1):
-                name = url_config.get('name', 'Unnamed')
-                url = url_config['url']
+            for i, url_config in enumerate(self.config["monitored_urls"], 1):
+                name = url_config.get("name", "Unnamed")
+                url = url_config["url"]
                 print(f"  {i}. {name}: {url}")
         else:
             print("\n⚠️ No URLs configured for monitoring")
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
 
-    def add_url(self, url: str, name: Optional[str] = None) -> bool:
+    def add_url(self, url: str, name: str | None = None) -> bool:
         """Add a URL to monitor"""
         if not name:
             name = urlparse(url).netloc
 
-        url_config = {
-            'url': url,
-            'name': name
-        }
+        url_config = {"url": url, "name": name}
 
         # Check if URL already exists
-        for existing in self.config['monitored_urls']:
-            if existing['url'] == url:
+        for existing in self.config["monitored_urls"]:
+            if existing["url"] == url:
                 logger.warning(f"URL already exists: {url}")
                 return False
 
-        self.config['monitored_urls'].append(url_config)
+        self.config["monitored_urls"].append(url_config)
         self.save_config()
 
         logger.info(f"Added URL: {name} ({url})")
@@ -499,8 +504,8 @@ class ListDiscoveryAgent:
             # Try to parse as index
             if isinstance(url_or_index, str) and url_or_index.isdigit():
                 index = int(url_or_index) - 1
-                if 0 <= index < len(self.config['monitored_urls']):
-                    removed = self.config['monitored_urls'].pop(index)
+                if 0 <= index < len(self.config["monitored_urls"]):
+                    removed = self.config["monitored_urls"].pop(index)
                     self.save_config()
                     logger.info(f"Removed URL: {removed['name']} ({removed['url']})")
                     return True
@@ -509,9 +514,9 @@ class ListDiscoveryAgent:
                     return False
 
             # Try to match by URL
-            for i, url_config in enumerate(self.config['monitored_urls']):
-                if url_config['url'] == url_or_index:
-                    removed = self.config['monitored_urls'].pop(i)
+            for i, url_config in enumerate(self.config["monitored_urls"]):
+                if url_config["url"] == url_or_index:
+                    removed = self.config["monitored_urls"].pop(i)
                     self.save_config()
                     logger.info(f"Removed URL: {removed['name']} ({removed['url']})")
                     return True
@@ -527,32 +532,32 @@ class ListDiscoveryAgent:
 async def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(description="List Discovery Agent - Phase 4")
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Check command
-    subparsers.add_parser('check', help='Run single check for new files')
+    subparsers.add_parser("check", help="Run single check for new files")
 
     # Monitor command
-    monitor_parser = subparsers.add_parser('monitor', help='Start continuous monitoring')
-    monitor_parser.add_argument('--interval', type=int, help='Check interval in seconds')
+    monitor_parser = subparsers.add_parser("monitor", help="Start continuous monitoring")
+    monitor_parser.add_argument("--interval", type=int, help="Check interval in seconds")
 
     # Status command
-    subparsers.add_parser('status', help='Show current status and statistics')
+    subparsers.add_parser("status", help="Show current status and statistics")
 
     # Add URL command
-    add_parser = subparsers.add_parser('add', help='Add URL to monitor')
-    add_parser.add_argument('url', help='URL to monitor')
-    add_parser.add_argument('--name', help='Display name for the URL')
+    add_parser = subparsers.add_parser("add", help="Add URL to monitor")
+    add_parser.add_argument("url", help="URL to monitor")
+    add_parser.add_argument("--name", help="Display name for the URL")
 
     # Remove URL command
-    remove_parser = subparsers.add_parser('remove', help='Remove URL from monitoring')
-    remove_parser.add_argument('url_or_index', help='URL or index number to remove')
+    remove_parser = subparsers.add_parser("remove", help="Remove URL from monitoring")
+    remove_parser.add_argument("url_or_index", help="URL or index number to remove")
 
     # List URLs command
-    subparsers.add_parser('list', help='List all configured URLs')
+    subparsers.add_parser("list", help="List all configured URLs")
 
     # Setup command
-    subparsers.add_parser('setup', help='Setup initial configuration')
+    subparsers.add_parser("setup", help="Setup initial configuration")
 
     args = parser.parse_args()
 
@@ -564,56 +569,56 @@ async def main():
     agent = ListDiscoveryAgent()
 
     try:
-        if args.command == 'check':
+        if args.command == "check":
             downloaded_files = await agent.run_single_check()
             print(f"\n✅ Check complete. Downloaded {len(downloaded_files)} files.")
 
-        elif args.command == 'monitor':
+        elif args.command == "monitor":
             if args.interval:
-                agent.config['check_interval'] = args.interval
+                agent.config["check_interval"] = args.interval
             await agent.start_monitoring()
 
-        elif args.command == 'status':
+        elif args.command == "status":
             agent.show_status()
 
-        elif args.command == 'add':
+        elif args.command == "add":
             if agent.add_url(args.url, args.name):
                 print(f"✅ Added URL: {args.url}")
             else:
                 print(f"❌ Failed to add URL: {args.url}")
 
-        elif args.command == 'remove':
+        elif args.command == "remove":
             if agent.remove_url(args.url_or_index):
                 print("✅ Removed URL")
             else:
                 print("❌ Failed to remove URL")
 
-        elif args.command == 'list':
+        elif args.command == "list":
             agent.show_status()
 
-        elif args.command == 'setup':
+        elif args.command == "setup":
             print("🛠️ Setting up List Discovery Agent...")
 
             # Create default config with examples
             default_config = {
-                'monitored_urls': [
+                "monitored_urls": [
                     {
-                        'url': 'https://example-county.gov/licenses',
-                        'name': 'Example County Liquor Licenses'
+                        "url": "https://example-county.gov/licenses",
+                        "name": "Example County Liquor Licenses",
                     }
                 ],
-                'download_dir': 'input/discovered_lists',
-                'file_extensions': ['.pdf', '.csv', '.xls', '.xlsx'],
-                'check_interval': 3600,
-                'notifications': {
-                    'discord_webhook': None,
-                    'email': {
-                        'enabled': False,
-                        'smtp_server': 'smtp.gmail.com',
-                        'username': '',
-                        'recipients': []
-                    }
-                }
+                "download_dir": "input/discovered_lists",
+                "file_extensions": [".pdf", ".csv", ".xls", ".xlsx"],
+                "check_interval": 3600,
+                "notifications": {
+                    "discord_webhook": None,
+                    "email": {
+                        "enabled": False,
+                        "smtp_server": "smtp.gmail.com",
+                        "username": "",
+                        "recipients": [],
+                    },
+                },
             }
 
             agent.config = default_config

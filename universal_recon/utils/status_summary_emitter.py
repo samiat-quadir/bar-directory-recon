@@ -12,7 +12,7 @@ def load_validation_matrix(yaml_path):
     """
     if not Path(yaml_path).exists():
         raise FileNotFoundError(f"Validation matrix file not found: {yaml_path}")
-    with open(yaml_path, "r", encoding="utf-8") as f:
+    with open(yaml_path, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
@@ -25,7 +25,7 @@ def emit_status_summary(schema_matrix_path, validation_matrix_path, output_path)
         raise FileNotFoundError(f"Schema matrix file not found: {schema_matrix_path}")
 
     # Load schema matrix
-    with open(schema_matrix_path, "r", encoding="utf-8") as f:
+    with open(schema_matrix_path, encoding="utf-8") as f:
         schema_matrix = json.load(f)
 
     # Load validation matrix

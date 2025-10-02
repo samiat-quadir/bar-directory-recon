@@ -1,0 +1,14 @@
+name: ci-workflow-guard
+# Allow-list: only fast-parity-ci.yml, pip-audit.yml, and codeql*.yml/.yaml may use pull_request/push triggers.
+# All other workflows must be workflow_dispatch-only.
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  guard:
+    name: workflow-guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check workflow triggers
+        run: python3 scripts/check_workflow_triggers.py
