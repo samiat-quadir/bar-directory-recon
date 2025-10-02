@@ -1,6 +1,5 @@
 """Pytest configuration for analytics tests."""
 
-import os
 import sys
 from pathlib import Path
 
