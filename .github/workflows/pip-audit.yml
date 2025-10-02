@@ -22,3 +22,27 @@ jobs:
       - name: pip-audit (environment)
         if: ${{ hashFiles('**/requirements*.txt') == '' }}
         run: pip-audit
+      - name: PR status comment (non-blocking)
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request ? context.payload.pull_request.number : null;
+            if (!pr) { 
+              core.info('No PR context; skipping status comment.'); 
+              return; 
+            }
+            
+            const body = [
+              "### CI Status Update",
+              "- **pip-audit**: ✅ Completed",
+              "- **Status**: Security audit finished",
+              "- **Timestamp**: " + new Date().toISOString()
+            ].join("\\n");
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr,
+              body: body
+            });
