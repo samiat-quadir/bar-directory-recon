@@ -1,10 +1,10 @@
 name: fast-parity-ci
 on:
   pull_request:
-    paths: ['requirements*', '.github/workflows/**', 'src/**', 'tests/**']
+    paths: ["requirements*", ".github/workflows/**", "src/**", "tests/**"]
   push:
     branches: [main]
-    paths: ['requirements*', '.github/workflows/**', 'src/**', 'tests/**']
+    paths: ["requirements*", ".github/workflows/**", "src/**", "tests/**"]
   workflow_dispatch:
 
 jobs:
