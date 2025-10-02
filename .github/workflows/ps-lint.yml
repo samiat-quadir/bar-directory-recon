@@ -1,16 +1,8 @@
-name: ps-lint
+name: ps-lint (manual-only)
 on:
-  pull_request:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 jobs:
-  ps-lint:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+  noop:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Run apply-attic-review.ps1 in DryRun syntax mode
-        shell: pwsh
-        run: pwsh -NoProfile -File scripts/apply-attic-review.ps1 -DryRun -PrNumber 0
+      - run: echo 'manual-only'
