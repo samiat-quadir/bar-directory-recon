@@ -1,15 +1,11 @@
 ############################################################
-# 1 · Operating-system cruft
-############################################################
+# 1 Γö¼Γòû Operating-system cruft
 # macOS
 .DS_Store
 # Windows
 Thumbs.db
 desktop.ini
-
-############################################################
-# 2 · Editor / IDE artefacts
-############################################################
+# 2 Γö¼Γòû Editor / IDE artefacts
 .vscode/
 !.vscode/extensions.json          # keep shared extension list
 !.vscode/settings.example.json    # keep templated settings
@@ -17,10 +13,7 @@ desktop.ini
 *.suo
 *.user
 *.code-workspace
-
-############################################################
-# 3 · Python build & virtual-envs
-############################################################
+# 3 Γö¼Γòû Python build & virtual-envs
 # venvs (any depth, any name)
 **/venv*/
 **/.venv*/
@@ -38,10 +31,7 @@ dist/
 *.egg-info/
 *.egg
 pip-wheel-metadata/
-
-############################################################
-# 4 · Tool caches & coverage & logs
-############################################################
+# 4 Γö¼Γòû Tool caches & coverage & logs
 .pytest_cache/
 .coverage
 htmlcov/
@@ -49,7 +39,6 @@ htmlcov/
 .ruff_cache/
 .isort.cfg.bak
 .pre-commit-cache/
-
 # Logs and temporary files
 logs/
 *.log
@@ -57,17 +46,11 @@ logs/
 *_temp.py
 *_backup.py
 security_report_*.json
-
 # Formatting artifacts
 .black.cache
 .autoflake.cache
 *.isorted
-
-############################################################
-# 5 · Logs, data, screenshots, backups
-############################################################
-logs/
-*.log
+# 5 Γö¼Γòû Logs, data, screenshots, backups
 *_errors.log
 screenshots/
 data/
@@ -79,10 +62,7 @@ merge_conflicts_backup/
 .temp_conflicts/
 snapshots/
 src/backups/archives/
-
-############################################################
-# 6 · Device-specific or secret config
-############################################################
+# 6 Γö¼Γòû Device-specific or secret config
 # generic env / secrets
 *.env
 .env*
@@ -96,10 +76,7 @@ device_*.json
 settings_*.json
 .env.work
 .env.asus
-
-############################################################
-# 7 · One-off project artefacts
-############################################################
+# 7 Γö¼Γòû One-off project artefacts
 mega_memory.yaml
 repo_tree.txt
 env_loader.py
@@ -115,10 +92,7 @@ tools/Test-CrossDeviceCompatibility.ps1
 planning/*.yaml
 !planning/README*.md
 MASTER_IMPLEMENTATION_REPORT.md
-
-############################################################
-# 8 · Binary / large files
-############################################################
+# 8 Γö¼Γòû Binary / large files
 *.zip
 !alienware_bootstrap_bundle.zip  # Critical deployment artifact for ALI
 *.gz
@@ -126,33 +100,42 @@ MASTER_IMPLEMENTATION_REPORT.md
 *.rar
 *.7z
 chromedriver*.exe
-
-############################################################
-# 9 · Git internals (safety net)
-############################################################
+# 9 Γö¼Γòû Git internals (safety net)
 **/.git/
 **/.git/*
-
-############################################################
-# 10 · Merge-conflict artefacts (removed if committed)
-############################################################
+# 10 Γö¼Γòû Merge-conflict artefacts (removed if committed)
 *<<<<<<<*
 *=======*
 *>>>>>>>*
 Copilot Agent Summary.txt
-
-############################################################
-# 11 · Cross-Device Agent Communication
-############################################################
-copilot_agent_relay.md
+# 11 Γö¼Γòû Cross-Device Agent Communication
 copilot_agent_ACE_relay.md
 ALI_RELAY_REPORT.md
-
-############################################################
-# 12 · Large Reports & Scans
-############################################################
+# 12 Γö¼Γòû Large Reports & Scans
 secrets_scan_report_*.json
-
 # smoke-test 2025-07-29T16:36:28
 REPO_HYGIENE_COMPLETION_REPORT.md
+outputs/
+*.pyc
+.pytest_tmp/
+# 1 ┬╖ Operating-system cruft
+# 2 ┬╖ Editor / IDE artefacts
+# 3 ┬╖ Python build & virtual-envs
+# 4 ┬╖ Tool caches & coverage & logs
+# 5 ┬╖ Logs, data, screenshots, backups
+# 6 ┬╖ Device-specific or secret config
+# 7 ┬╖ One-off project artefacts
+# 8 ┬╖ Binary / large files
+# 9 ┬╖ Git internals (safety net)
+# 10 ┬╖ Merge-conflict artefacts (removed if committed)
+# 11 ┬╖ Cross-Device Agent Communication
+# 12 ┬╖ Large Reports & Scans
 
+# --- attic additions (union) ---
+archive/
+automation/
+audits/
+scratch/
+device-specific/
+# venv & coverage hygiene
+.venv/
