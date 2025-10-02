@@ -1,23 +1,25 @@
+---
 name: pip-audit
-on:
-    pull_request:
-    push:
-        branches: [main]
+"on":
+  pull_request: {}
+  push:
+    branches: [main]
 jobs:
-    audit:
-        name: audit
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-python@v5
-              with: { python-version: "3.11" }
-            - run: python -m pip install --upgrade pip pip-audit
-            - name: pip-audit (lock if present)
-              if: ${{ hashFiles('requirements-lock.txt') != '' }}
-              run: pip-audit -r requirements-lock.txt --strict
-            - name: pip-audit (requirements.txt)
-              if: ${{ hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') != '' }}
-              run: pip-audit -r requirements.txt
-            - name: pip-audit (environment)
-              if: ${{ hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') == '' }}
-              run: pip-audit -e .
+  audit:
+    name: audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --upgrade pip pip-audit
+      - name: pip-audit (lock if present)
+        if: ${{ hashFiles('requirements-lock.txt') != '' }}
+        run: pip-audit -r requirements-lock.txt --strict
+      - name: pip-audit (requirements.txt)
+        if: ${{ hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') != '' }}
+        run: pip-audit -r requirements.txt
+      - name: pip-audit (environment)
+        if: ${{ hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') == '' }}
+        run: pip-audit -e .
