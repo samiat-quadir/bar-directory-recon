@@ -10,7 +10,7 @@ def run_schema_score_lint(site_name, verbose=False):
         print(f"[!] Fieldmap not found: {fieldmap_path}")
         return None
 
-    with open(fieldmap_path, "r", encoding="utf-8") as f:
+    with open(fieldmap_path, encoding="utf-8") as f:
         fieldmap = json.load(f)
 
     # Simple mock scoring logic
