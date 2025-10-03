@@ -8,7 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  ubuntu-fast:
+  fast-tests:
+    name: fast-tests (ubuntu-latest)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,7 +45,8 @@ jobs:
             --ignore=universal_recon/tests/auto_smoke/test_auto_05.py \
             || echo "Tests completed with some failures"
 
-  windows-fast:
+  fast-tests-windows:
+    name: fast-tests (windows-latest)
     runs-on: windows-latest
     continue-on-error: true
     steps:
