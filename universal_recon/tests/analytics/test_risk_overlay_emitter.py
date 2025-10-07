@@ -9,9 +9,9 @@ import pytest
 
 from universal_recon.analytics.risk_overlay_emitter import (
     calculate_risk_level,
-    load_validator_tiers,
     emit_risk_overlay,
     emit_site_risk_json,
+    load_validator_tiers,
 )
 
 
@@ -24,7 +24,10 @@ class TestRiskOverlayEmitter(TestCase):
         self.matrix_data = {
             "utah_bar": {
                 "drift_metrics": {"drift_score": 0.7},
-                "validators": {"name_parser": {"health": 90}, "email_validator": {"health": 65}},
+                "validators": {
+                    "name_parser": {"health": 90},
+                    "email_validator": {"health": 65},
+                },
             }
         }
 
@@ -63,15 +66,18 @@ class TestRiskOverlayEmitter(TestCase):
         """Test risk level calculation logic."""
         # Test high risk scenarios
         self.assertEqual(
-            calculate_risk_level(0.9, 65, 0.8), ("high", "Critical validator issues detected")
+            calculate_risk_level(0.9, 65, 0.8),
+            ("high", "Critical validator issues detected"),
         )
         self.assertEqual(
-            calculate_risk_level(0.5, 60, 0.9), ("high", "Critical validator issues detected")
+            calculate_risk_level(0.5, 60, 0.9),
+            ("high", "Critical validator issues detected"),
         )
 
         # Test medium risk scenarios
         self.assertEqual(
-            calculate_risk_level(0.7, 80, 0.9), ("medium", "Moderate validation concerns")
+            calculate_risk_level(0.7, 80, 0.9),
+            ("medium", "Moderate validation concerns"),
         )
 
         # Test low risk scenarios
@@ -112,7 +118,7 @@ class TestRiskOverlayEmitter(TestCase):
         self.assertTrue(os.path.exists(output_path))
 
         # Verify JSON content
-        with open(output_path, "r", encoding="utf-8") as f:
+        with open(output_path, encoding="utf-8") as f:
             exported = json.load(f)
         self.assertEqual(exported, result)
 
