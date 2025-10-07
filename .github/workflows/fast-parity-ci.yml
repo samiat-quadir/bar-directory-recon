@@ -60,9 +60,10 @@ jobs:
           python -m pip install -U pip
           if [ -f requirements-lock.txt ]; then
             python -m pip install -r requirements-lock.txt
-            python -m pip install -e .[dev] --no-deps
+            python -m pip install -e . --no-deps
           else
-            python -m pip install -e .[dev]
+            python -m pip install -e .
+            python -m pip install -r requirements-dev.txt
           fi
       - name: Run fast tests
         if: steps.guard.outputs.workflow_only != 'true'
@@ -134,9 +135,10 @@ jobs:
           python -m pip install -U pip
           if (Test-Path 'requirements-lock.txt') {
             python -m pip install -r requirements-lock.txt
-            python -m pip install -e .[dev] --no-deps
+            python -m pip install -e . --no-deps
           } else {
-            python -m pip install -e .[dev]
+            python -m pip install -e .
+            python -m pip install -r requirements-dev.txt
           }
       - name: Run fast tests
         if: steps.guard.outputs.workflow_only != 'true'
