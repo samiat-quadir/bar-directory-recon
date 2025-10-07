@@ -1,0 +1,97 @@
+name: Dependabot Workflow Auto-merge
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, labeled]
+    
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  auto-merge:
+    name: Auto-merge Dependabot workflow-only PRs
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Check for workflow-only label
+        id: check-label
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const labels = context.payload.pull_request.labels.map(l => l.name);
+            const hasLabel = labels.includes('ci/workflow-only');
+            core.setOutput('has_label', hasLabel ? 'true' : 'false');
+            core.info(`Label 'ci/workflow-only' present: ${hasLabel}`);
+      
+      - name: Get PR files
+        id: pr-files
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pr = context.payload.pull_request.number;
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr
+            });
+            const allWorkflows = files.every(f => 
+              f.filename.startsWith('.github/workflows/') || 
+              f.filename === '.github/dependabot.yml'
+            );
+            core.setOutput('all_workflows', allWorkflows ? 'true' : 'false');
+            core.info(`All files are workflow-only: ${allWorkflows}`);
+      
+      - name: Check required checks
+        id: check-status
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const sha = context.payload.pull_request.head.sha;
+            const required = ['audit', 'fast-tests (ubuntu-latest)', 'fast-tests (windows-latest)'];
+            
+            // Wait a bit for checks to start
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            
+            const { data: checks } = await github.rest.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: sha
+            });
+            
+            const checkNames = checks.check_runs.map(c => c.name);
+            const allPresent = required.every(name => checkNames.includes(name));
+            const allSuccess = required.every(name => {
+              const check = checks.check_runs.find(c => c.name === name);
+              return check && check.conclusion === 'success';
+            });
+            
+            core.setOutput('all_present', allPresent ? 'true' : 'false');
+            core.setOutput('all_success', allSuccess ? 'true' : 'false');
+            core.info(`Required checks present: ${allPresent}, all success: ${allSuccess}`);
+      
+      - name: Enable auto-merge
+        if: |
+          steps.check-label.outputs.has_label == 'true' &&
+          steps.pr-files.outputs.all_workflows == 'true' &&
+          steps.check-status.outputs.all_success == 'true'
+        run: |
+          gh pr merge ${{ github.event.pull_request.number }} --auto --squash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+      
+      - name: Comment on PR
+        if: |
+          steps.check-label.outputs.has_label == 'true' &&
+          steps.pr-files.outputs.all_workflows == 'true' &&
+          steps.check-status.outputs.all_success == 'true'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: '✅ Auto-merge enabled: workflow-only change, all required checks passed.'
+            });
