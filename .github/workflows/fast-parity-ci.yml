@@ -64,8 +64,8 @@ jobs:
           else
             python -m pip install -e .
           fi
-          # Always install pytest for tests
-          python -m pip install pytest
+          # Always install dev dependencies for testing
+          python -m pip install -r requirements-dev.txt
       - name: Run fast tests
         if: steps.guard.outputs.workflow_only != 'true'
         run: pytest -q -m "not slow and not e2e and not integration"
@@ -140,8 +140,8 @@ jobs:
           } else {
             python -m pip install -e .
           }
-          # Always install pytest for tests
-          python -m pip install pytest
+          # Always install dev dependencies for testing
+          python -m pip install -r requirements-dev.txt
       - name: Run fast tests
         if: steps.guard.outputs.workflow_only != 'true'
         shell: pwsh
