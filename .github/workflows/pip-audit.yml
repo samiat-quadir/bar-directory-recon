@@ -38,6 +38,7 @@ jobs:
       - name: Workflow-only change short-circuit success
         if: steps.guard.outputs.workflow_only == 'true'
         run: echo "Workflow-only change detected; skipping pip-audit."
+
       - name: Guard verifier (non-blocking)
         continue-on-error: true
         run: python scripts/check_guard_integrity.py

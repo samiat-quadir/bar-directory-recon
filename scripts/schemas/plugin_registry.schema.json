@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/samiat-quadir/bar-directory-recon/schemas/plugin_registry.schema.json",
+  "title": "Plugin Registry Schema",
+  "description": "Schema for plugin_registry.json - defines available plugins and their metadata",
+  "type": "object",
+  "properties": {
+    "plugins": {
+      "type": "array",
+      "description": "List of registered plugins",
+      "items": {
+        "type": "object",
+        "required": ["name", "version", "entry_point"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Plugin name (unique identifier)",
+            "pattern": "^[a-z0-9_-]+$"
+          },
+          "version": {
+            "type": "string",
+            "description": "Semantic version",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "entry_point": {
+            "type": "string",
+            "description": "Python import path to plugin entry point"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable plugin description"
+          },
+          "author": {
+            "type": "string",
+            "description": "Plugin author"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether plugin is enabled by default",
+            "default": true
+          }
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "description": "Registry schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    }
+  },
+  "required": ["plugins", "version"]
+}
