@@ -35,7 +35,7 @@ jobs:
       - name: Workflow-only change short-circuit success
         if: steps.guard.outputs.workflow_only == 'true'
         run: echo "Workflow-only change detected; skipping tests."
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         if: steps.guard.outputs.workflow_only != 'true'
         with: 
           python-version: '3.11'
@@ -96,7 +96,7 @@ jobs:
         if: steps.guard.outputs.workflow_only == 'true'
         shell: pwsh
         run: Write-Host "Workflow-only change detected; skipping tests."
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         if: steps.guard.outputs.workflow_only != 'true'
         with: 
           python-version: '3.11'
