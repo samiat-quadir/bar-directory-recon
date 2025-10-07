@@ -23,20 +23,9 @@ jobs:
         run: git fetch origin main --depth=1
       - name: Detect workflow-only change
         id: guard
-        run: |
-          set -e
-          CHANGED=$(git diff --name-only origin/main...HEAD | tr -d '\r')
-          if [ -z "$CHANGED" ] || [ -z "$(echo "$CHANGED" | grep -Ev '^\.github/(workflows/|dependabot\.yml$)' || true)" ]; then
-            echo "workflow_only=true" >> $GITHUB_OUTPUT
-          else
-            echo "workflow_only=false" >> $GITHUB_OUTPUT
-          fi
-          if [ "${{ github.actor }}" = "dependabot[bot]" ]; then
-            ONLY_WF=$(echo "$CHANGED" | grep -Ev '^\.github/(workflows/|dependabot\.yml$)' || true)
-            if [ -z "$ONLY_WF" ]; then echo "workflow_only=true" >> $GITHUB_OUTPUT; fi
-          fi
+        uses: ./.github/actions/guard
       - name: Workflow-only change short-circuit success
-        if: steps.guard.outputs.workflow_only == 'true'
+        if: steps.guard.outputs.attic_only == 'true'
         run: echo "Workflow-only change detected; skipping pip-audit."
 
       - name: Guard verifier (non-blocking)
@@ -56,20 +45,41 @@ jobs:
           echo "- Cache dir: \`~/.cache/pip\`" >> $GITHUB_STEP_SUMMARY
           echo "- Cache hit: \`${{ steps.pip-cache.outputs.cache-hit }}\`" >> $GITHUB_STEP_SUMMARY
       - run: python -m pip install --upgrade pip pip-audit
-        if: steps.guard.outputs.workflow_only != 'true'
+        if: steps.guard.outputs.attic_only != 'true'
       - name: pip-audit (lock if present)
-        if: steps.guard.outputs.workflow_only != 'true' && hashFiles('requirements-lock.txt') != ''
+        if: steps.guard.outputs.attic_only != 'true' && hashFiles('requirements-lock.txt') != ''
         run: pip-audit -r requirements-lock.txt --strict
       - name: pip-audit (requirements.txt)
-        if: steps.guard.outputs.workflow_only != 'true' && hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') != ''
+        if: steps.guard.outputs.attic_only != 'true' && hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') != ''
         run: pip-audit -r requirements.txt
       - name: pip-audit (environment)
-        if: steps.guard.outputs.workflow_only != 'true' && hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') == ''
+        if: steps.guard.outputs.attic_only != 'true' && hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') == ''
         run: pip-audit -e .
       - name: Compute lock presence
         id: vars
         run: |
           if [ -f requirements-lock.txt ]; then echo "lock_present=true" >> $GITHUB_OUTPUT; else echo "lock_present=false" >> $GITHUB_OUTPUT; fi
+      - name: Exactly-3 checks assert (non-blocking)
+        if: always()
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const sha = context.sha;
+            const checks = await github.rest.checks.listForRef({ owner, repo, ref: sha });
+            const runs = checks.data.check_runs || [];
+            const required = ["audit", "fast-tests (ubuntu-latest)", "fast-tests (windows-latest)"];
+            const found = required.filter(name => runs.some(c => c.name === name));
+            const exactly3 = found.length === 3;
+            core.info(`Required checks found: ${found.length}/3 → ${found.join(", ")}`);
+            if (!exactly3) {
+              core.warning(`Expected exactly 3 required checks, found ${found.length}: ${found.join(", ")}`);
+              core.warning("This may indicate branch protection mismatch or workflow naming changes");
+            } else {
+              core.info("✅ All 3 required checks present");
+            }
       - name: PR status comment (non-blocking)
         if: always()
         uses: actions/github-script@v8
