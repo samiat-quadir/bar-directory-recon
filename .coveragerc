@@ -1,0 +1,17 @@
+[run]
+branch = True
+source =
+    .
+
+[report]
+skip_empty = True
+omit =
+    archive/*
+    automation/*
+    audits/*
+    logs/*
+    scratch/*
+    device-specific/*
+    src/hallandale_*
+    src/ut_bar.py
+    test_*.py
