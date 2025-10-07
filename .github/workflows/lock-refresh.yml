@@ -102,7 +102,7 @@ jobs:
                   echo "high=$HIGH" >> $GITHUB_OUTPUT
                   echo "critical=$CRIT" >> $GITHUB_OUTPUT
             - name: Create PR with changes
-              uses: peter-evans/create-pull-request@v6
+              uses: peter-evans/create-pull-request@v7
               with:
                   commit-message: "chore(sec): weekly constraints copy + lock refresh (${{ steps.prep.outputs.DATE }})"
                   branch: "chore/lock-refresh-${{ steps.prep.outputs.DATE }}"
