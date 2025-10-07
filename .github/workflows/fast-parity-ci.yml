@@ -1,83 +1,129 @@
 name: fast-parity-ci
 on:
   pull_request:
-    paths: ['requirements*', '.github/workflows/**', 'src/**', 'tests/**']
   push:
-    branches: [main]
-    paths: ['requirements*', '.github/workflows/**', 'src/**', 'tests/**']
-  workflow_dispatch:
-
+    branches: [ main ]
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
 jobs:
-  fast-tests:
+  ubuntu:
     name: fast-tests (ubuntu-latest)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
+          submodules: false
+      - name: Compute base
+        run: git fetch origin main --depth=1
+      - name: Detect workflow-only change
+        id: guard
+        run: |
+          set -e
+          CHANGED=$(git diff --name-only origin/main...HEAD | tr -d '\r')
+          if [ -z "$CHANGED" ] || [ -z "$(echo "$CHANGED" | grep -Ev '^\.github/(workflows/|dependabot\.yml$)' || true)" ]; then
+            echo "workflow_only=true" >> $GITHUB_OUTPUT
+          else
+            echo "workflow_only=false" >> $GITHUB_OUTPUT
+          fi
+          if [ "${{ github.actor }}" = "dependabot[bot]" ]; then
+            ONLY_WF=$(echo "$CHANGED" | grep -Ev '^\.github/(workflows/|dependabot\.yml$)' || true)
+            if [ -z "$ONLY_WF" ]; then echo "workflow_only=true" >> $GITHUB_OUTPUT; fi
+          fi
+      - name: Workflow-only change short-circuit success
+        if: steps.guard.outputs.workflow_only == 'true'
+        run: echo "Workflow-only change detected; skipping tests."
       - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - name: Cache pip packages
+        if: steps.guard.outputs.workflow_only != 'true'
+        with: 
+          python-version: '3.11'
+      - name: Cache pip
+        if: steps.guard.outputs.workflow_only != 'true'
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-lock.txt', 'requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-lock.txt', 'requirements.txt', 'requirements-dev.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      - name: Install dependencies (prefer lockfile)
+      - name: Install (prefer lockfile)
+        if: steps.guard.outputs.workflow_only != 'true'
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install -U pip
           if [ -f requirements-lock.txt ]; then
-            echo "Using requirements-lock.txt (pinned versions)"
             python -m pip install -r requirements-lock.txt
-          elif [ -f requirements.txt ]; then
-            echo "Using requirements.txt (flexible versions)"
-            python -m pip install -r requirements.txt
+            python -m pip install -e .[dev] --no-deps
           else
-            echo "No requirements file found, installing minimal deps"
-            python -m pip install pytest
+            python -m pip install -e .[dev]
           fi
       - name: Run fast tests
-        run: |
-          # Run tests excluding problematic modules with import errors
-          python -m pytest -v --tb=short \
-            --ignore=src/tests/test_hallandale_pipeline.py \
-            --ignore=src/tests/test_hallandale_pipeline_success.py \
-            --ignore=universal_recon/tests/auto_smoke/test_auto_04.py \
-            --ignore=universal_recon/tests/auto_smoke/test_auto_05.py \
-            || echo "Tests completed with some failures"
+        if: steps.guard.outputs.workflow_only != 'true'
+        run: pytest -q -m "not slow and not e2e and not integration"
 
-  fast-tests-windows:
+  windows:
     name: fast-tests (windows-latest)
     runs-on: windows-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
+          submodules: false
+      - name: Compute base
+        shell: pwsh
+        run: git fetch origin main --depth=1
+      - name: Detect workflow-only change
+        id: guard
+        shell: pwsh
+        run: |
+          $changed = git diff --name-only origin/main...HEAD
+          if (-not $changed) { 
+            "workflow_only=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            return 
+          }
+          $nonWf = $changed | Where-Object { $_ -notmatch '^\.github/(workflows/|dependabot\.yml$)' }
+          if (-not $nonWf) { 
+            "workflow_only=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append 
+          } else { 
+            "workflow_only=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append 
+          }
+          if ("${{ github.actor }}" -eq "dependabot[bot]") {
+            if (-not $nonWf) { 
+              "workflow_only=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append 
+            }
+          }
+      - name: Workflow-only change short-circuit success
+        if: steps.guard.outputs.workflow_only == 'true'
+        shell: pwsh
+        run: Write-Host "Workflow-only change detected; skipping tests."
       - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - name: Cache pip packages
+        if: steps.guard.outputs.workflow_only != 'true'
+        with: 
+          python-version: '3.11'
+      - name: Set pip cache dir
+        if: steps.guard.outputs.workflow_only != 'true'
+        shell: pwsh
+        run: echo "PIP_CACHE_DIR=$env:LOCALAPPDATA\pip\Cache" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Cache pip
+        if: steps.guard.outputs.workflow_only != 'true'
         uses: actions/cache@v4
         with:
-          path: ~\AppData\Local\pip\Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-lock.txt', 'requirements.txt') }}
+          path: ${{ env.PIP_CACHE_DIR }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-lock.txt', 'requirements.txt', 'requirements-dev.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      - name: Install dependencies (prefer lockfile)
+      - name: Install (prefer lockfile)
+        if: steps.guard.outputs.workflow_only != 'true'
         shell: pwsh
         run: |
-          python -m pip install --upgrade pip
-          if (Test-Path requirements-lock.txt) {
-            Write-Host "Using requirements-lock.txt (pinned versions)"
+          python -m pip install -U pip
+          if (Test-Path 'requirements-lock.txt') {
             python -m pip install -r requirements-lock.txt
-          } elseif (Test-Path requirements.txt) {
-            Write-Host "Using requirements.txt (flexible versions)"
-            python -m pip install -r requirements.txt
+            python -m pip install -e .[dev] --no-deps
           } else {
-            Write-Host "No requirements file found, installing minimal deps"
-            python -m pip install pytest
+            python -m pip install -e .[dev]
           }
       - name: Run fast tests
+        if: steps.guard.outputs.workflow_only != 'true'
         shell: pwsh
-        continue-on-error: true
-        run: |
-          # Run tests excluding problematic modules with import errors
-          python -m pytest -v --tb=short --ignore=src/tests/test_hallandale_pipeline.py --ignore=src/tests/test_hallandale_pipeline_success.py --ignore=universal_recon/tests/auto_smoke/test_auto_04.py --ignore=universal_recon/tests/auto_smoke/test_auto_05.py
-          Write-Host "Windows test completed (may have some expected failures)"
+        run: pytest -q -m "not slow and not e2e and not integration"
