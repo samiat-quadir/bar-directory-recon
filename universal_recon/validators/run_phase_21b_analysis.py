@@ -31,7 +31,7 @@ def validate_site_status():
         print("⚠️  No status summary found (skipping validator_drift check)")
         return True
 
-    with open(STATUS_PATH, "r", encoding="utf-8") as f:
+    with open(STATUS_PATH, encoding="utf-8") as f:
         status = json.load(f)
 
     issue_found = False
@@ -52,7 +52,7 @@ def run_sanity_check():
         print("❌ schema_matrix.json is missing.")
         return False
 
-    with open(MATRIX_PATH, "r", encoding="utf-8") as f:
+    with open(MATRIX_PATH, encoding="utf-8") as f:
         matrix = json.load(f)
 
     print("\n🔍 Validating schema_matrix.json structure...")

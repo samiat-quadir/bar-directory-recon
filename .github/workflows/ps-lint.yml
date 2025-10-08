@@ -1,0 +1,27 @@
+name: ps-lint
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "scripts/**"
+jobs:
+  ps-lint:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - name: Syntax check apply-attic-review.ps1 (DryRun)
+        shell: pwsh
+        run: pwsh -NoProfile -File scripts/apply-attic-review.ps1 -DryRun -PrNumber 0
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+      - name: Static analysis (warnings as non-blocking)
+        shell: pwsh
+        run: |
+          Invoke-ScriptAnalyzer -Path scripts -Recurse -Severity Warning,Error

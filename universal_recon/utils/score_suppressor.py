@@ -15,10 +15,10 @@ def suppress_scores(
         print("❌ Required input files not found.")
         return
 
-    with open(matrix_path, "r", encoding="utf-8") as f:
+    with open(matrix_path, encoding="utf-8") as f:
         matrix = json.load(f)
 
-    with open(status_path, "r", encoding="utf-8") as f:
+    with open(status_path, encoding="utf-8") as f:
         status = json.load(f)
 
     modified_sites = 0
