@@ -54,3 +54,18 @@ jobs:
             const existing = issues.find(i => i.title === 'Guard Health Report');
             if (existing) await github.rest.issues.update({ owner, repo, issue_number: existing.number, body });
             else await github.rest.issues.create({ owner, repo, title: 'Guard Health Report', body });
+      - name: Mention on failure
+        if: ${{ steps.bp.outputs.ok != 'true' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open' });
+            const target = issues.find(i => i.title === 'Guard Health Report');
+            const ping = '@samiat-quadir';
+            const note = 'Guard Health check failed — branch protection or names drifted.';
+            if (target) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: target.number, body: ${ping} ${note} });
+            } else {
+              await github.rest.issues.create({ owner, repo, title: 'Guard Health Report', body: ${ping} ${note} });
+            }
