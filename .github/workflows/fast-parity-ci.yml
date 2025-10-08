@@ -1,0 +1,120 @@
+name: fast-parity-ci
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+jobs:
+  ubuntu:
+    name: fast-tests (ubuntu-latest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with: 
+          fetch-depth: 0
+          submodules: false
+      - name: Guard check
+        id: guard
+        uses: ./.github/actions/guard
+      - name: Attic/workflow-only change short-circuit success  
+        if: steps.guard.outputs.attic_only == 'true'
+        run: echo "Attic/workflow-only change detected; skipping tests."
+      - uses: actions/setup-python@v6
+        if: steps.guard.outputs.workflow_only != 'true'
+        with: 
+          python-version: '3.11'
+      - name: Cache pip
+        if: steps.guard.outputs.attic_only != 'true'
+        id: pip-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-lock.txt', 'requirements.txt', 'requirements-dev.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Cache telemetry
+        if: steps.guard.outputs.attic_only != 'true'
+        run: |
+          echo "### 📦 Pip Cache Telemetry (Ubuntu)" >> $GITHUB_STEP_SUMMARY
+          echo "- Cache dir: \`~/.cache/pip\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Cache hit: \`${{ steps.pip-cache.outputs.cache-hit }}\`" >> $GITHUB_STEP_SUMMARY
+      - name: Install (prefer lockfile)
+        if: steps.guard.outputs.attic_only != 'true'
+        run: |
+          python -m pip install -U pip
+          if [ -f requirements-lock.txt ]; then
+            python -m pip install -r requirements-lock.txt
+            python -m pip install -e . --no-deps
+          else
+            python -m pip install -e .
+          fi
+          # Always install dev dependencies for testing
+          python -m pip install -r requirements-dev.txt
+      - name: Run fast tests
+        if: steps.guard.outputs.attic_only != 'true'
+        run: pytest -q -m "not slow and not e2e and not integration"
+
+  windows:
+    name: fast-tests (windows-latest)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+        with: 
+          fetch-depth: 0
+          submodules: false
+      - name: Guard check
+        id: guard
+        uses: ./.github/actions/guard
+      - name: Attic/workflow-only change short-circuit success
+        if: steps.guard.outputs.attic_only == 'true'
+        shell: pwsh
+        run: Write-Host "Attic/workflow-only change detected; skipping tests."
+      - uses: actions/setup-python@v6
+        if: steps.guard.outputs.workflow_only != 'true'
+        with: 
+          python-version: '3.11'
+      - name: Set pip cache dir
+        if: steps.guard.outputs.workflow_only != 'true'
+        shell: pwsh
+        run: echo "PIP_CACHE_DIR=$env:LOCALAPPDATA\pip\Cache" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Cache pip
+        if: steps.guard.outputs.workflow_only != 'true'
+        id: pip-cache-win
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PIP_CACHE_DIR }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-lock.txt', 'requirements.txt', 'requirements-dev.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Cache telemetry
+        if: steps.guard.outputs.workflow_only != 'true'
+        shell: pwsh
+        run: |
+          "### 📦 Pip Cache Telemetry (Windows)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Cache dir: ``$env:PIP_CACHE_DIR``" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Cache hit: ``${{ steps.pip-cache-win.outputs.cache-hit }}``" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+      - name: Install (prefer lockfile)
+        if: steps.guard.outputs.workflow_only != 'true'
+        shell: pwsh
+        run: |
+          python -m pip install -U pip
+          if (Test-Path 'requirements-lock.txt') {
+            python -m pip install -r requirements-lock.txt
+            python -m pip install -e . --no-deps
+          } else {
+            python -m pip install -e .
+          }
+          # Always install dev dependencies for testing
+          python -m pip install -r requirements-dev.txt
+      - name: Run fast tests
+        if: steps.guard.outputs.workflow_only != 'true'
+        shell: pwsh
+        run: pytest -q -m "not slow and not e2e and not integration"
