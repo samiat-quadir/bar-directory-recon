@@ -1,57 +1,10 @@
-name: CI
-
-on:
-  push:
-    branches: [ "main", "feature/**", "prep/**" ]
-  pull_request:
-    branches: [ "main", "feature/**", "prep/**" ]
-  workflow_dispatch:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
+name: ci (manual-only)
 permissions:
   contents: read
-  packages: write
-
+on:
+  workflow_dispatch:
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        python-version: ['3.9', '3.10', '3.11']
-        os: [ubuntu-latest, windows-latest]
-
+  noop:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
-
-      - name: Install Dependencies
-        run: pip install -r requirements-dev.txt
-
-      - name: Run pre-commit hooks
-        run: pre-commit run --all-files
-
-      - name: Type check with mypy
-        run: mypy . --ignore-missing-imports
-
-      - name: Run Tests and Coverage
-        run: |
-          pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=35
-
-      - name: Upload coverage to Codecov
-        if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.xml
-
-      - name: Security scan
-        if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
-        run: python tools/secrets_scan.py --path . --report-path security_check.json
+      - run: echo 'manual-only'

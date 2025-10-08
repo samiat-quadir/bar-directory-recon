@@ -10,7 +10,7 @@ fix the device_path_resolver.py file.
 import os
 import re
 import sys
-from pathlib import Path
+
 
 def find_device_path_resolver():
     """Find the device_path_resolver.py file"""
@@ -31,6 +31,7 @@ def find_device_path_resolver():
 
     return None
 
+
 def fix_device_path_resolver():
     """Fix the device_path_resolver.py file"""
     resolver_path = find_device_path_resolver()
@@ -41,12 +42,12 @@ def fix_device_path_resolver():
     print(f"Found device_path_resolver.py at: {resolver_path}")
 
     # Read the file content
-    with open(resolver_path, 'r', encoding='utf-8') as f:
+    with open(resolver_path, encoding="utf-8") as f:
         content = f.read()
 
     # Create a backup
     backup_path = resolver_path + ".bak"
-    with open(backup_path, 'w', encoding='utf-8') as f:
+    with open(backup_path, "w", encoding="utf-8") as f:
         f.write(content)
     print(f"Created backup at: {backup_path}")
 
@@ -97,17 +98,27 @@ def fix_device_path_resolver():
     new_content = re.sub(pattern, replacement, content)
 
     # Fix reference to get_onedrive_path in get_project_root_path
-    get_project_root_pattern = r"onedrive_path = os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)"
+    get_project_root_pattern = (
+        r"onedrive_path = os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)"
+    )
     get_project_root_replacement = "onedrive_path = get_onedrive_path()"
     new_content = re.sub(get_project_root_pattern, get_project_root_replacement, new_content)
 
     # Fix reference to get_onedrive_path in register_current_device
-    register_current_device_pattern = r"onedrive_path = os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)"
+    register_current_device_pattern = (
+        r"onedrive_path = os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)"
+    )
     register_current_device_replacement = "onedrive_path = get_onedrive_path()"
-    new_content = re.sub(register_current_device_pattern, register_current_device_replacement, new_content)
+    new_content = re.sub(
+        register_current_device_pattern,
+        register_current_device_replacement,
+        new_content,
+    )
 
     # Fix any args.onedrive path references
-    args_onedrive_pattern = r"print\(os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)\)"
+    args_onedrive_pattern = (
+        r"print\(os\.path\.join\(get_project_root_path\(\), 'os\.path\.join.*?\(\)\)"
+    )
     args_onedrive_replacement = "print(get_onedrive_path())"
     new_content = re.sub(args_onedrive_pattern, args_onedrive_replacement, new_content)
 
@@ -117,7 +128,7 @@ def fix_device_path_resolver():
     new_content = re.sub(diagnostics_pattern, diagnostics_replacement, new_content)
 
     # Write the fixed content back to the file
-    with open(resolver_path, 'w', encoding='utf-8') as f:
+    with open(resolver_path, "w", encoding="utf-8") as f:
         f.write(new_content)
 
     print("Successfully fixed device_path_resolver.py")
@@ -126,21 +137,24 @@ def fix_device_path_resolver():
     if "SALESREP" not in new_content:
         print("Adding SALESREP to DEVICE_CONFIGS...")
         # Read the file again to ensure we have the latest content
-        with open(resolver_path, 'r', encoding='utf-8') as f:
+        with open(resolver_path, encoding="utf-8") as f:
             content = f.read()
 
         # Add SALESREP to DEVICE_CONFIGS
         device_configs_pattern = r'(DEVICE_CONFIGS = \{.*?"ROG-LUCCI": \{.*?"onedrive_folder": "OneDrive - Digital Age Marketing Group"\s+\})'
         device_configs_replacement = r'\1,\n    "SALESREP": {\n        "username": "samq",\n        "onedrive_folder": "OneDrive - Digital Age Marketing Group"\n    }'
-        new_content = re.sub(device_configs_pattern, device_configs_replacement, content, flags=re.DOTALL)
+        new_content = re.sub(
+            device_configs_pattern, device_configs_replacement, content, flags=re.DOTALL
+        )
 
         # Write the updated content back to the file
-        with open(resolver_path, 'w', encoding='utf-8') as f:
+        with open(resolver_path, "w", encoding="utf-8") as f:
             f.write(new_content)
 
         print("Successfully added SALESREP to DEVICE_CONFIGS")
 
     return True
+
 
 if __name__ == "__main__":
     print("Running device_path_resolver fix script...")
