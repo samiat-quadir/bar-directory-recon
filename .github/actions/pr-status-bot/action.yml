@@ -1,0 +1,27 @@
+name: pr-status-bot
+description: Post CI status summary to PR (non-blocking)
+runs:
+  using: composite
+  steps:
+    - uses: actions/github-script@v7
+      with:
+        script: |
+          const owner = context.repo.owner, repo = context.repo.repo, sha = context.sha;
+          const pr = context.payload.pull_request ? context.payload.pull_request.number : null;
+          if (!pr) { core.info('No PR context; skipping.'); return; }
+          const res = await github.rest.checks.listForRef({ owner, repo, ref: sha });
+          const runs = res.data.check_runs || [];
+          const pick = (n) => runs.find(c => c.name.toLowerCase() === n.toLowerCase());
+          const names = runs.map(c => c.name);
+          const guard = runs.find(c => c.name.toLowerCase().includes('workflow-guard'));
+          const pslU = pick('ps-lint (ubuntu-latest)');
+          const pslW = pick('ps-lint (windows-latest)');
+          const required = ["audit","fast-tests (ubuntu-latest)","fast-tests (windows-latest)"];
+          const haveAll = required.every(n => names.includes(n));
+          const body = [
+            "### CI status (auto)",
+            "• Required checks present: " + (haveAll ? "yes" : "no") + " → " + required.join(", "),
+            "• Guard: " + (guard ? guard.conclusion || guard.status : "absent") + " (name='" + (guard ? guard.name : "n/a") + "')",
+            "• ps-lint: ubuntu=" + (pslU ? pslU.conclusion || pslU.status : "absent") + ", windows=" + (pslW ? pslW.conclusion || pslW.status : "absent")
+          ].join("\\n");
+          await github.rest.issues.createComment({ owner, repo, issue_number: pr, body });
