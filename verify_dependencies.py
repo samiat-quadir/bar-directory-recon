@@ -4,9 +4,6 @@ Dependency Verification Script
 Check all dependencies for the unified scraping framework
 """
 
-import sys
-import subprocess
-from pathlib import Path
 
 def check_dependency(package_name, import_name=None, optional=False):
     """Check if a dependency is available."""
@@ -21,6 +18,7 @@ def check_dependency(package_name, import_name=None, optional=False):
         status = "⚠️  OPTIONAL" if optional else "❌ REQUIRED"
         print(f"{status} {package_name} - Not available")
         return not optional
+
 
 def check_core_dependencies():
     """Check core framework dependencies."""
@@ -45,6 +43,7 @@ def check_core_dependencies():
 
     return all_available
 
+
 def check_notification_dependencies():
     """Check notification system dependencies."""
     print("\n📧 Checking Notification Dependencies...")
@@ -61,6 +60,7 @@ def check_notification_dependencies():
         results[package] = check_dependency(package, import_name, optional)
 
     return results
+
 
 def check_google_sheets_dependencies():
     """Check Google Sheets integration dependencies."""
@@ -80,6 +80,7 @@ def check_google_sheets_dependencies():
         results[package] = check_dependency(package, import_name, optional)
 
     return results
+
 
 def check_framework_modules():
     """Check if framework modules can be imported."""
@@ -109,6 +110,7 @@ def check_framework_modules():
 
     return all_available
 
+
 def suggest_installations(missing_packages):
     """Suggest installation commands for missing packages."""
     if not missing_packages:
@@ -118,28 +120,40 @@ def suggest_installations(missing_packages):
     print("=" * 50)
 
     # Core packages
-    core_missing = [pkg for pkg in missing_packages if pkg in [
-        'selenium', 'webdriver-manager', 'beautifulsoup4', 'pandas',
-        'requests', 'openpyxl', 'python-dotenv', 'typer'
-    ]]
+    core_missing = [
+        pkg
+        for pkg in missing_packages
+        if pkg
+        in [
+            "selenium",
+            "webdriver-manager",
+            "beautifulsoup4",
+            "pandas",
+            "requests",
+            "openpyxl",
+            "python-dotenv",
+            "typer",
+        ]
+    ]
 
     if core_missing:
         print("For core functionality:")
         print(f"pip install {' '.join(core_missing)}")
 
     # Google Sheets packages
-    sheets_missing = [pkg for pkg in missing_packages if pkg.startswith('google-')]
+    sheets_missing = [pkg for pkg in missing_packages if pkg.startswith("google-")]
     if sheets_missing:
         print("\nFor Google Sheets integration:")
         print(f"pip install {' '.join(sheets_missing)}")
 
     # Notification packages
-    if 'twilio' in missing_packages:
+    if "twilio" in missing_packages:
         print("\nFor SMS notifications:")
         print("pip install twilio")
 
     print("\nOr install all optional dependencies:")
     print("pip install -r requirements.txt")
+
 
 def main():
     """Main verification process."""
@@ -150,13 +164,23 @@ def main():
 
     # Check core dependencies
     if not check_core_dependencies():
-        missing_packages.extend(['selenium', 'webdriver-manager', 'beautifulsoup4',
-                                'pandas', 'requests', 'openpyxl', 'python-dotenv', 'typer'])
+        missing_packages.extend(
+            [
+                "selenium",
+                "webdriver-manager",
+                "beautifulsoup4",
+                "pandas",
+                "requests",
+                "openpyxl",
+                "python-dotenv",
+                "typer",
+            ]
+        )
 
     # Check notification dependencies
     notification_results = check_notification_dependencies()
-    if not notification_results.get('twilio', True):
-        missing_packages.append('twilio')
+    if not notification_results.get("twilio", True):
+        missing_packages.append("twilio")
 
     # Check Google Sheets dependencies
     sheets_results = check_google_sheets_dependencies()
@@ -187,6 +211,7 @@ def main():
     print("2. Configure credentials (see DEPLOYMENT_GUIDE.md)")
     print("3. Test the framework with sample data")
     print("4. Set up automated scheduling")
+
 
 if __name__ == "__main__":
     main()

@@ -6,7 +6,7 @@ Defines the standard data structure and field mappings for all scraped data.
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -31,15 +31,15 @@ class UnifiedDataRecord:
     country: str = "US"
 
     # Professional details
-    practice_areas: List[str] = field(default_factory=list)
-    specializations: List[str] = field(default_factory=list)
-    certifications: List[str] = field(default_factory=list)
+    practice_areas: list[str] = field(default_factory=list)
+    specializations: list[str] = field(default_factory=list)
+    certifications: list[str] = field(default_factory=list)
 
     # Social media and additional contacts
     linkedin_url: str = ""
     facebook_url: str = ""
     twitter_url: str = ""
-    other_urls: List[str] = field(default_factory=list)
+    other_urls: list[str] = field(default_factory=list)
 
     # Metadata
     source: str = ""
@@ -53,7 +53,7 @@ class UnifiedDataRecord:
     notes: str = ""
 
     # Custom fields for extensibility
-    custom_fields: Dict[str, Any] = field(default_factory=dict)
+    custom_fields: dict[str, Any] = field(default_factory=dict)
 
 
 class SchemaMapper:
@@ -153,7 +153,7 @@ class SchemaMapper:
         self.source_type = source_type
         self.field_mapping = self.FIELD_MAPPINGS.get(source_type, {})
 
-    def map_to_unified(self, raw_data: Dict[str, Any]) -> UnifiedDataRecord:
+    def map_to_unified(self, raw_data: dict[str, Any]) -> UnifiedDataRecord:
         """Map raw scraped data to unified schema."""
         unified_data = {}
 
@@ -192,9 +192,7 @@ class SchemaMapper:
 
         return UnifiedDataRecord(**unified_data)
 
-    def to_export_dict(
-        self, record: UnifiedDataRecord, schema: str = "standard"
-    ) -> Dict[str, str]:
+    def to_export_dict(self, record: UnifiedDataRecord, schema: str = "standard") -> dict[str, str]:
         """Convert unified record to export dictionary with proper column headers."""
         export_schema = self.EXPORT_SCHEMA.get(schema, self.EXPORT_SCHEMA["standard"])
         export_data = {}
@@ -214,12 +212,12 @@ class SchemaMapper:
 
         return export_data
 
-    def get_export_headers(self, schema: str = "standard") -> List[str]:
+    def get_export_headers(self, schema: str = "standard") -> list[str]:
         """Get ordered list of export column headers."""
         export_schema = self.EXPORT_SCHEMA.get(schema, self.EXPORT_SCHEMA["standard"])
         return [header for _, header in export_schema]
 
-    def validate_record(self, record: UnifiedDataRecord) -> Dict[str, Any]:
+    def validate_record(self, record: UnifiedDataRecord) -> dict[str, Any]:
         """Validate a unified data record and return validation results."""
         issues = []
         score = 100.0
@@ -265,10 +263,10 @@ class SchemaMapper:
 
     def map_data_to_unified_schema(
         self,
-        raw_data_list: List[Dict[str, Any]],
-        source_type: Optional[str] = None,
-        source_name: Optional[str] = None,
-    ) -> List[UnifiedDataRecord]:
+        raw_data_list: list[dict[str, Any]],
+        source_type: str | None = None,
+        source_name: str | None = None,
+    ) -> list[UnifiedDataRecord]:
         """Map a list of raw data dictionaries to unified schema records."""
         if source_type:
             self.source_type = source_type
@@ -287,7 +285,7 @@ class SchemaMapper:
         return unified_records
 
     def create_export_dataframe(
-        self, unified_records: List[UnifiedDataRecord], export_type: str = "standard"
+        self, unified_records: list[UnifiedDataRecord], export_type: str = "standard"
     ) -> Any:
         """Create a pandas DataFrame from unified records with proper column order."""
         import pandas as pd
@@ -313,8 +311,8 @@ class SchemaMapper:
         return df
 
     def deduplicate_records(
-        self, records: List[UnifiedDataRecord], dedup_fields: Optional[List[str]] = None
-    ) -> List[UnifiedDataRecord]:
+        self, records: list[UnifiedDataRecord], dedup_fields: list[str] | None = None
+    ) -> list[UnifiedDataRecord]:
         """Remove duplicate records based on specified fields."""
         if dedup_fields is None:
             dedup_fields = ["email", "phone"]
@@ -350,7 +348,7 @@ class SchemaMapper:
         return unique_records
 
 
-def create_unified_config_template() -> Dict[str, Any]:
+def create_unified_config_template() -> dict[str, Any]:
     """Create template for unified configuration with all options."""
     return {
         "name": "example_directory",
