@@ -120,7 +120,7 @@ jobs:
         run: pytest -q -m "not slow and not e2e and not integration"
       - name: CI minutes saved (24h)
         if: always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const since = new Date(Date.now() - 24*60*60*1000);

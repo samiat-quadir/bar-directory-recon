@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Verify branch protection (4 required checks)
         id: bp
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const {owner,repo} = context.repo;
@@ -25,7 +25,7 @@ jobs:
             core.setOutput('checks', checks.join(', '));
       - name: Verify job name exactness (diagnostic)
         id: names
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const {owner, repo} = context.repo;
@@ -38,7 +38,7 @@ jobs:
             core.setOutput('missing', missing.join(','));
       - name: Upsert Guard Health Report
         if: always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const ok = "${{ steps.bp.outputs.ok }}" === "true";
@@ -56,7 +56,7 @@ jobs:
             else await github.rest.issues.create({ owner, repo, title: 'Guard Health Report', body });
       - name: Mention on failure
         if: ${{ steps.bp.outputs.ok != 'true' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const {owner, repo} = context.repo;
