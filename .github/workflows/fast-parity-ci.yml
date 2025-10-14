@@ -118,3 +118,19 @@ jobs:
         if: steps.guard.outputs.workflow_only != 'true'
         shell: pwsh
         run: pytest -q -m "not slow and not e2e and not integration"
+      - name: CI minutes saved (24h)
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const since = new Date(Date.now() - 24*60*60*1000);
+            const { owner, repo } = context.repo;
+            const wf = context.workflow;
+            const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
+              owner, repo, status: 'cancelled', per_page: 100
+            });
+            const recent = runs.filter(r => new Date(r.run_started_at) >= since && r.name === wf);
+            core.summary.addHeading('CI minutes saved (24h)');
+            core.summary.addRaw(`Group: ${wf}-${context.ref}`);
+            core.summary.addRaw(`\nCancelled runs: ${recent.length}`);
+            await core.summary.write();

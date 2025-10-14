@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Generate hygiene report
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const allow = new RegExp('^(fast-parity-ci\\.yml|pip-audit\\.yml|ps-lint\\.yml|ci-workflow-guard\\.yml|codeql.*)$');
