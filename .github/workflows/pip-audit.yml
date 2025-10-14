@@ -67,7 +67,7 @@ jobs:
       - name: Exactly-3 checks assert (non-blocking)
         if: always()
         continue-on-error: true
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const owner = context.repo.owner;
@@ -120,3 +120,19 @@ jobs:
           echo "Expected: \`audit\`, \`fast-tests (ubuntu-latest)\`, \`fast-tests (windows-latest)\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "⚠️ If this differs from branch protection, update \`.github/workflows/\` job names." >> $GITHUB_STEP_SUMMARY
+      - name: CI minutes saved (24h)
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const since = new Date(Date.now() - 24*60*60*1000);
+            const { owner, repo } = context.repo;
+            const wf = context.workflow;
+            const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
+              owner, repo, status: 'cancelled', per_page: 100
+            });
+            const recent = runs.filter(r => new Date(r.run_started_at) >= since && r.name === wf);
+            core.summary.addHeading('CI minutes saved (24h)');
+            core.summary.addRaw(`Group: ${wf}-${context.ref}`);
+            core.summary.addRaw(`\nCancelled runs: ${recent.length}`);
+            await core.summary.write();

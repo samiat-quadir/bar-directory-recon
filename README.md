@@ -18,6 +18,21 @@
 [![Cross-Device Bootstrap](https://github.com/samiat-quadir/bar-directory-recon/workflows/cross-device-bootstrap/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/cross-device-bootstrap.yml)
 [![CI Weekly Insights](https://github.com/samiat-quadir/bar-directory-recon/workflows/ci-insights-weekly/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/ci-insights-weekly.yml)
 
+## CI status (required checks)
+The branch protection requires **exactly four** checks:
+- `audit`
+- `fast-tests (ubuntu-latest)`
+- `fast-tests (windows-latest)`
+- `workflow-guard`
+
+## Security: pinned Actions + lockfile-first
+- All marketplace Actions are pinned to immutable **commit SHAs**.
+- Installs prefer **requirements-lock.txt** with hashes; `pip-audit` targets the **lock**.
+
+## CI insights: minutes saved
+Fast jobs write a non-blocking summary line with the workflow **group** and **cancelled runs (24h)** to visualize concurrency savings.
+
+
 ## Overview
 
 Universal Recon is a comprehensive bar directory reconnaissance and automation tool designed for legal professional data extraction. It provides a modular plugin system for extracting, validating, and analyzing data from legal bar directories and professional websites.
