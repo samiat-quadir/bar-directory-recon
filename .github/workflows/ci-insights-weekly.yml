@@ -11,7 +11,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     steps:
-      - name: CI weekly insights (cancelled runs by workflow)
+      - name: CI weekly insights (cancelled runs by workflow + guard drift)
         uses: actions/github-script@v7
         with:
           script: |
@@ -24,9 +24,35 @@ jobs:
             const byName = {};
             for (const r of recent) { byName[r.name] = (byName[r.name] ?? 0) + 1; }
             const total = recent.length;
+            // --- Guard drift (7d) ---
+            // Count PRs short-circuited by composite guard vs total PRs updated in window,
+            // and list top 3 workflows that still triggered despite being workflow-only.
+            const prs = await github.paginate(github.rest.pulls.list, { owner, repo, state: 'all', per_page: 100 });
+            const windowPRs = prs.filter(p => new Date(p.updated_at) >= since);
+            let shortCircuits = 0;
+            const offenderCounts = {};
+            for (const p of windowPRs) {
+              // Parse PR comments for status bot line "Attic/workflow short-circuit: true"
+              const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number: p.number });
+              const statusComments = comments.filter(c => (c.user && c.user.login === 'github-actions[bot]') && /Attic\/workflow short-circuit:\s*true/i.test(c.body || ''));
+              if (statusComments.length > 0) {
+                shortCircuits++;
+                // If short-circuited, verify if any fast-tests/audit still triggered (should be rare)
+                const checks = await github.rest.checks.listForRef({ owner, repo, ref: p.head.sha });
+                const names = (checks.data.check_runs || []).map(c => c.name);
+                for (const n of names) {
+                  if (/(fast-tests|audit)/i.test(n)) offenderCounts[n] = (offenderCounts[n] ?? 0) + 1;
+                }
+              }
+            }
+            const offendersTop3 = Object.entries(offenderCounts).sort((a,b)=>b[1]-a[1]).slice(0,3);
             let body = `### CI Weekly Insights\n\nSince ${since.toISOString()}\n\n` +
-                       `Cancelled runs (total): ${total}\n\n` +
-                       Object.entries(byName).map(([k,v])=>`- ${k}: ${v}`).join('\n') +
+                       `**Cancelled runs (24h group savings)**\n` +
+                       `- Total cancelled: ${total}\n` +
+                       Object.entries(byName).map(([k,v])=>`- ${k}: ${v}`).join('\n') + `\n\n` +
+                       `**Guard drift (7d)**\n` +
+                       `- Short-circuited PRs: ${shortCircuits} / ${windowPRs.length}\n` +
+                       (offendersTop3.length ? offendersTop3.map(([k,v])=>`- Triggered despite short-circuit: ${k} → ${v}`).join('\n') : '- No offenders detected') +
                        `\n\n_Non-blocking; for observability._`;
             const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open' });
             const title = 'CI Weekly Insights';
