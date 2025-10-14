@@ -1,0 +1,35 @@
+name: ci-insights-weekly
+on:
+  schedule:
+    - cron: "20 14 * * 3"   # Wednesdays ~09:20 ET
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CI weekly insights (cancelled runs by workflow)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const since = new Date(Date.now() - 7*24*60*60*1000);
+            const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
+              owner, repo, status: 'cancelled', per_page: 100
+            });
+            const recent = runs.filter(r => new Date(r.run_started_at) >= since);
+            const byName = {};
+            for (const r of recent) { byName[r.name] = (byName[r.name] ?? 0) + 1; }
+            const total = recent.length;
+            let body = `### CI Weekly Insights\n\nSince ${since.toISOString()}\n\n` +
+                       `Cancelled runs (total): ${total}\n\n` +
+                       Object.entries(byName).map(([k,v])=>`- ${k}: ${v}`).join('\n') +
+                       `\n\n_Non-blocking; for observability._`;
+            const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open' });
+            const title = 'CI Weekly Insights';
+            const existing = issues.find(i => i.title === title);
+            if (existing) await github.rest.issues.update({ owner, repo, issue_number: existing.number, body });
+            else await github.rest.issues.create({ owner, repo, title, body });
