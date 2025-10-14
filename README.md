@@ -18,6 +18,7 @@
 [![Cross-Device Bootstrap](https://github.com/samiat-quadir/bar-directory-recon/workflows/cross-device-bootstrap/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/cross-device-bootstrap.yml)
 [![CI Weekly Insights](https://github.com/samiat-quadir/bar-directory-recon/workflows/ci-insights-weekly/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/ci-insights-weekly.yml)
 
+
 ## CI status (required checks)
 The branch protection requires **exactly four** checks:
 - `audit`
