@@ -32,6 +32,7 @@ The branch protection requires **exactly four** checks:
 ## CI insights: minutes saved
 Fast jobs write a non-blocking summary line with the workflow **group** and **cancelled runs (24h)** to visualize concurrency savings.
 
+
 ## Overview
 
 Universal Recon is a comprehensive bar directory reconnaissance and automation tool designed for legal professional data extraction. It provides a modular plugin system for extracting, validating, and analyzing data from legal bar directories and professional websites.
