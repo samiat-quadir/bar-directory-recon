@@ -13,7 +13,7 @@ jobs:
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4# pinned to actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c on 2025-10-08
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
