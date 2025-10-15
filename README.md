@@ -16,6 +16,23 @@
 [![Benchmark](https://github.com/samiat-quadir/bar-directory-recon/workflows/benchmark/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/benchmark.yml)
 [![Security Scan](https://github.com/samiat-quadir/bar-directory-recon/workflows/security-scan/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/security-scan.yml)
 [![Cross-Device Bootstrap](https://github.com/samiat-quadir/bar-directory-recon/workflows/cross-device-bootstrap/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/cross-device-bootstrap.yml)
+[![CI Weekly Insights](https://github.com/samiat-quadir/bar-directory-recon/workflows/ci-insights-weekly/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/ci-insights-weekly.yml)
+
+
+## CI status (required checks)
+The branch protection requires **exactly four** checks:
+- `audit`
+- `fast-tests (ubuntu-latest)`
+- `fast-tests (windows-latest)`
+- `workflow-guard`
+
+## Security: pinned Actions + lockfile-first
+- All marketplace Actions are pinned to immutable **commit SHAs**.
+- Installs prefer **requirements-lock.txt** with hashes; `pip-audit` targets the **lock**.
+
+## CI insights: minutes saved
+Fast jobs write a non-blocking summary line with the workflow **group** and **cancelled runs (24h)** to visualize concurrency savings.
+
 
 ## Overview
 
@@ -278,4 +295,19 @@ python final_hallandale_pipeline.py  # Adapt for other cities
 
 ---
 
+## Security & dependencies
+
+See **SECURITY_NOTES.md** for constraints → lock flow and refresh cadence.
+
+
 *This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*
+
+## Using secrets in GitHub Codespaces
+
+- Create a Codespaces secret **SCRAPER_API_KEY** in your GitHub user settings and grant access to this repo.
+- Restart the Codespace; the value is available as `$SCRAPER_API_KEY` (Linux) or `$Env:SCRAPER_API_KEY` (PowerShell).
+- In code, read it with:
+```python
+from universal_recon.util.secrets import get_secret
+API_KEY = get_secret("SCRAPER_API_KEY")
+```

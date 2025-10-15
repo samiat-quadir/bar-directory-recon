@@ -6,7 +6,7 @@ Handles loading and validation of scraping configurations from JSON/YAML files.
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import yaml
 
@@ -18,12 +18,12 @@ class ScrapingConfig:
     name: str
     description: str
     base_url: str
-    listing_phase: Dict[str, Any]
-    detail_phase: Dict[str, Any]
-    pagination: Dict[str, Any]
-    data_extraction: Dict[str, Any]
-    output: Dict[str, Any]
-    options: Dict[str, Any]
+    listing_phase: dict[str, Any]
+    detail_phase: dict[str, Any]
+    pagination: dict[str, Any]
+    data_extraction: dict[str, Any]
+    output: dict[str, Any]
+    options: dict[str, Any]
 
 
 class ConfigLoader:
@@ -34,7 +34,7 @@ class ConfigLoader:
         self.config_dir = Path(config_dir)
         self.config_dir.mkdir(exist_ok=True)
 
-    def load_config(self, config_path: Union[str, Path]) -> ScrapingConfig:
+    def load_config(self, config_path: str | Path) -> ScrapingConfig:
         """Load configuration from file."""
         config_path = Path(config_path)
 
@@ -42,14 +42,11 @@ class ConfigLoader:
             raise FileNotFoundError(f"Configuration file not found: {config_path}")
 
         # Load based on file extension
-        if (
-            config_path.suffix.lower() == ".yaml"
-            or config_path.suffix.lower() == ".yml"
-        ):
-            with open(config_path, "r", encoding="utf-8") as f:
+        if config_path.suffix.lower() == ".yaml" or config_path.suffix.lower() == ".yml":
+            with open(config_path, encoding="utf-8") as f:
                 config_data = yaml.safe_load(f)
         elif config_path.suffix.lower() == ".json":
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config_data = json.load(f)
         else:
             raise ValueError(f"Unsupported config file format: {config_path.suffix}")
@@ -57,9 +54,7 @@ class ConfigLoader:
         # Validate and create config object
         return self._validate_config(config_data)
 
-    def save_config(
-        self, config: ScrapingConfig, config_path: Union[str, Path]
-    ) -> None:
+    def save_config(self, config: ScrapingConfig, config_path: str | Path) -> None:
         """Save configuration to file."""
         config_path = Path(config_path)
 
@@ -67,10 +62,7 @@ class ConfigLoader:
         config_dict = self._config_to_dict(config)
 
         # Save based on file extension
-        if (
-            config_path.suffix.lower() == ".yaml"
-            or config_path.suffix.lower() == ".yml"
-        ):
+        if config_path.suffix.lower() == ".yaml" or config_path.suffix.lower() == ".yml":
             with open(config_path, "w", encoding="utf-8") as f:
                 yaml.dump(config_dict, f, default_flow_style=False, indent=2)
         elif config_path.suffix.lower() == ".json":
@@ -79,7 +71,7 @@ class ConfigLoader:
         else:
             raise ValueError(f"Unsupported config file format: {config_path.suffix}")
 
-    def list_configs(self) -> List[str]:
+    def list_configs(self) -> list[str]:
         """List available configuration files."""
         configs = []
         for ext in ["*.json", "*.yaml", "*.yml"]:
@@ -188,7 +180,7 @@ class ConfigLoader:
             },
         )
 
-    def _validate_config(self, config_data: Dict[str, Any]) -> ScrapingConfig:
+    def _validate_config(self, config_data: dict[str, Any]) -> ScrapingConfig:
         """Validate configuration data and create ScrapingConfig object."""
         required_fields = [
             "name",
@@ -223,7 +215,7 @@ class ConfigLoader:
 
         return ScrapingConfig(**config_data)
 
-    def _config_to_dict(self, config: ScrapingConfig) -> Dict[str, Any]:
+    def _config_to_dict(self, config: ScrapingConfig) -> dict[str, Any]:
         """Convert ScrapingConfig to dictionary."""
         return {
             "name": config.name,
@@ -237,7 +229,7 @@ class ConfigLoader:
             "options": config.options,
         }
 
-    def validate_config(self, config: ScrapingConfig) -> Dict[str, Any]:
+    def validate_config(self, config: ScrapingConfig) -> dict[str, Any]:
         """Validate a configuration and return validation results."""
         errors = []
         warnings = []
@@ -268,15 +260,9 @@ class ConfigLoader:
         # Validate pagination
         pagination_type = config.pagination.get("type", "none")
         if pagination_type != "none":
-            if pagination_type == "next_button" and not config.pagination.get(
-                "next_selector"
-            ):
-                errors.append(
-                    "Next button selector is required for next_button pagination"
-                )
-            elif pagination_type == "load_more" and not config.pagination.get(
-                "load_more_selector"
-            ):
+            if pagination_type == "next_button" and not config.pagination.get("next_selector"):
+                errors.append("Next button selector is required for next_button pagination")
+            elif pagination_type == "load_more" and not config.pagination.get("load_more_selector"):
                 errors.append("Load more selector is required for load_more pagination")
 
         # Validate output configuration
@@ -285,7 +271,7 @@ class ConfigLoader:
 
         return {"valid": len(errors) == 0, "errors": errors, "warnings": warnings}
 
-    def validate_selectors(self, selectors: Dict[str, Any]) -> List[str]:
+    def validate_selectors(self, selectors: dict[str, Any]) -> list[str]:
         """Validate CSS selectors and return any issues."""
         issues = []
 
@@ -304,7 +290,7 @@ class ConfigLoader:
 
         return issues
 
-    def get_selector_priority(self, selector_config: Dict[str, Any]) -> List[str]:
+    def get_selector_priority(self, selector_config: dict[str, Any]) -> list[str]:
         """Get CSS selectors in priority order."""
         css_selectors = selector_config.get("css", [])
         if isinstance(css_selectors, str):
@@ -313,19 +299,13 @@ class ConfigLoader:
 
     def is_required_field(self, field_name: str, config: ScrapingConfig) -> bool:
         """Check if a field is required."""
-        selector_config = config.data_extraction.get("selectors", {}).get(
-            field_name, {}
-        )
+        selector_config = config.data_extraction.get("selectors", {}).get(field_name, {})
         required = selector_config.get("required", False)
         return bool(required)
 
-    def get_extraction_patterns(
-        self, field_name: str, config: ScrapingConfig
-    ) -> List[str]:
+    def get_extraction_patterns(self, field_name: str, config: ScrapingConfig) -> list[str]:
         """Get regex patterns for field extraction."""
-        selector_config = config.data_extraction.get("selectors", {}).get(
-            field_name, {}
-        )
+        selector_config = config.data_extraction.get("selectors", {}).get(field_name, {})
         patterns = selector_config.get("patterns", [])
         if isinstance(patterns, str):
             return [patterns]

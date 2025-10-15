@@ -1,0 +1,138 @@
+name: pip-audit
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+jobs:
+  audit:
+    name: audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with: 
+          fetch-depth: 0
+          submodules: false
+      - uses: actions/setup-python@v6
+        with: 
+          python-version: '3.11'
+      - name: Compute base
+        run: git fetch origin main --depth=1
+      - name: Detect workflow-only change
+        id: guard
+        uses: ./.github/actions/guard
+      - name: Workflow-only change short-circuit success
+        if: steps.guard.outputs.attic_only == 'true'
+        run: echo "Workflow-only change detected; skipping pip-audit."
+
+      - name: Guard verifier (non-blocking)
+        continue-on-error: true
+        run: python scripts/check_guard_integrity.py
+      - name: Cache pip directory
+        id: pip-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-audit-${{ runner.os }}-${{ hashFiles('requirements-lock.txt', 'requirements.txt') }}
+          restore-keys: |
+            pip-audit-${{ runner.os }}-
+      - name: Cache telemetry
+        run: |
+          echo "### 📦 Pip Cache Telemetry" >> $GITHUB_STEP_SUMMARY
+          echo "- Cache dir: \`~/.cache/pip\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Cache hit: \`${{ steps.pip-cache.outputs.cache-hit }}\`" >> $GITHUB_STEP_SUMMARY
+      - run: python -m pip install --upgrade pip pip-audit
+        if: steps.guard.outputs.attic_only != 'true'
+      - name: pip-audit (lock if present)
+        if: steps.guard.outputs.attic_only != 'true' && hashFiles('requirements-lock.txt') != ''
+        run: pip-audit -r requirements-lock.txt --strict
+      - name: pip-audit (requirements.txt)
+        if: steps.guard.outputs.attic_only != 'true' && hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') != ''
+        run: pip-audit -r requirements.txt
+      - name: pip-audit (environment)
+        if: steps.guard.outputs.attic_only != 'true' && hashFiles('requirements-lock.txt') == '' && hashFiles('**/requirements.txt') == ''
+        run: pip-audit -e .
+      - name: Compute lock presence
+        id: vars
+        run: |
+          if [ -f requirements-lock.txt ]; then echo "lock_present=true" >> $GITHUB_OUTPUT; else echo "lock_present=false" >> $GITHUB_OUTPUT; fi
+      - name: Exactly-3 checks assert (non-blocking)
+        if: always()
+        continue-on-error: true
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const sha = context.sha;
+            const checks = await github.rest.checks.listForRef({ owner, repo, ref: sha });
+            const runs = checks.data.check_runs || [];
+            const required = ["audit", "fast-tests (ubuntu-latest)", "fast-tests (windows-latest)"];
+            const found = required.filter(name => runs.some(c => c.name === name));
+            const exactly3 = found.length === 3;
+            core.info(`Required checks found: ${found.length}/3 → ${found.join(", ")}`);
+            if (!exactly3) {
+              core.warning(`Expected exactly 3 required checks, found ${found.length}: ${found.join(", ")}`);
+              core.warning("This may indicate branch protection mismatch or workflow naming changes");
+            } else {
+              core.info("✅ All 3 required checks present");
+            }
+      - name: PR status comment (non-blocking)
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const sha = context.sha;
+            const pr = context.payload.pull_request ? context.payload.pull_request.number : null;
+            if (!pr) { core.info('No PR context; skipping.'); return; }
+            const checks = await github.rest.checks.listForRef({ owner, repo, ref: sha });
+            const runs = checks.data.check_runs || [];
+            const pick = (n) => runs.find(c => c.name.toLowerCase() === n.toLowerCase());
+            const names = runs.map(c => c.name);
+            const guard = runs.find(c => c.name.toLowerCase().includes('workflow-guard'));
+            const pslU = pick('ps-lint (ubuntu-latest)');
+            const pslW = pick('ps-lint (windows-latest)');
+            const required = ["audit","fast-tests (ubuntu-latest)","fast-tests (windows-latest)"];
+            const haveAll = required.every(n => names.includes(n));
+            const lockPresent = "${{ steps.vars.outputs.lock_present }}";
+            const body = [
+              "### CI status (auto)",
+              `• Required checks present: ${haveAll ? "yes" : "no"} → ${required.join(", ")}`,
+              `• Guard: ${guard ? guard.conclusion || guard.status : "absent"} (name='${guard ? guard.name : "n/a"}')`,
+              `• ps-lint: ubuntu=${pslU ? pslU.conclusion || pslU.status : "absent"}, windows=${pslW ? pslW.conclusion || pslW.status : "absent"}`,
+              `• Lockfile present: ${lockPresent}`
+            ].filter(Boolean).join("\\n");
+            await github.rest.issues.createComment({ owner, repo, issue_number: pr, body });
+      - name: Required checks diagnostic (non-blocking)
+        if: always()
+        run: |
+          echo "### 🔍 Required Checks Diagnostic" >> $GITHUB_STEP_SUMMARY
+          echo "Expected: \`audit\`, \`fast-tests (ubuntu-latest)\`, \`fast-tests (windows-latest)\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ If this differs from branch protection, update \`.github/workflows/\` job names." >> $GITHUB_STEP_SUMMARY
+      - name: CI minutes saved (24h)
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const since = new Date(Date.now() - 24*60*60*1000);
+            const { owner, repo } = context.repo;
+            const wf = context.workflow;
+            const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
+              owner, repo, status: 'cancelled', per_page: 100
+            });
+            const recent = runs.filter(r => new Date(r.run_started_at) >= since && r.name === wf);
+            core.summary.addHeading('CI minutes saved (24h)');
+            core.summary.addRaw(`Group: ${wf}-${context.ref}`);
+            core.summary.addRaw(`\nCancelled runs: ${recent.length}`);
+            await core.summary.write();

@@ -55,6 +55,10 @@ repos:
   # Add detect-secrets for secrets scanning
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
     hooks:
-      - id: detect-secrets
-        args: ["--baseline", ".secrets.baseline"]
+      - id: black
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.5
+
