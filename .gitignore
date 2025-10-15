@@ -55,6 +55,7 @@ security_report_*.json
 screenshots/
 data/
 output/
+!examples/demo/output/
 run_logs/
 temp_backup/
 temp_broken_code/
@@ -139,3 +140,16 @@ scratch/
 device-specific/
 # venv & coverage hygiene
 .venv/
+AI_AUTOMATION_COMPLETE.md
+scripts/check_automation.ps1
+scripts/configure_ai_automation.ps1
+scripts/verify_ai_automation_simple.ps1
+scripts/verify_ai_automation.ps1
+
+# AI Automation Configuration (local only)
+.automation-config/
+
+# Local automation helpers
+scripts/*.local.ps1
+scripts/local-*.ps1
+!examples/demo/work/
