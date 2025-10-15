@@ -1,4 +1,4 @@
--c constraints/2025-10-01.txt
+-c constraints/2025-10-15.txt
 
 # Core dependencies from pyproject.toml [project.dependencies]
 pydantic>=2.10.6
