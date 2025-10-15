@@ -69,6 +69,24 @@ jobs:
             core.setOutput('all_present', allPresent ? 'true' : 'false');
             core.setOutput('all_success', allSuccess ? 'true' : 'false');
             core.info(`Required checks present: ${allPresent}, all success: ${allSuccess}`);
+      - name: Assert workflow-only diff
+        if: steps.check-label.outputs.has_label == 'true' && steps.pr-files.outputs.all_workflows == 'false'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pr = context.payload.pull_request.number;
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr
+            });
+            const offenders = files.filter(f => !(f.filename.startsWith('.github/workflows/') || f.filename === '.github/dependabot.yml')).map(f => f.filename);
+            if (offenders.length) {
+              const body = `⚠️ Auto-merge prevented: PR labeled as workflow-only, but these files are not in `.github/workflows/`:\n\n` + offenders.map(s => `- \`${s}\``).join('\n') + `\n\nPlease remove the label or split non-workflow changes into a separate PR.`;
+              await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: pr, body });
+            } else {
+              core.info('No offending paths detected.');
+            }
       
       - name: Enable auto-merge
         if: |
