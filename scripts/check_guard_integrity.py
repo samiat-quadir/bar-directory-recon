@@ -14,7 +14,7 @@ import pathlib
 import re
 import sys
 
-ALLOW = {'fast-parity-ci.yml', 'pip-audit.yml', 'ps-lint.yml', 'ci-workflow-guard.yml'}
+ALLOW = {'fast-parity-ci.yml', 'pip-audit.yml', 'ps-lint.yml', 'ci-workflow-guard.yml', 'ci-hygiene-weekly.yml'}
 REQ = {'audit', 'fast-tests (ubuntu-latest)', 'fast-tests (windows-latest)', 'workflow-guard'}
 PSLINT_NAMES = {'ps-lint (ubuntu-latest)', 'ps-lint (windows-latest)'}
 
