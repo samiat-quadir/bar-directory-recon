@@ -2,8 +2,6 @@ name: ps-lint
 on:
   pull_request:
     branches: [ main ]
-    paths:
-      - "scripts/**"
 jobs:
   ps-lint:
     runs-on: ${{ matrix.os }}
