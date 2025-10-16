@@ -16,6 +16,7 @@ import sys
 
 ALLOW = {'fast-parity-ci.yml', 'pip-audit.yml', 'ps-lint.yml', 'ci-workflow-guard.yml'}
 REQ = {'audit', 'fast-tests (ubuntu-latest)', 'fast-tests (windows-latest)', 'workflow-guard'}
+PSLINT_NAMES = {'ps-lint (ubuntu-latest)', 'ps-lint (windows-latest)'}
 
 
 def read(p):
@@ -42,14 +43,20 @@ def main():
         txt = read(p)
         if has_pr_or_push(txt) and p.name not in ALLOW and not p.name.lower().startswith('codeql'):
             offenders.append(p.name)
-    # ps-lint always-run
+    # ps-lint always-run + names
     ps = wfdir / 'ps-lint.yml'
-    ps_ok = ps.exists() and not has_paths_under_pr(read(ps))
+    txt = read(ps) if ps.exists() else ""
+    ps_ok = ps.exists() and not has_paths_under_pr(txt)
+    # Check for matrix strategy with ubuntu-latest and windows-latest (defensive - ensures job names)
+    has_ubuntu = 'ubuntu-latest' in txt
+    has_windows = 'windows-latest' in txt
+    names_ok = has_ubuntu and has_windows
     result = {
         'allow_offenders': offenders,
         'pslint_always_run': ps_ok,
+        'pslint_names_ok': names_ok,
         'required_checks': sorted(REQ),
-        'status': 'PASS' if not offenders and ps_ok else 'FAIL'
+        'status': 'PASS' if not offenders and ps_ok and names_ok else 'FAIL'
     }
     print(json.dumps(result))
     return 0

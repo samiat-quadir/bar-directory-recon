@@ -11,15 +11,37 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v5
+      - name: Detect scripts/ changes
+        id: changed
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const isPR = context.eventName === 'pull_request';
+            let changed = [];
+            if (isPR) {
+              const files = await github.paginate(github.rest.pulls.listFiles, { owner: context.repo.owner, repo: context.repo.repo, pull_number: context.payload.pull_request.number });
+              changed = files.map(f => f.filename).filter(f => f.startsWith('scripts/'));
+            } else {
+              const { exec } = require('child_process'); const { promisify } = require('util'); const sh = promisify(exec);
+              const base = process.env.GITHUB_SHA + '^';
+              const out = await sh(`git diff --name-only ${base} ${process.env.GITHUB_SHA}`);
+              changed = out.stdout.split('\n').filter(f => f.startsWith('scripts/'));
+            }
+            core.setOutput('has_scripts', changed.length > 0 ? 'true' : 'false');
+            core.summary.addRaw(`pslint_always_run: true\npslint_skipped: ${changed.length===0}\n`);
+            await core.summary.write();
       - name: Syntax check apply-attic-review.ps1 (DryRun)
+        if: steps.changed.outputs.has_scripts == 'true'
         shell: pwsh
         run: pwsh -NoProfile -File scripts/apply-attic-review.ps1 -DryRun -PrNumber 0
       - name: Install PSScriptAnalyzer
+        if: steps.changed.outputs.has_scripts == 'true'
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
       - name: Static analysis (warnings as non-blocking)
+        if: steps.changed.outputs.has_scripts == 'true'
         shell: pwsh
         run: |
           Invoke-ScriptAnalyzer -Path scripts -Recurse -Severity Warning,Error
