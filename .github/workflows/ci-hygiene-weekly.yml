@@ -1,9 +1,12 @@
-name: pr-hygiene-report
+name: ci-hygiene-weekly
 on:
   schedule:
-    # 14:10 UTC daily (safe cadence); adjustable
-    - cron: "10 14 * * *"
+    - cron: "30 13 * * 3"  # Wed 09:30 ET
   workflow_dispatch:
+
+concurrency:
+  group: ci-hygiene-weekly
+  cancel-in-progress: true
 
 permissions:
   contents: read
