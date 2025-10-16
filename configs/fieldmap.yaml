@@ -1,0 +1,8 @@
+# Minimal placeholder field mapping for the CLI demo.
+mappings:
+  - source: name
+    target: full_name
+  - source: id
+    target: bar_id
+  - source: registration_status
+    target: status

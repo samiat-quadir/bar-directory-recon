@@ -1,0 +1,8 @@
+name: ruff-strict (manual-only)
+on:
+  workflow_dispatch:
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'manual-only'

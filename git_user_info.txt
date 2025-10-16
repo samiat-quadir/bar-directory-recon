@@ -1,1 +1,1 @@
-Git not found in PATH 
+Git not found in PATH
