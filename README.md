@@ -311,3 +311,5 @@ See **SECURITY_NOTES.md** for constraints → lock flow and refresh cadence.
 from universal_recon.util.secrets import get_secret
 API_KEY = get_secret("SCRAPER_API_KEY")
 ```
+
+<!-- ps-lint sanity 10/17/2025 16:00:21 -->
