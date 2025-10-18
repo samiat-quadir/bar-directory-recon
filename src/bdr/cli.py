@@ -3,6 +3,9 @@ import json
 import pathlib
 import sys
 
+from bdr.stages import normalize as _norm
+from bdr.stages import validate as _val
+
 
 def _ensure_dir(p):
     p = pathlib.Path(p)
@@ -34,12 +37,10 @@ def run_ingest(inp, out):
 
 def run_normalize(inp, out):
     data = _load_json(inp)
-    norm = _try_import("universal_recon.utils.record_normalizer")
-    if norm and hasattr(norm, "normalize_records"):
-        try:
-            data = norm.normalize_records(data)  # best-effort
-        except Exception:
-            pass
+    try:
+        data = _norm.normalize(data)
+    except Exception:
+        pass
     _dump_json(out, data)
     return {"records": len(data)}
 
@@ -53,12 +54,10 @@ def run_validate(
 ):
     data = _load_json(inp)
     errors = 0
-    v = _try_import("universal_recon.utils.record_field_validator_v3")
-    if v and hasattr(v, "validate_records"):
-        try:
-            errors = v.validate_records(data, schema, fieldmap, rules)  # hypothetical
-        except Exception:
-            errors = 0
+    try:
+        errors = _val.validate(data, schema, fieldmap, rules)
+    except Exception:
+        pass
     _dump_json(out, {"records": len(data), "errors": errors})
     return {"records": len(data), "errors": errors}
 
@@ -75,8 +74,11 @@ def run_score(inp, out):
 def run_report(inp, out_json, out_md):
     payload = _load_json(inp)
     _dump_json(out_json, payload)
+    rec = payload.get("records", 0)
+    err = payload.get("errors", 0)
+    scr = payload.get("score", 0)
     pathlib.Path(out_md).write_text(
-        f"# Demo Report\n\nRecords: {payload.get('records',0)}\n\nErrors: {payload.get('errors',0)}\n\nScore: {payload.get('score',0)}\n",
+        f"# Demo Report\n\nRecords: {rec}\n\nErrors: {err}\n\nScore: {scr}\n",
         encoding="utf-8",
     )
     return payload

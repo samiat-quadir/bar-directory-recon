@@ -52,6 +52,24 @@ Universal Recon is a comprehensive bar directory reconnaissance and automation t
 
 ---
 
+## Quickstart (CLI)
+
+```bash
+# Run the demo end-to-end
+bdr ingest   -i examples/demo/input/records.json -o examples/demo/work/normalized.json
+bdr normalize -i examples/demo/work/normalized.json -o examples/demo/work/normalized.json
+bdr validate -i examples/demo/work/normalized.json -o examples/demo/work/validation.json
+bdr score    -i examples/demo/work/validation.json -o examples/demo/work/score.json
+bdr report   -i examples/demo/work/score.json -o examples/demo/output/report.json
+```
+
+**Notes**:
+
+- **Adapters are safe**: if preserved utilities aren't importable or signatures differ, the CLI falls back to the current no-op behavior so CI stays green.
+- See `configs/` for the schema/fieldmap/rules placeholders used by the demo.
+
+---
+
 ## Cross-Device Bootstrap
 
 ### Alienware Device Setup
