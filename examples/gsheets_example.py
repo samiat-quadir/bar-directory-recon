@@ -18,14 +18,14 @@ def main():
     """Example: Export sample data to Google Sheets."""
     # Example data
     sample_data = [
-        ['Date', 'Event', 'Status'],
-        ['2025-08-18', 'Plugin CLI Created', 'Complete'],
-        ['2025-08-18', 'Google Sheets Export', 'In Progress'],
+        ["Date", "Event", "Status"],
+        ["2025-08-18", "Plugin CLI Created", "Complete"],
+        ["2025-08-18", "Google Sheets Export", "In Progress"],
     ]
 
     # Configuration (would normally come from environment or config file)
-    spreadsheet_id = 'your_spreadsheet_id_here'  # Get from Google Sheets URL
-    worksheet_name = 'Sheet1'  # Or whatever your sheet is named
+    spreadsheet_id = "your_spreadsheet_id_here"  # Get from Google Sheets URL
+    worksheet_name = "Sheet1"  # Or whatever your sheet is named
 
     try:
         print("Exporting data to Google Sheets...")
@@ -36,5 +36,5 @@ def main():
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
