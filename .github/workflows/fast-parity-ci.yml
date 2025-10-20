@@ -134,3 +134,52 @@ jobs:
             core.summary.addRaw(`Group: ${wf}-${context.ref}`);
             core.summary.addRaw(`\nCancelled runs: ${recent.length}`);
             await core.summary.write();
+      - name: Compose PR status (status-bot)
+        if: ${{ github.event_name == 'pull_request' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .status
+          verdict='unknown'
+          details='{}'
+          if [ -f scripts/check_guard_integrity.py ]; then
+            python scripts/check_guard_integrity.py > .status/guard.json || true
+            verdict=$(jq -r '.status // "unknown"' .status/guard.json 2>/dev/null || echo "unknown")
+            details=$(cat .status/guard.json 2>/dev/null || echo '{}')
+          fi
+          lock_present="false"; [ -f requirements-lock.txt ] && lock_present="true"
+          pslint=""
+          if [ -f .status/pslint.txt ]; then pslint="$(cat .status/pslint.txt)"; fi
+          cat > .status/comment.md <<STATUSEOF
+          <!-- status-bot -->
+          **CI status bot**
+
+          - Required checks: \`audit\`, \`fast-tests (ubuntu-latest)\`, \`fast-tests (windows-latest)\`, \`workflow-guard\`
+          - Guard verdict: **${verdict}**
+          - Lock present: **${lock_present}**
+          ${pslint}
+          <details><summary>Guard JSON</summary>
+
+          \`\`\`json
+          ${details}
+          \`\`\`
+          </details>
+          STATUSEOF
+
+      - name: Post PR status comment (status-bot)
+        if: ${{ github.event_name == 'pull_request' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          pr="${{ github.event.pull_request.number }}"
+          body=".status/comment.md"
+          gh pr view "$pr" >/dev/null
+          last=$(gh pr comments "$pr" --json body,id | jq -r '[.[] | select(.body|contains("<!-- status-bot -->"))][-1].id // empty')
+          if [ -n "$last" ]; then
+            gh pr comment "$pr" --comment-id "$last" --body-file "$body"
+          else
+            gh pr comment "$pr" --body-file "$body"
+          fi
