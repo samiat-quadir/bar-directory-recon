@@ -11,5 +11,9 @@ VALIDATOR_DRIFT_BADGES = {
         "css_class": "validator-warning",
         "tooltip": "Warning – non-critical plugin drift",
     },
-    "info": {"icon": "ℹ️", "css_class": "validator-info", "tooltip": "Informational drift only"},
+    "info": {
+        "icon": "ℹ️",
+        "css_class": "validator-info",
+        "tooltip": "Informational drift only",
+    },
 }

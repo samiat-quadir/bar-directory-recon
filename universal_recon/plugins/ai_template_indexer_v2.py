@@ -4,7 +4,8 @@ This plugin classifies grouped records (template blocks) into profile templates
 such as individual, firm, hybrid, or unknown based on field composition.
 """
 
-from typing import Iterator, Dict, Any, List
+from collections.abc import Iterator
+from typing import Any
 
 
 class AITemplateIndexerPlugin:
@@ -15,7 +16,7 @@ class AITemplateIndexerPlugin:
         """Return the plugin's unique identifier name."""
         return "ai_template_indexer"
 
-    def fetch(self) -> Iterator[Dict[str, Any]]:
+    def fetch(self) -> Iterator[dict[str, Any]]:
         """Fetch raw data from input source.
 
         Note: This plugin operates on pre-grouped data passed via context.
@@ -32,16 +33,16 @@ class AITemplateIndexerPlugin:
                     {"type": "name", "value": "John Smith"},
                     {"type": "email", "value": "j.smith@example.com"},
                     {"type": "bar_number", "value": "12345"},
-                    {"type": "phone", "value": "555-0123"}
-                ]
+                    {"type": "phone", "value": "555-0123"},
+                ],
             },
             {
                 "group_id": "template_002",
                 "fields": [
                     {"type": "firm_name", "value": "Smith & Associates"},
                     {"type": "phone", "value": "555-0456"},
-                    {"type": "address", "value": "123 Main St"}
-                ]
+                    {"type": "address", "value": "123 Main St"},
+                ],
             },
             {
                 "group_id": "template_003",
@@ -49,15 +50,14 @@ class AITemplateIndexerPlugin:
                     {"type": "name", "value": "Sarah Johnson"},
                     {"type": "firm_name", "value": "Johnson Law Group"},
                     {"type": "email", "value": "s.johnson@jlg.com"},
-                    {"type": "phone", "value": "555-0789"}
-                ]
-            }
+                    {"type": "phone", "value": "555-0789"},
+                ],
+            },
         ]
 
-        for group in sample_groups:
-            yield group
+        yield from sample_groups
 
-    def transform(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
+    def transform(self, raw_data: dict[str, Any]) -> dict[str, Any]:
         """Transform grouped record into classified template.
 
         Args:
@@ -91,18 +91,20 @@ class AITemplateIndexerPlugin:
             template_confidence = "low"
 
         # Add classification metadata
-        template.update({
-            "template_type": template_type,
-            "template_score": template_score,
-            "template_confidence": template_confidence,
-            "field_count": len(field_types),
-            "field_types": list(field_types),
-            "source": "ai_template_indexer"
-        })
+        template.update(
+            {
+                "template_type": template_type,
+                "template_score": template_score,
+                "template_confidence": template_confidence,
+                "field_count": len(field_types),
+                "field_types": list(field_types),
+                "source": "ai_template_indexer",
+            }
+        )
 
         return template
 
-    def validate(self, transformed_data: Dict[str, Any]) -> bool:
+    def validate(self, transformed_data: dict[str, Any]) -> bool:
         """Validate that template classification meets quality requirements.
 
         Args:
@@ -112,7 +114,12 @@ class AITemplateIndexerPlugin:
             bool: True if template passes validation, False otherwise
         """
         # Check required fields are present
-        required_fields = ["template_type", "template_score", "template_confidence", "source"]
+        required_fields = [
+            "template_type",
+            "template_score",
+            "template_confidence",
+            "source",
+        ]
         if not all(field in transformed_data for field in required_fields):
             return False
 
@@ -135,7 +142,7 @@ class AITemplateIndexerPlugin:
 
 
 # Legacy function for backward compatibility
-def apply(records: List[Dict], context: str = "ai_template_indexer") -> List[Dict]:
+def apply(records: list[dict], context: str = "ai_template_indexer") -> list[dict]:
     """Legacy function - maintained for backward compatibility.
 
     Args:

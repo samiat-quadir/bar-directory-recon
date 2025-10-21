@@ -83,7 +83,6 @@ def run_report(inp, out_json, out_md):
     )
     return payload
 
-
 def _doctor():
     import platform
     info = {
@@ -112,6 +111,7 @@ def main():
     p.add_argument('--version', action='store_true', help='Show version')
     sub = p.add_subparsers(dest="cmd", required=False)
     sub.add_parser('doctor', help='Show environment diagnostics')
+
     for name in ("ingest", "normalize", "validate", "score", "report"):
         sp = sub.add_parser(name)
         sp.add_argument("--input", "-i")
@@ -131,6 +131,7 @@ def main():
     if not a.cmd:
         p.print_help()
         return 1
+
     if a.cmd == "ingest":
         print(json.dumps(run_ingest(a.input, a.output)))
         return 0

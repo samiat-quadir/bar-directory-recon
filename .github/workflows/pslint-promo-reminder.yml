@@ -1,0 +1,62 @@
+# Schedule-only reminder to ensure ps-lint promotion happens after Oct 23
+# This workflow does NOT run on PRs
+# Exits early if before Oct 23 cutoff
+# Creates/updates reminder issue if ps-lint contexts missing from branch protection
+
+name: ps-lint promotion reminder (schedule-only)
+
+on:
+  schedule:
+    - cron: '10 13 * * *'  # 09:10 ET daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    steps:
+      - name: Check if before Oct 23 cutoff
+        id: cutoff
+        run: |
+          # Cutoff: 2025-10-23T13:10:00Z (09:10 ET)
+          cutoff=$(date -d "2025-10-23 13:10:00 UTC" +%s)
+          now=$(date +%s)
+          if [ $now -lt $cutoff ]; then
+            echo "Before Oct 23 cutoff, exiting early"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "After Oct 23 cutoff, checking branch protection"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get branch protection
+        if: steps.cutoff.outputs.skip == 'false'
+        id: bp
+        run: |
+          gh api repos/${{ github.repository }}/branches/main/protection --jq '.required_status_checks.contexts[]' > contexts.txt || true
+          if grep -q 'ps-lint.*ubuntu' contexts.txt && grep -q 'ps-lint.*windows' contexts.txt; then
+            echo "ps-lint contexts present, no reminder needed"
+            echo "missing=false" >> $GITHUB_OUTPUT
+          else
+            echo "ps-lint contexts missing, creating reminder"
+            echo "missing=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create or update reminder issue
+        if: steps.cutoff.outputs.skip == 'false' && steps.bp.outputs.missing == 'true'
+        run: |
+          gh issue list --label "reminder" --search "Reminder: ps-lint promotion pending" --json number,state --jq '.[0].number' > issue.txt
+          if [ -s issue.txt ]; then
+            issue_num=$(cat issue.txt)
+            gh issue comment $issue_num --body "⏰ Reminder: ps-lint promotion still pending. Run \scripts/pslint_promotion_decide.ps1 -Execute\ to promote."
+          else
+            gh issue create --title "Reminder: ps-lint promotion pending" --label "reminder" --body "⏰ ps-lint contexts not yet in branch protection. Run \scripts/pslint_promotion_decide.ps1 -Execute\ to promote."
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
