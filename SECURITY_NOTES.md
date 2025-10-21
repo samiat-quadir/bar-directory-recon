@@ -24,3 +24,5 @@ This document outlines security considerations and dependency management for the
 
 Please report security vulnerabilities via GitHub Security Advisories or contact the maintainers directly.
 
+
+- [Promotion Runbook](docs/PROMOTION_RUNBOOK.md) - PS-lint promotion decision guide
