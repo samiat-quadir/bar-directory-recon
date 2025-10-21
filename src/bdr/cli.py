@@ -83,10 +83,35 @@ def run_report(inp, out_json, out_md):
     )
     return payload
 
+def _doctor():
+    import platform
+    info = {
+        'python': sys.version.split()[0],
+        'platform': platform.platform(),
+        'executable': sys.executable,
+    }
+    # best-effort: preserved utilities importability
+    def _can(mod):
+        try:
+            __import__(mod)
+            return True
+        except Exception:
+            return False
+    info['preserved_utils'] = {
+        'record_normalizer': _can('universal_recon.utils.record_normalizer'),
+        'validator_loader': _can('universal_recon.utils.validation_loader'),
+        'record_field_validator_v3': _can('universal_recon.validators.record_field_validator_v3'),
+    }
+    print(json.dumps(info, indent=2))
+    return 0
+
 
 def main():
     p = argparse.ArgumentParser(prog="bdr", description="Bar Directory Recon CLI")
-    sub = p.add_subparsers(dest="cmd", required=True)
+    p.add_argument('--version', action='store_true', help='Show version')
+    sub = p.add_subparsers(dest="cmd", required=False)
+    sub.add_parser('doctor', help='Show environment diagnostics')
+
     for name in ("ingest", "normalize", "validate", "score", "report"):
         sp = sub.add_parser(name)
         sp.add_argument("--input", "-i")
@@ -97,6 +122,16 @@ def main():
     spv.add_argument("--rules", default="configs/ruleset.yaml")
 
     a = p.parse_args()
+    from bdr import __version__ as _v
+    if getattr(a, 'version', False):
+        print(_v)
+        return 0
+    if a.cmd == 'doctor':
+        return _doctor()
+    if not a.cmd:
+        p.print_help()
+        return 1
+
     if a.cmd == "ingest":
         print(json.dumps(run_ingest(a.input, a.output)))
         return 0

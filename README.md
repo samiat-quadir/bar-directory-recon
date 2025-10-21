@@ -320,6 +320,12 @@ See **SECURITY_NOTES.md** for constraints → lock flow and refresh cadence.
 
 *This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*
 
+### CLI Basics
+
+```bash
+bdr --version
+bdr doctor
+```
 ## Using secrets in GitHub Codespaces
 
 - Create a Codespaces secret **SCRAPER_API_KEY** in your GitHub user settings and grant access to this repo.
