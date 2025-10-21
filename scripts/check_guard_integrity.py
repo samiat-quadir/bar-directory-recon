@@ -35,6 +35,15 @@ def has_paths_under_pr(txt):
     return re.search(r'(?ms)pull_request\s*:\s*\{[^}]*paths\s*:', txt) is not None
 
 
+
+def has_pslint_early_exit(yml_path):
+    """Check if ps-lint has early-exit pattern (id: changed + gated PSScriptAnalyzer)."""
+    content = yml_path.read_text(encoding='utf-8')
+    # Look for id: changed step followed by PSScriptAnalyzer gated on changed
+    has_changed_id = bool(re.search(r'id:\s*changed', content))
+    has_gated_pslint = bool(re.search(r'if:\s+steps\.changed\.outputs\.\w+.*PSScriptAnalyzer', content, re.DOTALL))
+    return has_changed_id and has_gated_pslint
+
 def main():
     root = pathlib.Path('.')
     wfdir = root / '.github' / 'workflows'
@@ -44,19 +53,22 @@ def main():
         if has_pr_or_push(txt) and p.name not in ALLOW and not p.name.lower().startswith('codeql'):
             offenders.append(p.name)
     # ps-lint always-run + names
-    ps = wfdir / 'ps-lint.yml'
-    txt = read(ps) if ps.exists() else ""
-    ps_ok = ps.exists() and not has_paths_under_pr(txt)
+    wf_ps_lint = wfdir / 'ps-lint.yml'
+    txt = read(wf_ps_lint) if wf_ps_lint.exists() else ""
+    ps_ok = wf_ps_lint.exists() and not has_paths_under_pr(txt)
     # Check for matrix strategy with ubuntu-latest and windows-latest (defensive - ensures job names)
     has_ubuntu = 'ubuntu-latest' in txt
     has_windows = 'windows-latest' in txt
     names_ok = has_ubuntu and has_windows
+    # Check early-exit pattern
+    early_exit = has_pslint_early_exit(wf_ps_lint) if wf_ps_lint.exists() else False
     result = {
         'allow_offenders': offenders,
         'pslint_always_run': ps_ok,
         'pslint_names_ok': names_ok,
+        "pslint_early_exit": early_exit,
         'required_checks': sorted(REQ),
-        'status': 'PASS' if not offenders and ps_ok and names_ok else 'FAIL'
+        'status': 'PASS' if (not offenders and ps_ok and names_ok and early_exit) else 'FAIL'
     }
     print(json.dumps(result))
     return 0
