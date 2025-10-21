@@ -279,3 +279,11 @@ python final_hallandale_pipeline.py  # Adapt for other cities
 ---
 
 *This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*
+
+
+### CLI Basics
+
+```bash
+bdr --version
+bdr doctor
+```
