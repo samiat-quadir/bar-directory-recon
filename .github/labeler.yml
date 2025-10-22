@@ -1,0 +1,6 @@
+# Auto-label PRs based on changed files
+# Used by actions/labeler or custom workflow automation
+
+ci/workflow-only:
+  - changed-files:
+    - all-globs-to-all-files: '.github/workflows/**'

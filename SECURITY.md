@@ -7,3 +7,4 @@
 ## Secrets / Tokens
 - Test/legacy fixtures are allowlisted (see .github/secret-scanning.yml).
 - Avoid committing real credentials. Use .env + local secrets where needed.
+
