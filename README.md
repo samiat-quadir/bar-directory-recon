@@ -1,5 +1,12 @@
 # Universal Recon - Bar Directory Reconnaissance Tool
 
+<!-- badges:start -->
+[![fast-tests (ubuntu-latest)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml?query=branch%3Amain)
+[![fast-tests (windows-latest)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml?query=branch%3Amain)
+[![audit](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/pip-audit.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/pip-audit.yml?query=branch%3Amain)
+[![workflow-guard](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/ci-workflow-guard.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/ci-workflow-guard.yml?query=branch%3Amain)
+<!-- badges:end -->
+
 [![PyPI version](https://img.shields.io/pypi/v/bar-directory-recon.svg)](https://pypi.org/project/bar-directory-recon/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
