@@ -1,6 +1,10 @@
 # Security Policy
 
-- Findings: open an issue with label `security` or email maintainer.
-- Weekly SCA: pip-audit runs Sundays 03:00 UTC; HIGH will fail.
-- Code scanning: CodeQL runs on PRs and weekly; non-blocking during observation.
-- Secrets: use GitHub Secrets/.env; never commit secrets.
+- **Reporting:** Please do not open public issues for suspected vulnerabilities.
+- Email: security@samiat-quadir.example (or use GitHub Security Advisories)
+- We aim to triage within 3 business days.
+
+## Secrets / Tokens
+- Test/legacy fixtures are allowlisted (see .github/secret-scanning.yml).
+- Avoid committing real credentials. Use .env + local secrets where needed.
+

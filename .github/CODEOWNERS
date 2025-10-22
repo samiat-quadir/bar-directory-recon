@@ -1,7 +1,4 @@
-# Global ownership
-
-* @samiat-quadir
-
-## Specific areas
-
-src/universal_recon/plugins/ @samiat-quadir
+# Informational routing only (branch protection unchanged)
+# CI & workflows
+.github/workflows/*   @samiat-quadir @hector-example
+scripts/*             @samiat-quadir @hector-example
