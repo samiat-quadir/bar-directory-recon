@@ -1,5 +1,12 @@
 # Universal Recon - Bar Directory Reconnaissance Tool
 
+<!-- badges:start -->
+[![fast-tests (ubuntu-latest)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml?query=branch%3Amain)
+[![fast-tests (windows-latest)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml?query=branch%3Amain)
+[![audit](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/pip-audit.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/pip-audit.yml?query=branch%3Amain)
+[![workflow-guard](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/ci-workflow-guard.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/ci-workflow-guard.yml?query=branch%3Amain)
+<!-- badges:end -->
+
 [![PyPI version](https://img.shields.io/pypi/v/bar-directory-recon.svg)](https://pypi.org/project/bar-directory-recon/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
@@ -16,6 +23,23 @@
 [![Benchmark](https://github.com/samiat-quadir/bar-directory-recon/workflows/benchmark/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/benchmark.yml)
 [![Security Scan](https://github.com/samiat-quadir/bar-directory-recon/workflows/security-scan/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/security-scan.yml)
 [![Cross-Device Bootstrap](https://github.com/samiat-quadir/bar-directory-recon/workflows/cross-device-bootstrap/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/cross-device-bootstrap.yml)
+[![CI Weekly Insights](https://github.com/samiat-quadir/bar-directory-recon/workflows/ci-insights-weekly/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/ci-insights-weekly.yml)
+
+
+## CI status (required checks)
+The branch protection requires **exactly four** checks:
+- `audit`
+- `fast-tests (ubuntu-latest)`
+- `fast-tests (windows-latest)`
+- `workflow-guard`
+
+## Security: pinned Actions + lockfile-first
+- All marketplace Actions are pinned to immutable **commit SHAs**.
+- Installs prefer **requirements-lock.txt** with hashes; `pip-audit` targets the **lock**.
+
+## CI insights: minutes saved
+Fast jobs write a non-blocking summary line with the workflow **group** and **cancelled runs (24h)** to visualize concurrency savings.
+
 
 ## Overview
 
@@ -32,6 +56,24 @@ Universal Recon is a comprehensive bar directory reconnaissance and automation t
 - **Validation Framework**: Comprehensive data validation and quality assessment tools
 - **Analytics Suite**: Risk assessment, trend analysis, and reporting capabilities
 - **Cross-Platform Support**: Works on Windows and Linux with automated environment detection
+
+---
+
+## Quickstart (CLI)
+
+```bash
+# Run the demo end-to-end
+bdr ingest   -i examples/demo/input/records.json -o examples/demo/work/normalized.json
+bdr normalize -i examples/demo/work/normalized.json -o examples/demo/work/normalized.json
+bdr validate -i examples/demo/work/normalized.json -o examples/demo/work/validation.json
+bdr score    -i examples/demo/work/validation.json -o examples/demo/work/score.json
+bdr report   -i examples/demo/work/score.json -o examples/demo/output/report.json
+```
+
+**Notes**:
+
+- **Adapters are safe**: if preserved utilities aren't importable or signatures differ, the CLI falls back to the current no-op behavior so CI stays green.
+- See `configs/` for the schema/fieldmap/rules placeholders used by the demo.
 
 ---
 
@@ -278,4 +320,27 @@ python final_hallandale_pipeline.py  # Adapt for other cities
 
 ---
 
+## Security & dependencies
+
+See **SECURITY_NOTES.md** for constraints → lock flow and refresh cadence.
+
+
 *This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*
+
+### CLI Basics
+
+```bash
+bdr --version
+bdr doctor
+```
+## Using secrets in GitHub Codespaces
+
+- Create a Codespaces secret **SCRAPER_API_KEY** in your GitHub user settings and grant access to this repo.
+- Restart the Codespace; the value is available as `$SCRAPER_API_KEY` (Linux) or `$Env:SCRAPER_API_KEY` (PowerShell).
+- In code, read it with:
+```python
+from universal_recon.util.secrets import get_secret
+API_KEY = get_secret("SCRAPER_API_KEY")
+```
+
+<!-- ps-lint sanity 10/17/2025 16:00:21 -->
