@@ -1,0 +1,59 @@
+name: branch-hygiene-weekly
+
+on:
+  schedule:
+    - cron: '30 13 * * 3'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Branch hygiene (stale > 60 days)
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const cutoff = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+            const branches = await github.paginate(github.rest.repos.listBranches, { owner, repo, per_page: 100 });
+            const stale = [];
+            for (const branch of branches) {
+              if (branch.name === 'main') continue;
+              const commit = await github.rest.repos.getCommit({ owner, repo, ref: branch.commit.sha });
+              const dateStr = commit.data.commit.committer?.date || commit.data.commit.author?.date;
+              if (!dateStr) continue;
+              const committed = new Date(dateStr);
+              if (committed < cutoff) {
+                stale.push({
+                  name: branch.name,
+                  sha: branch.commit.sha.substring(0, 7),
+                  date: committed.toISOString(),
+                });
+              }
+            }
+            stale.sort((a, b) => new Date(a.date) - new Date(b.date));
+            let body = `### Branch Hygiene\n\nStale branches (>60d): ${stale.length}\n\n`;
+            if (stale.length) {
+              body += stale.slice(0, 50).map((s) => `- \`${s.name}\` (last updated ${s.date.slice(0, 10)})`).join('\n');
+            } else {
+              body += '- None 🎉';
+            }
+            body += `\n\n_Non-destructive report. Branches are not deleted automatically._`;
+            const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open', per_page: 100 });
+            const title = 'Branch Hygiene';
+            const existing = issues.find((issue) => issue.title === title);
+            if (existing) {
+              await github.rest.issues.update({ owner, repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({ owner, repo, title, body });
+            }
+            core.summary.addHeading('Branch Hygiene Weekly', 2);
+            core.summary.addRaw(`Stale branches (>60d): ${stale.length}`);
+            if (stale.length) {
+              core.summary.addBreak();
+              core.summary.addRaw(stale.slice(0, 10).map((s) => `• ${s.name} (${s.date.slice(0, 10)})`).join('\n'));
+            }

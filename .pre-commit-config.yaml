@@ -16,6 +16,27 @@ repos:
       - id: ruff
         args: ["--fix"]
       - id: ruff-format
+  # (disabled) black block removed in favor of ruff-format
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.5
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: ["--check-only", "--diff"]
+        stages: [pre-push] # Only run on push, not commit
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        args: ["--max-line-length=88", "--extend-ignore=E203,W503,E501"] # Ignore line length for now
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.5.1
@@ -23,11 +44,6 @@ repos:
       - id: mypy
         additional_dependencies: [types-requests, types-PyYAML]
         exclude: ^(archive/|.*test.*\.py$|tools/|scripts/|src/hallandale_pipeline\.py$)
-
-        exclude: ^(archive/|.*test.*\.py$|tools/|scripts/|src/hallandale_pipeline\.py$)
-
-        exclude: ^(archive/|.*test.*\.py$|tools/|scripts/)
-
         args: ["--ignore-missing-imports", "--allow-untyped-defs"]
 
   # Add autoflake to remove unused imports automatically
@@ -45,6 +61,10 @@ repos:
   # Add detect-secrets for secrets scanning
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
     hooks:
-      - id: detect-secrets
-        args: ["--baseline", ".secrets.baseline"]
+      - id: black
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.5
+
