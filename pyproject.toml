@@ -55,9 +55,11 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-extend-select = ["E", "F", "W", "I", "UP", "B", "PERF"]
-ignore = ["E501"]  # Ignore line too long for now
+select = ["E", "F", "I", "W", "UP", "B"]
 
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
 
 [tool.autoflake]
 remove-all-unused-imports = true
