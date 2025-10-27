@@ -75,6 +75,24 @@ bdr report   -i examples/demo/work/score.json -o examples/demo/output/report.jso
 - **Adapters are safe**: if preserved utilities aren't importable or signatures differ, the CLI falls back to the current no-op behavior so CI stays green.
 - See `configs/` for the schema/fieldmap/rules placeholders used by the demo.
 
+### Adapters (Safe Mode)
+
+Adapters prefer preserved utilities when available, with a timeout fallback.
+
+- `BDR_SAFE_MODE` (default `1`): when `1`, adapters use safe fallbacks (no external imports).
+- `BDR_ADAPTER_TIMEOUT_MS` (default `500`): per-call timeout when safe mode is `0`.
+
+Examples:
+```bash
+# default (safe)
+bdr doctor
+
+# try real adapters with 1s timeout
+set BDR_SAFE_MODE=0
+set BDR_ADAPTER_TIMEOUT_MS=1000
+bdr run ...
+```
+
 ---
 
 ## Cross-Device Bootstrap
