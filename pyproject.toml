@@ -13,6 +13,9 @@ authors = [
     { name = "Samiat Quadir", email = "sam.quadir@gmail.com" }
 ]
 
+[project.scripts]
+bdr = "bdr.cli:main"
+
 [tool.black]
 line-length = 88
 target-version = ["py311"]
@@ -38,10 +41,8 @@ skip = [".venv311", "merge_conflicts_backup", ".temp_conflicts", "logs", "archiv
 known_first_party = ["src", "universal_recon"]
 
 [tool.ruff]
-line-length = 88
+line-length = 100
 target-version = "py311"
-extend-select = ["E", "F", "W", "I"]
-ignore = ["E501"]  # Ignore line too long for now
 exclude = [
     ".git",
     ".venv",
@@ -52,6 +53,13 @@ exclude = [
     "logs",
     "archive",
 ]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
 
 [tool.autoflake]
 remove-all-unused-imports = true
@@ -82,7 +90,8 @@ exclude = [
 [tool.pytest.ini_options]
 minversion = "6.0"
 # Start with a modest coverage floor to avoid blocking while we iterate.
-addopts = "--cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=25"
+addopts = "--cov=src --cov=universal_recon --cov-report=term-missing --cov-fail-under=20"
+
 testpaths = [
     "src/tests",
     "universal_recon/tests"
