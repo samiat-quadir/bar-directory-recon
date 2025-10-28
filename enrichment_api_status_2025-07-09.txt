@@ -30,7 +30,7 @@ and current operational status.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔧 Motion Project Management:
    Status: ✅ CONFIGURED
-   API Key: sk_live_VlswChgnqt5gWyq1Eaw9d0azG5UJkxBkTZp6ZQGHq2c=
+   API Key: sk_test_FAKE_xxxxxxxxxxxxxxxxxxxxx
    Workspace ID: oYOn-GO3fIZiEn_J13Ksn
    Project ID: iKzln8zm1sd4iyj7pGZS_
 
