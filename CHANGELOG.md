@@ -1,5 +1,19 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- **Adapters Pass-1**: Thin adapters to preserved utilities (`normalize`, `validate_record`, `load_validators`) with 500ms timeout and safe fallbacks.
+- **Safe Mode**: `BDR_SAFE_MODE` (default `1`) enables no-op fallbacks; set to `0` to attempt real imports.
+- **Configurable Timeout**: `BDR_ADAPTER_TIMEOUT_MS` (default `500`) controls per-call timeout when safe mode is disabled.
+
+## [v0.1.0] - 2025-10-27
+
+### Added
+- Initial stable release with 6 required CI checks (audit, fast-tests ubuntu/windows, workflow-guard, ps-lint ubuntu/windows)
+- CLI demo with ingest/normalize/validate/score/report commands
+- Security quieting and locked dependencies
+
 ## [v2.0-cross-device] - 2025-08-06 - Phase 2 Cross-Device Parity Close-Out (ASUS)
 
 ### Added

@@ -1,0 +1,4 @@
+name: bdr-codeql
+paths-ignore:
+  - legacy_intake/fixtures/**
+  - DataHunter_Credentials/**
