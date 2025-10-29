@@ -101,7 +101,7 @@ bdr run ...
 
 For setting up this project on a fresh Alienware device to match the ASUS golden image configuration:
 
-📦 **Download Bootstrap Bundle**: [`alienware_bootstrap_bundle.zip`](./alienware_bootstrap_bundle.zip) *(27.4KB - Updated July 30, 2025)*
+ðŸ“¦ **Download Bootstrap Bundle**: [`alienware_bootstrap_bundle.zip`](./alienware_bootstrap_bundle.zip) *(27.4KB - Updated July 30, 2025)*
 **SHA256**: `2999b1ac6dc9d94045778fee902c2f484b65c3514caa737f9e033c2cff626b85`
 
 **Quick Setup (Windows)**:
@@ -128,14 +128,14 @@ chmod +x bootstrap_alienware.sh
 ```
 
 **What the Bootstrap Does**:
-- ✅ Clones repository at v2.0 tag
-- ✅ Sets up Python 3.13 virtual environment
-- ✅ Installs all 55+ required packages
-- ✅ Creates device-specific configuration
-- ✅ Sets up complete directory structure
-- ✅ Generates validation report
-- ✅ Configures automation framework
-- ✅ Sets up cross-device compatibility
+- âœ… Clones repository at v2.0 tag
+- âœ… Sets up Python 3.13 virtual environment
+- âœ… Installs all 55+ required packages
+- âœ… Creates device-specific configuration
+- âœ… Sets up complete directory structure
+- âœ… Generates validation report
+- âœ… Configures automation framework
+- âœ… Sets up cross-device compatibility
 
 **Bundle Contents** *(8 files, 27.4KB total)*:
 - `bootstrap_alienware.ps1` - PowerShell bootstrap script (529 lines)
@@ -148,9 +148,9 @@ chmod +x bootstrap_alienware.sh
 - `ENV_READY_REPORT.md` - Current environment status report
 
 **Documentation**:
-- � [Environment Readiness Report](./ENV_READY_REPORT.md) - **95% parity achieved**
-- 🔧 [Phase 3 Roadmap](./docs/PHASE3_ROADMAP.md) - Advanced features and planning
-- ✅ [ASUS Completion Report](./ASUS_PHASE2_COMPLETION_REPORT.md) - Phase 2 wrap-up status
+- ï¿½ [Environment Readiness Report](./ENV_READY_REPORT.md) - **95% parity achieved**
+- ðŸ”§ [Phase 3 Roadmap](./docs/PHASE3_ROADMAP.md) - Advanced features and planning
+- âœ… [ASUS Completion Report](./ASUS_PHASE2_COMPLETION_REPORT.md) - Phase 2 wrap-up status
 
 **Requirements**:
 - Python 3.13+
@@ -161,7 +161,7 @@ chmod +x bootstrap_alienware.sh
 
 **Expected Setup Time**: 10-15 minutes for complete environment
 
-**Validation Status**: ✅ **95% Golden Image Parity** - Ready for deployment
+**Validation Status**: âœ… **95% Golden Image Parity** - Ready for deployment
 
 ---
 
@@ -345,6 +345,20 @@ See **SECURITY_NOTES.md** for constraints → lock flow and refresh cadence.
 
 *This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*
 
+
+### Verify Checksums
+
+After downloading assets from a Release, validate integrity:
+
+```bash
+# Linux/macOS
+sha256sum bar_directory_recon-*.whl
+sha256sum -c bar_directory_recon-*.whl.sha256
+
+# Windows (PowerShell)
+Get-FileHash -Algorithm SHA256 .\bar_directory_recon-*.whl
+Get-Content .\bar_directory_recon-*.whl.sha256
+```
 ### CLI Basics
 
 ```bash
