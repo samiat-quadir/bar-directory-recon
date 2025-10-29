@@ -34,6 +34,13 @@ jobs:
         if: steps.changed.outputs.has_scripts == 'true'
         shell: pwsh
         run: pwsh -NoProfile -File scripts/apply-attic-review.ps1 -DryRun -PrNumber 0
+      - name: Ensure PSGallery is registered
+        if: steps.changed.outputs.has_scripts == 'true'
+        shell: pwsh
+        run: |
+          if (-not (Get-PSRepository -Name 'PSGallery' -ErrorAction SilentlyContinue)) {
+            Register-PSRepository -Name 'PSGallery' -SourceLocation 'https://www.powershellgallery.com/api/v2/' -InstallationPolicy Trusted
+          }
       - name: Install PSScriptAnalyzer
         if: steps.changed.outputs.has_scripts == 'true'
         shell: pwsh
