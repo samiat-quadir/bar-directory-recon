@@ -379,3 +379,10 @@ API_KEY = get_secret("SCRAPER_API_KEY")
 
 
 > See the latest demo artifact in Actions → Demo workflow summary.
+
+
+### Quicklook (doctor + 5-stage demo)
+
+![BDR demo](docs/assets/bdr-demo.gif)
+
+> The full CLI demo artifact remains available via the Actions demo job.
