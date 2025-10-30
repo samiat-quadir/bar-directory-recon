@@ -109,6 +109,11 @@ def _doctor():
 def main():
     p = argparse.ArgumentParser(prog="bdr", description="Bar Directory Recon CLI")
     p.add_argument('--version', action='store_true', help='Show version')
+    p.add_argument(
+        '--no-exec',
+        action='store_true',
+        help='Enable safe mode (sets BDR_SAFE_MODE=1, disables optional imports)'
+    )
     sub = p.add_subparsers(dest="cmd", required=False)
     sub.add_parser('doctor', help='Show environment diagnostics')
 
@@ -122,6 +127,12 @@ def main():
     spv.add_argument("--rules", default="configs/ruleset.yaml")
 
     a = p.parse_args()
+    
+    # Handle --no-exec flag by setting BDR_SAFE_MODE
+    if getattr(a, 'no_exec', False):
+        import os
+        os.environ['BDR_SAFE_MODE'] = '1'
+    
     from bdr import __version__ as _v
     if getattr(a, 'version', False):
         print(_v)
