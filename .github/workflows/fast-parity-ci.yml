@@ -62,6 +62,43 @@ jobs:
         if: steps.guard.outputs.attic_only != 'true'
         run: pytest -q -m "not slow and not e2e and not integration"
 
+  packaging-dry-run:
+    name: packaging-dry-run
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Check for packaging changes
+        id: check
+        run: |
+          changed=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '(pyproject\.toml|setup\.cfg|setup\.py|scripts/|\.github/workflows/cli-pack\.yml)' || true)
+          if [ -n "$changed" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Packaging files changed:"
+            echo "$changed"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No packaging files changed"
+          fi
+      - uses: actions/setup-python@v6
+        if: steps.check.outputs.changed == 'true'
+        with:
+          python-version: '3.11'
+      - name: Install build tools
+        if: steps.check.outputs.changed == 'true'
+        run: python -m pip install build twine
+      - name: Build and check
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          python -m build
+          twine check dist/*
+          echo "✅ Packaging dry-run passed" >> $GITHUB_STEP_SUMMARY
+      - name: Skipped
+        if: steps.check.outputs.changed != 'true'
+        run: echo "⏭️ No packaging changes detected; skipped" >> $GITHUB_STEP_SUMMARY
+
   windows:
     name: fast-tests (windows-latest)
     runs-on: windows-latest
