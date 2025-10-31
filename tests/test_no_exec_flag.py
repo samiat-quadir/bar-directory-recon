@@ -21,7 +21,7 @@ def test_no_exec_flag_sets_env():
     # Should complete successfully
     assert result.returncode == 0
     # Doctor output should show safe mode info
-    assert 'BDR_SAFE_MODE' in result.stdout or result.returncode == 0
+    assert 'BDR_SAFE_MODE' in result.stdout
 
 
 def test_adapters_safe_mode_fallback():
