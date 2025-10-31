@@ -17,13 +17,15 @@ def _load_optional_adapters():
         import pandas as pd
         adapters['pandas'] = pd
     except ImportError:
-        # pandas is optional; ignore if not installed
+    except ImportError:
+        # pandas is optional; safe to ignore if not installed
         pass
     
     try:
         import numpy as np
         adapters['numpy'] = np
     except ImportError:
+        # numpy is optional; safe to ignore if not installed
         # numpy is optional; ignore if not installed
         pass
     
