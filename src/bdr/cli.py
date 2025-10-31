@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import pathlib
 import sys
 
@@ -130,7 +131,6 @@ def main():
     
     # Handle --no-exec flag by setting BDR_SAFE_MODE
     if getattr(a, 'no_exec', False):
-        import os
         os.environ['BDR_SAFE_MODE'] = '1'
     
     from bdr import __version__ as _v
