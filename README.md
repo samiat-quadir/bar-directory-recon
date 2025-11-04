@@ -1,6 +1,7 @@
 # Universal Recon - Bar Directory Reconnaissance Tool
 
 <!-- badges:start -->
+[![release-qa-parity](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/release-qa-parity.yml/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/release-qa-parity.yml)
 [![fast-tests (ubuntu-latest)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml?query=branch%3Amain)
 [![fast-tests (windows-latest)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/fast-parity-ci.yml?query=branch%3Amain)
 [![audit](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/pip-audit.yml/badge.svg?branch=main)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/pip-audit.yml?query=branch%3Amain)
