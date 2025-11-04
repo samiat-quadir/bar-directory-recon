@@ -1,0 +1,61 @@
+name: release-qa-parity
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag to verify (e.g., v0.1.0)'
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build from tag
+        run: |
+          python -m pip install -U pip build
+          python -m build
+      - name: Download Release assets
+        run: |
+          mkdir -p release_assets
+          gh release download "${{ inputs.tag }}" --pattern "*.whl" --pattern "*.tar.gz" --pattern "*.sha256" --dir release_assets --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Compute parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "## Release QA â€” ${{ inputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| artifact | rebuild sha256 | release sha256 | match |" >> table.md
+          echo "|---|---|---|---|" >> table.md
+          mismatches=0
+          for f in dist/*.whl dist/*.tar.gz; do
+            base=$(basename "$f")
+            sha_local=$(sha256sum "$f" | awk '{print $1}')
+            if [ -f "release_assets/$base" ]; then
+              sha_rel=$(sha256sum "release_assets/$base" | awk '{print $1}')
+            else
+              sha_rel="(missing)"
+            fi
+            match=false
+            if [ "$sha_rel" != "(missing)" ] && [ "$sha_local" = "$sha_rel" ]; then match=true; else mismatches=$((mismatches+1)); fi
+            echo "| $base | $sha_local | $sha_rel | $match |" >> table.md
+          done
+          cat table.md >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Result:** $([ $mismatches -eq 0 ] && echo PASS || echo ATTN ) (mismatches: $mismatches)" >> $GITHUB_STEP_SUMMARY
+      - name: Upload parity table
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-${{ inputs.tag }}
+          path: table.md

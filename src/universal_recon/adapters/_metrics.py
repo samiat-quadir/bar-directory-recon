@@ -1,0 +1,1 @@
+[{"name":"ADAPTER_METRICS","enabled":false}]
