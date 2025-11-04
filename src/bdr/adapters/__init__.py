@@ -17,7 +17,6 @@ def _load_optional_adapters():
         import pandas as pd
         adapters['pandas'] = pd
     except ImportError:
-    except ImportError:
         # pandas is optional; safe to ignore if not installed
         pass
     
@@ -26,7 +25,6 @@ def _load_optional_adapters():
         adapters['numpy'] = np
     except ImportError:
         # numpy is optional; safe to ignore if not installed
-        # numpy is optional; ignore if not installed
         pass
     
     return adapters
