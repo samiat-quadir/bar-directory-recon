@@ -5,10 +5,13 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Optional
 
 import yaml
 
-CFG = yaml.safe_load(Path("automation/cross_device_tasks.yaml").read_text(encoding="utf-8"))
+CFG = yaml.safe_load(
+    Path("automation/cross_device_tasks.yaml").read_text(encoding="utf-8")
+)
 
 
 def ensure_identity_opts(cmd: str) -> str:
@@ -63,16 +66,11 @@ ap.add_argument("--timeout", type=int, default=None, help="Per-command timeout")
 ap.add_argument("--retries", type=int, default=0, help="Retries for failures")
 ap.add_argument("--retry-delay", type=int, default=3, help="Seconds between retries")
 ap.add_argument("--identity-file", default=None, help="Explicit SSH identity file")
-ap.add_argument(
-    "--log-file",
-    dest="log_file",
-    default=None,
-    help="Append plain-text log output to this file",
-)
+ap.add_argument("--log-file", dest="log_file", default=None, help="Append plain-text log output to this file")
 args = ap.parse_args()
 
 
-def _log(line: str, *, lf_path: str | None):
+def _log(line: str, *, lf_path: Optional[str]):
     print(line)
     if not lf_path:
         return
@@ -85,7 +83,6 @@ def _log(line: str, *, lf_path: str | None):
         # best-effort logging
         pass
 
-
 tasks = CFG.get("tasks", {})
 flows = CFG.get("workflows", {})
 if args.list:
@@ -95,7 +92,9 @@ if args.list_workflows:
     print("Workflows:", ", ".join(sorted(flows.keys())))
     sys.exit(0)
 if not args.target:
-    print("Usage: python run_cross_device_task.py <task|workflow> [--list --list-workflows]")
+    print(
+        "Usage: python run_cross_device_task.py <task|workflow> [--list --list-workflows]"
+    )
     sys.exit(1)
 
 items = []

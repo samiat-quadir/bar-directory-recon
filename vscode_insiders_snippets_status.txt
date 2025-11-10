@@ -1,1 +1,1 @@
-Snippets directory exists but is empty
+Snippets directory exists but is empty 

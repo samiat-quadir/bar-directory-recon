@@ -2,9 +2,9 @@
 
 import argparse
 
-from universal_recon.core.multisite_config_manager import ConfigManager
+from universal_recon.core.config_loader import ConfigManager
 from universal_recon.core.snapshot_manager import SnapshotArchiver
-from universal_recon.plugin_loader import load_normalized_records
+from universal_recon.plugin_loader import load_normalized_records, load_plugins_by_type
 
 
 def main():
@@ -21,14 +21,10 @@ def main():
     parser.add_argument("--full-report", action="store_true")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument(
-        "--emit-status",
-        action="store_true",
-        help="Emit site health and validator drift status",
+        "--emit-status", action="store_true", help="Emit site health and validator drift status"
     )
     parser.add_argument(
-        "--emit-drift-dashboard",
-        action="store_true",
-        help="generate drift dashboard HTML",
+        "--emit-drift-dashboard", action="store_true", help="generate drift dashboard HTML"
     )
     parser.add_argument(
         "--emit-risk-overlay",
@@ -45,9 +41,7 @@ def main():
 
     # Handle realtor directory scraping
     if site_name == "realtor_directory":
-        from universal_recon.plugins.realtor_directory_plugin import (
-            scrape_realtor_directory,
-        )
+        from universal_recon.plugins.realtor_directory_plugin import scrape_realtor_directory
 
         result = scrape_realtor_directory(
             output_path=args.output,
@@ -117,9 +111,7 @@ def main():
         generate_drift_csv(site=site_name)
 
     if args.plugin_decay:
-        from universal_recon.analytics.plugin_decay_overlay import (
-            run_plugin_decay_overlay,
-        )
+        from universal_recon.analytics.plugin_decay_overlay import run_plugin_decay_overlay
 
         run_plugin_decay_overlay(site=site_name)
 
@@ -129,9 +121,7 @@ def main():
         emit_status(verbose=args.verbose)
 
     if args.emit_drift_dashboard:
-        from universal_recon.analytics.drift_dashboard_generator import (
-            generate_dashboard,
-        )
+        from universal_recon.analytics.drift_dashboard_generator import generate_dashboard
 
         generate_dashboard(site_name)
 

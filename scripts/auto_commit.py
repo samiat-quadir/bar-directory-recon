@@ -7,6 +7,7 @@ This script handles the entire git workflow autonomously.
 import subprocess
 import sys
 from pathlib import Path
+from typing import List, Optional
 
 
 class GitWorkflow:
@@ -15,17 +16,12 @@ class GitWorkflow:
     def __init__(self, workspace_path: Path):
         self.workspace_path = workspace_path
 
-    def run_command(self, cmd: list[str], description: str) -> tuple[bool, str]:
+    def run_command(self, cmd: List[str], description: str) -> tuple[bool, str]:
         """Run a command and return success status and output."""
         print(f"[*] {description}...")
         try:
             result = subprocess.run(
-                cmd,
-                check=True,
-                capture_output=True,
-                text=True,
-                cwd=self.workspace_path,
-                timeout=60,
+                cmd, check=True, capture_output=True, text=True, cwd=self.workspace_path
             )
             print(f"[+] {description} completed successfully")
             return True, result.stdout
@@ -49,9 +45,11 @@ class GitWorkflow:
 
         return success
 
-    def check_git_status(self) -> tuple[bool, list[str]]:
+    def check_git_status(self) -> tuple[bool, List[str]]:
         """Check git status and return changed files."""
-        success, output = self.run_command(["git", "status", "--porcelain"], "Checking git status")
+        success, output = self.run_command(
+            ["git", "status", "--porcelain"], "Checking git status"
+        )
 
         if not success:
             return False, []
@@ -82,7 +80,7 @@ class GitWorkflow:
             if advanced_script.exists():
                 print("[*] Using advanced git workflow...")
                 subprocess.run(
-                    [sys.executable, str(advanced_script, timeout=60)],
+                    [sys.executable, str(advanced_script)],
                     check=True,
                     capture_output=True,
                     text=True,
@@ -101,7 +99,6 @@ class GitWorkflow:
                 capture_output=True,
                 text=True,
                 cwd=self.workspace_path,
-                timeout=60,
             )
             print("[+] Push successful")
             return True
@@ -121,7 +118,6 @@ class GitWorkflow:
                         capture_output=True,
                         text=True,
                         cwd=self.workspace_path,
-                        timeout=60,
                     )
                     print("[+] Push with upstream successful")
                     return True
@@ -134,7 +130,7 @@ class GitWorkflow:
 
         return False
 
-    def autonomous_commit_and_push(self, message: str | None = None) -> bool:
+    def autonomous_commit_and_push(self, message: Optional[str] = None) -> bool:
         """Perform autonomous commit and push workflow."""
         print("[*] Starting autonomous commit and push workflow...")
 
@@ -147,7 +143,7 @@ class GitWorkflow:
         print("[*] Starting push workflow...")
         return self.smart_push()
 
-    def autonomous_commit(self, message: str | None = None) -> bool:
+    def autonomous_commit(self, message: Optional[str] = None) -> bool:
         """Perform autonomous commit workflow."""
         print("[*] Starting autonomous commit workflow...")
 
@@ -168,7 +164,9 @@ class GitWorkflow:
 
         # 3. Use default message if none provided
         if not message:
-            message = "Autonomous commit: Update security implementation and fix formatting"
+            message = (
+                "Autonomous commit: Update security implementation and fix formatting"
+            )
 
         # 4. Commit with hooks disabled to prevent infinite loops
         if not self.commit_changes(message, skip_hooks=True):
@@ -184,8 +182,12 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Autonomous Git Workflow")
-    parser.add_argument("--push", action="store_true", help="Also push after committing")
-    parser.add_argument("--push-only", action="store_true", help="Only push, don't commit")
+    parser.add_argument(
+        "--push", action="store_true", help="Also push after committing"
+    )
+    parser.add_argument(
+        "--push-only", action="store_true", help="Only push, don't commit"
+    )
     parser.add_argument("--message", "-m", help="Commit message")
 
     args = parser.parse_args()

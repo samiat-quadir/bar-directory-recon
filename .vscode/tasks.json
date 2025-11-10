@@ -2,46 +2,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Lint (Ruff)",
-            "type": "shell",
-            "command": "ruff check --fix .",
-            "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Format (Black)",
-            "type": "shell",
-            "command": "black .",
-            "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Test (quick)",
-            "type": "shell",
-            "command": "pytest",
-            "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Test (cov)",
-            "type": "shell",
-            "command": "pytest --cov=src --cov-report=term-missing",
-            "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
             "label": "Run Automation Setup",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
@@ -227,7 +187,7 @@
             },
             "problemMatcher": [],
             "runOptions": {
-                "runOn": "default"
+                "runOn": "folderOpen"
             },
             "group": {
                 "kind": "build",
@@ -549,27 +509,6 @@
                 "reveal": "always",
                 "panel": "new"
             }
-        },
-        {
-            "label": "Install Dev Deps",
-            "type": "shell",
-            "command": ".\\.venv\\Scripts\\python -m pip install -U pip && .\\.venv\\Scripts\\pip install -e .[dev]",
-            "group": "build",
-            "problemMatcher": []
-        },
-        {
-            "label": "Fast Tests",
-            "type": "shell",
-            "command": ".\\.venv\\Scripts\\pytest -p no:cacheprovider -o addopts=\"\" -k \"not slow and not e2e and not integration\" -q",
-            "group": "test",
-            "problemMatcher": []
-        },
-        {
-            "label": "Pre-commit All",
-            "type": "shell",
-            "command": ".\\.venv\\Scripts\\pre-commit run -a",
-            "group": "test",
-            "problemMatcher": []
         }
     ]
 }

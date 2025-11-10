@@ -11,6 +11,7 @@ import argparse
 import re
 from datetime import datetime
 from pathlib import Path
+from typing import Dict, List, Optional
 
 
 class DocumentationMerger:
@@ -21,18 +22,18 @@ class DocumentationMerger:
         self.docs_dir = self.project_root / "docs"
         self.docs_dir.mkdir(exist_ok=True)
 
-    def find_readme_files(self) -> list[Path]:
+    def find_readme_files(self) -> List[Path]:
         """Find all README files in the project."""
         patterns = ["README*.md", "PHASE*README*.md", "*_README.md", "README_*.md"]
 
-        files: list[Path] = []
+        files: List[Path] = []
         for pattern in patterns:
             files.extend(self.project_root.glob(pattern))
 
         # Sort by modification time for logical ordering
         return sorted(files, key=lambda f: f.stat().st_mtime)
 
-    def extract_metadata(self, file_path: Path) -> dict[str, str]:
+    def extract_metadata(self, file_path: Path) -> Dict[str, str]:
         """Extract metadata from markdown file."""
         content = file_path.read_text(encoding="utf-8", errors="ignore")
 
@@ -48,12 +49,7 @@ class DocumentationMerger:
         date_match = re.search(r"(\d{4}-\d{2}-\d{2})", content)
         date = date_match.group(1) if date_match else "unknown"
 
-        return {
-            "title": title,
-            "phase": phase,
-            "date": date,
-            "filename": file_path.name,
-        }
+        return {"title": title, "phase": phase, "date": date, "filename": file_path.name}
 
     def adjust_heading_levels(self, content: str, base_level: int = 2) -> str:
         """Adjust heading levels to fit into document hierarchy."""
@@ -74,12 +70,12 @@ class DocumentationMerger:
 
         return "\n".join(adjusted_lines)
 
-    def create_table_of_contents(self, files_metadata: list[dict]) -> str:
+    def create_table_of_contents(self, files_metadata: List[Dict]) -> str:
         """Create table of contents for merged documentation."""
         toc = ["# Table of Contents\n"]
 
         # Group by phase
-        by_phase: dict[str, list[dict]] = {}
+        by_phase: Dict[str, List[Dict]] = {}
         for meta in files_metadata:
             phase = meta["phase"]
             if phase not in by_phase:
@@ -105,7 +101,7 @@ class DocumentationMerger:
 
         return "\n".join(toc)
 
-    def merge_files(self, output_path: Path | None = None) -> Path:
+    def merge_files(self, output_path: Optional[Path] = None) -> Path:
         """Merge all README files into unified documentation."""
         if output_path is None:
             output_path = self.docs_dir / "README.md"
@@ -126,9 +122,7 @@ class DocumentationMerger:
         # Header
         merged_content.append("# Bar Directory Recon - Complete Documentation")
         merged_content.append(f"*Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n")
-        merged_content.append(
-            "This document consolidates all project documentation from multiple README files.\n"
-        )
+        merged_content.append("This document consolidates all project documentation from multiple README files.\n")
 
         # Table of contents
         merged_content.append(self.create_table_of_contents(files_metadata))
@@ -168,16 +162,16 @@ class DocumentationMerger:
         merged_content.append("## Document Information")
         merged_content.append(f"- **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         merged_content.append(f"- **Source Files**: {len(readme_files)} README files")
-        merged_content.append("- **Project**: Bar Directory Recon")
+        merged_content.append(f"- **Project**: Bar Directory Recon")
         merged_content.append(
-            "- **Repository**: [bar-directory-recon](https://github.com/samiat-quadir/bar-directory-recon)"
+            f"- **Repository**: [bar-directory-recon](https://github.com/samiat-quadir/bar-directory-recon)"
         )
 
         # Write merged file
         final_content = "\n".join(merged_content)
         output_path.write_text(final_content, encoding="utf-8")
 
-        print("\n✅ Documentation merged successfully!")
+        print(f"\n✅ Documentation merged successfully!")
         print(f"📄 Output: {output_path}")
         print(f"📊 Size: {len(final_content):,} characters")
 
@@ -196,7 +190,7 @@ class DocumentationMerger:
         if setup_files:
             self._create_setup_index(setup_files)
 
-    def _create_api_index(self, api_files: list[Path]):
+    def _create_api_index(self, api_files: List[Path]):
         """Create API documentation index."""
         content = ["# API Reference\n"]
         for file_path in sorted(api_files):
@@ -205,7 +199,7 @@ class DocumentationMerger:
 
         (self.docs_dir / "API.md").write_text("\n".join(content))
 
-    def _create_setup_index(self, setup_files: list[Path]):
+    def _create_setup_index(self, setup_files: List[Path]):
         """Create setup/guide documentation index."""
         content = ["# Setup and Configuration Guides\n"]
         for file_path in sorted(setup_files):
@@ -218,18 +212,9 @@ class DocumentationMerger:
 def main():
     """Main entry point for documentation merger."""
     parser = argparse.ArgumentParser(description="Merge README files into unified documentation")
-    parser.add_argument(
-        "--project-root", type=Path, default=".", help="Root directory of the project"
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=None,
-        help="Output file path (default: docs/README.md)",
-    )
-    parser.add_argument(
-        "--create-indexes", action="store_true", help="Create additional index files"
-    )
+    parser.add_argument("--project-root", type=Path, default=".", help="Root directory of the project")
+    parser.add_argument("--output", type=Path, default=None, help="Output file path (default: docs/README.md)")
+    parser.add_argument("--create-indexes", action="store_true", help="Create additional index files")
 
     args = parser.parse_args()
 
@@ -243,7 +228,7 @@ def main():
         merger.create_index_files()
         print("📚 Additional index files created")
 
-    print("\n🎉 Documentation consolidation complete!")
+    print(f"\n🎉 Documentation consolidation complete!")
     print(f"📖 View merged docs: {output_path}")
 
 

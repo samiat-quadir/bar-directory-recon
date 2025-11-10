@@ -1,18 +1,9 @@
----
 # .yamllint
 extends: default
 rules:
-  document-start: disable
   line-length:
-    max: 150
+    max: 120
   comments:
-    level: warning
-  empty-lines:
-    max: 1
-    level: warning
-  braces:
-    level: warning
-  truthy:
     level: warning
 
 ignore: |

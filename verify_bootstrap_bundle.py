@@ -5,9 +5,10 @@ Bootstrap Bundle Verification
 Final verification of the Alienware bootstrap bundle.
 """
 
+import zipfile
 import hashlib
 import os
-import zipfile
+from pathlib import Path
 
 
 def verify_bootstrap_bundle():
@@ -71,12 +72,12 @@ def verify_bootstrap_bundle():
                 print(f"❌ {required_file} MISSING")
                 return False
 
-    print("\n📊 Bundle Summary:")
+    print(f"\n📊 Bundle Summary:")
     print(f"   • Total Files: {len(bundle_files)}")
     print(f"   • Required Files: {len(required_files)}")
-    print("   • All Present: ✅")
-    print("   • ZIP Valid: ✅")
-    print("   • Ready for Distribution: ✅")
+    print(f"   • All Present: ✅")
+    print(f"   • ZIP Valid: ✅")
+    print(f"   • Ready for Distribution: ✅")
 
     return True
 

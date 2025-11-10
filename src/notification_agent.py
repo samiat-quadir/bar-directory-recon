@@ -11,7 +11,7 @@ import ssl
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class NotificationConfig:
     """Configuration for notification services."""
 
-    def __init__(self, config: dict[str, Any]):
+    def __init__(self, config: Dict[str, Any]):
         """Initialize notification configuration."""
         self.config = config
         self.enabled = config.get("enabled", False)
@@ -40,7 +40,7 @@ class NotificationConfig:
 class NotificationAgent:
     """Unified notification agent for scraping operations."""
 
-    def __init__(self, config: dict[str, Any] | None = None):
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize notification agent."""
         self.config = NotificationConfig(config or {})
         self.logger = logging.getLogger(f"{__name__}.NotificationAgent")
@@ -51,7 +51,7 @@ class NotificationAgent:
         subject: str = "Scraping Notification",
         notification_type: str = "info",
         include_stats: bool = False,
-        stats: dict[str, Any] | None = None,
+        stats: Optional[Dict[str, Any]] = None,
     ) -> bool:
         """Send notification via configured channels."""
         if not self.config.enabled:
@@ -83,7 +83,7 @@ class NotificationAgent:
         return success
 
     def send_completion_notification(
-        self, session_name: str, stats: dict[str, Any], success: bool = True
+        self, session_name: str, stats: Dict[str, Any], success: bool = True
     ) -> bool:
         """Send completion notification with session statistics."""
         status = "completed successfully" if success else "completed with errors"
@@ -100,10 +100,12 @@ class NotificationAgent:
         )
 
     def send_error_notification(
-        self, session_name: str, error_message: str, error_details: str | None = None
+        self, session_name: str, error_message: str, error_details: Optional[str] = None
     ) -> bool:
         """Send error notification."""
-        message = f"Scraping session '{session_name}' encountered an error: {error_message}"
+        message = (
+            f"Scraping session '{session_name}' encountered an error: {error_message}"
+        )
 
         if error_details:
             message += f"\n\nDetails:\n{error_details}"
@@ -149,7 +151,9 @@ class NotificationAgent:
             self.logger.warning("Slack notifications not enabled")
             return False
 
-        return self._send_slack("This is a test Slack message from the Unified Scraping Framework")
+        return self._send_slack(
+            "This is a test Slack message from the Unified Scraping Framework"
+        )
 
     def send_test_notification_by_type(self, notification_type: str) -> bool:
         """Send test notification for specific type."""
@@ -170,8 +174,8 @@ class NotificationAgent:
         message: str,
         subject: str,
         notification_type: str,
-        stats: dict[str, Any] | None = None,
-    ) -> dict[str, str]:
+        stats: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, str]:
         """Prepare message content for different channels."""
 
         # Add timestamp
@@ -279,7 +283,9 @@ class NotificationAgent:
             return True
 
         except ImportError:
-            self.logger.error("Twilio library not installed. Install with: pip install twilio")
+            self.logger.error(
+                "Twilio library not installed. Install with: pip install twilio"
+            )
             return False
         except Exception as e:
             self.logger.error(f"Failed to send SMS: {e}")
@@ -297,10 +303,7 @@ class NotificationAgent:
                 return False
 
             response = requests.post(
-                webhook_url,
-                data=message,
-                headers={"Content-Type": "application/json"},
-                timeout=30,
+                webhook_url, data=message, headers={"Content-Type": "application/json"}
             )
             response.raise_for_status()
 
@@ -311,7 +314,7 @@ class NotificationAgent:
             self.logger.error(f"Failed to send Slack notification: {e}")
             return False
 
-    def _format_stats_for_email(self, stats: dict[str, Any]) -> str:
+    def _format_stats_for_email(self, stats: Dict[str, Any]) -> str:
         """Format statistics for email body."""
         stats_text = "\n\n--- Session Statistics ---\n"
 
@@ -322,7 +325,7 @@ class NotificationAgent:
 
         return stats_text
 
-    def _format_stats_for_slack(self, stats: dict[str, Any]) -> list[dict[str, Any]]:
+    def _format_stats_for_slack(self, stats: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Format statistics for Slack attachment fields."""
         fields = []
 
@@ -352,7 +355,7 @@ class NotificationAgent:
         return colors.get(notification_type, "#36a64f")
 
 
-def create_sample_notification_config() -> dict[str, Any]:
+def create_sample_notification_config() -> Dict[str, Any]:
     """Create sample notification configuration."""
     return {
         "enabled": False,

@@ -3,7 +3,6 @@
 Check for additional useful packages that might enhance the framework
 """
 
-
 def check_optional_packages():
     """Check for optional but useful packages."""
     print("🔍 Checking Optional Enhancement Packages...")
@@ -11,33 +10,35 @@ def check_optional_packages():
 
     optional_packages = [
         # Data analysis and visualization
-        ("numpy", "numpy", "Numerical computing"),
-        ("matplotlib", "matplotlib", "Data visualization"),
-        ("seaborn", "seaborn", "Statistical visualization"),
-        ("plotly", "plotly", "Interactive visualizations"),
+        ('numpy', 'numpy', 'Numerical computing'),
+        ('matplotlib', 'matplotlib', 'Data visualization'),
+        ('seaborn', 'seaborn', 'Statistical visualization'),
+        ('plotly', 'plotly', 'Interactive visualizations'),
+
         # Data processing
-        ("xlsxwriter", "xlsxwriter", "Enhanced Excel writing"),
-        ("csvkit", "csvkit", "CSV manipulation tools"),
+        ('xlsxwriter', 'xlsxwriter', 'Enhanced Excel writing'),
+        ('csvkit', 'csvkit', 'CSV manipulation tools'),
+
         # Web scraping enhancements
-        ("fake-useragent", "fake_useragent", "Rotating user agents"),
-        (
-            "undetected-chromedriver",
-            "undetected_chromedriver",
-            "Anti-detection browser",
-        ),
+        ('fake-useragent', 'fake_useragent', 'Rotating user agents'),
+        ('undetected-chromedriver', 'undetected_chromedriver', 'Anti-detection browser'),
+
         # Data validation
-        ("cerberus", "cerberus", "Data validation"),
-        ("jsonschema", "jsonschema", "JSON schema validation"),
+        ('cerberus', 'cerberus', 'Data validation'),
+        ('jsonschema', 'jsonschema', 'JSON schema validation'),
+
         # Performance monitoring
-        ("psutil", "psutil", "System monitoring"),
-        ("memory-profiler", "memory_profiler", "Memory usage profiling"),
+        ('psutil', 'psutil', 'System monitoring'),
+        ('memory-profiler', 'memory_profiler', 'Memory usage profiling'),
+
         # Additional utilities
-        ("tqdm", "tqdm", "Progress bars"),
-        ("rich", "rich", "Rich terminal output"),
-        ("click", "click", "Enhanced CLI"),
+        ('tqdm', 'tqdm', 'Progress bars'),
+        ('rich', 'rich', 'Rich terminal output'),
+        ('click', 'click', 'Enhanced CLI'),
+
         # Database support
-        ("sqlalchemy", "sqlalchemy", "SQL toolkit"),
-        ("sqlite3", "sqlite3", "Lightweight database"),
+        ('sqlalchemy', 'sqlalchemy', 'SQL toolkit'),
+        ('sqlite3', 'sqlite3', 'Lightweight database'),
     ]
 
     available = []
@@ -57,26 +58,20 @@ def check_optional_packages():
     if missing:
         # Categorize missing packages
         recommended = [
-            "numpy",
-            "matplotlib",
-            "fake-useragent",
-            "undetected-chromedriver",
-            "tqdm",
-            "rich",
-            "psutil",
+            'numpy', 'matplotlib', 'fake-useragent', 'undetected-chromedriver',
+            'tqdm', 'rich', 'psutil'
         ]
 
         recommended_missing = [pkg for pkg in missing if pkg in recommended]
 
         if recommended_missing:
-            print("\n📦 Recommended additional packages:")
+            print(f"\n📦 Recommended additional packages:")
             print(f"pip install {' '.join(recommended_missing)}")
 
-        print("\n📦 All optional packages:")
+        print(f"\n📦 All optional packages:")
         print(f"pip install {' '.join(missing)}")
 
     return missing
-
 
 def suggest_browser_enhancements():
     """Suggest browser-related enhancements."""
@@ -98,13 +93,12 @@ def suggest_browser_enhancements():
     print("pip install undetected-chromedriver fake-useragent")
     print("pip install playwright  # Alternative browser automation")
 
-
 def main():
     """Main enhancement check."""
     print("🚀 Framework Enhancement Opportunities")
     print("=" * 60)
 
-    check_optional_packages()
+    missing_optional = check_optional_packages()
     suggest_browser_enhancements()
 
     print("\n📋 Enhancement Priority:")
@@ -125,7 +119,6 @@ def main():
 
     print("\n✅ Current Status: Framework is fully functional!")
     print("💡 These packages would add extra capabilities but aren't required.")
-
 
 if __name__ == "__main__":
     main()

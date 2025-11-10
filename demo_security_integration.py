@@ -91,10 +91,8 @@ def demonstrate_azure_integration():
     else:
         print("   ⚠️ Azure SDK Not Available - Using Environment Fallback")
 
-
 if __name__ == "__main__":
     main()
-
 
 def demonstrate_error_handling():
     """Demonstrate error handling capabilities."""

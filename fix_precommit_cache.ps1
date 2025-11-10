@@ -79,3 +79,4 @@ Write-Host "🎉 Pre-commit cache fix complete!" -ForegroundColor Green
 Write-Host "You can now run git commits normally" -ForegroundColor White
 Write-Host ""
 Write-Host "If issues persist, run: git commit --no-verify" -ForegroundColor Cyan
+

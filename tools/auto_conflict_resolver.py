@@ -18,13 +18,12 @@ Examples:
     python auto_conflict_resolver.py --primary theirs --fallback ours
     python auto_conflict_resolver.py --repo-path /path/to/repo
 """
-
-import argparse
-import os
 import subprocess
 import sys
+import os
+import argparse
 from pathlib import Path
-
+from typing import List
 
 def find_git_repository() -> Path:
     """Find the git repository root starting from the current directory."""
@@ -42,7 +41,6 @@ def find_git_repository() -> Path:
             capture_output=True,
             text=True,
             check=True,
-            timeout=60,
         )
         return Path(result.stdout.strip())
     except subprocess.CalledProcessError:
@@ -51,7 +49,7 @@ def find_git_repository() -> Path:
         sys.exit(1)
 
 
-def get_conflicted_files() -> list[str]:
+def get_conflicted_files() -> List[str]:
     """Get a list of conflicted files."""
     try:
         result = subprocess.run(
@@ -59,7 +57,6 @@ def get_conflicted_files() -> list[str]:
             capture_output=True,
             text=True,
             check=True,
-            timeout=60,
         )
         return result.stdout.strip().splitlines()
     except subprocess.CalledProcessError as e:
@@ -74,7 +71,6 @@ def resolve_file(file: str, primary_strategy: str, fallback_strategy: str) -> bo
             ["git", "checkout", f"--{primary_strategy}", file],
             check=True,
             capture_output=True,
-            timeout=60,
         )
         print(f"✅ Resolved {file} using '{primary_strategy}' strategy.")
     except subprocess.CalledProcessError:
@@ -84,7 +80,6 @@ def resolve_file(file: str, primary_strategy: str, fallback_strategy: str) -> bo
                 ["git", "checkout", f"--{fallback_strategy}", file],
                 check=True,
                 capture_output=True,
-                timeout=60,
             )
             print(f"✅ Resolved {file} using '{fallback_strategy}' strategy.")
         except subprocess.CalledProcessError as e:
@@ -93,7 +88,7 @@ def resolve_file(file: str, primary_strategy: str, fallback_strategy: str) -> bo
 
     # Add the resolved file to staging
     try:
-        subprocess.run(["git", "add", file], check=True, capture_output=True, timeout=60)
+        subprocess.run(["git", "add", file], check=True, capture_output=True)
     except subprocess.CalledProcessError as e:
         print(f"❌ Failed to add {file} to staging: {e.stderr}")
         return False
@@ -103,10 +98,8 @@ def resolve_file(file: str, primary_strategy: str, fallback_strategy: str) -> bo
 
 def resolve_conflicts(primary_strategy: str = "ours", fallback_strategy: str = "theirs") -> None:
     """Resolve all conflicted files."""
-    print(
-        f"🔧 Starting conflict resolution with primary strategy: '{primary_strategy}', "
-        f"fallback: '{fallback_strategy}'"
-    )
+    print(f"🔧 Starting conflict resolution with primary strategy: '{primary_strategy}', "
+          f"fallback: '{fallback_strategy}'")
 
     conflicted_files = get_conflicted_files()
 
@@ -119,7 +112,7 @@ def resolve_conflicts(primary_strategy: str = "ours", fallback_strategy: str = "
         print(f"  • {file}")
     print()
 
-    failed_resolutions: list[str] = []
+    failed_resolutions: List[str] = []
 
     for file in conflicted_files:
         success = resolve_file(file, primary_strategy, fallback_strategy)
@@ -131,10 +124,8 @@ def resolve_conflicts(primary_strategy: str = "ours", fallback_strategy: str = "
         print("🛑 Please resolve these manually and rerun this script.")
         sys.exit(1)
 
-    print(
-        f"🎉 Successfully resolved all conflicts using '{primary_strategy}' "
-        f"with fallback to '{fallback_strategy}'."
-    )
+    print(f"🎉 Successfully resolved all conflicts using '{primary_strategy}' "
+          f"with fallback to '{fallback_strategy}'.")
     print("\nNext step: run 'git rebase --continue' to finalize your rebase.")
 
 
@@ -147,18 +138,18 @@ def main() -> None:
         "--primary",
         default="ours",
         choices=["ours", "theirs"],
-        help="Primary strategy to use for conflict resolution (default: ours)",
+        help="Primary strategy to use for conflict resolution (default: ours)"
     )
     parser.add_argument(
         "--fallback",
         default="theirs",
         choices=["ours", "theirs"],
-        help="Fallback strategy if primary fails (default: theirs)",
+        help="Fallback strategy if primary fails (default: theirs)"
     )
     parser.add_argument(
         "--repo-path",
         type=str,
-        help="Path to git repository (if not provided, will auto-detect)",
+        help="Path to git repository (if not provided, will auto-detect)"
     )
 
     args = parser.parse_args()

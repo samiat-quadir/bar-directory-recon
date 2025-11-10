@@ -1,3 +1,4 @@
+
 # Production dependencies (pinned)
 
 # Configuration and validation
@@ -6,11 +7,11 @@ python-dotenv==1.0.1
 pyyaml==6.0.2
 
 # Template engine for dashboards
-jinja2>=3.1.6
+jinja2==3.1.5
 
 # HTTP requests and async support
-requests>=2.32.4
-aiohttp>=3.12.14
+requests==2.32.3
+aiohttp==3.12.13
 aiofiles==24.1.0
 
 # Data processing
@@ -44,4 +45,4 @@ charset-normalizer==3.4.1
 
 # idna 3.12 not yet available for Python 3.13 on this index; pin to latest available (3.10)
 idna==3.10
-urllib3>=2.5.0
+urllib3==2.3.0

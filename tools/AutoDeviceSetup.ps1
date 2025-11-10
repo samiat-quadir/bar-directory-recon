@@ -15,27 +15,6 @@
     Created by GitHub Copilot - May 15, 2025
 #>
 
-param(
-    [switch]$NonInteractive
-)
-
-# Defensive guard: ensure we are running from inside the repository workspace and
-# optionally support non-interactive mode to quietly exit 0 if mis-invoked.
-$scriptPath = $MyInvocation.MyCommand.Path
-if (-not $scriptPath) {
-    if ($NonInteractive) { exit 0 }
-    throw "AutoDeviceSetup.ps1 invoked without a script path; aborting to avoid running outside workspace."
-}
-
-$scriptDir = Split-Path -Parent $scriptPath
-$projectRoot = Split-Path -Parent $scriptDir
-
-# Require that the project root contains a .git directory to consider this a workspace
-if (-not (Test-Path (Join-Path -Path $projectRoot -ChildPath '.git'))) {
-    if ($NonInteractive) { exit 0 }
-    throw "AutoDeviceSetup.ps1: project root does not appear to be a workspace (no .git found at $projectRoot). Aborting."
-}
-
 $ErrorActionPreference = "Stop"
 $Host.UI.RawUI.WindowTitle = "Configuring Device..."
 

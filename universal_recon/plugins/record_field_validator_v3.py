@@ -1,6 +1,7 @@
 # universal_recon/utils/record_field_validator_v3.py
 
 import logging
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
@@ -10,8 +11,8 @@ MIN_TEMPLATE_CONFIDENCE = 0.5
 
 
 def validate_records(
-    records: list[dict], strict: bool = False, verbose: bool = False
-) -> list[dict]:
+    records: List[Dict], strict: bool = False, verbose: bool = False
+) -> List[Dict]:
     """
     Validates records using field completeness, score, and predicted score.
     Returns cleaned list (or raises) and logs summary stats.
@@ -21,7 +22,7 @@ def validate_records(
     for rec in records:
         missing = [f for f in REQUIRED_FIELDS if not rec.get(f)]
         score = rec.get("score") or rec.get("predicted_score") or 0
-        rec.get("template_confidence") or "medium"
+        confidence = rec.get("template_confidence") or "medium"
 
         if missing:
             rec["valid"] = False

@@ -40,10 +40,7 @@ def smart_fill_and_submit_forms(driver, config, logger, dry_run=False):
                         inp.clear()
                         inp.send_keys(fill_value)
                     except:
-                        logger(
-                            f"[FormHandler] Could not type into input: {in_name}",
-                            "WARN",
-                        )
+                        logger(f"[FormHandler] Could not type into input: {in_name}", "WARN")
 
             for sel in selects:
                 try:
@@ -51,7 +48,7 @@ def smart_fill_and_submit_forms(driver, config, logger, dry_run=False):
                     if len(select_obj.options) > 1 and not dry_run:
                         select_obj.select_by_index(1)
                 except:
-                    logger("[FormHandler] Could not select dropdown option", "WARN")
+                    logger(f"[FormHandler] Could not select dropdown option", "WARN")
 
             if not dry_run:
                 form.submit()

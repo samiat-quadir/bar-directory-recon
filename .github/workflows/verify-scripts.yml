@@ -1,8 +1,10 @@
-name: verify-scripts (manual-only)
-on:
-  workflow_dispatch:
+name: verify-scripts
+on: [push]
+permissions:
+  contents: read
 jobs:
-  noop:
+  lint-yaml:
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'manual-only'
+      - uses: actions/checkout@v4
+      - uses: ibiqlik/action-yamllint@v3

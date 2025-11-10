@@ -1,0 +1,65 @@
+{
+    "task_id": "aliyah_run_tests_on_asus",
+    "title": "Run Test Suite on ASUS Target",
+    "description": "Execute comprehensive test suite on ASUS server after SSH key authentication is established",
+    "target_device": "asus",
+    "target_host": "rog-lucci",
+    "target_ip": "100.89.12.61",
+    "target_user": "samqu",
+    "ssh_key": "C:\\Users\\samqu\\.ssh\\id_ed25519_clear",
+    "priority": "high",
+    "queue_status": "pending_auth",
+    "created_by": "aliyah_datacenter_sync",
+    "created_at": "2025-08-13T19:42:00Z",
+    "prerequisites": [
+        "SSH key must be imported to ASUS authorized_keys",
+        "ASUS SSH daemon must accept our Ed25519 key",
+        "Network connectivity to 100.89.12.61:22 verified"
+    ],
+    "execution_plan": {
+        "phase_1": {
+            "name": "ssh_connectivity_test",
+            "command": "ssh -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -o ConnectTimeout=10 -i C:\\Users\\samqu\\.ssh\\id_ed25519_clear rog-lucci 'echo SSH_OK'",
+            "expected_result": "SSH_OK",
+            "timeout_seconds": 15
+        },
+        "phase_2": {
+            "name": "environment_validation",
+            "command": "ssh rog-lucci 'python3 --version && pip3 --version && git --version'",
+            "expected_result": "Python 3.x, pip, git versions displayed",
+            "timeout_seconds": 30
+        },
+        "phase_3": {
+            "name": "test_execution",
+            "command": "ssh rog-lucci 'cd /path/to/project && python3 -m pytest src/tests/ -v --tb=short'",
+            "expected_result": "Test suite execution with results",
+            "timeout_seconds": 300
+        }
+    },
+    "retry_policy": {
+        "max_retries": 3,
+        "retry_delay_seconds": 60,
+        "exponential_backoff": true
+    },
+    "notification_config": {
+        "on_success": [
+            "email",
+            "log"
+        ],
+        "on_failure": [
+            "email",
+            "log",
+            "alert"
+        ],
+        "recipients": [
+            "aliyah@datacenter.local"
+        ]
+    },
+    "metadata": {
+        "ssh_key_fingerprint": "SHA256:bMlMEM4RiKFLpfvKl46pDiVV3CUOnJbGlWGURyeyl6g",
+        "client_proof_completed": true,
+        "server_side_issue_confirmed": true,
+        "infrastructure_validation_attempted": true,
+        "environment_ready": true
+    }
+}

@@ -26,7 +26,7 @@ def write_csv_site_scores(matrix, output_dir):
                     scores.get("validation_pass_rate", ""),
                 ]
             )
-    print("[✓] site_scores.csv written")
+    print(f"[✓] site_scores.csv written")
 
 
 def write_csv_plugin_usage(matrix, output_dir):
@@ -48,7 +48,7 @@ def write_csv_plugin_usage(matrix, output_dir):
         for domain, plugins in domain_plugin_counts.items():
             for plugin, count in plugins.items():
                 writer.writerow([domain, plugin, count])
-    print("[✓] plugin_usage.csv written")
+    print(f"[✓] plugin_usage.csv written")
 
 
 def write_csv_domain_summary(matrix, output_dir):
@@ -60,7 +60,7 @@ def write_csv_domain_summary(matrix, output_dir):
         writer.writerow(["Domain", "Sites", "Avg Field Score"])
         for domain, stats in domain_stats.items():
             writer.writerow([domain, stats["sites"], stats["avg_score"]])
-    print("[✓] domain_summary.csv written")
+    print(f"[✓] domain_summary.csv written")
 
 
 def main():
@@ -68,9 +68,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Export schema_matrix.json summary to CSVs")
     parser.add_argument(
-        "--matrix-path",
-        default="output/schema_matrix.json",
-        help="Path to schema matrix",
+        "--matrix-path", default="output/schema_matrix.json", help="Path to schema matrix"
     )
     parser.add_argument("--output-dir", default="output/", help="Output folder for CSVs")
     args = parser.parse_args()
