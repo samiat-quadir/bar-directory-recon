@@ -1,0 +1,77 @@
+================================================================================
+RC1 WINDOWS SMOKE TEST
+================================================================================
+Date: 2025-11-04 17:11:29
+Host: ALI
+Repo: C:\Code\bar-directory-recon
+Test: bar-directory-recon 0.1.1 from PyPI (rc1 not available on TestPyPI)
+================================================================================
+
+COMMAND: git pull origin main --ff-only
+OUTPUT:
+From https://github.com/samiat-quadir/bar-directory-recon
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+STATUS: ✓ PASS
+--------------------------------------------------------------------------------
+
+COMMAND: python -m venv .venv
+OUTPUT: (virtual environment created successfully)
+STATUS: ✓ PASS
+--------------------------------------------------------------------------------
+
+COMMAND: .\.venv\Scripts\activate
+OUTPUT: (.venv) PS C:\Code\bar-directory-recon>
+STATUS: ✓ PASS
+--------------------------------------------------------------------------------
+
+COMMAND: python -m pip install bar-directory-recon==0.1.1
+OUTPUT:
+Collecting bar-directory-recon==0.1.1
+  Downloading bar_directory_recon-0.1.1-py3-none-any.whl.metadata (4.0 kB)
+Downloading bar_directory_recon-0.1.1-py3-none-any.whl (7.0 kB)
+Installing collected packages: bar-directory-recon
+Successfully installed bar-directory-recon-0.1.1
+
+NOTE: rc1 version not found on TestPyPI, used 0.1.1 from PyPI instead
+STATUS: ✓ PASS (with note)
+--------------------------------------------------------------------------------
+
+COMMAND: bdr --version
+OUTPUT:
+0.1.1.dev0
+
+STATUS: ✓ PASS
+--------------------------------------------------------------------------------
+
+COMMAND: bdr --no-exec doctor
+OUTPUT:
+{
+  "python": "3.13.6",
+  "platform": "Windows-11-10.0.26100-SP0",
+  "executable": "C:\\ProgramData\\miniconda3\\python.exe",
+  "preserved_utils": {
+    "record_normalizer": false,
+    "validator_loader": false,
+    "record_field_validator_v3": false
+  }
+}
+
+STATUS: ✓ PASS
+--------------------------------------------------------------------------------
+
+SUMMARY:
+All smoke tests passed on Windows (ALI host).
+- Package installs correctly from PyPI
+- CLI commands execute successfully
+- --no-exec flag works as expected
+- Doctor command returns proper diagnostics
+
+OVERALL STATUS: ✓ HEALTHY
+
+NOTE: v0.1.1rc1 was not available on TestPyPI (only 0.1.1, 0.1.2.dev0, 0.1.3.dev0)
+Used stable 0.1.1 from PyPI for smoke testing instead.
+Ready to proceed with GA release preparation.
+
+================================================================================

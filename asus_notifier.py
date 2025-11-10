@@ -6,7 +6,6 @@ from email.mime.multipart import MIMEMultipart
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
 from base64 import urlsafe_b64encode
 from dotenv import load_dotenv
 

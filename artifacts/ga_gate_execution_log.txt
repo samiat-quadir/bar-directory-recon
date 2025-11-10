@@ -1,0 +1,3 @@
+RESULT >> step=1 status=ok link=https://github.com/samiat-quadir/bar-directory-recon note="env ready; repo set"
+RESULT >> step=2 status=fail link=https://github.com/samiat-quadir/bar-directory-recon/tree/main/.github/workflows note="publish-pypi.yml missing (manual-only required)"
+RELAY >> task=ga_gate_execute status=degraded checks=0 guard=PASS note="publish-pypi.yml missing (manual-only required)"
