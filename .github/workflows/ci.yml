@@ -34,7 +34,9 @@ jobs:
           cache: "pip"
 
       - name: Install Dependencies
-        run: pip install -r requirements-dev.txt
+        run: |
+          pip install -r requirements-lock.txt
+          pip install -r requirements-dev.txt
 
       # Temporarily disabled: pre-existing code quality issues block security fix PR
       # TODO: Fix pre-commit issues in separate PR
