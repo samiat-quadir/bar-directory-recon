@@ -36,9 +36,6 @@ try:
         path,
         ignore_errors=False,
         onerror=None,
-        *,
-        onexc=None,
-        dir_fd=None,
     ):
         """Retry a few times for transient PermissionError (WinError 32).
 
@@ -54,8 +51,6 @@ try:
                     path,
                     ignore_errors=ignore_errors,
                     onerror=onerror,
-                    onexc=onexc,
-                    dir_fd=dir_fd,
                 )
             except PermissionError as exc:
                 # On Windows, winerror == 32 corresponds to "file in use".
