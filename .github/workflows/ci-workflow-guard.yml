@@ -1,0 +1,46 @@
+name: Workflow Guard
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  workflow-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Validate Workflow YAML
+        run: |
+          yamllint .github/workflows/*.yml || echo "YAML validation has warnings - not blocking"
+
+      - name: Check Workflow Syntax
+        run: |
+          for file in .github/workflows/*.yml; do
+            echo "Checking $file"
+            python -c "import yaml; yaml.safe_load(open('$file'))" || exit 1
+          done
+
+      - name: Verify Required Workflows
+        run: |
+          required=("ci.yml" "fast-tests.yml" "pip-audit.yml" "ps-lint.yml")
+          for wf in "${required[@]}"; do
+            if [ ! -f ".github/workflows/$wf" ]; then
+              echo "ERROR: Required workflow missing: $wf"
+              exit 1
+            fi
+            echo "✓ Found $wf"
+          done
+          echo "All required workflows present"

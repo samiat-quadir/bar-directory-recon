@@ -1,0 +1,54 @@
+name: PowerShell Lint
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  ps-lint:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install PSScriptAnalyzer (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer)) {
+            Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          }
+
+      - name: Install PSScriptAnalyzer (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer)) {
+            Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          }
+
+      - name: Lint PowerShell Scripts
+        shell: pwsh
+        run: |
+          $scripts = Get-ChildItem -Path . -Recurse -Include "*.ps1","*.psm1" -File
+          if ($scripts.Count -eq 0) {
+            Write-Host "No PowerShell scripts found to lint"
+            exit 0
+          }
+          $results = $scripts | ForEach-Object { Invoke-ScriptAnalyzer -Path $_.FullName }
+          if ($results) {
+            $results | Format-Table -AutoSize
+            $errors = $results | Where-Object Severity -eq 'Error'
+            if ($errors) {
+              Write-Error "Found $($errors.Count) PSScriptAnalyzer errors"
+              exit 1
+            }
+          }
+          Write-Host "PowerShell linting passed"
