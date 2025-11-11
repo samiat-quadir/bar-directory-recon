@@ -1,0 +1,29 @@
+---
+name: Fast Tests
+
+on:
+  push:
+    branches: ["main", "feature/**", "prep/**", "deps/**"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  fast-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: "pip"
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      - name: Validate installation
+        run: python -c "import sys; print(f'Python {sys.version}')"

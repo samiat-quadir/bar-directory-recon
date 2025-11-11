@@ -1,0 +1,28 @@
+---
+name: PS Lint
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  ps-lint:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint PowerShell
+        shell: pwsh
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -SkipPublisherCheck
+          $scripts = Get-ChildItem -Recurse -Include "*.ps1" | Where-Object { $_.FullName -notmatch '[\\/]\.' }
+          if ($scripts.Count -eq 0) { Write-Host "✓ No PS scripts"; exit 0 }
+          $results = $scripts | ForEach-Object { Invoke-ScriptAnalyzer -Path $_ -Severity Error }
+          if ($results) { $results | Format-Table; exit 1 }
+          Write-Host "✓ PS lint passed"
