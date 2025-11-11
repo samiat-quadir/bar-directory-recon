@@ -1,4 +1,4 @@
-groups:
+﻿groups:
 - name: bdr.rules
   rules:
   - alert: HighCPU

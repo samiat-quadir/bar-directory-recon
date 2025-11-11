@@ -1,0 +1,18 @@
+# === validation_matrix.yaml ===
+
+bar_number_check:
+  description: "Ensures bar number is present and properly formatted."
+  severity: critical
+  required_if_domain: ["bar", "legal"]
+  linked_plugin: "bar_number_extractor"
+
+email_validator:
+  description: "Validates presence of a contact email field."
+  severity: warning
+  required_if_domain: ["legal"]
+  linked_plugin: "email_extractor"
+
+address_validator:
+  description: "Checks for physical mailing address."
+  severity: warning
+  required_if_domain: ["legal"]

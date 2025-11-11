@@ -68,7 +68,7 @@ class TestPluginUsageDiff(TestCase):
 
         # Verify diff results
         self.assertTrue(os.path.exists(diff_path))
-        with open(diff_path, encoding="utf-8") as f:
+        with open(diff_path, "r", encoding="utf-8") as f:
             diff_results = json.load(f)
 
         self.assertEqual(set(diff_results["missing_plugins"]), {"removed"})

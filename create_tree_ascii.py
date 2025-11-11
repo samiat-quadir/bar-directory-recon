@@ -2,7 +2,6 @@
 """
 Create a tree structure visualization with ASCII characters
 """
-
 import os
 import sys
 

@@ -7,31 +7,31 @@ cross-device consistency in development. It's used by Git hooks and
 other automation tools to maintain a consistent environment.
 """
 
-import json
 import os
+import json
 import platform
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Dict, Optional, Union, List, Any
 
 # Known device configurations
 DEVICE_CONFIGS = {
     "DESKTOP-ACER": {
         "username": "samq",
-        "onedrive_folder": "OneDrive - Digital Age Marketing Group",
+        "onedrive_folder": "OneDrive - Digital Age Marketing Group"
     },
     "LAPTOP-ASUS": {
         "username": "samqu",
-        "onedrive_folder": "OneDrive - Digital Age Marketing Group",
+        "onedrive_folder": "OneDrive - Digital Age Marketing Group"
     },
     "ROG-LUCCI": {
         "username": "samqu",
-        "onedrive_folder": "OneDrive - Digital Age Marketing Group",
+        "onedrive_folder": "OneDrive - Digital Age Marketing Group"
     },
     "SALESREP": {
         "username": "samq",
-        "onedrive_folder": "OneDrive - Digital Age Marketing Group",
-    },
+        "onedrive_folder": "OneDrive - Digital Age Marketing Group"
+    }
 }
 
 
@@ -52,21 +52,21 @@ def get_python_interpreter():
     system = platform.system().lower()
 
     # Device-specific overrides (customize based on your environment)
-    device_name = os.environ.get("COMPUTERNAME") or os.environ.get("HOSTNAME", "").lower()
+    device_name = os.environ.get('COMPUTERNAME') or os.environ.get('HOSTNAME', '').lower()
 
     # Dict of device-specific Python paths (add your devices here)
     device_paths = {
         # Example mappings - replace with your actual device names and paths
-        "salesrep": {
-            "windows": r"C:\Python312\python.exe",
-            "linux": "/usr/bin/python3",
-            "darwin": "/usr/local/bin/python3",
+        'salesrep': {
+            'windows': r'C:\Python312\python.exe',
+            'linux': '/usr/bin/python3',
+            'darwin': '/usr/local/bin/python3'
         },
-        "workstation": {
-            "windows": r"C:\Python312\python.exe",
-            "linux": "/usr/bin/python3",
-            "darwin": "/usr/local/bin/python3",
-        },
+        'workstation': {
+            'windows': r'C:\Python312\python.exe',
+            'linux': '/usr/bin/python3',
+            'darwin': '/usr/local/bin/python3'
+        }
     }
 
     # Check for device-specific settings
@@ -76,9 +76,9 @@ def get_python_interpreter():
 
     # Default fallback paths by system
     default_paths = {
-        "windows": r"python.exe",  # Use system PATH
-        "linux": "/usr/bin/python3",
-        "darwin": "/usr/bin/python3",
+        'windows': r'python.exe',  # Use system PATH
+        'linux': '/usr/bin/python3',
+        'darwin': '/usr/bin/python3'
     }
 
     # Use system default path if no specific match
@@ -89,7 +89,7 @@ def get_python_interpreter():
     return current_python
 
 
-def get_current_device() -> str | None:
+def get_current_device() -> Optional[str]:
     """
     Detect the current device based on computer name and username.
 
@@ -134,7 +134,7 @@ def get_onedrive_path() -> str:
     possible_paths = [
         os.path.join("C:\\", "Users", "samq", "OneDrive - Digital Age Marketing Group"),
         os.path.join("C:\\", "Users", "samqu", "OneDrive - Digital Age Marketing Group"),
-        os.path.join("C:\\", "Users", os.getlogin(), "OneDrive - Digital Age Marketing Group"),
+        os.path.join("C:\\", "Users", os.getlogin(), "OneDrive - Digital Age Marketing Group")
     ]
 
     for path in possible_paths:
@@ -144,11 +144,8 @@ def get_onedrive_path() -> str:
     # If still no match, look for OneDrive folders
     user_folder = os.path.join("C:\\", "Users", os.getlogin())
     if os.path.exists(user_folder):
-        onedrive_folders = [
-            f
-            for f in os.listdir(user_folder)
-            if os.path.isdir(os.path.join(user_folder, f)) and f.startswith("OneDrive")
-        ]
+        onedrive_folders = [f for f in os.listdir(user_folder)
+                          if os.path.isdir(os.path.join(user_folder, f)) and f.startswith("OneDrive")]
         if onedrive_folders:
             return os.path.join(user_folder, onedrive_folders[0])
 
@@ -157,11 +154,9 @@ def get_onedrive_path() -> str:
     return os.getcwd()
 
 
-def get_project_root_path(
-    onedrive_path: str | None = None,
-    project_name: str = "bar-directory-recon-new",
-    sub_path: str = "Desktop\\Local Py\\Work Projects",
-) -> str | None:
+def get_project_root_path(onedrive_path: Optional[str] = None,
+                         project_name: str = "bar-directory-recon-new",
+                         sub_path: str = "Desktop\\Local Py\\Work Projects") -> Optional[str]:
     """
     Get the correct project root path for the current device.
 
@@ -200,9 +195,7 @@ def get_project_root_path(
     base_path = os.path.join(onedrive_path, sub_path)
     if os.path.exists(base_path):
         for folder in os.listdir(base_path):
-            if folder.startswith(project_name.split("-")[0]) and os.path.isdir(
-                os.path.join(base_path, folder)
-            ):
+            if folder.startswith(project_name.split("-")[0]) and os.path.isdir(os.path.join(base_path, folder)):
                 return os.path.join(base_path, folder)
 
     # As a last resort, try current directory or its parent
@@ -219,7 +212,7 @@ def get_project_root_path(
     return None
 
 
-def to_project_relative_path(path: str, project_root: str | None = None) -> str:
+def to_project_relative_path(path: str, project_root: Optional[str] = None) -> str:
     """
     Convert an absolute path to a project-relative path.
 
@@ -299,7 +292,7 @@ def get_data_directory() -> str:
     possible_paths = [
         os.path.join(project_root, "data"),
         os.path.join(project_root, "database"),
-        os.path.join(project_root, "datasets"),
+        os.path.join(project_root, "datasets")
     ]
 
     for path in possible_paths:
@@ -319,11 +312,7 @@ def get_data_directory() -> str:
     return data_dir
 
 
-def get_device_config(
-    key: str | None = None,
-    default_value: Any = None,
-    device_id: str | None = None,
-) -> dict | Any:
+def get_device_config(key: Optional[str] = None, default_value: Any = None, device_id: Optional[str] = None) -> Union[Dict, Any]:
     """
     Get device-specific configuration.
 
@@ -349,7 +338,7 @@ def get_device_config(
         return default_value
 
     # Load config
-    with open(config_file) as f:
+    with open(config_file, 'r') as f:
         config = json.load(f)
 
     # If no key specified, return the entire config
@@ -363,7 +352,7 @@ def get_device_config(
     return default_value
 
 
-def set_device_config(key: str, value: Any, device_id: str | None = None) -> dict:
+def set_device_config(key: str, value: Any, device_id: Optional[str] = None) -> Dict:
     """
     Set device-specific configuration.
 
@@ -390,16 +379,15 @@ def set_device_config(key: str, value: Any, device_id: str | None = None) -> dic
 
     # Load existing config or create new
     if os.path.exists(config_file):
-        with open(config_file) as f:
+        with open(config_file, 'r') as f:
             config = json.load(f)
     else:
         from datetime import datetime
-
         config = {
             "DeviceId": device_id,
             "Settings": {},
             "Paths": {},
-            "LastUpdated": datetime.now().isoformat(),
+            "LastUpdated": datetime.now().isoformat()
         }
 
     # Update with new value
@@ -410,17 +398,16 @@ def set_device_config(key: str, value: Any, device_id: str | None = None) -> dic
 
     # Update timestamp
     from datetime import datetime
-
     config["LastUpdated"] = datetime.now().isoformat()
 
     # Save config
-    with open(config_file, "w") as f:
+    with open(config_file, 'w') as f:
         json.dump(config, f, indent=4)
 
     return config
 
 
-def register_current_device(force: bool = False) -> dict:
+def register_current_device(force: bool = False) -> Dict:
     """
     Register the current device in the configuration.
 
@@ -439,7 +426,7 @@ def register_current_device(force: bool = False) -> dict:
 
     # Check if device is already registered
     if os.path.exists(config_file) and not force:
-        with open(config_file) as f:
+        with open(config_file, 'r') as f:
             config = json.load(f)
 
         if config.get("DeviceId") == platform.node():
@@ -454,25 +441,26 @@ def register_current_device(force: bool = False) -> dict:
     onedrive_path = get_onedrive_path()
 
     from datetime import datetime
-
     now = datetime.now().isoformat()
 
     config = {
         "DeviceId": platform.node(),
         "Username": os.getlogin(),
-        "Settings": {"DefaultEditor": "code"},
+        "Settings": {
+            "DefaultEditor": "code"
+        },
         "Paths": {
             "OneDrive": onedrive_path,
             "ProjectRoot": project_root,
             "DataDirectory": get_data_directory(),
-            "RepoRoot": get_repository_root(),
+            "RepoRoot": get_repository_root()
         },
         "FirstRegistered": now,
-        "LastUpdated": now,
+        "LastUpdated": now
     }
 
     # Save config
-    with open(config_file, "w") as f:
+    with open(config_file, 'w') as f:
         json.dump(config, f, indent=4)
 
     print(f"Device registered as: {config['DeviceId']}")
@@ -489,15 +477,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Device path resolver utility")
     parser.add_argument("--onedrive", action="store_true", help="Output only the OneDrive path")
     parser.add_argument("--project", action="store_true", help="Output only the project root path")
-    parser.add_argument(
-        "--python", action="store_true", help="Output only the Python interpreter path"
-    )
+    parser.add_argument("--python", action="store_true", help="Output only the Python interpreter path")
     parser.add_argument("--register", action="store_true", help="Register the current device")
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Force registration even if already registered",
-    )
+    parser.add_argument("--force", action="store_true",
+                      help="Force registration even if already registered")
     parser.add_argument("--config", nargs="*", help="Get or set configuration")
     args = parser.parse_args()
 
@@ -523,7 +506,6 @@ if __name__ == "__main__":
             config = get_device_config()
             if config:
                 import pprint
-
                 pprint.pprint(config)
             else:
                 print("No device configuration found.")
@@ -545,15 +527,13 @@ if __name__ == "__main__":
             print("Usage: --config [key [value]]")
     else:
         # Print full diagnostics by default
-        print("Device Path Resolver Information:")
-        print("=================================")
+        print(f"Device Path Resolver Information:")
+        print(f"=================================")
         print(f"Current device: {platform.node()}")
         try:
             print(f"Current user: {os.getlogin()}")
         except:
-            print(
-                f"Current user: {os.environ.get('USERNAME') or os.environ.get('USER', 'Unknown')}"
-            )
+            print(f"Current user: {os.environ.get('USERNAME') or os.environ.get('USER', 'Unknown')}")
         print(f"Detected device config: {get_current_device() or 'Unknown'}")
         print(f"Python interpreter: {get_python_interpreter()}")
         print(f"OneDrive path: {get_onedrive_path()}")

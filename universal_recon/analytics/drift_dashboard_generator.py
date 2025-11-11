@@ -3,7 +3,7 @@
 import json
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict
 
 from universal_recon.analytics.risk_overlay_emitter import emit_risk_overlay
 
@@ -17,26 +17,26 @@ BADGE_COLORS = {
 }
 
 
-def load_status(status_path: str = "output/output_status.json") -> dict[str, Any]:
+def load_status(status_path: str = "output/output_status.json") -> Dict[str, Any]:
     """Load status data from JSON file."""
     if not os.path.exists(status_path):
         print(f"❌ No status summary found at {status_path}")
         return {}
-    with open(status_path, encoding="utf-8") as f:
+    with open(status_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-def load_risk_overlay(path: str = "output/risk_overlay.json") -> dict[str, Any]:
+def load_risk_overlay(path: str = "output/risk_overlay.json") -> Dict[str, Any]:
     """Load risk overlay data if available."""
     if not os.path.exists(path):
         return {"risk_badges": {}}
-    with open(path, encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def generate_html(
-    status_data: dict[str, Any],
-    risk_data: dict[str, Any],
+    status_data: Dict[str, Any],
+    risk_data: Dict[str, Any],
     output_path: str = "output/drift_dashboard.html",
 ) -> None:
     """Generate HTML dashboard with integrated risk overlay."""
@@ -141,14 +141,10 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Generate the Drift Dashboard with risk overlay")
     parser.add_argument(
-        "--status-path",
-        default="output/output_status.json",
-        help="Path to status JSON file",
+        "--status-path", default="output/output_status.json", help="Path to status JSON file"
     )
     parser.add_argument(
-        "--matrix-path",
-        default="output/schema_matrix.json",
-        help="Path to schema matrix JSON",
+        "--matrix-path", default="output/schema_matrix.json", help="Path to schema matrix JSON"
     )
     parser.add_argument(
         "--output-path",

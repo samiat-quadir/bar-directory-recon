@@ -1,4 +1,9 @@
 import json
+import os
+import tempfile
+from pathlib import Path
+
+import pytest
 
 from universal_recon.analytics.risk_overlay_emitter import (
     calculate_risk_level,
@@ -66,20 +71,11 @@ def test_emit_site_risk_json(tmp_path):
 def test_calculate_risk_level():
     """Test risk level calculation."""
     # Test high risk scenarios
-    assert calculate_risk_level(0.85, 65, 0.9) == (
-        "high",
-        "Critical validator issues detected",
-    )
-    assert calculate_risk_level(0.5, 60, 0.9) == (
-        "high",
-        "Critical validator issues detected",
-    )
+    assert calculate_risk_level(0.85, 65, 0.9) == ("high", "Critical validator issues detected")
+    assert calculate_risk_level(0.5, 60, 0.9) == ("high", "Critical validator issues detected")
 
     # Test medium risk scenarios
-    assert calculate_risk_level(0.7, 80, 0.9) == (
-        "medium",
-        "Moderate validation concerns",
-    )
+    assert calculate_risk_level(0.7, 80, 0.9) == ("medium", "Moderate validation concerns")
     assert calculate_risk_level(0.5, 80, 0.9) == ("low", "Stable validation state")
 
     # Test low risk scenarios

@@ -2,7 +2,6 @@
 """
 Create a tree structure visualization of the .venv directory
 """
-
 import os
 
 

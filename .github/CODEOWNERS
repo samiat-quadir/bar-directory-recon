@@ -1,4 +1,0 @@
-# Informational routing only (branch protection unchanged)
-# CI & workflows
-.github/workflows/*   @samiat-quadir @hector-example
-scripts/*             @samiat-quadir @hector-example

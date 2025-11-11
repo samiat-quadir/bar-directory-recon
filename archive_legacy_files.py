@@ -4,10 +4,10 @@ Archive Legacy Files - Phase 5 Cleanup
 Move legacy scripts and modules to archive directory
 """
 
+import os
 import shutil
-from datetime import datetime
 from pathlib import Path
-
+from datetime import datetime
 
 def create_archive_manifest():
     """Create a manifest of what's being archived."""
@@ -48,9 +48,8 @@ Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
 
     manifest_path = Path("archive/ARCHIVE_MANIFEST.md")
-    manifest_path.write_text(manifest_content, encoding="utf-8")
+    manifest_path.write_text(manifest_content, encoding='utf-8')
     print(f"Created archive manifest: {manifest_path}")
-
 
 def archive_file(source_path, archive_subdir="legacy_scripts"):
     """Archive a single file."""
@@ -72,7 +71,6 @@ def archive_file(source_path, archive_subdir="legacy_scripts"):
         print(f"❌ Failed to archive {source_path}: {e}")
         return False
 
-
 def main():
     """Main archiving process."""
     print("🗂️  Starting Legacy Files Archive Process...")
@@ -83,10 +81,12 @@ def main():
         # Legacy Python modules
         ("usage_demo.py", "legacy_modules"),
         ("google_sheets_integration.py", "legacy_modules"),
+
         # Legacy batch scripts
         ("test_integration.bat", "legacy_scripts"),
         ("RunRealtorAutomation.bat", "legacy_scripts"),
         ("weekly_automation.bat", "legacy_scripts"),
+
         # Legacy tool scripts
         ("tools/realtor_directory_scraper.py", "legacy_modules"),
     ]
@@ -101,14 +101,13 @@ def main():
     create_archive_manifest()
 
     print("=" * 60)
-    print("🎉 Archive process complete!")
+    print(f"🎉 Archive process complete!")
     print(f"📁 {archived_count} files archived")
-    print("📋 Manifest created: archive/ARCHIVE_MANIFEST.md")
+    print(f"📋 Manifest created: archive/ARCHIVE_MANIFEST.md")
     print("\n⚠️  Remember to:")
     print("   - Update automation scripts to use unified CLI")
     print("   - Update documentation")
     print("   - Test unified framework functionality")
-
 
 if __name__ == "__main__":
     main()

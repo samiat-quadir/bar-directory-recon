@@ -1,10 +1,10 @@
 import os
-from typing import Any
+from typing import Any, Dict, Optional
 
 import yaml
 
 
-def load_validation_matrix(yaml_path: str | None = None) -> dict[str, Any]:
+def load_validation_matrix(yaml_path: Optional[str] = None) -> Dict[str, Any]:
     """
     Loads the validation matrix YAML file and returns its contents as a dictionary.
     Handles missing file gracefully (prints error, returns empty dict).
@@ -19,7 +19,7 @@ def load_validation_matrix(yaml_path: str | None = None) -> dict[str, Any]:
     if not os.path.exists(yaml_path):
         print(f"[load_validation_matrix] Validation matrix not found: {yaml_path}")
         return {}
-    with open(yaml_path, encoding="utf-8") as f:
+    with open(yaml_path, "r", encoding="utf-8") as f:
         try:
             return yaml.safe_load(f)
         except yaml.YAMLError as e:

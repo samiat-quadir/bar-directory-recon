@@ -1,8 +1,0 @@
-logs/nextwave/coverage_report_after.txt
-logs/nextwave/pytest_after.txt
-logs/nextwave/pytest_now.txt
-logs/nextwave/top_roi.json
-logs/verify/config_checks.json
-logs/verify/coverage_report_now.txt
-logs/verify/pytest_now.txt
-logs/verify/top_roi.json

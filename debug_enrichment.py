@@ -4,16 +4,14 @@ Debug script to test enrichment on raw CSV data
 """
 
 import sys
-
-sys.path.append("src")
+sys.path.append('src')
 
 import pandas as pd
-
 from property_enrichment import PropertyEnrichment
 
 # Load the raw CSV and inspect it
 try:
-    df = pd.read_csv("outputs/hallandale/hallandale_properties_raw.csv")
+    df = pd.read_csv('outputs/hallandale/hallandale_properties_raw.csv')
     print("Raw CSV loaded successfully")
     print(f"Shape: {df.shape}")
     print(f"Columns: {df.columns.tolist()}")
@@ -38,5 +36,4 @@ try:
 except Exception as e:
     print(f"Error: {e}")
     import traceback
-
     traceback.print_exc()

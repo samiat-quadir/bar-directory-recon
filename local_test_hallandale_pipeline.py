@@ -4,16 +4,14 @@ Test script for the complete Hallandale property processing pipeline
 """
 
 import sys
+import pandas as pd
 from pathlib import Path
 
-import pandas as pd
-
 # Add src to path and import modules
-sys.path.append("src")
+sys.path.append('src')
 from pdf_processor import HallandalePropertyProcessor
 from property_enrichment import PropertyEnrichment
 from property_validation import PropertyValidation
-
 
 def test_complete_pipeline():
     """Test the complete pipeline with sample data."""
@@ -28,9 +26,9 @@ def test_complete_pipeline():
     sample_data = processor._create_sample_data()
 
     # Add some corporate entities for testing
-    sample_data[0]["owner_name"] = "Miami Properties LLC"
-    sample_data[1]["owner_name"] = "Sunshine Investments Inc"
-    sample_data[2]["owner_name"] = "Beachfront Holdings Corp"
+    sample_data[0]['owner_name'] = "Miami Properties LLC"
+    sample_data[1]['owner_name'] = "Sunshine Investments Inc"
+    sample_data[2]['owner_name'] = "Beachfront Holdings Corp"
 
     df = pd.DataFrame(sample_data)
     output_dir = Path("outputs/hallandale")
@@ -50,10 +48,10 @@ def test_complete_pipeline():
 
         # Generate summary
         summary = enricher.generate_summary_report(enrichment_result["output_file"])
-        print("✓ Summary report generated")
+        print(f"✓ Summary report generated")
 
         # Display key metrics
-        print("\nKey Metrics:")
+        print(f"\nKey Metrics:")
         print(f"  Total records: {summary.get('total_records_processed', 0)}")
         print(f"  Records with emails: {summary.get('records_with_emails', 0)}")
         print(f"  Records with phones: {summary.get('records_with_phones', 0)}")
@@ -71,7 +69,7 @@ def test_complete_pipeline():
     validation_result = validator.validate_properties(enrichment_result["output_file"])
 
     if validation_result["status"] == "success":
-        print("✓ Validation completed")
+        print(f"✓ Validation completed")
     else:
         print(f"✗ Validation failed: {validation_result.get('message', 'Unknown error')}")
 
@@ -81,24 +79,24 @@ def test_complete_pipeline():
         enriched_df = pd.read_csv(enrichment_result["output_file"])
 
         excel_file = output_dir / "hallandale_properties_complete.xlsx"
-        with pd.ExcelWriter(excel_file, engine="openpyxl") as writer:
+        with pd.ExcelWriter(excel_file, engine='openpyxl') as writer:
             # Main data sheet
-            enriched_df.to_excel(writer, sheet_name="All Properties", index=False)
+            enriched_df.to_excel(writer, sheet_name='All Properties', index=False)
 
             # Priority properties
-            priority_df = enriched_df[enriched_df["priority_flag"] == True]
-            priority_df.to_excel(writer, sheet_name="Priority Properties", index=False)
+            priority_df = enriched_df[enriched_df['priority_flag'] == True]
+            priority_df.to_excel(writer, sheet_name='Priority Properties', index=False)
 
             # Corporate entities
-            corporate_df = enriched_df[enriched_df["is_corporate"] == True]
-            corporate_df.to_excel(writer, sheet_name="Corporate Entities", index=False)
+            corporate_df = enriched_df[enriched_df['is_corporate'] == True]
+            corporate_df.to_excel(writer, sheet_name='Corporate Entities', index=False)
 
             # Missing contact info
             missing_contact = enriched_df[
-                (enriched_df["owner_email"].isna() | (enriched_df["owner_email"] == ""))
-                & (enriched_df["owner_phone"].isna() | (enriched_df["owner_phone"] == ""))
+                (enriched_df['owner_email'].isna() | (enriched_df['owner_email'] == '')) &
+                (enriched_df['owner_phone'].isna() | (enriched_df['owner_phone'] == ''))
             ]
-            missing_contact.to_excel(writer, sheet_name="Missing Contact Info", index=False)
+            missing_contact.to_excel(writer, sheet_name='Missing Contact Info', index=False)
 
         print(f"✓ Excel file created: {excel_file}")
         print(f"  - All Properties: {len(enriched_df)} records")
@@ -118,7 +116,7 @@ def test_complete_pipeline():
     print("\n" + "=" * 60)
     print("PIPELINE TEST COMPLETED SUCCESSFULLY!")
     print("=" * 60)
-    print("\nResults summary:")
+    print(f"\nResults summary:")
     print(f"  📁 Output directory: {output_dir}")
     print(f"  📊 Total properties processed: {len(sample_data)}")
     print(f"  📧 Records with emails: {summary.get('records_with_emails', 0)}")
@@ -126,7 +124,6 @@ def test_complete_pipeline():
     print(f"  ⚠️  Priority records: {summary.get('priority_records', 0)}")
     print(f"  🏢 Corporate entities: {summary.get('corporate_entities', 0)}")
     print(f"  🔍 Needs manual review: {summary.get('needs_manual_review', 0)}")
-
 
 if __name__ == "__main__":
     test_complete_pipeline()

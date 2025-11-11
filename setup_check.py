@@ -28,9 +28,7 @@ def install_core_dependencies():
     print("📦 Installing core dependencies...")
 
     try:
-        subprocess.check_call(
-            [sys.executable, "-m", "pip", "install", "-r", "requirements-core.txt"]
-        )
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements-core.txt"])
         print("✅ Core dependencies installed successfully!")
         return True
     except subprocess.CalledProcessError as e:

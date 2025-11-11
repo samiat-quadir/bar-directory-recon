@@ -1,9 +1,0 @@
-route:
-  receiver: "dev-null"
-  group_by: ["alertname", "instance"]
-  group_wait: 30s
-  group_interval: 5m
-  repeat_interval: 2h
-receivers:
-  - name: "dev-null"
-# To enable email or Slack later, copy this file to alertmanager/config.local.yml and add real receivers.

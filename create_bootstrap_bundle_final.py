@@ -5,8 +5,9 @@ Create Bootstrap Bundle for Alienware
 Creates the final bootstrap bundle with all required files.
 """
 
-import os
 import zipfile
+import os
+from pathlib import Path
 
 
 def create_bootstrap_bundle():
@@ -33,7 +34,7 @@ def create_bootstrap_bundle():
     # Remove existing bundle if it exists
     if os.path.exists(bundle_path):
         os.remove(bundle_path)
-        print("🗑️  Removed existing bundle")
+        print(f"🗑️  Removed existing bundle")
 
     with zipfile.ZipFile(bundle_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         for file_path in required_files:

@@ -4,14 +4,10 @@ import json
 import os
 
 import yaml
+
 from utils.validator_drift_badges import VALIDATOR_DRIFT_BADGES
 
-BADGE_COLORS = {
-    "critical": "#e74c3c",
-    "warning": "#f39c12",
-    "info": "#3498db",
-    "ok": "#2ecc71",
-}
+BADGE_COLORS = {"critical": "#e74c3c", "warning": "#f39c12", "info": "#3498db", "ok": "#2ecc71"}
 
 
 def load_matrix(matrix_path):

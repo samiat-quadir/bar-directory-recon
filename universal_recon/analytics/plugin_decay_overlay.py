@@ -20,12 +20,12 @@ BADGE_COLORS = {
 
 
 def load_json(path):
-    with open(path, encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def load_yaml(path):
-    with open(path, encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
@@ -99,7 +99,7 @@ def main():
     parser.add_argument("--matrix", default=MATRIX_PATH)
     parser.add_argument("--status", default=STATUS_PATH)
     parser.add_argument("--yaml", default=YAML_PATH)
-    parser.parse_args()
+    args = parser.parse_args()
     generate_overlay()
 
 

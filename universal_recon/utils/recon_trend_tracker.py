@@ -1,13 +1,14 @@
 import json
 import os
 from collections import defaultdict
+from typing import Dict, List
 
 
-def load_summaries_from_directory(directory: str) -> list[dict]:
+def load_summaries_from_directory(directory: str) -> List[Dict]:
     summaries = []
     for filename in os.listdir(directory):
         if filename.endswith("_summary.json"):
-            with open(os.path.join(directory, filename), encoding="utf-8") as f:
+            with open(os.path.join(directory, filename), "r", encoding="utf-8") as f:
                 summaries.append(json.load(f))
     return summaries
 
@@ -16,7 +17,7 @@ def run_analysis(records, config=None):
     return analyze_trends(records)
 
 
-def analyze_trends(summaries: list[dict]) -> dict:
+def analyze_trends(summaries: List[Dict]) -> Dict:
     trend_data = {
         "total_runs": len(summaries),
         "field_presence": defaultdict(int),
@@ -60,7 +61,7 @@ def analyze_trends(summaries: list[dict]) -> dict:
     return trend_summary
 
 
-def save_trend_report(site_name: str, trend_summary: dict):
+def save_trend_report(site_name: str, trend_summary: Dict):
     os.makedirs("output/reports", exist_ok=True)
     path = f"output/reports/{site_name}_trend.json"
     with open(path, "w", encoding="utf-8") as f:

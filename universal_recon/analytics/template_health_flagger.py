@@ -12,17 +12,12 @@ def flag_template_health(records):
         Dict with plugin name, flagged count, and summary.
     """
     if not records:
-        return {
-            "plugin": "template_health_flagger",
-            "flagged": 0,
-            "total": 0,
-            "summary": [],
-        }
+        return {"plugin": "template_health_flagger", "flagged": 0, "total": 0, "summary": []}
 
     flagged = []
     for record in records:
         score = record.get("score", 0)
-        record.get("error")
+        error = record.get("error")
         severity = record.get("severity", "none")
 
         if severity == "critical" or score <= 2:

@@ -3,7 +3,6 @@
 safe_commit_push.py - A script to safely commit and push changes.
 Validates that all necessary checks pass before committing and pushing.
 """
-
 import argparse
 import os
 import subprocess
@@ -14,7 +13,7 @@ from pathlib import Path
 def run_command(cmd, check=True, capture_output=True):
     """Run a shell command and return the output."""
     print(f"Running: {' '.join(cmd)}")
-    result = subprocess.run(cmd, capture_output=capture_output, text=True, check=False, timeout=60)
+    result = subprocess.run(cmd, capture_output=capture_output, text=True, check=False)
 
     if check and result.returncode != 0:
         print(f"Error running command: {' '.join(cmd)}")

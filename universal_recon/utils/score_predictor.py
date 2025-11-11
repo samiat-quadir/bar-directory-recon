@@ -1,13 +1,14 @@
 # utils/score_predictor.py
 
 """Score prediction for validation records."""
+from typing import Dict, List, Union
 
 from universal_recon.core.logger import get_logger
 
 logger = get_logger(__name__)
 
 
-def predict_score(records: list[dict]) -> list[dict]:
+def predict_score(records: List[Dict]) -> List[Dict]:
     """Predict validation scores for records."""
     try:
         predictions = []

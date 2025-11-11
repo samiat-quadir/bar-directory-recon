@@ -6,6 +6,7 @@ Creates alienware_bootstrap_bundle.zip with all necessary bootstrap artifacts
 
 import os
 import zipfile
+from pathlib import Path
 
 
 def create_bootstrap_bundle():
@@ -44,12 +45,12 @@ def create_bootstrap_bundle():
     # Verify the bundle
     if os.path.exists(bundle_path):
         file_size = os.path.getsize(bundle_path) / 1024  # KB
-        print("\n✅ Bundle created successfully!")
+        print(f"\n✅ Bundle created successfully!")
         print(f"📦 File: {bundle_path}")
         print(f"📏 Size: {file_size:.1f} KB")
 
         # List contents
-        print("\n📋 Bundle Contents:")
+        print(f"\n📋 Bundle Contents:")
         with zipfile.ZipFile(bundle_path, "r") as zipf:
             for info in zipf.infolist():
                 print(f"   - {info.filename} ({info.file_size} bytes)")

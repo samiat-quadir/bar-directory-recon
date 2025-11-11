@@ -4,18 +4,16 @@ Final Installation Summary for Unified Scraping Framework
 Complete verification of all components for production readiness.
 """
 
-import importlib
-import subprocess
 import sys
+import subprocess
+import importlib
 from pathlib import Path
-
 
 def print_header(title: str) -> None:
     """Print formatted header."""
     print(f"\n{'='*60}")
     print(f"🎯 {title}")
     print(f"{'='*60}")
-
 
 def check_critical_packages() -> bool:
     """Check critical packages for production."""
@@ -31,7 +29,7 @@ def check_critical_packages() -> bool:
         ("twilio", "SMS notifications"),
         ("gspread", "Google Sheets integration"),
         ("typer", "CLI interface"),
-        ("python-dotenv", "Environment variable management"),
+        ("python-dotenv", "Environment variable management")
     ]
 
     all_installed = True
@@ -50,7 +48,6 @@ def check_critical_packages() -> bool:
 
     return all_installed
 
-
 def check_development_tools() -> bool:
     """Check development tools."""
     print_header("Development & Code Quality Tools")
@@ -62,7 +59,7 @@ def check_development_tools() -> bool:
         ("mypy", "Type checking"),
         ("flake8", "Code linting"),
         ("bandit", "Security analysis"),
-        ("pre-commit", "Git hooks management"),
+        ("pre-commit", "Git hooks management")
     ]
 
     all_installed = True
@@ -76,7 +73,6 @@ def check_development_tools() -> bool:
 
     return all_installed
 
-
 def check_system_requirements() -> bool:
     """Check system requirements."""
     print_header("System Requirements")
@@ -85,20 +81,16 @@ def check_system_requirements() -> bool:
         "Python 3.8+": sys.version_info >= (3, 8),
         "Chrome Browser": Path("C:/Program Files/Google/Chrome/Application/chrome.exe").exists(),
         "Git": True,  # We'll check this separately
-        "PowerShell": True,  # We'll check this separately
+        "PowerShell": True  # We'll check this separately
     }
 
     all_met = True
 
     # Python version
     if requirements["Python 3.8+"]:
-        print(
-            f"✅ Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} - Compatible"
-        )
+        print(f"✅ Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} - Compatible")
     else:
-        print(
-            f"❌ Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} - Requires 3.8+"
-        )
+        print(f"❌ Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} - Requires 3.8+")
         all_met = False
 
     # Chrome
@@ -111,13 +103,7 @@ def check_system_requirements() -> bool:
     # Git and PowerShell
     for tool in ["git", "powershell"]:
         try:
-            result = subprocess.run(
-                f"{tool} --version",
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=60,
-            )
+            result = subprocess.run(f"{tool} --version", shell=True, capture_output=True, text=True)
             if result.returncode == 0:
                 print(f"✅ {tool.title()} - Available")
             else:
@@ -128,7 +114,6 @@ def check_system_requirements() -> bool:
             all_met = False
 
     return all_met
-
 
 def check_framework_components() -> bool:
     """Check framework components."""
@@ -143,7 +128,7 @@ def check_framework_components() -> bool:
         ("src.unified_schema", "Data schema standardization"),
         ("src.notification_agent", "Email/SMS/Slack notifications"),
         ("src.security_audit", "Security and credential management"),
-        ("src.logger", "Logging system"),
+        ("src.logger", "Logging system")
     ]
 
     all_available = True
@@ -157,7 +142,6 @@ def check_framework_components() -> bool:
 
     return all_available
 
-
 def check_configuration_files() -> bool:
     """Check configuration files."""
     print_header("Configuration Files")
@@ -168,7 +152,7 @@ def check_configuration_files() -> bool:
         ("unified_scraper.py", "Main CLI entry point"),
         ("requirements.txt", "Package dependencies"),
         ("DEPLOYMENT_GUIDE.md", "Deployment instructions"),
-        ("PRODUCTIONIZATION_COMPLETE.md", "Production checklist"),
+        ("PRODUCTIONIZATION_COMPLETE.md", "Production checklist")
     ]
 
     all_present = True
@@ -180,7 +164,6 @@ def check_configuration_files() -> bool:
             all_present = False
 
     return all_present
-
 
 def check_production_readiness() -> bool:
     """Check production readiness features."""
@@ -196,14 +179,13 @@ def check_production_readiness() -> bool:
         ("✅", "Cross-device compatibility"),
         ("✅", "Automated retry and pagination logic"),
         ("✅", "Development tools and pre-commit hooks"),
-        ("✅", "Comprehensive documentation and guides"),
+        ("✅", "Comprehensive documentation and guides")
     ]
 
     for status, feature in features:
         print(f"{status} {feature}")
 
     return True
-
 
 def main() -> bool:
     """Main verification function."""
@@ -217,7 +199,7 @@ def main() -> bool:
         ("System Requirements", check_system_requirements()),
         ("Framework Components", check_framework_components()),
         ("Configuration Files", check_configuration_files()),
-        ("Production Features", check_production_readiness()),
+        ("Production Features", check_production_readiness())
     ]
 
     print_header("Overall Summary")
@@ -262,7 +244,6 @@ def main() -> bool:
         print(f"\n⚠️  {total - passed} components need attention.")
         print("Please address the issues above before production deployment.")
         return False
-
 
 if __name__ == "__main__":
     success = main()

@@ -1,9 +1,0 @@
-version: 2
-paths_ignore:
-  - "archive/**"
-  - "automation/**"
-  - "audits/**"
-  - "logs/**"
-  - "scratch/**"
-  - "device-specific/**"
-  - "device-*/**"
