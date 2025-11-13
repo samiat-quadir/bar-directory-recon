@@ -1,5 +1,8 @@
 name: verify-scripts
-on: [push]
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 14 * * 3'
 permissions:
   contents: read
 jobs:
