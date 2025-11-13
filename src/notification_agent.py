@@ -304,7 +304,7 @@ class NotificationAgent:
 
             response = requests.post(
                 webhook_url, data=message, headers={"Content-Type": "application/json"}
-            )
+            , timeout=30)
             response.raise_for_status()
 
             self.logger.info("Slack notification sent")
