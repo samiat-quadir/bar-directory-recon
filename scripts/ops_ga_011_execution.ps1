@@ -122,6 +122,7 @@ $filesToModify = @()
 Out-Step "3.1: Scanning for insecure MD5 usage..."
 
 $md5Files = Get-ChildItem -Recurse -Include "*.py" -Exclude "*test*","*__pycache__*" |
+    Where-Object { $_.FullName -notmatch '\\\.venv\\|\\archive\\|\\logs\\' } |
     Select-String -Pattern "hashlib\.md5" |
     Select-Object -ExpandProperty Path -Unique
 
@@ -143,6 +144,7 @@ if ($md5Files) {
 Out-Step "3.2: Scanning for bare except: blocks..."
 
 $exceptFiles = Get-ChildItem -Recurse -Include "*.py" -Exclude "*test*","*__pycache__*" |
+    Where-Object { $_.FullName -notmatch '\\\.venv\\|\\archive\\|\\logs\\' } |
     Select-String -Pattern "^\s*except:\s*$" |
     Select-Object -ExpandProperty Path -Unique
 
@@ -164,6 +166,7 @@ if ($exceptFiles) {
 Out-Step "3.3: Scanning for requests calls without timeout..."
 
 $requestFiles = Get-ChildItem -Recurse -Include "*.py" -Exclude "*test*","*__pycache__*" |
+    Where-Object { $_.FullName -notmatch '\\\.venv\\|\\archive\\|\\logs\\' } |
     Select-String -Pattern "requests\.(get|post|put|delete|patch)\(" |
     Select-Object -ExpandProperty Path -Unique
 
@@ -262,7 +265,7 @@ if (-not $banditInstalled) {
 
 # Run bandit scan
 Out-Step "Scanning for high/medium severity issues..."
-$banditOutput = python -m bandit -q -r src universal_recon --severity-level Medium 2>&1
+$banditOutput = python -m bandit -q -r src universal_recon --severity-level medium 2>&1
 $banditExitCode = $LASTEXITCODE
 
 if ($banditExitCode -eq 0) {
