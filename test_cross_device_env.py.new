@@ -15,7 +15,7 @@ from pathlib import Path
 # Try to import device path resolver
 try:
     sys.path.append(str(Path(__file__).parent / "tools"))
-    from device_path_resolver import get_project_root_path, to_project_relative_path, get_current_device
+    from device_path_resolver import get_project_root_path, to_project_relative_path
     RESOLVER_AVAILABLE = True
 except ImportError as e:
     print(f"⚠️ Warning: device_path_resolver.py not found or couldn't be imported. Error: {e}")
@@ -62,8 +62,8 @@ def check_python_environment():
     try:
         pip_version = subprocess.check_output([sys.executable, "-m", "pip", "--version"]).decode().strip()
         print_success(f"Pip available: {pip_version}")
-    except:
-        print_error("Pip not available")
+    except (subprocess.SubprocessError, FileNotFoundError) as exc:
+        print_error(f"Pip not available: {exc}")
 
 def check_project_structure():
     """Check the project structure."""
@@ -167,9 +167,9 @@ def check_path_resolution():
             print(f"  Relative: {relative_path}")
 
             if os.path.exists(absolute_path):
-                print_success(f"  Path exists")
+                print_success("  Path exists")
             else:
-                print_error(f"  Path does not exist")
+                print_error("  Path does not exist")
         except Exception as e:
             print_error(f"  Error processing path {rel_path}: {e}")
 
