@@ -56,3 +56,6 @@ repos:
     hooks:
       - id: detect-secrets
         args: ["--baseline", ".secrets.baseline"]
+        additional_dependencies:
+          - requests
+          - pyyaml
