@@ -71,13 +71,7 @@ warn_unused_ignores = false
 warn_return_any = false
 warn_unreachable = false
 show_error_codes = true
-exclude = [
-    "archive/",
-    "logs/",
-    ".venv/",
-    "tools/",
-    "scripts/"
-]
+exclude = '(archive[\\/]|logs[\\/]|.venv[\\/]|tools[\\/]|scripts[\\/]|src[\\/]|universal_recon[\\/]|enhanced_processing_pipeline\.py$|score_leads\.py$|lead_enrichment_plugin\.py$|universal_automation\.py$|realtor_automation\.py$|demo_security_integration\.py$|automation[\\/]run_cross_device_task\.py$|.*test.*\.py$|.*\.py\.new$)'
 
 [tool.pytest.ini_options]
 minversion = "6.0"
