@@ -1,0 +1,34 @@
+# Device & Ops Reports
+
+This folder contains ASUS/ALIENWARE/Ace/Ali bootstrap, sync, and validation reports
+that were moved from the repo root during Phase 3 cleanup.
+
+## Files
+
+- ACE_RELAY_COMPLETION_REPORT.md
+- ACE_SYNC_COMPLETION.md
+- ACE_WORKFLOW_FEEDBACK.md
+- alienware_audit_baseline_post_fixes.md
+- alienware_bootstrap_bundle.zip
+- ALIENWARE_BOOTSTRAP_GUIDE.md
+- ALIENWARE_BOOTSTRAP_IMPLEMENTATION_SUMMARY.md
+- ALIENWARE_FOLLOW_UP_ANSWERS.md
+- ALIENWARE_HARDENING_COMPLETE_20250818.md
+- alienware_playbook.ps1
+- alienware_playbook.ps1.reference
+- ALIENWARE_POST_HARDENING_CONFIRMATION.md
+- ALIENWARE_SSH_RETRY_RESULTS_20250813.md
+- ALIENWARE_SSH_TEST_RESULTS_20250813.md
+- ALIENWARE_SSH_VALIDATION_COMPLETE_20250813.md
+- ALIENWARE_SYNC_REPORT.md
+- alienware_validation_output.txt
+- alienware_validation_report.md
+- ASUS_Device_Sync_Report.md
+- ASUS_HUB_SETUP_COMPLETE_REPORT.md
+- ASUS_PARITY_FIX_SUMMARY.md
+- ASUS_PHASE2_COMPLETION_REPORT.md
+- ASUS_SSH_TEST_RESULTS_20250813.md
+- ASUS_VALIDATION_COMPLETE.md
+- FINAL_SSH_TEST_RESULTS_20250813.md
+- REPO_SYNC_KEY_FINGERPRINT_GUARANTEE_REPORT.md
+- ROG-LUCCI_SYNC_REPORT.md
