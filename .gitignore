@@ -42,6 +42,15 @@ pip-wheel-metadata/
 ############################################################
 # 4 · Tool caches & coverage & logs
 ############################################################
+.venv/
+.mypy_cache/
+.pytest_cache/
+__pycache__/
+.cache/
+logs/
+artifacts/
+.coverage
+*.coverage
 .pytest_cache/
 .coverage
 htmlcov/
@@ -155,4 +164,3 @@ secrets_scan_report_*.json
 
 # smoke-test 2025-07-29T16:36:28
 REPO_HYGIENE_COMPLETION_REPORT.md
-
