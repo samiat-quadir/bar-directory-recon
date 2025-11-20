@@ -7,6 +7,19 @@
 [![Release](https://img.shields.io/badge/release-v2.0-brightgreen.svg)](https://github.com/samiat-quadir/bar-directory-recon/releases/tag/v2.0)
 [![Bootstrap Ready](https://img.shields.io/badge/bootstrap-ready-success.svg)](./alienware_bootstrap_bundle.zip)
 
+## Quick demo
+
+![bdr demo](docs/assets/bdr-demo.gif)
+
+```bash
+# install
+pip install bar-directory-recon
+
+# basic usage
+bdr --version
+bdr doctor --no-exec
+```
+
 ## Workflow Status
 
 [![Lint](https://github.com/samiat-quadir/bar-directory-recon/workflows/lint/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/lint.yml)
