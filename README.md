@@ -20,6 +20,8 @@ bdr --version
 bdr doctor --no-exec
 ```
 
+> Note: `bdr doctor` may report some checks as `WARN` or `FAIL` when you install from PyPI. Those refer to optional, local-only diagnostics modules that are not shipped in the wheel and can be safely ignored in that environment.
+
 ## Workflow Status
 
 [![Lint](https://github.com/samiat-quadir/bar-directory-recon/workflows/lint/badge.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions/workflows/lint.yml)

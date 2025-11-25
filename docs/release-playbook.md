@@ -41,6 +41,8 @@ This one-pager captures the manual-yet-repeatable process we follow for 0.1.x GA
 3. Close or update tracking issues linked to the release, including feature toggles that can return to normal defaults.
 4. Archive validation evidence (logs, screenshots) under `docs/phase_logs/` for traceability.
 
+- 0.1.4 is the first fully working GA published to PyPI with the Typer-based `bdr` CLI correctly packaged. Earlier 0.1.x tags used experimental or broken wheels and should be skipped in favor of 0.1.4 or later.
+
 ## 6. Rollback (if something goes wrong)
 
 1. Open a "Release X.Y.Z incident" issue and mark the GA release as at-risk; freeze new merges to `main`.
