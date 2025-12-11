@@ -8,6 +8,7 @@ import typer
 
 from . import get_version
 from .doctor import format_report, run_doctor
+from .telemetry import emit_if_enabled
 
 app = typer.Typer(add_completion=False, help="Utilities for validating bar-directory-recon installs.")
 
@@ -69,7 +70,10 @@ def doctor(
 def entrypoint() -> None:
     """Console script shim so Typer can launch the app."""
 
-    app()
+    try:
+        app()
+    finally:
+        emit_if_enabled()
 
 
 if __name__ == "__main__":

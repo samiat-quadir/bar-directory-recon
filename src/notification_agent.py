@@ -11,7 +11,10 @@ import ssl
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from time import perf_counter
 from typing import Any, Dict, List, Optional
+
+from bdr.telemetry import record_call
 
 logger = logging.getLogger(__name__)
 
@@ -226,6 +229,8 @@ class NotificationAgent:
 
     def _send_email(self, subject: str, body: str) -> bool:
         """Send email notification."""
+        start = perf_counter()
+        outcome = "success"
         try:
             smtp_server = self.config.email_config.get("smtp_server", "smtp.gmail.com")
             smtp_port = self.config.email_config.get("smtp_port", 587)
@@ -256,11 +261,20 @@ class NotificationAgent:
             return True
 
         except Exception as e:
+            outcome = "error"
             self.logger.error(f"Failed to send email: {e}")
             return False
+        finally:
+            record_call(
+                "notification.email",
+                outcome,
+                (perf_counter() - start) * 1000,
+            )
 
     def _send_sms(self, message: str) -> bool:
         """Send SMS notification via Twilio."""
+        start = perf_counter()
+        outcome = "success"
         try:
             # Import Twilio only if SMS is enabled
             from twilio.rest import Client
@@ -283,18 +297,28 @@ class NotificationAgent:
             return True
 
         except ImportError:
+            outcome = "error"
             self.logger.error(
                 "Twilio library not installed. Install with: pip install twilio"
             )
             return False
         except Exception as e:
+            outcome = "error"
             self.logger.error(f"Failed to send SMS: {e}")
             return False
+        finally:
+            record_call(
+                "notification.sms",
+                outcome,
+                (perf_counter() - start) * 1000,
+            )
 
     def _send_slack(self, message: str) -> bool:
         """Send Slack notification."""
+        start = perf_counter()
+        outcome = "success"
         try:
-            import requests
+            import requests  # type: ignore[import-not-found]
 
             webhook_url = self.config.slack_config.get("webhook_url")
 
@@ -303,16 +327,30 @@ class NotificationAgent:
                 return False
 
             response = requests.post(
-                webhook_url, data=message, headers={"Content-Type": "application/json"}
-            , timeout=30)
+                webhook_url,
+                data=message,
+                headers={"Content-Type": "application/json"},
+                timeout=30,
+            )
             response.raise_for_status()
 
             self.logger.info("Slack notification sent")
             return True
 
+        except requests.exceptions.Timeout as exc:
+            outcome = "timeout"
+            self.logger.error(f"Slack notification timed out: {exc}")
+            return False
         except Exception as e:
+            outcome = "error"
             self.logger.error(f"Failed to send Slack notification: {e}")
             return False
+        finally:
+            record_call(
+                "notification.slack",
+                outcome,
+                (perf_counter() - start) * 1000,
+            )
 
     def _format_stats_for_email(self, stats: Dict[str, Any]) -> str:
         """Format statistics for email body."""
