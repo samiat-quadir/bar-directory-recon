@@ -1,0 +1,39 @@
+# Automation Configuration
+# ========================
+# Configuration for the bar-directory-recon pipeline system
+
+pipeline:
+  # Enable asynchronous execution for concurrent site processing
+  use_async: true
+
+  # Maximum number of sites to process concurrently
+  max_concurrent_sites: 5
+
+  # Timeout in seconds for each site processing
+  timeout: 3600
+
+  # Number of retry attempts for failed sites
+  retry_count: 3
+
+  # Demo mode for testing (simulates processing)
+  demo_mode: false
+
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+sites:
+  # Default sites for batch processing
+  default:
+    - utah_bar
+    - california_bar
+    - texas_bar
+
+output:
+  # Output directory for results
+  directory: "./output"
+
+  # Output formats
+  formats:
+    - json
+    - csv
