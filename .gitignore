@@ -95,6 +95,8 @@ src/backups/archives/
 # generic env / secrets
 *.env
 .env*
+.env.*
+!.env.example
 # project-specific
 config/device_config.json
 local_device_config.json
