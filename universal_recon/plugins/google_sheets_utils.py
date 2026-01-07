@@ -1,6 +1,15 @@
 """
 Google Sheets utility functions for plugins
 Shared functionality for exporting lead data to Google Sheets
+
+This is an optional integration. Install with: pip install .[gsheets]
+
+Environment variables (standardized):
+    GOOGLE_SHEETS_CREDENTIALS_PATH — path to service account JSON credentials
+    GOOGLE_SHEETS_SPREADSHEET_ID — destination spreadsheet ID
+
+Legacy env vars (deprecated, still supported):
+    GOOGLE_SA_JSON — deprecated, use GOOGLE_SHEETS_CREDENTIALS_PATH
 """
 
 import logging
@@ -10,18 +19,81 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-# Google Sheets integration (optional)
-try:
-    GOOGLE_SHEETS_AVAILABLE = True
-except ImportError:
-    GOOGLE_SHEETS_AVAILABLE = False
-
 logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Lazy import handling
+# ---------------------------------------------------------------------------
+_GSHEETS_AVAILABLE: Optional[bool] = None
+
+
+class GSheetsNotInstalledError(ImportError):
+    """Raised when Google Sheets dependencies are not installed."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            "Google Sheets dependencies not installed.\n"
+            "Install with: pip install .[gsheets]\n"
+            "Or: pip install google-api-python-client google-auth google-auth-oauthlib"
+        )
+
+
+def _check_gsheets_available() -> bool:
+    """Lazily check if Google Sheets dependencies are available."""
+    global _GSHEETS_AVAILABLE
+    if _GSHEETS_AVAILABLE is None:
+        try:
+            from google.oauth2.service_account import Credentials  # noqa: F401
+            from googleapiclient.discovery import build  # noqa: F401
+            _GSHEETS_AVAILABLE = True
+        except ImportError:
+            _GSHEETS_AVAILABLE = False
+    return _GSHEETS_AVAILABLE
+
+
+def is_gsheets_available() -> bool:
+    """Check if Google Sheets dependencies are installed."""
+    return _check_gsheets_available()
+
+
+# For backwards compatibility (module-level constant check)
+GOOGLE_SHEETS_AVAILABLE = is_gsheets_available()
+
+
+def _get_credentials_path() -> Optional[str]:
+    """
+    Get credentials path from environment variables.
+
+    Checks (in order):
+        1. GOOGLE_SHEETS_CREDENTIALS_PATH (preferred)
+        2. GOOGLE_SA_JSON (legacy fallback)
+        3. config/google_service_account.json (hardcoded fallback)
+    """
+    # Preferred: standardized env var
+    path = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_PATH")
+    if path and os.path.exists(path):
+        return path
+
+    # Legacy fallback
+    path = os.environ.get("GOOGLE_SA_JSON")
+    if path and os.path.exists(path):
+        logger.warning(
+            "GOOGLE_SA_JSON is deprecated. "
+            "Use GOOGLE_SHEETS_CREDENTIALS_PATH instead."
+        )
+        return path
+
+    # Hardcoded fallback for backwards compatibility
+    fallback = os.path.join("config", "google_service_account.json")
+    if os.path.exists(fallback):
+        return fallback
+
+    return None
 
 
 def export_to_google_sheets(
     data: List[Dict[str, Any]],
-    sheet_id: str,
+    sheet_id: Optional[str] = None,
     sheet_name: Optional[str] = None,
     plugin_name: str = "Lead_Scraper"
 ) -> bool:
@@ -30,26 +102,42 @@ def export_to_google_sheets(
 
     Args:
         data: List of lead dictionaries
-        sheet_id: Google Sheets spreadsheet ID
+        sheet_id: Google Sheets spreadsheet ID (or use GOOGLE_SHEETS_SPREADSHEET_ID env var)
         sheet_name: Name for the sheet tab (optional)
         plugin_name: Name of the plugin for default sheet naming
 
     Returns:
         bool: True if successful, False otherwise
     """
-    if not GOOGLE_SHEETS_AVAILABLE:
-        logger.warning("Google Sheets integration not available. Install google-api-python-client packages.")
+    if not _check_gsheets_available():
+        logger.warning(
+            "Google Sheets integration not available. "
+            "Install with: pip install .[gsheets]"
+        )
         return False
 
     if not data:
         logger.warning("No data to export to Google Sheets")
         return False
 
+    # Resolve sheet_id from env var if not provided
+    if not sheet_id:
+        sheet_id = os.environ.get("GOOGLE_SHEETS_SPREADSHEET_ID")
+        if not sheet_id:
+            logger.error(
+                "No spreadsheet ID provided. Set GOOGLE_SHEETS_SPREADSHEET_ID "
+                "or pass sheet_id parameter."
+            )
+            return False
+
     try:
         # Set up credentials
-        credentials_path = os.path.join("config", "google_service_account.json")
-        if not os.path.exists(credentials_path):
-            logger.warning(f"Google Sheets credentials not found at: {credentials_path}")
+        credentials_path = _get_credentials_path()
+        if not credentials_path:
+            logger.warning(
+                "Google Sheets credentials not found. "
+                "Set GOOGLE_SHEETS_CREDENTIALS_PATH env var."
+            )
             return False
 
         from google.oauth2.service_account import Credentials
