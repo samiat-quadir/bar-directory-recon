@@ -7,7 +7,6 @@ Checks all required dependencies, tools, and system requirements.
 import sys
 import subprocess
 import importlib
-import os
 from pathlib import Path
 
 def check_python_version():

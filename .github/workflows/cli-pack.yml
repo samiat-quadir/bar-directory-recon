@@ -17,11 +17,11 @@ jobs:
         run: pip install build
       - name: Build wheel & sdist
         run: python -m build
-      
+
       - name: Generate checksums
         run: |
           for f in dist/*; do sha256sum "$f" > "$f.sha256"; done
-      
+
       - name: Upload to Release (if release)
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
@@ -30,11 +30,10 @@ jobs:
             dist/*.whl
             dist/*.tar.gz
             dist/*.sha256
-      
+
       - name: Upload artifact (if manual)
         if: github.event_name != 'release'
         uses: actions/upload-artifact@v4
         with:
           name: cli-dist
           path: dist
-

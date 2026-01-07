@@ -3,7 +3,7 @@
 import json
 import os
 import tempfile
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple
 
 from universal_recon.core.logger import get_logger
 

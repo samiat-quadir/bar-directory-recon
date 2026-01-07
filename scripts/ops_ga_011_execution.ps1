@@ -216,24 +216,24 @@ Out-Step "Applying security fixes..."
 foreach ($file in $filesToModify) {
     $relativePath = Resolve-Path -Relative $file
     Out-Step "Processing: $relativePath"
-    
+
     $content = Get-Content $file -Raw
     $modified = $false
-    
+
     # Fix 1: Replace MD5 with SHA-256
     if ($content -match 'hashlib\.md5') {
         Out-Step "  → Replacing MD5 with SHA-256"
         $content = $content -replace 'hashlib\.md5\(', 'hashlib.sha256('
         $modified = $true
     }
-    
+
     # Fix 2: Fix bare except: blocks (conservative approach - add Exception)
     if ($content -match '^\s*except:\s*$') {
         Out-Step "  → Adding Exception type to bare except:"
         $content = $content -replace '(\s+)except:\s*$', '$1except Exception:'
         $modified = $true
     }
-    
+
     # Fix 3: Add timeout to requests calls (if not present)
     if ($content -match 'requests\.(get|post|put|delete|patch)\([^)]*\)' -and $content -notmatch 'timeout\s*=') {
         Out-Step "  → Adding timeout=30 to requests calls"
@@ -241,7 +241,7 @@ foreach ($file in $filesToModify) {
         $content = $content -replace '(requests\.(get|post|put|delete|patch)\([^)]+)(\))', '$1, timeout=30$3'
         $modified = $true
     }
-    
+
     if ($modified) {
         Set-Content -Path $file -Value $content -NoNewline
         Out-Ok "  ✓ Modified $relativePath"
@@ -299,17 +299,17 @@ if ($testExitCode -eq 0) {
 
 if ($AutoCommit) {
     Out-Step "STEP 5: Committing changes..."
-    
+
     $branchName = "ga/011-security-hardening"
-    
+
     Out-Step "Creating branch: $branchName"
     git checkout -b $branchName 2>&1 | Out-Null
-    
+
     Out-Step "Staging modified files..."
     foreach ($file in $filesToModify) {
         git add $file
     }
-    
+
     $commitMsg = @"
 fix(security): harden codebase for GA 0.1.1
 
@@ -321,13 +321,13 @@ fix(security): harden codebase for GA 0.1.1
 
 Part of GA 0.1.1 Execution Plan Step 3
 "@
-    
+
     Out-Step "Committing..."
     git commit -m $commitMsg --no-verify
-    
+
     Out-Step "Pushing branch..."
     git push -u origin $branchName --force-with-lease
-    
+
     Out-Ok "✓ Changes committed and pushed"
     Out-Step "Create PR with: gh pr create --fill"
 } else {

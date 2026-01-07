@@ -8,9 +8,7 @@ import time
 from typing import Any, Dict, List, Optional
 import re
 
-import pandas as pd
 import requests
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service

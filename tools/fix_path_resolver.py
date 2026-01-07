@@ -10,7 +10,6 @@ fix the device_path_resolver.py file.
 import os
 import re
 import sys
-from pathlib import Path
 
 def find_device_path_resolver():
     """Find the device_path_resolver.py file"""

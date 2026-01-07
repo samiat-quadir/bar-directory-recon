@@ -98,7 +98,7 @@ def main():
     print("🚀 Framework Enhancement Opportunities")
     print("=" * 60)
 
-    missing_optional = check_optional_packages()
+    check_optional_packages()
     suggest_browser_enhancements()
 
     print("\n📋 Enhancement Priority:")

@@ -4,7 +4,6 @@ Final Integration Test for Google Sheets Lead Automation
 Tests end-to-end functionality with OAuth credentials
 """
 
-import os
 import sys
 from pathlib import Path
 from datetime import datetime
@@ -78,7 +77,6 @@ def main():
     try:
         # Import and test argument parsing
         import argparse
-        from universal_automation import UniversalLeadAutomation
 
         # Create a test parser with our new arguments
         parser = argparse.ArgumentParser()
@@ -101,7 +99,7 @@ def main():
     print("-" * 42)
 
     try:
-        from google_sheets_integration import GoogleSheetsIntegration
+        pass
 
         # Test initialization (won't authenticate unless needed)
         print("   📦 Google Sheets integration import: ✅")

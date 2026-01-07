@@ -7,7 +7,6 @@ Creates the final bootstrap bundle with all required files.
 
 import zipfile
 import os
-from pathlib import Path
 
 
 def create_bootstrap_bundle():
