@@ -5,6 +5,7 @@ These tests verify that:
 1. Importing the gsheets modules does NOT crash when dependencies are missing
 2. The is_gsheets_available() function returns a boolean
 3. The GSheetsNotInstalledError is raised when calling functions without deps
+4. CLI entrypoint works (--help, --check, arg parsing)
 
 These tests run in CI without installing the [gsheets] extra.
 """
@@ -112,3 +113,93 @@ class TestPyprojectOptionalDeps:
         gsheets_deps = optional_deps["gsheets"]
         assert any("google-api-python-client" in dep for dep in gsheets_deps)
         assert any("gspread" in dep for dep in gsheets_deps)
+
+
+class TestGSheetsExporterCLI:
+    """Tests for gsheets_exporter CLI entrypoint (no network calls)."""
+
+    def test_help_flag_shows_usage(self, capsys):
+        """--help should print usage information and exit cleanly."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit) as exc_info:
+            main(["--help"])
+
+        # argparse exits with 0 for --help
+        assert exc_info.value.code == 0
+
+        captured = capsys.readouterr()
+        # Should contain key usage elements
+        assert "gsheets_exporter" in captured.out
+        assert "--demo" in captured.out
+        assert "--check" in captured.out
+
+    def test_check_flag_returns_correct_status(self, capsys):
+        """--check should report dependency status without network calls."""
+        from tools.gsheets_exporter import is_gsheets_available, main
+
+        exit_code = main(["--check"])
+
+        captured = capsys.readouterr()
+        if is_gsheets_available():
+            assert exit_code == 0
+            assert "installed" in captured.out.lower()
+        else:
+            assert exit_code == 1
+            assert "not installed" in captured.out.lower()
+            assert "pip install" in captured.out
+
+    def test_demo_dry_run_no_network(self, capsys):
+        """--demo --dry-run should work without network or credentials."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main(["--demo", "--dry-run"])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "Dry run" in captured.out
+        assert "timestamp" in captured.out
+
+    def test_demo_without_creds_returns_error(self, capsys, monkeypatch):
+        """--demo without credentials should return friendly error."""
+        from tools.gsheets_exporter import main
+
+        # Clear env vars
+        monkeypatch.delenv("GOOGLE_SHEETS_CREDENTIALS_PATH", raising=False)
+        monkeypatch.delenv("GOOGLE_SA_JSON", raising=False)
+
+        exit_code = main(["--demo"])
+
+        assert exit_code == 1
+        captured = capsys.readouterr()
+        assert "GOOGLE_SHEETS_CREDENTIALS_PATH" in captured.out
+
+    def test_invalid_json_data_returns_error(self, capsys):
+        """--data with invalid JSON should return friendly error."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main(["--data", "not valid json"])
+
+        assert exit_code == 1
+        captured = capsys.readouterr()
+        assert "Invalid JSON" in captured.out
+
+    def test_no_args_shows_help(self, capsys):
+        """No arguments should show help (no error)."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main([])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "--help" in captured.out or "usage" in captured.out.lower()
+
+    def test_gsheets_not_installed_error_message(self):
+        """GSheetsNotInstalledError should have install instructions."""
+        from tools.gsheets_exporter import GSheetsNotInstalledError
+
+        error = GSheetsNotInstalledError()
+        msg = str(error)
+
+        assert "pip install" in msg
+        assert "gsheets" in msg.lower()
