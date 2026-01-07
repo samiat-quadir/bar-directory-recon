@@ -2,6 +2,45 @@
 
 This document describes integration tiers for Bar Directory Recon.
 
+## Quickstart: Google Sheets Export
+
+Google Sheets is an **optional dependency** — the core library works without it.
+
+### Installation
+
+```bash
+# Install with Google Sheets support
+pip install .[gsheets]
+
+# Or install dependencies directly
+pip install google-api-python-client google-auth google-auth-oauthlib gspread
+```
+
+### Configuration
+
+Set the following environment variables:
+
+```bash
+# Path to service account JSON credentials
+export GOOGLE_SHEETS_CREDENTIALS_PATH=/path/to/service-account.json
+
+# Destination spreadsheet ID (from the URL)
+export GOOGLE_SHEETS_SPREADSHEET_ID=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms
+```
+
+### Usage
+
+```python
+from tools.gsheets_exporter import is_gsheets_available, export_rows
+
+if is_gsheets_available():
+    export_rows([{"name": "John Doe", "email": "john@example.com"}])
+else:
+    print("Google Sheets not installed. Run: pip install .[gsheets]")
+```
+
+---
+
 ## Tier0 — No external APIs
 
 - Runs entirely locally with no external API dependencies.
