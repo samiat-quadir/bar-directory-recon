@@ -5,14 +5,12 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from universal_recon.core.config_loader import ConfigManager
 from universal_recon.core.report_printer import (
     print_audit,
     print_health,
     print_summary,
     print_trend,
 )
-from universal_recon.plugin_loader import load_plugins_by_type
 
 
 def archive_previous_matrix():

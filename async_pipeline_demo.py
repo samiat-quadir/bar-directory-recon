@@ -26,7 +26,6 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 try:
-    from automation.pipeline_executor import PipelineExecutor
     from automation.enhanced_config_loader import load_automation_config
 
     AUTOMATION_AVAILABLE = True

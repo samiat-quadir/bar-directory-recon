@@ -6,15 +6,8 @@ Scrapes lead data from Angi contractor and service provider directories
 import logging
 import time
 from typing import Any, Dict, List, Optional
-import re
 
-import pandas as pd
 import requests
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 
 # Import Google Sheets utilities
 from .google_sheets_utils import export_to_google_sheets

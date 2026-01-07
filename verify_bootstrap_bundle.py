@@ -8,7 +8,6 @@ Final verification of the Alienware bootstrap bundle.
 import zipfile
 import hashlib
 import os
-from pathlib import Path
 
 
 def verify_bootstrap_bundle():

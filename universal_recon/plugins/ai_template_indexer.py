@@ -1,6 +1,5 @@
 # plugins/ai_template_indexer.py
 
-from collections import defaultdict
 from typing import Dict, List
 
 

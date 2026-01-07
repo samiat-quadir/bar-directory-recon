@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Quick script listing tool"""
 
-import os
 from pathlib import Path
 
 

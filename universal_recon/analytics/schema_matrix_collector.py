@@ -1,7 +1,6 @@
 # === analytics/schema_matrix_collector.py ===
 
 import json
-import os
 from pathlib import Path
 from typing import Any, Dict
 

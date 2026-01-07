@@ -14,7 +14,7 @@ import json
 import subprocess
 import platform
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict
 from datetime import datetime
 
 
