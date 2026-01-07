@@ -28,7 +28,28 @@ export GOOGLE_SHEETS_CREDENTIALS_PATH=/path/to/service-account.json
 export GOOGLE_SHEETS_SPREADSHEET_ID=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms
 ```
 
-### Usage
+### CLI Usage
+
+The exporter can be run as a module:
+
+```bash
+# Show help
+python -m tools.gsheets_exporter --help
+
+# Check if dependencies are installed
+python -m tools.gsheets_exporter --check
+
+# One-command demo: export 1 test row to configured sheet
+python -m tools.gsheets_exporter --demo
+
+# Dry-run demo (no network, no credentials required)
+python -m tools.gsheets_exporter --demo --dry-run
+
+# Export custom data
+python -m tools.gsheets_exporter --worksheet "Sheet1" --data '[["Name", "Email"], ["John", "john@example.com"]]'
+```
+
+### Python Usage
 
 ```python
 from tools.gsheets_exporter import is_gsheets_available, export_rows
