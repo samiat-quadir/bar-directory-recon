@@ -203,3 +203,106 @@ class TestGSheetsExporterCLI:
 
         assert "pip install" in msg
         assert "gsheets" in msg.lower()
+
+
+class TestWorksheetNotFoundError:
+    """Tests for WorksheetNotFoundError UX improvements."""
+
+    def test_worksheet_not_found_error_contains_available_list(self):
+        """WorksheetNotFoundError should list available worksheets."""
+        from tools.gsheets_exporter import WorksheetNotFoundError
+
+        error = WorksheetNotFoundError(
+            worksheet_name="NonExistent",
+            available_worksheets=["Sheet1", "Data", "Results"],
+            spreadsheet_id="test-id"
+        )
+        msg = str(error)
+
+        assert "NonExistent" in msg
+        assert "not found" in msg.lower()
+        assert "Sheet1" in msg
+        assert "Data" in msg
+        assert "Results" in msg
+        assert "--worksheet" in msg
+
+    def test_worksheet_not_found_error_suggests_first_available(self):
+        """WorksheetNotFoundError should suggest first available worksheet."""
+        from tools.gsheets_exporter import WorksheetNotFoundError
+
+        error = WorksheetNotFoundError(
+            worksheet_name="BadName",
+            available_worksheets=["FirstSheet", "SecondSheet"],
+            spreadsheet_id="test-id"
+        )
+        msg = str(error)
+
+        # Should suggest using the first available
+        assert "FirstSheet" in msg
+
+    def test_worksheet_not_found_error_handles_empty_list(self):
+        """WorksheetNotFoundError should handle empty worksheet list gracefully."""
+        from tools.gsheets_exporter import WorksheetNotFoundError
+
+        error = WorksheetNotFoundError(
+            worksheet_name="Test",
+            available_worksheets=[],
+            spreadsheet_id="test-id"
+        )
+        msg = str(error)
+
+        assert "Test" in msg
+        assert "not found" in msg.lower()
+
+    def test_worksheet_not_found_is_value_error(self):
+        """WorksheetNotFoundError should be a ValueError subclass."""
+        from tools.gsheets_exporter import WorksheetNotFoundError
+
+        assert issubclass(WorksheetNotFoundError, ValueError)
+
+
+class TestWorksheetFallbackBehavior:
+    """Tests for worksheet fallback and listing behavior (mocked, no network)."""
+
+    def test_list_worksheets_function_exists(self):
+        """list_worksheets function should be importable."""
+        from tools.gsheets_exporter import list_worksheets
+
+        assert callable(list_worksheets)
+
+    def test_get_worksheet_with_fallback_helper_exists(self):
+        """_get_worksheet_with_fallback helper should be importable."""
+        from tools.gsheets_exporter import _get_worksheet_with_fallback
+
+        assert callable(_get_worksheet_with_fallback)
+
+    def test_export_rows_accepts_fallback_param(self):
+        """export_rows should accept fallback_to_first parameter."""
+        import inspect
+
+        from tools.gsheets_exporter import export_rows
+
+        sig = inspect.signature(export_rows)
+        params = list(sig.parameters.keys())
+
+        assert "fallback_to_first" in params
+
+    def test_cli_has_fallback_option(self, capsys):
+        """CLI should have --fallback option."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--fallback" in captured.out
+
+    def test_cli_has_list_worksheets_option(self, capsys):
+        """CLI should have --list-worksheets option."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--list-worksheets" in captured.out
