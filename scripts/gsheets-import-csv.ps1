@@ -79,15 +79,29 @@ if ($DryRun) {
 Write-Host ""
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 2. Validate CSV file exists
+# 2. Validate CSV file exists (with repo-root fallbacks)
 # ─────────────────────────────────────────────────────────────────────────────
 if (-not (Test-Path $CsvPath)) {
-    Write-Error "CSV file not found: $CsvPath"
-    exit 1
+    # Try resolving the path relative to the repository root
+    $Candidate = Join-Path $RepoRoot $CsvPath
+    if (Test-Path $Candidate) {
+        $CsvPath = (Resolve-Path $Candidate).Path
+    } else {
+        # Try using only the file name relative to repo root (handles .\prefix)
+        $Leaf = Split-Path $CsvPath -Leaf
+        $Candidate2 = Join-Path $RepoRoot $Leaf
+        if (Test-Path $Candidate2) {
+            $CsvPath = (Resolve-Path $Candidate2).Path
+        } else {
+            Write-Error "CSV file not found: $CsvPath"
+            Write-Error "Try providing an absolute path or a repo-relative path, e.g. docs/examples/sample_leads.csv"
+            exit 1
+        }
+    }
+} else {
+    # Resolve to absolute path
+    $CsvPath = (Resolve-Path $CsvPath).Path
 }
-
-# Resolve to absolute path
-$CsvPath = (Resolve-Path $CsvPath).Path
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 3. Activate virtual environment
