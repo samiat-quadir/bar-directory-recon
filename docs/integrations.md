@@ -49,6 +49,33 @@ python -m tools.gsheets_exporter --demo --dry-run
 python -m tools.gsheets_exporter --worksheet "Sheet1" --data '[["Name", "Email"], ["John", "john@example.com"]]'
 ```
 
+### One-Command Demo (PowerShell)
+
+For the fastest setup, use the provided demo script:
+
+```powershell
+# 1. Create .env.local with your credentials
+# GOOGLE_SHEETS_CREDENTIALS_PATH=C:\path\to\service-account.json
+# GOOGLE_SHEETS_SPREADSHEET_ID=your-spreadsheet-id
+
+# 2. Run the demo script (activates venv, loads env, exports demo row)
+.\scripts\gsheets-demo.ps1
+
+# Or specify a different worksheet
+.\scripts\gsheets-demo.ps1 -Worksheet "Sheet1"
+
+# Dry-run mode (no network calls)
+.\scripts\gsheets-demo.ps1 -DryRun
+```
+
+The demo script will:
+
+1. Activate the `.venv` virtual environment
+2. Load environment variables from `.env.local`
+3. Check that gsheets dependencies are installed
+4. List available worksheets in your spreadsheet
+5. Export a demo row (timestamp + run_id) to the "leads" worksheet
+
 ### Python Usage
 
 ```python
