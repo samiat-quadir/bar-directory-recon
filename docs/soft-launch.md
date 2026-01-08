@@ -94,6 +94,38 @@ This will:
 
 ---
 
+## Import Your Own CSV
+
+Already have lead data? Import it directly:
+
+```powershell
+# Basic import (appends to "leads" worksheet)
+python -m tools.gsheets_exporter --csv path\to\your\leads.csv --worksheet "leads"
+
+# Replace existing data
+python -m tools.gsheets_exporter --csv path\to\your\leads.csv --worksheet "leads" --mode replace
+
+# Remove duplicates by email
+python -m tools.gsheets_exporter --csv path\to\your\leads.csv --worksheet "leads" --dedupe-key email
+
+# Preview without writing (dry-run)
+python -m tools.gsheets_exporter --csv path\to\your\leads.csv --worksheet "leads" --dry-run
+```
+
+### CSV Format
+
+Your CSV should have a header row. Example:
+
+```csv
+name,email,firm,city,state
+John Doe,john@example.com,Doe Law,New York,NY
+Jane Smith,jane@example.com,Smith Legal,Boston,MA
+```
+
+See `docs/examples/sample_leads.csv` for a complete example.
+
+---
+
 ## Troubleshooting
 
 ### "Worksheet 'leads' not found"

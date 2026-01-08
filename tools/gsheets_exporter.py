@@ -257,6 +257,167 @@ def export_dataframe(
 
 
 # ---------------------------------------------------------------------------
+# CSV Import Functions
+# ---------------------------------------------------------------------------
+
+def load_csv(csv_path: str) -> List[List[str]]:
+    """
+    Load a CSV file and return rows as list of lists.
+
+    Args:
+        csv_path: Path to CSV file
+
+    Returns:
+        List[List[str]]: Rows including header row
+
+    Raises:
+        FileNotFoundError: If CSV file not found
+        ValueError: If CSV is empty
+    """
+    import csv
+
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(f"CSV file not found: {csv_path}")
+
+    rows = []
+    with open(csv_path, 'r', encoding='utf-8-sig', newline='') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            rows.append(row)
+
+    if not rows:
+        raise ValueError(f"CSV file is empty: {csv_path}")
+
+    return rows
+
+
+def dedupe_rows(
+    rows: List[List[str]],
+    key_column: str
+) -> List[List[str]]:
+    """
+    Remove duplicate rows based on a key column.
+
+    Args:
+        rows: List of rows (first row is header)
+        key_column: Column name to use for deduplication
+
+    Returns:
+        List[List[str]]: Deduplicated rows (header + unique data rows)
+
+    Raises:
+        ValueError: If key_column not found in header
+    """
+    if len(rows) < 2:
+        return rows
+
+    header = rows[0]
+
+    try:
+        key_index = header.index(key_column)
+    except ValueError:
+        available = ", ".join(header)
+        raise ValueError(
+            f"Dedupe key column '{key_column}' not found in CSV.\n"
+            f"Available columns: {available}"
+        )
+
+    seen = set()
+    unique_rows = [header]
+
+    for row in rows[1:]:
+        if key_index < len(row):
+            key_value = row[key_index]
+            if key_value not in seen:
+                seen.add(key_value)
+                unique_rows.append(row)
+        else:
+            # Row doesn't have enough columns, include it anyway
+            unique_rows.append(row)
+
+    return unique_rows
+
+
+def export_csv_to_sheets(
+    csv_path: str,
+    spreadsheet_id: str,
+    worksheet: str,
+    *,
+    mode: str = "append",
+    dedupe_key: Optional[str] = None,
+    spreadsheet_id_from_env: bool = False,
+    fallback_to_first: bool = False
+) -> int:
+    """
+    Export a CSV file to Google Sheets.
+
+    Args:
+        csv_path: Path to CSV file
+        spreadsheet_id: Google Sheets spreadsheet ID
+        worksheet: Name of the worksheet tab
+        mode: "append" to add rows, "replace" to clear and write
+        dedupe_key: Column name for deduplication (optional)
+        spreadsheet_id_from_env: If True, read spreadsheet_id from env var
+        fallback_to_first: If True and worksheet not found, use first worksheet
+
+    Returns:
+        int: Number of rows exported (excluding header)
+
+    Raises:
+        GSheetsNotInstalledError: If gsheets dependencies not installed
+        FileNotFoundError: If CSV file not found
+    """
+    if not _check_gsheets_available():
+        raise GSheetsNotInstalledError()
+
+    # Load CSV
+    rows = load_csv(csv_path)
+
+    # Deduplicate if requested
+    if dedupe_key:
+        original_count = len(rows) - 1  # exclude header
+        rows = dedupe_rows(rows, dedupe_key)
+        deduped_count = len(rows) - 1
+        if original_count != deduped_count:
+            print(f"   Deduplicated: {original_count} → {deduped_count} rows (key: {dedupe_key})")
+
+    # Resolve spreadsheet ID
+    if spreadsheet_id_from_env or not spreadsheet_id:
+        spreadsheet_id = os.environ.get('GOOGLE_SHEETS_SPREADSHEET_ID', spreadsheet_id)
+
+    if not spreadsheet_id:
+        raise RuntimeError(
+            "Spreadsheet ID not provided. "
+            "Pass spreadsheet_id argument or set GOOGLE_SHEETS_SPREADSHEET_ID environment variable."
+        )
+
+    gc = get_client()
+    sh = gc.open_by_key(spreadsheet_id)
+    ws = _get_worksheet_with_fallback(
+        spreadsheet=sh,
+        worksheet_name=worksheet,
+        spreadsheet_id=spreadsheet_id,
+        use_fallback=fallback_to_first
+    )
+
+    if mode == "replace":
+        # Clear the worksheet and write all rows
+        ws.clear()
+        ws.update('A1', rows)
+    else:
+        # Append mode: add rows (skip header if sheet already has data)
+        existing = ws.get_all_values()
+        if existing:
+            # Sheet has data, skip header row
+            ws.append_rows(rows[1:])
+        else:
+            # Empty sheet, include header
+            ws.append_rows(rows)
+
+    return len(rows) - 1  # Return data row count (excluding header)
+
+
+# ---------------------------------------------------------------------------
 # CLI Entrypoint
 # ---------------------------------------------------------------------------
 
@@ -279,6 +440,15 @@ Examples:
 
   # Run demo: export 1 test row to configured sheet
   python -m tools.gsheets_exporter --demo
+
+  # Export a CSV file to Google Sheets
+  python -m tools.gsheets_exporter --csv leads.csv --worksheet leads
+
+  # Replace worksheet contents (instead of append)
+  python -m tools.gsheets_exporter --csv leads.csv --worksheet leads --mode replace
+
+  # Deduplicate by email before exporting
+  python -m tools.gsheets_exporter --csv leads.csv --dedupe-key email
 
   # Export custom data (JSON format)
   python -m tools.gsheets_exporter --worksheet "Sheet1" --data '[["A", "B"], [1, 2]]'
@@ -327,6 +497,25 @@ Examples:
         "--list-worksheets",
         action="store_true",
         help="List all worksheets in the spreadsheet"
+    )
+    parser.add_argument(
+        "--csv",
+        type=str,
+        default=None,
+        help="Path to CSV file to export to Google Sheets"
+    )
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["append", "replace"],
+        default="append",
+        help="Export mode: 'append' adds rows, 'replace' clears sheet first (default: append)"
+    )
+    parser.add_argument(
+        "--dedupe-key",
+        type=str,
+        default=None,
+        help="Column name to use for deduplication (e.g., 'email')"
     )
 
     return parser
@@ -481,6 +670,71 @@ def main(args: Optional[List[str]] = None) -> int:
             return 1
         except Exception as e:
             print(f"❌ Export failed: {e}")
+            return 1
+
+    # --csv: export CSV file to Google Sheets
+    if parsed.csv:
+        sheet_id = parsed.spreadsheet_id or os.environ.get('GOOGLE_SHEETS_SPREADSHEET_ID', '')
+
+        # Load and preview CSV
+        try:
+            rows = load_csv(parsed.csv)
+        except FileNotFoundError as e:
+            print(f"❌ {e}")
+            return 1
+        except ValueError as e:
+            print(f"❌ {e}")
+            return 1
+
+        row_count = len(rows) - 1  # exclude header
+        print(f"📄 CSV: {parsed.csv}")
+        print(f"   Rows: {row_count} (+ header)")
+        print(f"   Columns: {', '.join(rows[0][:5])}{'...' if len(rows[0]) > 5 else ''}")
+        print(f"   Mode: {parsed.mode}")
+        print(f"   Worksheet: {parsed.worksheet}")
+
+        # Deduplicate if requested
+        if parsed.dedupe_key:
+            try:
+                original_count = row_count
+                rows = dedupe_rows(rows, parsed.dedupe_key)
+                row_count = len(rows) - 1
+                print(f"   Dedupe: {original_count} → {row_count} (key: {parsed.dedupe_key})")
+            except ValueError as e:
+                print(f"❌ {e}")
+                return 1
+
+        if parsed.dry_run:
+            print(f"\n🔍 Dry run — would export {row_count} rows to {parsed.worksheet}")
+            return 0
+
+        if not sheet_id:
+            print("\n❌ Error: Spreadsheet ID not provided")
+            print("   Use --spreadsheet-id or set GOOGLE_SHEETS_SPREADSHEET_ID env var")
+            return 1
+
+        if not is_gsheets_available():
+            raise GSheetsNotInstalledError()
+
+        try:
+            export_csv_to_sheets(
+                csv_path=parsed.csv,
+                spreadsheet_id=sheet_id,
+                worksheet=parsed.worksheet,
+                mode=parsed.mode,
+                dedupe_key=parsed.dedupe_key,
+                spreadsheet_id_from_env=not parsed.spreadsheet_id,
+                fallback_to_first=parsed.fallback
+            )
+            mode_verb = "replaced" if parsed.mode == "replace" else "appended"
+            print(f"\n✅ Successfully {mode_verb} {row_count} rows to '{parsed.worksheet}'")
+            print(f"   https://docs.google.com/spreadsheets/d/{sheet_id}")
+            return 0
+        except WorksheetNotFoundError as e:
+            print(f"\n❌ {e}")
+            return 1
+        except Exception as e:
+            print(f"\n❌ Export failed: {e}")
             return 1
 
     # No action specified — show help
