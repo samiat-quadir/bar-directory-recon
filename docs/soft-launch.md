@@ -96,7 +96,35 @@ This will:
 
 ## Import Your Own CSV
 
-Already have lead data? Import it directly:
+Already have lead data? Import it with one command:
+
+```powershell
+# One-command CSV import (activates venv, loads .env.local, imports CSV)
+.\scripts\gsheets-import-csv.ps1 -CsvPath .\leads.csv
+
+# Specify worksheet and mode
+.\scripts\gsheets-import-csv.ps1 -CsvPath .\leads.csv -Worksheet "Sheet1" -Mode replace
+
+# Deduplicate by a different column
+.\scripts\gsheets-import-csv.ps1 -CsvPath .\leads.csv -DedupeKey name
+
+# Preview without writing (dry-run)
+.\scripts\gsheets-import-csv.ps1 -CsvPath .\leads.csv -DryRun
+```
+
+### Script Options
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `-CsvPath` | (required) | Path to your CSV file |
+| `-Worksheet` | `leads` | Target worksheet name |
+| `-DedupeKey` | `email` | Column to deduplicate by |
+| `-Mode` | `append` | `append` or `replace` |
+| `-DryRun` | off | Preview without writing |
+
+### Manual CLI (Alternative)
+
+If you prefer to manage the environment yourself:
 
 ```powershell
 # Basic import (appends to "leads" worksheet)
