@@ -38,6 +38,16 @@ Universal Recon is a comprehensive bar directory reconnaissance and automation t
 
 ---
 
+## 🚀 Soft Launch Quickstart
+
+New to BDR? Start here: **[Soft Launch Quickstart Guide](docs/soft-launch.md)**
+
+- 5-minute setup with Google Sheets
+- One-command demo: `.\scripts\gsheets-demo.ps1`
+- Offer v1 pricing information
+
+---
+
 ## Key Features
 
 - **Plugin-Based Architecture**: Modular system with specialized extractors for different data types
