@@ -28,6 +28,30 @@ class GSheetsNotInstalledError(ImportError):
         )
 
 
+class WorksheetNotFoundError(ValueError):
+    """Raised when specified worksheet is not found in the spreadsheet."""
+
+    def __init__(
+        self,
+        worksheet_name: str,
+        available_worksheets: List[str],
+        spreadsheet_id: str = ""
+    ) -> None:
+        self.worksheet_name = worksheet_name
+        self.available_worksheets = available_worksheets
+        self.spreadsheet_id = spreadsheet_id
+
+        available_str = ", ".join(f"'{w}'" for w in available_worksheets)
+        suggestion = available_worksheets[0] if available_worksheets else "Sheet1"
+
+        message = (
+            f"Worksheet '{worksheet_name}' not found.\n"
+            f"Available worksheets: {available_str}\n"
+            f"Use --worksheet '{suggestion}' to select a valid worksheet."
+        )
+        super().__init__(message)
+
+
 def _check_gsheets_available() -> bool:
     """
     Lazily check if Google Sheets dependencies are available.
@@ -98,12 +122,72 @@ def get_client():
     return gspread.authorize(creds)
 
 
+def list_worksheets(spreadsheet_id: str) -> List[str]:
+    """
+    List all worksheet names in a spreadsheet.
+
+    Args:
+        spreadsheet_id: Google Sheets spreadsheet ID
+
+    Returns:
+        List[str]: List of worksheet titles
+
+    Raises:
+        GSheetsNotInstalledError: If gsheets dependencies not installed
+    """
+    if not _check_gsheets_available():
+        raise GSheetsNotInstalledError()
+
+    gc = get_client()
+    sh = gc.open_by_key(spreadsheet_id)
+    return [ws.title for ws in sh.worksheets()]
+
+
+def _get_worksheet_with_fallback(
+    spreadsheet,
+    worksheet_name: str,
+    spreadsheet_id: str,
+    use_fallback: bool = False
+):
+    """
+    Get a worksheet by name, with helpful error if not found.
+
+    Args:
+        spreadsheet: gspread Spreadsheet object
+        worksheet_name: Name of worksheet to find
+        spreadsheet_id: Spreadsheet ID (for error messages)
+        use_fallback: If True and worksheet not found, use first worksheet
+
+    Returns:
+        gspread.Worksheet: The worksheet object
+
+    Raises:
+        WorksheetNotFoundError: If worksheet not found and use_fallback is False
+    """
+    import gspread
+
+    available = [ws.title for ws in spreadsheet.worksheets()]
+
+    try:
+        return spreadsheet.worksheet(worksheet_name)
+    except gspread.exceptions.WorksheetNotFound:
+        if use_fallback and available:
+            # Fallback to first worksheet
+            return spreadsheet.worksheet(available[0])
+        raise WorksheetNotFoundError(
+            worksheet_name=worksheet_name,
+            available_worksheets=available,
+            spreadsheet_id=spreadsheet_id
+        )
+
+
 def export_rows(
     spreadsheet_id: str,
     worksheet: str,
     rows: List[List],
     *,
-    spreadsheet_id_from_env: bool = False
+    spreadsheet_id_from_env: bool = False,
+    fallback_to_first: bool = False
 ) -> None:
     """
     Append rows to a Google Sheets worksheet.
@@ -113,10 +197,12 @@ def export_rows(
         worksheet: Name of the worksheet tab
         rows: List of rows (each row is a list of cell values)
         spreadsheet_id_from_env: If True, read spreadsheet_id from GOOGLE_SHEETS_SPREADSHEET_ID env var
+        fallback_to_first: If True and worksheet not found, use first available worksheet
 
     Raises:
         GSheetsNotInstalledError: If gsheets dependencies not installed
         RuntimeError: If credentials or spreadsheet ID not configured
+        WorksheetNotFoundError: If worksheet not found (with list of available worksheets)
     """
     if not _check_gsheets_available():
         raise GSheetsNotInstalledError()
@@ -133,7 +219,12 @@ def export_rows(
 
     gc = get_client()
     sh = gc.open_by_key(spreadsheet_id)
-    ws = sh.worksheet(worksheet)
+    ws = _get_worksheet_with_fallback(
+        spreadsheet=sh,
+        worksheet_name=worksheet,
+        spreadsheet_id=spreadsheet_id,
+        use_fallback=fallback_to_first
+    )
     ws.append_rows(rows)
 
 
@@ -227,11 +318,26 @@ Examples:
         action="store_true",
         help="Print what would be exported without making network calls"
     )
+    parser.add_argument(
+        "--fallback",
+        action="store_true",
+        help="If worksheet not found, use first available worksheet"
+    )
+    parser.add_argument(
+        "--list-worksheets",
+        action="store_true",
+        help="List all worksheets in the spreadsheet"
+    )
 
     return parser
 
 
-def _run_demo(worksheet: str, spreadsheet_id: Optional[str], dry_run: bool = False) -> int:
+def _run_demo(
+    worksheet: str,
+    spreadsheet_id: Optional[str],
+    dry_run: bool = False,
+    fallback: bool = False
+) -> int:
     """
     Run demo mode: export 1 row with timestamp and run_id.
 
@@ -277,7 +383,8 @@ def _run_demo(worksheet: str, spreadsheet_id: Optional[str], dry_run: bool = Fal
         export_rows(
             spreadsheet_id=sheet_id,
             worksheet=worksheet,
-            rows=demo_row
+            rows=demo_row,
+            fallback_to_first=fallback
         )
         print("\n✅ Successfully exported demo row to Google Sheets!")
         print(f"   https://docs.google.com/spreadsheets/d/{sheet_id}")
@@ -316,8 +423,30 @@ def main(args: Optional[List[str]] = None) -> int:
         return _run_demo(
             worksheet=parsed.worksheet,
             spreadsheet_id=parsed.spreadsheet_id,
-            dry_run=parsed.dry_run
+            dry_run=parsed.dry_run,
+            fallback=parsed.fallback
         )
+
+    # --list-worksheets: show available worksheets
+    if parsed.list_worksheets:
+        sheet_id = parsed.spreadsheet_id or os.environ.get('GOOGLE_SHEETS_SPREADSHEET_ID', '')
+        if not sheet_id:
+            print("❌ Error: Spreadsheet ID not provided")
+            print("   Use --spreadsheet-id or set GOOGLE_SHEETS_SPREADSHEET_ID env var")
+            return 1
+
+        if not is_gsheets_available():
+            raise GSheetsNotInstalledError()
+
+        try:
+            worksheets = list_worksheets(sheet_id)
+            print("📋 Available worksheets:")
+            for ws in worksheets:
+                print(f"   • {ws}")
+            return 0
+        except Exception as e:
+            print(f"❌ Failed to list worksheets: {e}")
+            return 1
 
     # --data: export custom data
     if parsed.data:
@@ -342,10 +471,14 @@ def main(args: Optional[List[str]] = None) -> int:
                 spreadsheet_id=sheet_id,
                 worksheet=parsed.worksheet,
                 rows=rows,
-                spreadsheet_id_from_env=not parsed.spreadsheet_id
+                spreadsheet_id_from_env=not parsed.spreadsheet_id,
+                fallback_to_first=parsed.fallback
             )
             print(f"✅ Exported {len(rows)} rows to {parsed.worksheet}")
             return 0
+        except WorksheetNotFoundError as e:
+            print(f"❌ {e}")
+            return 1
         except Exception as e:
             print(f"❌ Export failed: {e}")
             return 1
