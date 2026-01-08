@@ -10,17 +10,17 @@
     4. Runs the Google Sheets exporter CLI to:
        - Check if dependencies are installed
        - List available worksheets
-       - Export a demo row to the "leads" worksheet
+       - Export a demo row to the "changelog" worksheet (system/run logs)
 
 .PARAMETER Worksheet
-    Target worksheet name (default: "leads")
+    Target worksheet name (default: "changelog")
 
 .PARAMETER DryRun
     If specified, runs demo in dry-run mode (no network calls)
 
 .EXAMPLE
     .\scripts\gsheets-demo.ps1
-    Runs the full demo against worksheet "leads".
+    Runs the full demo against worksheet "changelog".
 
 .EXAMPLE
     .\scripts\gsheets-demo.ps1 -Worksheet "Sheet1"
@@ -32,7 +32,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$Worksheet = "leads",
+    [string]$Worksheet = "changelog",
     [switch]$DryRun
 )
 

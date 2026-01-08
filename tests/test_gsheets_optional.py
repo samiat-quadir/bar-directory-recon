@@ -460,3 +460,164 @@ class TestCSVImport:
         assert exit_code == 1
         captured = capsys.readouterr()
         assert "not found" in captured.out.lower() or "error" in captured.out.lower()
+
+
+class TestDemoWorksheetDefault:
+    """Tests for demo worksheet default (changelog)."""
+
+    def test_demo_default_worksheet_constant(self):
+        """DEMO_DEFAULT_WORKSHEET should be 'changelog'."""
+        from tools.gsheets_exporter import DEMO_DEFAULT_WORKSHEET
+
+        assert DEMO_DEFAULT_WORKSHEET == "changelog"
+
+    def test_data_default_worksheet_constant(self):
+        """DATA_DEFAULT_WORKSHEET should be 'leads'."""
+        from tools.gsheets_exporter import DATA_DEFAULT_WORKSHEET
+
+        assert DATA_DEFAULT_WORKSHEET == "leads"
+
+    def test_demo_dry_run_uses_changelog(self, capsys):
+        """--demo --dry-run should default to changelog worksheet."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main(["--demo", "--dry-run"])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "changelog" in captured.out.lower()
+
+    def test_csv_dry_run_uses_leads(self, capsys, tmp_path):
+        """--csv --dry-run should default to leads worksheet."""
+        from tools.gsheets_exporter import main
+
+        csv_file = tmp_path / "test.csv"
+        csv_file.write_text("name,email\nJohn,john@example.com\n")
+
+        exit_code = main(["--csv", str(csv_file), "--dry-run"])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "leads" in captured.out.lower()
+
+
+class TestHeaderMapping:
+    """Tests for CSV header mapping functionality."""
+
+    def test_normalize_header_function_exists(self):
+        """_normalize_header function should be importable."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert callable(_normalize_header)
+
+    def test_normalize_header_lowercase(self):
+        """_normalize_header should convert to lowercase."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert _normalize_header("Name") == "name"
+        assert _normalize_header("EMAIL") == "email"
+
+    def test_normalize_header_strips_spaces(self):
+        """_normalize_header should convert spaces to underscores."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert _normalize_header("Full Name") == "full_name"
+        assert _normalize_header("  name  ") == "name"
+
+    def test_normalize_header_converts_dashes(self):
+        """_normalize_header should convert dashes to underscores."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert _normalize_header("bar-number") == "bar_number"
+
+    def test_header_synonyms_exist(self):
+        """HEADER_SYNONYMS should be defined with expected mappings."""
+        from tools.gsheets_exporter import HEADER_SYNONYMS
+
+        assert isinstance(HEADER_SYNONYMS, dict)
+        assert HEADER_SYNONYMS.get("name") == "full_name"
+        assert HEADER_SYNONYMS.get("email") == "email"
+        assert HEADER_SYNONYMS.get("firm") == "firm"
+
+    def test_map_csv_to_sheet_headers_function_exists(self):
+        """_map_csv_to_sheet_headers function should be importable."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        assert callable(_map_csv_to_sheet_headers)
+
+    def test_map_csv_to_sheet_headers_basic_mapping(self):
+        """_map_csv_to_sheet_headers should map matching columns."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email", "city"],
+            ["John", "john@example.com", "NYC"],
+        ]
+        sheet_headers = ["full_name", "email", "city", "state"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        # Should return mapped rows (without header)
+        assert len(mapped_rows) == 1
+        assert info["type"] == "header"
+        assert "name" in info["mapped_columns"]
+        assert "email" in info["mapped_columns"]
+
+    def test_map_csv_to_sheet_headers_synonym_mapping(self):
+        """_map_csv_to_sheet_headers should use synonyms (name -> full_name)."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+        ]
+        sheet_headers = ["full_name", "email", "city"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        # First mapped row should have name in position 0 (full_name)
+        assert mapped_rows[0][0] == "John"
+        assert mapped_rows[0][1] == "john@example.com"
+        assert mapped_rows[0][2] == ""  # city is blank
+
+    def test_map_csv_to_sheet_headers_unmapped_columns(self):
+        """_map_csv_to_sheet_headers should track unmapped columns."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email", "unknown_field"],
+            ["John", "john@example.com", "xyz"],
+        ]
+        sheet_headers = ["full_name", "email"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        assert "unknown_field" in info["unmapped_columns"]
+
+    def test_map_csv_to_sheet_headers_positional_fallback(self):
+        """_map_csv_to_sheet_headers should fall back to positional if no match."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["col_a", "col_b"],
+            ["val1", "val2"],
+        ]
+        sheet_headers = ["totally_different", "headers"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        # Should return original rows and positional type
+        assert info["type"] == "positional"
+        assert mapped_rows == csv_rows
+
+    def test_map_csv_to_sheet_headers_empty_inputs(self):
+        """_map_csv_to_sheet_headers should handle empty inputs."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        # Empty CSV
+        mapped_rows, info = _map_csv_to_sheet_headers([], ["a", "b"])
+        assert info["type"] == "positional"
+
+        # Empty sheet headers
+        mapped_rows, info = _map_csv_to_sheet_headers([["a"], ["1"]], [])
+        assert info["type"] == "positional"
