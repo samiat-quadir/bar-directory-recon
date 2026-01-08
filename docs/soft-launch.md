@@ -80,7 +80,18 @@ This will:
 2. Load your `.env.local` credentials
 3. Check that dependencies are installed
 4. List available worksheets
-5. Export a demo row to the "leads" worksheet
+5. Export a demo row to the "changelog" worksheet
+
+### Worksheet Separation
+
+BDR uses two worksheets to keep your data clean:
+
+| Worksheet | Purpose | Script Default |
+|-----------|---------|----------------|
+| **leads** | Your actual lead data (attorneys, contacts) | `gsheets-import-csv.ps1` |
+| **changelog** | System logs, demo runs, audit records | `gsheets-demo.ps1` |
+
+This ensures demo/test runs never pollute your production lead data.
 
 ### Options
 

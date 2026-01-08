@@ -338,6 +338,98 @@ def dedupe_rows(
     return unique_rows
 
 
+# ---------------------------------------------------------------------------
+# Header Mapping Constants and Helpers
+# ---------------------------------------------------------------------------
+
+# Built-in synonyms: CSV column name -> canonical sheet header
+HEADER_SYNONYMS = {
+    "name": "full_name",
+    "fullname": "full_name",
+    "full_name": "full_name",
+    "email": "email",
+    "email_address": "email",
+    "firm": "firm",
+    "company": "firm",
+    "law_firm": "firm",
+    "city": "city",
+    "state": "state",
+    "bar_number": "bar_number",
+    "bar_id": "bar_number",
+}
+
+
+def _normalize_header(name: str) -> str:
+    """Normalize header name: lowercase, strip spaces/underscores."""
+    return name.lower().strip().replace(" ", "_").replace("-", "_")
+
+
+def _map_csv_to_sheet_headers(
+    csv_rows: List[List[str]],
+    sheet_headers: List[str]
+) -> tuple:
+    """
+    Map CSV rows to match sheet header order.
+
+    Args:
+        csv_rows: CSV data (first row is header)
+        sheet_headers: Existing sheet header row
+
+    Returns:
+        tuple: (mapped_rows, mapping_info)
+            mapped_rows: Rows reordered to match sheet headers
+            mapping_info: Dict with 'type' ('header' or 'positional'),
+                          'mapped_columns', 'unmapped_columns'
+    """
+    if not csv_rows or not sheet_headers:
+        return csv_rows, {"type": "positional", "mapped_columns": [], "unmapped_columns": []}
+
+    csv_header = csv_rows[0]
+
+    # Normalize sheet headers
+    normalized_sheet = {_normalize_header(h): i for i, h in enumerate(sheet_headers)}
+
+    # Build mapping: CSV column index -> Sheet column index
+    csv_to_sheet_map = {}
+    mapped_columns = []
+    unmapped_columns = []
+
+    for csv_idx, csv_col in enumerate(csv_header):
+        norm_csv = _normalize_header(csv_col)
+        # Check direct match or synonym
+        canonical = HEADER_SYNONYMS.get(norm_csv, norm_csv)
+
+        if canonical in normalized_sheet:
+            sheet_idx = normalized_sheet[canonical]
+            csv_to_sheet_map[csv_idx] = sheet_idx
+            mapped_columns.append(csv_col)
+        else:
+            unmapped_columns.append(csv_col)
+
+    # If no columns mapped, fall back to positional
+    if not csv_to_sheet_map:
+        return csv_rows, {"type": "positional", "mapped_columns": [], "unmapped_columns": csv_header}
+
+    # Build mapped rows (skip CSV header since sheet already has one)
+    mapped_rows = []
+    num_sheet_cols = len(sheet_headers)
+
+    for row in csv_rows[1:]:  # Skip header row
+        new_row = [""] * num_sheet_cols
+        for csv_idx, sheet_idx in csv_to_sheet_map.items():
+            if csv_idx < len(row):
+                new_row[sheet_idx] = row[csv_idx]
+        mapped_rows.append(new_row)
+
+    mapping_info = {
+        "type": "header",
+        "mapped_columns": mapped_columns,
+        "unmapped_columns": unmapped_columns
+    }
+
+    return mapped_rows, mapping_info
+
+
 def export_csv_to_sheets(
     csv_path: str,
     spreadsheet_id: str,
@@ -347,7 +439,7 @@ def export_csv_to_sheets(
     dedupe_key: Optional[str] = None,
     spreadsheet_id_from_env: bool = False,
     fallback_to_first: bool = False
-) -> int:
+) -> tuple:
     """
     Export a CSV file to Google Sheets.
 
@@ -361,7 +453,9 @@ def export_csv_to_sheets(
         fallback_to_first: If True and worksheet not found, use first worksheet
 
     Returns:
-        int: Number of rows exported (excluding header)
+        tuple: (row_count, mapping_info)
+            row_count: Number of rows exported (excluding header)
+            mapping_info: Dict with mapping type and column info
 
     Raises:
         GSheetsNotInstalledError: If gsheets dependencies not installed
@@ -400,21 +494,32 @@ def export_csv_to_sheets(
         use_fallback=fallback_to_first
     )
 
+    mapping_info = {"type": "positional", "mapped_columns": [], "unmapped_columns": []}
+
     if mode == "replace":
         # Clear the worksheet and write all rows
         ws.clear()
         ws.update('A1', rows)
     else:
-        # Append mode: add rows (skip header if sheet already has data)
+        # Append mode: try header mapping if sheet has data
         existing = ws.get_all_values()
         if existing:
-            # Sheet has data, skip header row
-            ws.append_rows(rows[1:])
+            sheet_headers = existing[0] if existing else []
+            if sheet_headers:
+                # Map CSV to sheet headers
+                mapped_rows, mapping_info = _map_csv_to_sheet_headers(rows, sheet_headers)
+                if mapping_info["type"] == "header":
+                    ws.append_rows(mapped_rows)
+                else:
+                    # Fallback to positional append (skip CSV header)
+                    ws.append_rows(rows[1:])
+            else:
+                ws.append_rows(rows[1:])
         else:
             # Empty sheet, include header
             ws.append_rows(rows)
 
-    return len(rows) - 1  # Return data row count (excluding header)
+    return len(rows) - 1, mapping_info  # Return data row count and mapping info
 
 
 # ---------------------------------------------------------------------------
@@ -468,8 +573,8 @@ Examples:
     parser.add_argument(
         "--worksheet",
         type=str,
-        default="Sheet1",
-        help="Worksheet name (default: Sheet1)"
+        default=None,
+        help="Worksheet name (default: 'changelog' for --demo, 'leads' for --csv)"
     )
     parser.add_argument(
         "--spreadsheet-id",
@@ -521,6 +626,11 @@ Examples:
     return parser
 
 
+# Default worksheets for different operations
+DEMO_DEFAULT_WORKSHEET = "changelog"  # Demo/system logs go here
+DATA_DEFAULT_WORKSHEET = "leads"      # User data imports go here
+
+
 def _run_demo(
     worksheet: str,
     spreadsheet_id: Optional[str],
@@ -542,7 +652,7 @@ def _run_demo(
     demo_row = [["timestamp", "run_id", "source"], [timestamp, run_id, "gsheets_exporter_demo"]]
 
     print("📊 Google Sheets Exporter Demo")
-    print(f"   Worksheet: {worksheet}")
+    print(f"   Worksheet: {worksheet} (changelog for system records)")
     print(f"   Timestamp: {timestamp}")
     print(f"   Run ID:    {run_id}")
 
@@ -609,8 +719,9 @@ def main(args: Optional[List[str]] = None) -> int:
 
     # --demo: export 1 row
     if parsed.demo:
+        worksheet = parsed.worksheet or DEMO_DEFAULT_WORKSHEET
         return _run_demo(
-            worksheet=parsed.worksheet,
+            worksheet=worksheet,
             spreadsheet_id=parsed.spreadsheet_id,
             dry_run=parsed.dry_run,
             fallback=parsed.fallback
@@ -675,6 +786,7 @@ def main(args: Optional[List[str]] = None) -> int:
     # --csv: export CSV file to Google Sheets
     if parsed.csv:
         sheet_id = parsed.spreadsheet_id or os.environ.get('GOOGLE_SHEETS_SPREADSHEET_ID', '')
+        worksheet = parsed.worksheet or DATA_DEFAULT_WORKSHEET
 
         # Load and preview CSV
         try:
@@ -691,7 +803,7 @@ def main(args: Optional[List[str]] = None) -> int:
         print(f"   Rows: {row_count} (+ header)")
         print(f"   Columns: {', '.join(rows[0][:5])}{'...' if len(rows[0]) > 5 else ''}")
         print(f"   Mode: {parsed.mode}")
-        print(f"   Worksheet: {parsed.worksheet}")
+        print(f"   Worksheet: {worksheet}")
 
         # Deduplicate if requested
         if parsed.dedupe_key:
@@ -705,7 +817,7 @@ def main(args: Optional[List[str]] = None) -> int:
                 return 1
 
         if parsed.dry_run:
-            print(f"\n🔍 Dry run — would export {row_count} rows to {parsed.worksheet}")
+            print(f"\n🔍 Dry run — would export {row_count} rows to {worksheet}")
             return 0
 
         if not sheet_id:
@@ -717,17 +829,28 @@ def main(args: Optional[List[str]] = None) -> int:
             raise GSheetsNotInstalledError()
 
         try:
-            export_csv_to_sheets(
+            exported_count, mapping_info = export_csv_to_sheets(
                 csv_path=parsed.csv,
                 spreadsheet_id=sheet_id,
-                worksheet=parsed.worksheet,
+                worksheet=worksheet,
                 mode=parsed.mode,
                 dedupe_key=parsed.dedupe_key,
                 spreadsheet_id_from_env=not parsed.spreadsheet_id,
                 fallback_to_first=parsed.fallback
             )
             mode_verb = "replaced" if parsed.mode == "replace" else "appended"
-            print(f"\n✅ Successfully {mode_verb} {row_count} rows to '{parsed.worksheet}'")
+            print(f"\n✅ Successfully {mode_verb} {row_count} rows to '{worksheet}'")
+
+            # Show mapping info
+            if mapping_info["type"] == "header":
+                mapped = ", ".join(mapping_info["mapped_columns"][:5])
+                print(f"   Mapping: header-based ({mapped}{'...' if len(mapping_info['mapped_columns']) > 5 else ''})")
+                if mapping_info["unmapped_columns"]:
+                    unmapped = ", ".join(mapping_info["unmapped_columns"])
+                    print(f"   Unmapped: {unmapped}")
+            else:
+                print("   Mapping: positional append")
+
             print(f"   https://docs.google.com/spreadsheets/d/{sheet_id}")
             return 0
         except WorksheetNotFoundError as e:
