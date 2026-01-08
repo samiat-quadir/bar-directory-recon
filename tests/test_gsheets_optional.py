@@ -306,3 +306,157 @@ class TestWorksheetFallbackBehavior:
 
         captured = capsys.readouterr()
         assert "--list-worksheets" in captured.out
+
+
+class TestCSVImport:
+    """Tests for CSV import functionality."""
+
+    def test_load_csv_function_exists(self):
+        """load_csv function should be importable."""
+        from tools.gsheets_exporter import load_csv
+
+        assert callable(load_csv)
+
+    def test_load_csv_reads_sample_file(self):
+        """load_csv should read the sample CSV file correctly."""
+        from pathlib import Path
+
+        from tools.gsheets_exporter import load_csv
+
+        sample_path = Path(__file__).parent.parent / "docs" / "examples" / "sample_leads.csv"
+        if not sample_path.exists():
+            pytest.skip("Sample CSV not found")
+
+        rows = load_csv(str(sample_path))
+
+        # Should have header + data rows
+        assert len(rows) >= 2
+
+        # Header should have expected columns
+        header = rows[0]
+        assert "name" in header
+        assert "email" in header
+
+    def test_load_csv_file_not_found(self):
+        """load_csv should raise FileNotFoundError for missing files."""
+        from tools.gsheets_exporter import load_csv
+
+        with pytest.raises(FileNotFoundError):
+            load_csv("/nonexistent/path/to/file.csv")
+
+    def test_dedupe_rows_function_exists(self):
+        """dedupe_rows function should be importable."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        assert callable(dedupe_rows)
+
+    def test_dedupe_rows_removes_duplicates(self):
+        """dedupe_rows should remove rows with duplicate key values."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email", "city"],
+            ["John", "john@example.com", "NYC"],
+            ["Jane", "jane@example.com", "Boston"],
+            ["John2", "john@example.com", "LA"],  # Duplicate email
+        ]
+
+        result = dedupe_rows(rows, "email")
+
+        # Should have header + 2 unique rows
+        assert len(result) == 3
+        emails = [row[1] for row in result[1:]]
+        assert emails == ["john@example.com", "jane@example.com"]
+
+    def test_dedupe_rows_preserves_order(self):
+        """dedupe_rows should preserve order (first occurrence wins)."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["id", "value"],
+            ["1", "first"],
+            ["2", "second"],
+            ["1", "duplicate"],  # Duplicate id
+        ]
+
+        result = dedupe_rows(rows, "id")
+
+        # First occurrence should be kept
+        assert result[1] == ["1", "first"]
+        assert len(result) == 3
+
+    def test_dedupe_rows_invalid_column_raises_error(self):
+        """dedupe_rows should raise ValueError for nonexistent column."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+        ]
+
+        with pytest.raises(ValueError) as exc_info:
+            dedupe_rows(rows, "nonexistent")
+
+        assert "nonexistent" in str(exc_info.value).lower()
+
+    def test_export_csv_to_sheets_function_exists(self):
+        """export_csv_to_sheets function should be importable."""
+        from tools.gsheets_exporter import export_csv_to_sheets
+
+        assert callable(export_csv_to_sheets)
+
+    def test_cli_has_csv_option(self, capsys):
+        """CLI should have --csv option."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--csv" in captured.out
+
+    def test_cli_has_mode_option(self, capsys):
+        """CLI should have --mode option with append/replace choices."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--mode" in captured.out
+        assert "append" in captured.out
+        assert "replace" in captured.out
+
+    def test_cli_has_dedupe_key_option(self, capsys):
+        """CLI should have --dedupe-key option."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--dedupe-key" in captured.out
+
+    def test_csv_dry_run_no_network(self, capsys, tmp_path):
+        """--csv with --dry-run should work without network calls."""
+        from tools.gsheets_exporter import main
+
+        # Create a temp CSV file
+        csv_file = tmp_path / "test.csv"
+        csv_file.write_text("name,email\nJohn,john@example.com\n")
+
+        exit_code = main(["--csv", str(csv_file), "--worksheet", "leads", "--dry-run"])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "Dry run" in captured.out
+
+    def test_csv_file_not_found_error(self, capsys):
+        """--csv with nonexistent file should return friendly error."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main(["--csv", "/nonexistent/file.csv", "--worksheet", "leads"])
+
+        assert exit_code == 1
+        captured = capsys.readouterr()
+        assert "not found" in captured.out.lower() or "error" in captured.out.lower()

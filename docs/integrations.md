@@ -49,6 +49,32 @@ python -m tools.gsheets_exporter --demo --dry-run
 python -m tools.gsheets_exporter --worksheet "Sheet1" --data '[["Name", "Email"], ["John", "john@example.com"]]'
 ```
 
+### CSV Import
+
+Export a local CSV file directly to Google Sheets:
+
+```bash
+# Basic CSV import (appends to worksheet)
+python -m tools.gsheets_exporter --csv path/to/leads.csv --worksheet "leads"
+
+# Replace mode (clears worksheet first)
+python -m tools.gsheets_exporter --csv path/to/leads.csv --worksheet "leads" --mode replace
+
+# Deduplicate by email before importing
+python -m tools.gsheets_exporter --csv path/to/leads.csv --worksheet "leads" --dedupe-key email
+
+# Dry-run to preview without writing
+python -m tools.gsheets_exporter --csv path/to/leads.csv --worksheet "leads" --dry-run
+```
+
+A sample CSV is provided at `docs/examples/sample_leads.csv`:
+
+```csv
+name,email,firm,city,state,bar_number
+John Doe,john.doe@lawfirm.com,Doe & Associates,New York,NY,NY123456
+...
+```
+
 ### One-Command Demo (PowerShell)
 
 For the fastest setup, use the provided demo script:
