@@ -10,7 +10,9 @@
     4. Imports a CSV file to Google Sheets using the gsheets_exporter CLI
 
 .PARAMETER CsvPath
-    Path to the CSV file to import (required)
+    Path to the CSV file to import. If omitted, auto-discovers sample CSV from:
+    1) .\client_export_kit\examples\sample_leads.csv
+    2) .\examples\sample_leads.csv
 
 .PARAMETER Worksheet
     Target worksheet name (default: "leads")
@@ -42,7 +44,7 @@
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, Position=0)]
+    [Parameter(Position=0)]
     [string]$CsvPath,
 
     [string]$Worksheet = "leads",
@@ -79,10 +81,54 @@ if ($DryRun) {
 Write-Host ""
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 2. Validate CSV file exists
+# 2. Auto-discover or validate CSV file
 # ─────────────────────────────────────────────────────────────────────────────
+$SamplePaths = @(
+    (Join-Path $RepoRoot "client_export_kit\examples\sample_leads.csv"),
+    (Join-Path $RepoRoot "examples\sample_leads.csv")
+)
+
+if (-not $CsvPath) {
+    # Auto-discover sample CSV
+    $FoundSample = $null
+    foreach ($sp in $SamplePaths) {
+        if (Test-Path $sp) {
+            $FoundSample = $sp
+            break
+        }
+    }
+    if ($FoundSample) {
+        $CsvPath = $FoundSample
+        Write-Host "  Auto-discovered: $CsvPath" -ForegroundColor DarkGray
+    } else {
+        Write-Host ""
+        Write-Error "No CSV file specified and no sample found."
+        Write-Host ""
+        Write-Host "Usage:" -ForegroundColor Yellow
+        Write-Host "  .\scripts\gsheets-import-csv.ps1 -CsvPath .\your-leads.csv" -ForegroundColor White
+        Write-Host ""
+        Write-Host "Sample locations (none found):" -ForegroundColor Yellow
+        foreach ($sp in $SamplePaths) {
+            Write-Host "  • $sp" -ForegroundColor DarkGray
+        }
+        Write-Host ""
+        exit 1
+    }
+}
+
 if (-not (Test-Path $CsvPath)) {
+    Write-Host ""
     Write-Error "CSV file not found: $CsvPath"
+    Write-Host ""
+    Write-Host "Did you mean one of these?" -ForegroundColor Yellow
+    foreach ($sp in $SamplePaths) {
+        if (Test-Path $sp) {
+            Write-Host "  ✓ $sp" -ForegroundColor Green
+        } else {
+            Write-Host "  ✗ $sp" -ForegroundColor DarkGray
+        }
+    }
+    Write-Host ""
     exit 1
 }
 

@@ -4,6 +4,20 @@ Import your leads into Google Sheets in **one command**.
 
 ---
 
+## ⚡ Quickstart (3 Steps)
+
+```powershell
+# 1. Create .env.local with your credentials (see Setup below)
+# 2. Run the import:
+.\client_export_kit\Run-Import.ps1
+
+# 3. Check the 'leads' worksheet in your Google Sheet!
+```
+
+> Runs the sample CSV by default. Add `-CsvPath .\your-leads.csv` to import your own data.
+
+---
+
 ## Prerequisites
 
 1. **Python 3.11+** installed
