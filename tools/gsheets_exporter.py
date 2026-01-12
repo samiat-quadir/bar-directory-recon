@@ -7,15 +7,60 @@ Install with: pip install .[gsheets]
 Environment variables (standardized):
     GOOGLE_SHEETS_CREDENTIALS_PATH — path to service account JSON credentials
     GOOGLE_SHEETS_SPREADSHEET_ID — destination spreadsheet ID (optional, can be passed to functions)
+
+Security:
+    - Credentials must be stored OUTSIDE the repository
+    - .env.local is gitignored and never logged
 """
 
 import os
+from pathlib import Path
 from typing import List, Optional
 
 # Lazy import flag
 _GSHEETS_AVAILABLE: Optional[bool] = None
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+
+# ---------------------------------------------------------------------------
+# Security: Secrets Rails
+# ---------------------------------------------------------------------------
+
+
+def _get_repo_root() -> Optional[Path]:
+    """Get the repository root by looking for .git directory."""
+    current = Path(__file__).resolve().parent
+    for parent in [current] + list(current.parents):
+        if (parent / ".git").exists():
+            return parent
+    return None
+
+
+def _validate_credentials_path(creds_path: str, repo_root: Optional[str] = None) -> None:
+    """
+    Validate that credentials are stored safely outside the repository.
+
+    Args:
+        creds_path: Path to credentials file
+        repo_root: Optional repo root path (auto-detected if not provided)
+
+    Raises:
+        ValueError: If credentials are inside the repository
+    """
+    creds_resolved = Path(creds_path).resolve()
+
+    if repo_root:
+        repo_resolved: Optional[Path] = Path(repo_root).resolve()
+    else:
+        repo_resolved = _get_repo_root()
+
+    if repo_resolved and creds_resolved.is_relative_to(repo_resolved):
+        raise ValueError(
+            f"SECURITY ERROR: Credentials file is inside the repository!\\n"
+            f"  Credentials: {creds_resolved}\\n"
+            f"  Repository:  {repo_resolved}\\n"
+            f"Move your credentials file outside the repo (e.g., C:\\\\secrets\\\\)."
+        )
 
 
 class GSheetsNotInstalledError(ImportError):
@@ -117,6 +162,9 @@ def get_client():
             f"Credentials file not found: {creds_path}. "
             "Ensure GOOGLE_SHEETS_CREDENTIALS_PATH points to a valid service account JSON file."
         )
+
+    # Security: Ensure credentials are not inside the repository
+    _validate_credentials_path(creds_path)
 
     creds = Credentials.from_service_account_file(creds_path, scopes=SCOPES)
     return gspread.authorize(creds)

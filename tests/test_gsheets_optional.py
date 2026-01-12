@@ -621,3 +621,185 @@ class TestHeaderMapping:
         # Empty sheet headers
         mapped_rows, info = _map_csv_to_sheet_headers([["a"], ["1"]], [])
         assert info["type"] == "positional"
+
+
+class TestEdgeCases:
+    """Edge-case tests for header normalization, dedupe, and replace mode."""
+
+    def test_normalize_header_mixed_case_and_symbols(self):
+        """_normalize_header should handle mixed case and various symbols."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert _normalize_header("Full-Name") == "full_name"
+        assert _normalize_header("BAR_NUMBER") == "bar_number"
+        assert _normalize_header("  Email Address  ") == "email_address"
+        assert _normalize_header("Company--Name") == "company__name"
+
+    def test_synonym_mapping_covers_all_variants(self):
+        """All documented synonyms should map correctly."""
+        from tools.gsheets_exporter import HEADER_SYNONYMS
+
+        # name variants
+        assert HEADER_SYNONYMS.get("name") == "full_name"
+        assert HEADER_SYNONYMS.get("fullname") == "full_name"
+        assert HEADER_SYNONYMS.get("full_name") == "full_name"
+
+        # firm variants
+        assert HEADER_SYNONYMS.get("firm") == "firm"
+        assert HEADER_SYNONYMS.get("company") == "firm"
+        assert HEADER_SYNONYMS.get("law_firm") == "firm"
+
+        # bar_number variants
+        assert HEADER_SYNONYMS.get("bar_number") == "bar_number"
+        assert HEADER_SYNONYMS.get("bar_id") == "bar_number"
+
+    def test_missing_columns_become_blank(self):
+        """Columns in sheet but not in CSV should become blank."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+        ]
+        sheet_headers = ["full_name", "email", "city", "state", "bar_number"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        # Row should have 5 columns, with city/state/bar_number blank
+        assert len(mapped_rows[0]) == 5
+        assert mapped_rows[0][0] == "John"        # full_name
+        assert mapped_rows[0][1] == "john@example.com"  # email
+        assert mapped_rows[0][2] == ""            # city (blank)
+        assert mapped_rows[0][3] == ""            # state (blank)
+        assert mapped_rows[0][4] == ""            # bar_number (blank)
+
+    def test_extra_columns_tracked_as_unmapped(self):
+        """Columns in CSV but not in sheet should be tracked as unmapped."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email", "phone", "notes", "custom_field"],
+            ["John", "john@example.com", "555-1234", "VIP", "xyz"],
+        ]
+        sheet_headers = ["full_name", "email"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        assert "phone" in info["unmapped_columns"]
+        assert "notes" in info["unmapped_columns"]
+        assert "custom_field" in info["unmapped_columns"]
+        assert len(info["unmapped_columns"]) == 3
+
+    def test_dedupe_is_idempotent(self):
+        """Running dedupe twice should produce same result."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+            ["Jane", "jane@example.com"],
+            ["John2", "john@example.com"],  # duplicate
+        ]
+
+        result1 = dedupe_rows(rows, "email")
+        result2 = dedupe_rows(result1, "email")
+
+        assert result1 == result2
+        assert len(result1) == 3  # header + 2 unique
+
+    def test_dedupe_preserves_first_occurrence(self):
+        """Dedupe should keep first occurrence, not last."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email", "score"],
+            ["First", "same@example.com", "100"],
+            ["Second", "same@example.com", "200"],
+            ["Third", "same@example.com", "300"],
+        ]
+
+        result = dedupe_rows(rows, "email")
+
+        assert len(result) == 2
+        assert result[1][0] == "First"
+        assert result[1][2] == "100"
+
+    def test_dedupe_handles_empty_key_values(self):
+        """Dedupe should handle empty string keys."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+            ["NoEmail1", ""],
+            ["NoEmail2", ""],  # duplicate empty
+        ]
+
+        result = dedupe_rows(rows, "email")
+
+        # Should keep first empty, remove second
+        assert len(result) == 3
+
+    def test_dedupe_handles_single_row(self):
+        """Dedupe should handle single data row."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+        ]
+
+        result = dedupe_rows(rows, "email")
+        assert result == rows
+
+
+class TestSecretsRails:
+    """Tests for secrets safety rails."""
+
+    def test_validate_credentials_path_function_exists(self):
+        """_validate_credentials_path should be importable."""
+        from tools.gsheets_exporter import _validate_credentials_path
+
+        assert callable(_validate_credentials_path)
+
+    def test_credentials_inside_repo_raises_error(self, tmp_path):
+        """Credentials path inside repo should raise error."""
+        from tools.gsheets_exporter import _validate_credentials_path
+
+        # Simulate repo root and creds inside it
+        repo_root = tmp_path / "myrepo"
+        repo_root.mkdir()
+        creds_file = repo_root / "secrets" / "creds.json"
+        creds_file.parent.mkdir()
+        creds_file.write_text("{}")
+
+        with pytest.raises(ValueError) as exc_info:
+            _validate_credentials_path(str(creds_file), str(repo_root))
+
+        assert "inside" in str(exc_info.value).lower() or "repo" in str(exc_info.value).lower()
+
+    def test_credentials_outside_repo_is_valid(self, tmp_path):
+        """Credentials path outside repo should be valid."""
+        from tools.gsheets_exporter import _validate_credentials_path
+
+        # Simulate repo root and creds outside it
+        repo_root = tmp_path / "myrepo"
+        repo_root.mkdir()
+        creds_file = tmp_path / "secrets" / "creds.json"
+        creds_file.parent.mkdir()
+        creds_file.write_text("{}")
+
+        # Should not raise
+        _validate_credentials_path(str(creds_file), str(repo_root))
+
+    def test_env_local_in_gitignore(self):
+        """'.env.local' should be in .gitignore."""
+        from pathlib import Path
+
+        gitignore_path = Path(__file__).parent.parent / ".gitignore"
+        if not gitignore_path.exists():
+            pytest.skip(".gitignore not found")
+
+        content = gitignore_path.read_text()
+        # Check for .env.local or *.env* pattern
+        assert ".env.local" in content or ".env*" in content or "*.env*" in content
