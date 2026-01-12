@@ -54,16 +54,23 @@ Write-Host "  Worksheet: $Worksheet"
 Write-Host ""
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 2. Activate virtual environment
+# 2. Verify virtual environment Python
 # ─────────────────────────────────────────────────────────────────────────────
-$VenvActivate = Join-Path $RepoRoot ".venv\Scripts\Activate.ps1"
+$VenvPython = Join-Path $RepoRoot ".venv\Scripts\python.exe"
 
-if (Test-Path $VenvActivate) {
-    Write-Host "[1/4] Activating .venv..." -ForegroundColor Yellow
-    & $VenvActivate
+if (Test-Path $VenvPython) {
+    Write-Host "[1/4] Using .venv Python..." -ForegroundColor Yellow
+    Write-Host "      Python: $VenvPython" -ForegroundColor DarkGray
 } else {
-    Write-Warning "[1/4] .venv not found at $VenvActivate — using system Python"
-    Write-Warning "      Consider running: python -m venv .venv && .\.venv\Scripts\Activate.ps1 && pip install -e .[gsheets]"
+    Write-Host ""
+    Write-Error ".venv not found at $RepoRoot\.venv"
+    Write-Host ""
+    Write-Host "To create the virtual environment, run:" -ForegroundColor Yellow
+    Write-Host "  python -m venv .venv" -ForegroundColor White
+    Write-Host "  .\.venv\Scripts\Activate.ps1" -ForegroundColor White
+    Write-Host "  pip install -e .[gsheets]" -ForegroundColor White
+    Write-Host ""
+    exit 1
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -79,7 +86,7 @@ Write-Host "[2/4] Loading .env.local..." -ForegroundColor Yellow
 # ─────────────────────────────────────────────────────────────────────────────
 Write-Host ""
 Write-Host "[3/4] Checking Google Sheets dependencies..." -ForegroundColor Yellow
-python -m tools.gsheets_exporter --check
+& $VenvPython -m tools.gsheets_exporter --check
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Google Sheets dependencies not installed. Run: pip install .[gsheets]"
     exit 1
@@ -87,7 +94,7 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host ""
 Write-Host "[3/4] Listing available worksheets..." -ForegroundColor Yellow
-python -m tools.gsheets_exporter --list-worksheets
+& $VenvPython -m tools.gsheets_exporter --list-worksheets
 if ($LASTEXITCODE -ne 0) {
     Write-Warning "Could not list worksheets (check credentials/spreadsheet ID)"
 }
@@ -96,9 +103,9 @@ Write-Host ""
 Write-Host "[4/4] Exporting demo row to worksheet '$Worksheet'..." -ForegroundColor Yellow
 
 if ($DryRun) {
-    python -m tools.gsheets_exporter --demo --worksheet $Worksheet --dry-run
+    & $VenvPython -m tools.gsheets_exporter --demo --worksheet $Worksheet --dry-run
 } else {
-    python -m tools.gsheets_exporter --demo --worksheet $Worksheet
+    & $VenvPython -m tools.gsheets_exporter --demo --worksheet $Worksheet
 }
 
 if ($LASTEXITCODE -eq 0) {

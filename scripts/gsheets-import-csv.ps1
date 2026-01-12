@@ -90,16 +90,23 @@ if (-not (Test-Path $CsvPath)) {
 $CsvPath = (Resolve-Path $CsvPath).Path
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 3. Activate virtual environment
+# 3. Verify virtual environment Python
 # ─────────────────────────────────────────────────────────────────────────────
-$VenvActivate = Join-Path $RepoRoot ".venv\Scripts\Activate.ps1"
+$VenvPython = Join-Path $RepoRoot ".venv\Scripts\python.exe"
 
-if (Test-Path $VenvActivate) {
-    Write-Host "[1/3] Activating .venv..." -ForegroundColor Yellow
-    & $VenvActivate
+if (Test-Path $VenvPython) {
+    Write-Host "[1/3] Using .venv Python..." -ForegroundColor Yellow
+    Write-Host "      Python: $VenvPython" -ForegroundColor DarkGray
 } else {
-    Write-Warning "[1/3] .venv not found at $VenvActivate — using system Python"
-    Write-Warning "      Consider running: python -m venv .venv && .\.venv\Scripts\Activate.ps1 && pip install -e .[gsheets]"
+    Write-Host ""
+    Write-Error ".venv not found at $RepoRoot\.venv"
+    Write-Host ""
+    Write-Host "To create the virtual environment, run:" -ForegroundColor Yellow
+    Write-Host "  python -m venv .venv" -ForegroundColor White
+    Write-Host "  .\.venv\Scripts\Activate.ps1" -ForegroundColor White
+    Write-Host "  pip install -e .[gsheets]" -ForegroundColor White
+    Write-Host ""
+    exit 1
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -116,7 +123,7 @@ Write-Host "[2/3] Loading .env.local..." -ForegroundColor Yellow
 Write-Host ""
 Write-Host "[3/3] Importing CSV to Google Sheets..." -ForegroundColor Yellow
 
-$Args = @(
+$PythonArgs = @(
     "-m", "tools.gsheets_exporter",
     "--csv", $CsvPath,
     "--worksheet", $Worksheet,
@@ -125,10 +132,10 @@ $Args = @(
 )
 
 if ($DryRun) {
-    $Args += "--dry-run"
+    $PythonArgs += "--dry-run"
 }
 
-python @Args
+& $VenvPython @PythonArgs
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host ""
