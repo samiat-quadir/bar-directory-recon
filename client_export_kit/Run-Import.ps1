@@ -7,7 +7,7 @@
     This is the client-facing entry point for the export kit.
 
 .PARAMETER CsvPath
-    Path to the CSV file to import (required)
+    Path to the CSV file to import. If omitted, uses examples\sample_leads.csv
 
 .PARAMETER Worksheet
     Target worksheet name (default: "leads")
@@ -29,7 +29,7 @@
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, Position=0)]
+    [Parameter(Position=0)]
     [string]$CsvPath,
 
     [string]$Worksheet = "leads",
@@ -61,9 +61,13 @@ if (-not (Test-Path $ImportScript)) {
 }
 
 $ImportArgs = @{
-    CsvPath = $CsvPath
     Worksheet = $Worksheet
     Mode = $Mode
+}
+
+# Only pass CsvPath if specified (let import script auto-discover if not)
+if ($CsvPath) {
+    $ImportArgs.CsvPath = $CsvPath
 }
 
 if ($DryRun) {
