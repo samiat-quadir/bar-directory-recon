@@ -134,8 +134,8 @@ class WebPageMonitor:
             logger.error(f"Failed to save state: {e}")
 
     def _get_page_hash(self, content: str) -> str:
-        """Generate hash of page content for change detection"""
-        return hashlib.md5(content.encode('utf-8')).hexdigest()
+        """Generate hash of page content for change detection."""
+        return hashlib.sha256(content.encode('utf-8')).hexdigest()
 
     def _extract_file_links(self, url: str, html_content: str) -> List[Tuple[str, str]]:
         """Extract file download links from HTML content"""
