@@ -81,6 +81,7 @@ logs/
 screenshots/
 data/
 output/
+outputs/
 run_logs/
 temp_backup/
 temp_broken_code/
@@ -97,6 +98,11 @@ src/backups/archives/
 .env*
 .env.*
 !.env.example
+# Credential JSON files (OAuth client secrets, service accounts)
+client_secret*.json
+*service_account*.json
+*credentials*.json
+!config/credentials.example.json
 # project-specific
 config/device_config.json
 local_device_config.json
@@ -107,6 +113,8 @@ device_*.json
 settings_*.json
 .env.work
 .env.asus
+# Archived credentials (never track)
+archive/credentials/
 
 ############################################################
 # 7 · One-off project artefacts

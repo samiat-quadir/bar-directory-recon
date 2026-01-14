@@ -14,6 +14,8 @@ Security:
 """
 
 import os
+import sys
+import warnings
 from pathlib import Path
 from typing import List, Optional
 
@@ -23,7 +25,7 @@ _GSHEETS_AVAILABLE: Optional[bool] = None
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # ---------------------------------------------------------------------------
-# Security: Secrets Rails
+# Interpreter Guardrail: Enforce project .venv
 # ---------------------------------------------------------------------------
 
 
@@ -34,6 +36,65 @@ def _get_repo_root() -> Optional[Path]:
         if (parent / ".git").exists():
             return parent
     return None
+
+
+def _check_venv_guardrail() -> None:
+    """
+    Verify that we are running inside the project's virtual environment.
+
+    Raises:
+        RuntimeError: If not running inside the project .venv
+    """
+    repo_root = _get_repo_root()
+    if repo_root is None:
+        # Not in a git repo, skip check
+        return
+
+    # Get the current Python executable path
+    python_path = Path(sys.executable).resolve()
+
+    # Expected venv locations (Windows and Unix)
+    expected_venv_paths = [
+        repo_root / ".venv" / "Scripts" / "python.exe",  # Windows
+        repo_root / ".venv" / "bin" / "python",          # Unix
+        repo_root / "venv" / "Scripts" / "python.exe",   # Windows alt
+        repo_root / "venv" / "bin" / "python",           # Unix alt
+    ]
+
+    # Check if current Python is in any expected venv
+    in_project_venv = any(
+        python_path == expected.resolve()
+        for expected in expected_venv_paths
+        if expected.exists()
+    )
+
+    # Also check if VIRTUAL_ENV points to project venv
+    virtual_env = os.environ.get("VIRTUAL_ENV", "")
+    if virtual_env:
+        venv_path = Path(virtual_env).resolve()
+        in_project_venv = in_project_venv or (
+            venv_path == (repo_root / ".venv").resolve() or
+            venv_path == (repo_root / "venv").resolve()
+        )
+
+    if not in_project_venv:
+        raise RuntimeError(
+            f"INTERPRETER ERROR: Not running inside the project virtual environment.\\n"
+            f"\\n"
+            f"  Current Python: {python_path}\\n"
+            f"  Project root:   {repo_root}\\n"
+            f"\\n"
+            f"To activate the correct environment:\\n"
+            f"  Windows:  {repo_root}\\.venv\\Scripts\\activate\\n"
+            f"  Unix:     source {repo_root}/.venv/bin/activate\\n"
+            f"\\n"
+            f"Then retry your command."
+        )
+
+
+# ---------------------------------------------------------------------------
+# Security: Secrets Rails
+# ---------------------------------------------------------------------------
 
 
 def _validate_credentials_path(creds_path: str, repo_root: Optional[str] = None) -> None:
@@ -140,6 +201,9 @@ def get_client():
     if not _check_gsheets_available():
         raise GSheetsNotInstalledError()
 
+    # Enforce running inside project venv
+    _check_venv_guardrail()
+
     # Lazy imports inside function
     from google.oauth2.service_account import Credentials
     import gspread
@@ -147,20 +211,37 @@ def get_client():
     # Standardized env variable
     creds_path = os.environ.get('GOOGLE_SHEETS_CREDENTIALS_PATH', '')
 
-    # Fallback to legacy env var for backwards compatibility
+    # Fallback to legacy env var for backwards compatibility (with deprecation warning)
     if not creds_path:
-        creds_path = os.environ.get('GOOGLE_SA_JSON', '')
+        legacy_path = os.environ.get('GOOGLE_SA_JSON', '')
+        if legacy_path:
+            warnings.warn(
+                "GOOGLE_SA_JSON is deprecated. "
+                "Use GOOGLE_SHEETS_CREDENTIALS_PATH instead. "
+                "Support for GOOGLE_SA_JSON will be removed in a future version.",
+                DeprecationWarning,
+                stacklevel=2
+            )
+            creds_path = legacy_path
 
     if not creds_path:
         raise RuntimeError(
-            "GOOGLE_SHEETS_CREDENTIALS_PATH not set. "
-            "Set this environment variable to the path of your service account JSON file."
+            "GOOGLE_SHEETS_CREDENTIALS_PATH not set.\\n"
+            "\\n"
+            "Set this environment variable to the path of your service account JSON file:\\n"
+            "  Windows PowerShell:  $env:GOOGLE_SHEETS_CREDENTIALS_PATH = 'C:\\\\secrets\\\\your-sa.json'\\n"
+            "  Windows CMD:         set GOOGLE_SHEETS_CREDENTIALS_PATH=C:\\\\secrets\\\\your-sa.json\\n"
+            "  Unix/macOS:          export GOOGLE_SHEETS_CREDENTIALS_PATH=/path/to/your-sa.json\\n"
+            "\\n"
+            "IMPORTANT: Store credentials OUTSIDE the repository (e.g., C:\\\\secrets\\\\ or ~/secrets/)."
         )
 
     if not os.path.exists(creds_path):
         raise RuntimeError(
-            f"Credentials file not found: {creds_path}. "
-            "Ensure GOOGLE_SHEETS_CREDENTIALS_PATH points to a valid service account JSON file."
+            f"Credentials file not found: {creds_path}\\n"
+            "\\n"
+            "Ensure GOOGLE_SHEETS_CREDENTIALS_PATH points to a valid service account JSON file.\\n"
+            "Download your service account key from Google Cloud Console."
         )
 
     # Security: Ensure credentials are not inside the repository

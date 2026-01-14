@@ -1,34 +1,69 @@
+# Pre-commit hooks for bar-directory-recon
+# ==========================================
+# HOOK TIERS:
+#   BLOCKING: Hooks that prevent commits if they fail (secrets, paths, corruption)
+#   WARN_ONLY: Hooks that run on push only (formatting, style)
+#
+# Golden-path code is gated ONLY by BLOCKING hooks.
+
 repos:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # BLOCKING HOOKS — These run on every commit and MUST pass
+  # ═══════════════════════════════════════════════════════════════════════════
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
-      - id: trailing-whitespace
-        exclude: ^(.*\.(zip|gz|tar|rar|7z|pdf|png|jpg|jpeg|gif|bin|log))$
-      - id: end-of-file-fixer
-        exclude: ^(.*\.(zip|gz|tar|rar|7z|pdf|png|jpg|jpeg|gif|bin|log))$
-      - id: check-yaml
+      # BLOCKING: Large files can corrupt repo
       - id: check-added-large-files
         args: ["--maxkb=1000"]
+
+      # BLOCKING: Syntax validation
+      - id: check-yaml
+
+      # WARN_ONLY: Formatting (moved to pre-push)
+      - id: trailing-whitespace
+        exclude: ^(.*\.(zip|gz|tar|rar|7z|pdf|png|jpg|jpeg|gif|bin|log))$
+        stages: [pre-push]
+
+      - id: end-of-file-fixer
+        exclude: ^(.*\.(zip|gz|tar|rar|7z|pdf|png|jpg|jpeg|gif|bin|log))$
+        stages: [pre-push]
+
+  # BLOCKING: Secrets detection — prevents credential leaks
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+        additional_dependencies:
+          - requests
+          - pyyaml
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # WARN_ONLY HOOKS — These run on push only, non-blocking for commits
+  # ═══════════════════════════════════════════════════════════════════════════
 
   - repo: https://github.com/psf/black
     rev: 23.9.1
     hooks:
       - id: black
         args: ["--line-length=88", "--check", "--diff"]
-        stages: [pre-push] # Only run on push, not commit
+        stages: [pre-push]
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.12.0
     hooks:
       - id: isort
         args: ["--check-only", "--diff"]
-        stages: [pre-push] # Only run on push, not commit
+        stages: [pre-push]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
     hooks:
       - id: flake8
         args: ["--config=.flake8"]
+        stages: [pre-push]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.5.1
@@ -37,8 +72,8 @@ repos:
         additional_dependencies: [types-requests, types-PyYAML, types-aiofiles]
         pass_filenames: false
         args: ["--config-file=mypy.ini"]
+        stages: [pre-push]
 
-  # Add autoflake to remove unused imports automatically
   - repo: https://github.com/PyCQA/autoflake
     rev: v2.2.1
     hooks:
@@ -49,13 +84,4 @@ repos:
             "--remove-unused-variables",
             "--in-place",
           ]
-
-  # Add detect-secrets for secrets scanning
-  - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.5.0
-    hooks:
-      - id: detect-secrets
-        args: ["--baseline", ".secrets.baseline"]
-        additional_dependencies:
-          - requests
-          - pyyaml
+        stages: [pre-push]

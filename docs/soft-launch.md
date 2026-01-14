@@ -62,11 +62,34 @@ GOOGLE_SHEETS_CREDENTIALS_PATH=C:\secrets\bdr-service-account.json
 GOOGLE_SHEETS_SPREADSHEET_ID=your-spreadsheet-id-here
 ```
 
-> ⚠️ **Security**: `.env.local` is gitignored and will not be committed.
+> ⚠️ **SECURITY WARNING**: Credentials must be stored **OUTSIDE** the repository!
+> - Store your service account JSON in a secure location (e.g., `C:\secrets\` or `~/secrets/`)
+> - `.env.local` is gitignored and will never be committed
+> - Never commit credential files to version control
 
 ---
 
-## One-Command Demo
+## Golden Path: One-Command Export
+
+The **supported workflow** for BDR is exporting CSV data to Google Sheets.
+
+### Using the BDR CLI (Recommended)
+
+```bash
+# Export a CSV file to Google Sheets
+bdr export csv-to-sheets leads.csv --sheet-id YOUR_SPREADSHEET_ID
+
+# Replace worksheet contents instead of appending
+bdr export csv-to-sheets leads.csv --sheet-id YOUR_ID --mode replace
+
+# Deduplicate by email before exporting
+bdr export csv-to-sheets leads.csv --sheet-id YOUR_ID --dedupe-key email
+
+# Preview without writing (dry-run)
+bdr export csv-to-sheets leads.csv --dry-run
+```
+
+### Using PowerShell Scripts (Alternative)
 
 Run the demo to verify everything works:
 
@@ -86,10 +109,10 @@ This will:
 
 BDR uses two worksheets to keep your data clean:
 
-| Worksheet | Purpose | Script Default |
-|-----------|---------|----------------|
-| **leads** | Your actual lead data (attorneys, contacts) | `gsheets-import-csv.ps1` |
-| **changelog** | System logs, demo runs, audit records | `gsheets-demo.ps1` |
+| Worksheet     | Purpose                                     | Script Default         |
+|---------------|---------------------------------------------|------------------------|
+| **leads**     | Your actual lead data (attorneys, contacts) | `gsheets-import-csv.ps1` |
+| **changelog** | System logs, demo runs, audit records       | `gsheets-demo.ps1`     |
 
 This ensures demo/test runs never pollute your production lead data.
 
