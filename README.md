@@ -3,9 +3,50 @@
 [![PyPI version](https://img.shields.io/pypi/v/bar-directory-recon.svg)](https://pypi.org/project/bar-directory-recon/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://img.shields.io/badge/tests-33%20passed-green.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions)
+[![Tests](https://img.shields.io/badge/tests-120%2B%20passed-green.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions)
+[![Coverage](https://img.shields.io/badge/coverage-17%25-yellow.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions)
 [![Release](https://img.shields.io/badge/release-v2.0-brightgreen.svg)](https://github.com/samiat-quadir/bar-directory-recon/releases/tag/v2.0)
 [![Bootstrap Ready](https://img.shields.io/badge/bootstrap-ready-success.svg)](./alienware_bootstrap_bundle.zip)
+
+---
+
+## ⚡ Quick Start (3 Steps)
+
+```bash
+# 1. Clone & setup virtual environment
+git clone https://github.com/samiat-quadir/bar-directory-recon.git
+cd bar-directory-recon
+python -m venv .venv
+.venv\Scripts\activate  # Windows (PowerShell)
+# source .venv/bin/activate  # Linux/macOS
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Verify installation
+python -m pytest tests/ -v --tb=short  # Run tests
+bdr doctor --no-exec                    # Check environment
+```
+
+### 🧪 Dry-Run Example
+
+Try the plugin system without making real network requests:
+
+```bash
+# Validate plugin registry & infrastructure
+python -m pytest universal_recon/tests/plugins/test_plugin_dryrun.py -v
+
+# List available plugins
+python -c "import json; print(json.dumps(json.load(open('universal_recon/plugin_registry.json')), indent=2))"
+```
+
+### 📄 Configuration
+
+1. Copy `.env.example` to `.env.local` (not tracked in git)
+2. Add your API keys and secrets to `.env.local`
+3. See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for detailed options
+
+---
 
 ## Quick demo
 

@@ -257,13 +257,22 @@ Performance:
         else:
             start_time_iso = str(start_time)
 
+        # Get stats and ensure all datetime objects are serialized
+        stats = self.get_stats()
+        serialized_stats = {}
+        for key, value in stats.items():
+            if isinstance(value, datetime):
+                serialized_stats[key] = value.isoformat()
+            else:
+                serialized_stats[key] = value
+
         report = {
             "session_info": {
                 "name": self.name,
                 "start_time": start_time_iso,
                 "end_time": datetime.now().isoformat(),
             },
-            "statistics": self.get_stats(),
+            "statistics": serialized_stats,
             "errors": self.errors,
             "warnings": self.warnings,
         }

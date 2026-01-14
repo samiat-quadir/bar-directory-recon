@@ -174,3 +174,27 @@ secrets_scan_report_*.json
 
 # smoke-test 2025-07-29T16:36:28
 REPO_HYGIENE_COMPLETION_REPORT.md
+
+############################################################
+# 13 · Generated outputs & temporary configs (Phase 2 cleanup)
+############################################################
+# Processing outputs (should never be version controlled)
+outputs/*.json
+batch_processing_report*.txt
+
+# Git operation logs
+git_commit.log
+git_commit_notify.log
+email_notifier.log
+
+# Temporary/generated settings files
+temp_*.json
+*_temp.json
+sync_data_*.json
+vscode_insiders_settings.json
+
+# Audit results (machine-specific)
+audits/*/audit_*.json
+
+# Security reports (regenerated on each scan)
+security_*_report.json
