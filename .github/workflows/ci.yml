@@ -70,7 +70,20 @@ jobs:
           # Coverage Ratchet: Current gate=17%, target=25%
           # Policy: Increase by +2% per PR when coverage exceeds gate
           echo "📊 Coverage Gate: 17% (ratchet policy - increase when coverage exceeds gate)"
+          echo "📊 Next targets: 19% → 21% → 25%"
           pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=17
+
+      - name: Print Coverage Summary
+        if: always()
+        run: |
+          echo ""
+          echo "═══════════════════════════════════════════════════════════"
+          echo "📊 COVERAGE SUMMARY"
+          echo "═══════════════════════════════════════════════════════════"
+          python -m coverage report -m --skip-covered | tail -20
+          echo ""
+          python -m coverage report | grep -E "^TOTAL" || echo "TOTAL line not found"
+          echo "═══════════════════════════════════════════════════════════"
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
