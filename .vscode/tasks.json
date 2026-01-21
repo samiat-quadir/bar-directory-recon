@@ -1,514 +1,525 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Run Automation Setup",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "-m",
-                "pip",
-                "install",
-                "-r",
-                "requirements.txt"
-            ],
-            "group": "build",
-            "problemMatcher": []
-        },
-        {
-            "label": "Lint: flake8",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "-m",
-                "flake8",
-                ".",
-                "--max-line-length=88",
-                "--extend-ignore=E203,W503"
-            ],
-            "group": "test",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Validate Requirements",
-            "type": "shell",
-            "command": "validate_requirements.bat",
-            "group": "test",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "Fix Requirements",
-            "type": "shell",
-            "command": "validate_requirements.bat",
-            "args": [
-                "--fix"
-            ],
-            "group": "test",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "Type Check: mypy",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "-m",
-                "mypy",
-                ".",
-                "--ignore-missing-imports"
-            ],
-            "group": "test",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Test: pytest",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "-m",
-                "pytest",
-                "-v"
-            ],
-            "group": "test",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Secrets Scan",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "tools/secrets_scan.py"
-            ],
-            "group": "test",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Run Cross Device Bootstrap",
-            "type": "shell",
-            "command": "cross_device_bootstrap.bat >> logs/cross_device_sync.log 2>&1",
-            "problemMatcher": [],
-            "group": "build"
-        },
-        {
-            "label": "Validate .venv Activation",
-            "type": "shell",
-            "command": "cmd /c \".venv\\Scripts\\python.exe -c \"import sys; print('[VENV ACTIVE]' if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') && sys.base_prefix != sys.prefix) else '[VENV ERROR]')\" >> logs/cross_device_sync.log 2>&1\"",
-            "problemMatcher": []
-        },
-        {
-            "label": "Check device_profile.json",
-            "type": "shell",
-            "command": "if exist config\\device_profile.json (echo [PROFILE OK] device_profile.json found.) else (echo [PROFILE ERROR] device_profile.json missing.) >> logs/cross_device_sync.log 2>&1",
-            "problemMatcher": []
-        },
-        {
-            "label": "Check Git Sync Status",
-            "type": "shell",
-            "command": "git status >> logs/cross_device_sync.log 2>&1 && echo [GIT OK] || echo [GIT ERROR] >> logs/cross_device_sync.log 2>&1",
-            "problemMatcher": []
-        },
-        {
-            "label": "Cross Device Full Sync",
-            "dependsOn": [
-                "Run Cross Device Bootstrap",
-                "Validate .venv Activation",
-                "Check device_profile.json",
-                "Check Git Sync Status"
-            ],
-            "dependsOrder": "sequence",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "Git Repair and Health Check",
-            "type": "shell",
-            "command": "git fetch --prune >> logs/cross_device_sync.log 2>&1 && git fsck >> logs/cross_device_sync.log 2>&1 && git gc --auto >> logs/cross_device_sync.log 2>&1 && echo [GIT HEALTH] Repair and health check complete. >> logs/cross_device_sync.log 2>&1",
-            "problemMatcher": []
-        },
-        {
-            "label": "Run Pre-commit",
-            "type": "shell",
-            "command": "pre-commit run --all-files",
-            "problemMatcher": []
-        },
-        {
-            "label": "Test Cross-Device",
-            "type": "shell",
-            "command": "powershell -File tools/Test-CrossDeviceCompatibility.ps1",
-            "problemMatcher": []
-        },
-        {
-            "label": "Detect and Configure Device",
-            "type": "shell",
-            "command": "powershell",
-            "args": [
-                "-ExecutionPolicy",
-                "Bypass",
-                "-NoProfile",
-                "-File",
-                "${workspaceFolder}\\tools\\AutoDeviceSetup.ps1"
-            ],
-            "presentation": {
-                "reveal": "silent",
-                "panel": "dedicated",
-                "clear": true
-            },
-            "problemMatcher": [],
-            "runOptions": {
-                "runOn": "folderOpen"
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "Start Development Environment",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "-m",
-                "pytest",
-                "-v",
-                "--tb=short",
-                "--cov=.",
-                "--cov-report=term-missing"
-            ],
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": [],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "Secrets Scan",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "tools/secrets_scan.py",
-                "--directory",
-                ".",
-                "--severity",
-                "medium",
-                "--output-format",
-                "console",
-                "--github-annotations"
-            ],
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": [],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "Full Quality Check",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "-c",
-                "import subprocess; import sys; tasks = ['flake8 --max-line-length=120 --ignore=E203,W503 .', 'mypy --config-file pyproject.toml .', 'pytest -v --tb=short']; [subprocess.run(task.split(), check=True) for task in tasks]; print('✅ All quality checks passed!')"
-            ],
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": [
-                "$python"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "Run Automation Setup",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "setup_check.py"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": [],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "Debug Configuration Demo",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "configuration_demo.py"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": [],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "Generate Documentation",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/merge_documentation.py",
-                "--project-root",
-                ".",
-                "--create-indexes"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Full Environment Bootstrap",
-            "dependsOn": [
-                "Cross Device Full Sync",
-                "Git Repair and Health Check",
-                "Run Pre-commit",
-                "Test Cross-Device"
-            ],
-            "dependsOrder": "sequence",
-            "type": "shell",
-            "problemMatcher": [],
-            "group": "build"
-        },
-        {
-            "label": "Update Virtual Environment for Cross-Device",
-            "type": "shell",
-            "command": "${workspaceFolder}\\Fix-VenvPath.bat",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new",
-                "clear": true
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Scan for Hardcoded Paths",
-            "type": "shell",
-            "command": "${workspaceFolder}\\ScanPaths.bat",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new",
-                "clear": true
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Fix Hardcoded Paths",
-            "type": "shell",
-            "command": "${workspaceFolder}\\ScanPaths.bat --fix",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new",
-                "clear": true
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Autonomous Code Format",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/format_code.py"
-            ],
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Autonomous Git Commit",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/auto_commit.py",
-                "Autonomous commit: Update security implementation"
-            ],
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Quick Environment Setup",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/quick_setup.py"
-            ],
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Safe Format and Commit",
-            "dependsOn": [
-                "Autonomous Code Format",
-                "Autonomous Git Commit"
-            ],
-            "dependsOrder": "sequence",
-            "group": "build",
-            "problemMatcher": []
-        },
-        {
-            "label": "Advanced Git Push",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/advanced_git.py"
-            ],
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Advanced Git Force Push",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/advanced_git.py",
-                "--force"
-            ],
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Auto Commit and Push",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/auto_commit.py",
-                "--push"
-            ],
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "Auto Push Only",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/auto_commit.py",
-                "--push-only"
-            ],
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "🚀 Bulletproof Git Workflow (Solves Ali's Issues)",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/bulletproof_git.py",
-                "--auto"
-            ],
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "⚙️ Setup Bulletproof Git Environment (One-Time)",
-            "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [
-                "scripts/setup_bulletproof_git.py"
-            ],
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Automation Setup",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"-m",
+				"pip",
+				"install",
+				"-r",
+				"requirements.txt"
+			],
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Lint: flake8",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"-m",
+				"flake8",
+				".",
+				"--max-line-length=88",
+				"--extend-ignore=E203,W503"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Validate Requirements",
+			"type": "shell",
+			"command": "validate_requirements.bat",
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"label": "Fix Requirements",
+			"type": "shell",
+			"command": "validate_requirements.bat",
+			"args": [
+				"--fix"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"label": "Type Check: mypy",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"-m",
+				"mypy",
+				".",
+				"--ignore-missing-imports"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Test: pytest",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"-m",
+				"pytest",
+				"-v"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Secrets Scan",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"tools/secrets_scan.py"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Run Cross Device Bootstrap",
+			"type": "shell",
+			"command": "cross_device_bootstrap.bat >> logs/cross_device_sync.log 2>&1",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Validate .venv Activation",
+			"type": "shell",
+			"command": "cmd /c \".venv\\Scripts\\python.exe -c \"import sys; print('[VENV ACTIVE]' if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') && sys.base_prefix != sys.prefix) else '[VENV ERROR]')\" >> logs/cross_device_sync.log 2>&1\"",
+			"problemMatcher": []
+		},
+		{
+			"label": "Check device_profile.json",
+			"type": "shell",
+			"command": "if exist config\\device_profile.json (echo [PROFILE OK] device_profile.json found.) else (echo [PROFILE ERROR] device_profile.json missing.) >> logs/cross_device_sync.log 2>&1",
+			"problemMatcher": []
+		},
+		{
+			"label": "Check Git Sync Status",
+			"type": "shell",
+			"command": "git status >> logs/cross_device_sync.log 2>&1 && echo [GIT OK] || echo [GIT ERROR] >> logs/cross_device_sync.log 2>&1",
+			"problemMatcher": []
+		},
+		{
+			"label": "Cross Device Full Sync",
+			"dependsOn": [
+				"Run Cross Device Bootstrap",
+				"Validate .venv Activation",
+				"Check device_profile.json",
+				"Check Git Sync Status"
+			],
+			"dependsOrder": "sequence",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Git Repair and Health Check",
+			"type": "shell",
+			"command": "git fetch --prune >> logs/cross_device_sync.log 2>&1 && git fsck >> logs/cross_device_sync.log 2>&1 && git gc --auto >> logs/cross_device_sync.log 2>&1 && echo [GIT HEALTH] Repair and health check complete. >> logs/cross_device_sync.log 2>&1",
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Pre-commit",
+			"type": "shell",
+			"command": "pre-commit run --all-files",
+			"problemMatcher": []
+		},
+		{
+			"label": "Test Cross-Device",
+			"type": "shell",
+			"command": "powershell -File tools/Test-CrossDeviceCompatibility.ps1",
+			"problemMatcher": []
+		},
+		{
+			"label": "Detect and Configure Device",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-NoProfile",
+				"-File",
+				"${workspaceFolder}\\tools\\AutoDeviceSetup.ps1"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "dedicated",
+				"clear": true
+			},
+			"problemMatcher": [],
+			"runOptions": {
+				"runOn": "folderOpen"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Start Development Environment",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"-m",
+				"pytest",
+				"-v",
+				"--tb=short",
+				"--cov=.",
+				"--cov-report=term-missing"
+			],
+			"group": "test",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"label": "Secrets Scan",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"tools/secrets_scan.py",
+				"--directory",
+				".",
+				"--severity",
+				"medium",
+				"--output-format",
+				"console",
+				"--github-annotations"
+			],
+			"group": "test",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"label": "Full Quality Check",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"-c",
+				"import subprocess; import sys; tasks = ['flake8 --max-line-length=120 --ignore=E203,W503 .', 'mypy --config-file pyproject.toml .', 'pytest -v --tb=short']; [subprocess.run(task.split(), check=True) for task in tasks]; print('✅ All quality checks passed!')"
+			],
+			"group": "test",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": [
+				"$python"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"label": "Run Automation Setup",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"setup_check.py"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"label": "Debug Configuration Demo",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"configuration_demo.py"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"label": "Generate Documentation",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/merge_documentation.py",
+				"--project-root",
+				".",
+				"--create-indexes"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Full Environment Bootstrap",
+			"dependsOn": [
+				"Cross Device Full Sync",
+				"Git Repair and Health Check",
+				"Run Pre-commit",
+				"Test Cross-Device"
+			],
+			"dependsOrder": "sequence",
+			"type": "shell",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Update Virtual Environment for Cross-Device",
+			"type": "shell",
+			"command": "${workspaceFolder}\\Fix-VenvPath.bat",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Scan for Hardcoded Paths",
+			"type": "shell",
+			"command": "${workspaceFolder}\\ScanPaths.bat",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Fix Hardcoded Paths",
+			"type": "shell",
+			"command": "${workspaceFolder}\\ScanPaths.bat --fix",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Autonomous Code Format",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/format_code.py"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Autonomous Git Commit",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/auto_commit.py",
+				"Autonomous commit: Update security implementation"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Quick Environment Setup",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/quick_setup.py"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Safe Format and Commit",
+			"dependsOn": [
+				"Autonomous Code Format",
+				"Autonomous Git Commit"
+			],
+			"dependsOrder": "sequence",
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Advanced Git Push",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/advanced_git.py"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Advanced Git Force Push",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/advanced_git.py",
+				"--force"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Auto Commit and Push",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/auto_commit.py",
+				"--push"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Auto Push Only",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/auto_commit.py",
+				"--push-only"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "🚀 Bulletproof Git Workflow (Solves Ali's Issues)",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/bulletproof_git.py",
+				"--auto"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "⚙️ Setup Bulletproof Git Environment (One-Time)",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"scripts/setup_bulletproof_git.py"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Git Push Main",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"push",
+				"origin",
+				"main"
+			],
+			"group": "build"
+		}
+	]
 }

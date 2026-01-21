@@ -11,6 +11,17 @@ repos:
   # BLOCKING HOOKS — These run on every commit and MUST pass
   # ═══════════════════════════════════════════════════════════════════════════
 
+  # BLOCKING: Prevent direct commits to main branch
+  - repo: local
+    hooks:
+      - id: block-main-branch
+        name: Block commits on main branch
+        entry: python pre-commit-hooks/block_main_branch.py
+        language: python
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
