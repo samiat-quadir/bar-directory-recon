@@ -13,7 +13,7 @@ No network calls, no credentials, no real browser launching.
 """
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone, timezone
 from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock
 
@@ -108,7 +108,7 @@ class TestOrchestratorCreateResultSummary:
         config_path = self._create_minimal_config(tmp_path)
         orchestrator = ScrapingOrchestrator(config_path)
 
-        start_time = datetime.now()
+        start_time = datetime.now(timezone.utc)
         result = orchestrator._create_result_summary(
             start_time=start_time,
             success=True,
@@ -128,7 +128,7 @@ class TestOrchestratorCreateResultSummary:
         config_path = self._create_minimal_config(tmp_path)
         orchestrator = ScrapingOrchestrator(config_path)
 
-        start_time = datetime.now()
+        start_time = datetime.now(timezone.utc)
         result = orchestrator._create_result_summary(
             start_time=start_time,
             success=False,
@@ -149,7 +149,7 @@ class TestOrchestratorCreateResultSummary:
         orchestrator.processed_urls = ["https://ex.com/1", "https://ex.com/2"]
         orchestrator.failed_urls = ["https://ex.com/bad"]
 
-        start_time = datetime.now()
+        start_time = datetime.now(timezone.utc)
         result = orchestrator._create_result_summary(start_time, success=True)
 
         assert result["records_extracted"] == 2
