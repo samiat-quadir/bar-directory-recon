@@ -36,9 +36,7 @@ try:
         path,
         ignore_errors=False,
         onerror=None,
-        *,
-        onexc=None,
-        dir_fd=None,
+        **kwargs,  # Handles onexc (Python 3.12+) and dir_fd flexibly
     ):
         """Retry a few times for transient PermissionError (WinError 32).
 
@@ -54,8 +52,7 @@ try:
                     path,
                     ignore_errors=ignore_errors,
                     onerror=onerror,
-                    onexc=onexc,
-                    dir_fd=dir_fd,
+                    **kwargs,  # Pass through onexc/dir_fd if supported
                 )
             except PermissionError as exc:
                 # On Windows, winerror == 32 corresponds to "file in use".
