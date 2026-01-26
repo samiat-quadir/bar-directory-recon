@@ -67,11 +67,11 @@ jobs:
 
       - name: Run Tests and Coverage
         run: |
-          # Coverage Ratchet: Current gate=19%, target=25%
+          # Coverage Ratchet: Current gate=21%, target=25%
           # Policy: Increase by +2% per PR when coverage exceeds gate
-          echo "📊 Coverage Gate: 19% (ratchet policy - increase when coverage exceeds gate)"
-          echo "📊 Next targets: 21% → 23% → 25%"
-          pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=19
+          echo "📊 Coverage Gate: 21% (ratchet policy - increase when coverage exceeds gate)"
+          echo "📊 Next targets: 23% → 25%"
+          pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=21
 
       - name: Print Coverage Summary
         if: always()
