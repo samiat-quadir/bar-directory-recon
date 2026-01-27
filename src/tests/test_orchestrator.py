@@ -10,6 +10,7 @@ Tests cover:
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+from datetime import datetime, timezone
 
 # Import the module under test
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -215,7 +216,7 @@ class TestScrapingOrchestratorDryRun:
 
                 orchestrator = ScrapingOrchestrator(config_path)
 
-                start_time = datetime.now()
+                start_time = datetime.now(timezone.utc)
                 result = orchestrator._create_result_summary(
                     start_time, success=True, output_files=["test.csv"]
                 )

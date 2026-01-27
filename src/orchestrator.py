@@ -82,7 +82,7 @@ class ScrapingOrchestrator:
         self.config_loader = ConfigLoader()
         self.config = self.config_loader.load_config(config_path)
         # Load integrity config if present (with CLI arg override)
-        integrity_cfg = self.config.integrity or {}
+        integrity_cfg = getattr(self.config, 'integrity', None) or {}
         integrity_enabled = integrity_cfg.get('enable', False)
         
         # Use config values if integrity.enable=true, otherwise use CLI args (with backward-compatible defaults)
