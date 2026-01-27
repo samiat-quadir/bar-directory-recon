@@ -7,7 +7,7 @@ import json
 import logging
 import sys
 import traceback
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -37,7 +37,7 @@ class ScrapingLogger:
 
         # File handler for detailed logs
         log_file = (
-            self.log_dir / f"{name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+            self.log_dir / f"{name}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.log"
         )
         file_handler = logging.FileHandler(log_file, encoding="utf-8")
         file_handler.setLevel(logging.DEBUG)
@@ -52,7 +52,7 @@ class ScrapingLogger:
 
         # Statistics tracking
         self.stats: Dict[str, Any] = {
-            "start_time": datetime.now(),
+            "start_time": datetime.now(timezone.utc),
             "pages_processed": 0,
             "records_extracted": 0,
             "errors": 0,
@@ -78,7 +78,7 @@ class ScrapingLogger:
             self.stats["warnings"] = warnings_count + 1
         self.warnings.append(
             {
-                "timestamp": datetime.now().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "message": message,
                 "kwargs": kwargs,
             }
@@ -119,7 +119,7 @@ class ScrapingLogger:
             self.stats["errors"] = errors_count + 1
 
         error_data = {
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "message": message,
             "level": "CRITICAL",
             "kwargs": kwargs,
@@ -195,7 +195,7 @@ class ScrapingLogger:
 
     def get_stats(self) -> Dict[str, Any]:
         """Get current statistics."""
-        current_time = datetime.now()
+        current_time = datetime.now(timezone.utc)
         runtime = current_time - self.stats["start_time"]
 
         return {
@@ -247,11 +247,11 @@ Performance:
         if not output_path:
             report_path = (
                 self.log_dir
-                / f"{self.name}_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                / f"{self.name}_report_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.json"
             )
             output_path = str(report_path)
 
-        start_time = self.stats.get("start_time", datetime.now())
+        start_time = self.stats.get("start_time", datetime.now(timezone.utc))
         if isinstance(start_time, datetime):
             start_time_iso = start_time.isoformat()
         else:
@@ -270,7 +270,7 @@ Performance:
             "session_info": {
                 "name": self.name,
                 "start_time": start_time_iso,
-                "end_time": datetime.now().isoformat(),
+                "end_time": datetime.now(timezone.utc).isoformat(),
             },
             "statistics": serialized_stats,
             "errors": self.errors,

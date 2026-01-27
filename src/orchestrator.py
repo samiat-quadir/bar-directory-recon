@@ -2,11 +2,19 @@
 """
 Unified Scraper Orchestrator
 Main controller that coordinates all scraping operations using the modular framework.
+
+Integrity Enhancements (v2.0):
+- Validation threshold enforcement
+- Empty result failure detection
+- Output collision prevention
+- Deduplication transparency
+- UTC timezone support
 """
 
 import os
+import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
@@ -17,6 +25,14 @@ from data_extractor import DataExtractor
 from logger import create_logger
 from pagination_manager import PaginationManager
 from unified_schema import SchemaMapper
+
+# Integrity policy imports (optional - graceful degradation)
+try:
+    from policies import ValidationPolicy, ExportPolicy, FailurePolicy, enforce_validation_threshold
+    from reports import DeduplicationReport, ValidationSummary, deduplicate_with_tracking
+    INTEGRITY_POLICIES_AVAILABLE = True
+except ImportError:
+    INTEGRITY_POLICIES_AVAILABLE = False
 # webdriver_manager may be an external package or a local module in this repo.
 # Import defensively: prefer local module if present to avoid 'is not a package' errors
 try:
@@ -45,12 +61,40 @@ GOOGLE_SHEETS_SCOPES = [
 class ScrapingOrchestrator:
     """Main orchestrator for unified scraping operations."""
 
-    def __init__(self, config_path: Union[str, Path]):
-        """Initialize the scraping orchestrator."""
+    def __init__(
+        self, 
+        config_path: Union[str, Path],
+        min_validation_score: float = 0.0,
+        allow_empty: bool = True,
+        export_rejected: bool = False,
+        collision_strategy: str = 'uuid'
+    ):
+        """
+        Initialize the scraping orchestrator.
+        
+        Args:
+            config_path: Path to configuration file
+            min_validation_score: Minimum score for record acceptance (0-100, default 0 = no filtering)
+            allow_empty: Allow 0 URLs or records without raising error (default True = legacy behavior)
+            export_rejected: Export low-score records to separate file (default False)
+            collision_strategy: File collision prevention ('uuid', 'millisecond', 'increment')
+        """
         self.config_loader = ConfigLoader()
         self.config = self.config_loader.load_config(config_path)
+        # Load integrity config if present (with CLI arg override)
+        integrity_cfg = getattr(self.config, 'integrity', None) or {}
+        integrity_enabled = integrity_cfg.get('enable', False)
+        
+        # Use config values if integrity.enable=true, otherwise use CLI args (with backward-compatible defaults)
+        if integrity_enabled:
+            min_validation_score = integrity_cfg.get('min_validation_score', 0.0)
+            allow_empty = integrity_cfg.get('allow_empty', True)
+            export_rejected = integrity_cfg.get('export_rejected', False)
+            collision_strategy = integrity_cfg.get('collision_strategy', 'uuid')
+        # else: use the function parameters (already set to backward-compatible defaults)
 
-        # Initialize logger
+
+        # Initialize logger (use UTC timestamps if policies available)
         self.logger = create_logger(
             name=f"scraper_{self.config.name}",
             log_level=self.config.options.get("log_level", "INFO"),
@@ -65,6 +109,30 @@ class ScrapingOrchestrator:
         self.extracted_data: List[Dict[str, Any]] = []
         self.processed_urls: List[str] = []
         self.failed_urls: List[str] = []
+        
+        # Integrity policies (if available)
+        if INTEGRITY_POLICIES_AVAILABLE:
+            self.validation_policy = ValidationPolicy(
+                min_score=min_validation_score,
+                export_rejected=export_rejected
+            )
+            self.export_policy = ExportPolicy(collision_strategy=collision_strategy)
+            self.failure_policy = FailurePolicy(
+                allow_empty_urls=allow_empty,
+                allow_empty_records=allow_empty
+            )
+            self.dedup_report = DeduplicationReport()
+            self.validation_summary = ValidationSummary()
+        else:
+            self.logger.warning(
+                "Integrity policies not available. "
+                "Install policies package for enhanced data quality controls."
+            )
+            self.validation_policy = None
+            self.export_policy = None
+            self.failure_policy = None
+            self.dedup_report = None
+            self.validation_summary = None
 
         self.logger.log_config_loaded(str(config_path), self.config.name)
 
@@ -181,8 +249,29 @@ class ScrapingOrchestrator:
                 if delay > 0:
                     time.sleep(delay)
 
-            # Remove duplicates while preserving order
-            unique_urls = list(dict.fromkeys(all_urls))
+            # Remove duplicates with tracking (if policies available)
+            if INTEGRITY_POLICIES_AVAILABLE and self.dedup_report:
+                unique_urls = deduplicate_with_tracking(
+                    all_urls, 
+                    self.dedup_report, 
+                    category='urls'
+                )
+                # Log deduplication summary
+                total_count = len(all_urls)
+                unique_count = len(unique_urls)
+                duplicates_removed = total_count - unique_count
+                if duplicates_removed > 0:
+                    self.logger.info(
+                        f"Deduplication: {total_count} total URLs → "
+                        f"{unique_count} unique URLs ({duplicates_removed} duplicates removed)"
+                    )
+            else:
+                # Preserve existing behavior when policies unavailable
+                unique_urls = list(dict.fromkeys(all_urls))
+
+            # Validate non-empty results (if policies available)
+            if INTEGRITY_POLICIES_AVAILABLE and self.failure_policy:
+                self.failure_policy.validate_url_extraction(unique_urls)
 
             self.logger.log_extraction_phase("listing", start_url, success=True)
             self.logger.info(
@@ -246,6 +335,10 @@ class ScrapingOrchestrator:
         self.logger.log_extraction_phase("detail", f"{len(urls)} URLs", success=True)
         self.logger.info(f"Detail phase completed: {len(all_data)} records extracted")
 
+        # Validate non-empty results (if policies available)
+        if INTEGRITY_POLICIES_AVAILABLE and self.failure_policy:
+            self.failure_policy.validate_record_extraction(all_data)
+
         return all_data
 
     def extract_from_current_page(self) -> List[Dict[str, Any]]:
@@ -258,7 +351,7 @@ class ScrapingOrchestrator:
 
     def run_scraping(self) -> Dict[str, Any]:
         """Run the complete scraping process."""
-        start_time = datetime.now()
+        start_time = datetime.now(timezone.utc)
         self.logger.info(f"Starting scraping session: {self.config.name}")
 
         try:
@@ -346,16 +439,45 @@ class ScrapingOrchestrator:
                 source_name=self.config.name,
             )
 
+            # Apply validation threshold (if policies available)
+            accepted_data = mapped_data
+            rejected_data = []
+            
+            if INTEGRITY_POLICIES_AVAILABLE and self.validation_policy:
+                accepted_data, rejected_data = enforce_validation_threshold(
+                    mapped_data,
+                    self.validation_policy,
+                    self.validation_summary
+                )
+                
+                # Log validation results
+                total_count = len(mapped_data)
+                accepted_count = len(accepted_data)
+                rejected_count = len(rejected_data)
+                
+                if rejected_count > 0:
+                    self.logger.warning(
+                        f"Validation threshold enforcement: {total_count} total records → "
+                        f"{accepted_count} accepted, {rejected_count} rejected "
+                        f"(min_score={self.validation_policy.min_score})"
+                    )
+
             # Create DataFrame with unified schema column order
             df = schema_mapper.create_export_dataframe(
-                mapped_data, export_type="standard"
+                accepted_data, export_type="standard"
             )
 
-            # Generate output filename
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            base_filename = self.config.output.get(
-                "filename", f"{self.config.name}_{timestamp}"
-            )
+            # Generate output filename with collision prevention (if policies available)
+            if INTEGRITY_POLICIES_AVAILABLE and self.export_policy:
+                base_filename = self.export_policy.generate_safe_filename(
+                    self.config.output.get("filename", self.config.name)
+                )
+            else:
+                # Preserve existing behavior when policies unavailable
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                base_filename = self.config.output.get(
+                    "filename", f"{self.config.name}_{timestamp}"
+                )
 
             # Remove extension if present
             if "." in base_filename:
@@ -385,6 +507,31 @@ class ScrapingOrchestrator:
                 self.logger.info(f"Data saved to Excel: {excel_path}")
             except Exception as e:
                 self.logger.warning(f"Failed to save Excel file: {e}")
+
+            # Export rejected records (if policies available and configured)
+            if (INTEGRITY_POLICIES_AVAILABLE and self.validation_policy and 
+                self.validation_policy.export_rejected and rejected_data):
+                rejected_df = schema_mapper.create_export_dataframe(
+                    rejected_data, export_type="standard"
+                )
+                rejected_csv = output_dir / f"{base_filename}_REJECTED.csv"
+                rejected_df.to_csv(rejected_csv, index=False, encoding="utf-8")
+                output_files.append(str(rejected_csv))
+                self.logger.info(f"Rejected records saved to: {rejected_csv}")
+
+            # Save validation summary (if policies available)
+            if INTEGRITY_POLICIES_AVAILABLE and self.validation_summary:
+                summary_path = output_dir / f"{base_filename}_validation_summary.json"
+                self.validation_summary.save_report(summary_path)
+                output_files.append(str(summary_path))
+                self.logger.info(f"Validation summary saved to: {summary_path}")
+
+            # Save deduplication report (if policies available)
+            if INTEGRITY_POLICIES_AVAILABLE and self.dedup_report:
+                dedup_path = output_dir / f"{base_filename}_deduplication_report.json"
+                self.dedup_report.save_report(dedup_path)
+                output_files.append(str(dedup_path))
+                self.logger.info(f"Deduplication report saved to: {dedup_path}")
 
             # Google Sheets integration (if configured)
             google_config = self.config.output.get("google_sheets", {})
@@ -505,7 +652,7 @@ class ScrapingOrchestrator:
         output_files: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """Create a summary of the scraping results."""
-        end_time = datetime.now()
+        end_time = datetime.now(timezone.utc)
         runtime = end_time - start_time
 
         stats = self.logger.get_stats() if hasattr(self.logger, "get_stats") else {}
