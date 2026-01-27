@@ -126,7 +126,8 @@ jobs:
         shell: pwsh
         run: |
           .smoke-venv\Scripts\Activate.ps1
-          bdr doctor --no-exec 2>&1 || $true  # May warn about optional modules
+          bdr doctor --no-exec 2>&1
+          exit 0  # Doctor may warn about optional modules, that's OK
 
   release:
     name: Create GitHub Release
