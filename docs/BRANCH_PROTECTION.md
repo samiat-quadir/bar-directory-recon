@@ -88,7 +88,7 @@ Under "Branch protection rules" → **main**:
 Under same rule → scroll to "Require status checks to pass before merging":
 
 - [ ] ✅ "Require branches to be up to date before merge" is **checked**
-- [ ] ✅ All 8 required checks are listed and **selected** (6 cross-platform + 2 ubuntu-only):
+- [ ] ✅ All 5 required status checks (running across 8 job instances) are listed and **selected**:
   - `fast-tests (ubuntu)`
   - `fast-tests (windows)`
   - `audit` (ubuntu-latest only)
@@ -100,7 +100,7 @@ Under same rule → scroll to "Require status checks to pass before merging":
   - `install-smoke (ubuntu)`
   - `install-smoke (windows)`
 
-**Expected state**: All 8 checks required and green before merge
+**Expected state**: All 5 status checks (8 job instances total) required and green before merge
 
 ### Step 4: Check Rule 3 — Disable Force Pushes & Deletions
 
@@ -141,7 +141,7 @@ BASIC PROTECTIONS:
 [ ] Force pushes: DISABLED
 [ ] Deletions: DISABLED
 
-REQUIRED STATUS CHECKS (6 cross-platform checks):
+REQUIRED STATUS CHECKS (5 checks, 8 job instances):
 [ ] fast-tests (ubuntu): REQUIRED
 [ ] fast-tests (windows): REQUIRED
 [ ] ps-lint (ubuntu): REQUIRED
@@ -189,7 +189,7 @@ If any rules are missing, here's the configuration order:
 2. Click **Add rule** or edit **main** rule
 3. Enable rules in this order:
    - Basic protections (PR, status checks, up-to-date)
-   - Require all 8 status checks from CI (6 cross-platform + 2 ubuntu-only)
+   - Require all 5 status checks from CI (8 job instances total)
    - Disable force pushes and deletions
    - Disable admin bypass
 4. Click **Save changes**
