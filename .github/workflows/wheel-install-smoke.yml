@@ -130,7 +130,13 @@ jobs:
               Write-Host "Note: installed/dev mode indicator missing (optional)"
           }
 
-      - name: Clean up venv
-        if: always()
+      - name: Clean up venv (Linux)
+        if: always() && runner.os == 'Linux'
         run: |
-          rm -rf .install-venv || rmdir /s /q .install-venv
+          rm -rf .install-venv || true
+
+      - name: Clean up venv (Windows)
+        if: always() && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Remove-Item -Recurse -Force .install-venv -ErrorAction SilentlyContinue
