@@ -31,7 +31,7 @@ These checks **MUST pass** before any PR can merge to main:
 | `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Ubuntu |
 | `fast-tests (windows)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Windows |
 | `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit (ubuntu-latest only; single `audit` status check) |
-| `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes |
+| `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes (ubuntu-latest only; single `workflow-guard` status check) |
 | `ps-lint (ubuntu)` | REQUIRED | GitHub Actions | PowerShell linting on Ubuntu |
 | `ps-lint (windows)` | REQUIRED | GitHub Actions | PowerShell linting on Windows |
 | `install-smoke (ubuntu)` | REQUIRED | GitHub Actions | Wheel install + CLI smoke test (Ubuntu) |
