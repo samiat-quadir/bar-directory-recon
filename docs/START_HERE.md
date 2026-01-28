@@ -4,7 +4,7 @@ Welcome! This guide will get you exporting data to Google Sheets in under 10 min
 
 ## Prerequisites
 
-- Python 3.9 or later
+- Python 3.11 or later
 - A Google account (for service account setup)
 - A Google Sheet you own or can edit
 - The bar-directory-recon package installed
@@ -24,7 +24,7 @@ Before you can write to Google Sheets, you need a service account:
 1. **Follow [docs/setup/gsheets.md](setup/gsheets.md)** for step-by-step instructions
    - It takes ~5 minutes
    - You'll get a `service-account-key.json` file
-   - Then set `GOOGLE_APPLICATION_CREDENTIALS` environment variable
+   - Then set `GOOGLE_SHEETS_CREDENTIALS_PATH` environment variable
 
 2. **Share your Google Sheet with the service account email** (from the JSON key)
    - Example: `my-service-account@YOUR_PROJECT.iam.gserviceaccount.com`
@@ -51,10 +51,8 @@ If you see ❌ on Google auth, revisit the permission grant in step 2 above.
 The simplest example: export a CSV to Google Sheets
 
 ```bash
-bdr export csv-to-sheets \
-  --csv-file data.csv \
-  --sheet-id "YOUR_SHEET_ID_HERE" \
-  --worksheet "Sheet1"
+bdr export csv-to-sheets data.csv \
+  --sheet-id "YOUR_SHEET_ID_HERE"
 ```
 
 **Where do you find the sheet ID?**
@@ -66,10 +64,10 @@ bdr export csv-to-sheets \
 
 | Option | Meaning |
 |--------|---------|
-| `--csv-file` | Path to your CSV file |
+| `data.csv` | Path to your CSV file (positional argument) |
 | `--sheet-id` | Google Sheets ID (from URL above) |
-| `--worksheet` | Tab name in the sheet (e.g., "Sheet1") |
-| `--dedupe-key` | (Optional) Column name for duplicate removal |
+| `--worksheet` | (Optional) Tab name in the sheet (default: "leads") |
+| `--dedupe-key` | (Optional) Column name for duplicate removal (single column) |
 | `--mode` | (Optional) `append` (default) or `replace` |
 | `--dry-run` | (Optional) Preview without uploading |
 
@@ -84,7 +82,7 @@ bdr export csv-to-sheets \
 ### ✅ DO
 
 - Store `service-account-key.json` **outside** the repo (e.g., `~/.config/service-account-key.json`)
-- Use `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to it
+- Use `GOOGLE_SHEETS_CREDENTIALS_PATH` environment variable to point to it
 - Never commit credentials to Git
 
 ### ❌ DON'T
@@ -97,20 +95,20 @@ bdr export csv-to-sheets \
 
 **Linux/macOS:**
 ```bash
-export GOOGLE_APPLICATION_CREDENTIALS=~/.config/service-account-key.json
-bdr export csv-to-sheets --csv-file data.csv --sheet-id "YOUR_SHEET_ID"
+export GOOGLE_SHEETS_CREDENTIALS_PATH=~/.config/service-account-key.json
+bdr export csv-to-sheets data.csv --sheet-id "YOUR_SHEET_ID"
 ```
 
 **Windows (PowerShell):**
 ```powershell
-$env:GOOGLE_APPLICATION_CREDENTIALS = "C:\Users\YourName\.config\service-account-key.json"
-bdr export csv-to-sheets --csv-file data.csv --sheet-id "YOUR_SHEET_ID"
+$env:GOOGLE_SHEETS_CREDENTIALS_PATH = "C:\Users\YourName\.config\service-account-key.json"
+bdr export csv-to-sheets data.csv --sheet-id "YOUR_SHEET_ID"
 ```
 
 **Windows (Command Prompt):**
 ```cmd
-set GOOGLE_APPLICATION_CREDENTIALS=C:\Users\YourName\.config\service-account-key.json
-bdr export csv-to-sheets --csv-file data.csv --sheet-id "YOUR_SHEET_ID"
+set GOOGLE_SHEETS_CREDENTIALS_PATH=C:\Users\YourName\.config\service-account-key.json
+bdr export csv-to-sheets data.csv --sheet-id "YOUR_SHEET_ID"
 ```
 
 ## Common Issues
