@@ -147,15 +147,14 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           source .smoke-venv/bin/activate
-          bdr doctor --no-exec || true  # May warn about optional modules
+          bdr doctor --no-exec
 
       - name: Smoke test - bdr doctor (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           .smoke-venv\Scripts\Activate.ps1
-          bdr doctor --no-exec 2>&1
-          exit 0  # Doctor may warn about optional modules, that's OK
+          bdr doctor --no-exec
 
   release:
     name: Create GitHub Release
