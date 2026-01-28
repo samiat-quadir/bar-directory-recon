@@ -32,9 +32,14 @@ These checks **MUST pass** before any PR can merge to main:
 
 | Check | Expected | Owner | Notes |
 |-------|----------|-------|-------|
+| `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python pytest on Ubuntu |
+| `fast-tests (windows)` | REQUIRED | GitHub Actions | Python pytest on Windows |
+| `audit (ubuntu)` | REQUIRED | GitHub Actions | Bandit + pip-audit (Ubuntu only) |
+| `workflow-guard (ubuntu)` | REQUIRED | GitHub Actions | No unexpected workflow changes (Ubuntu only) |
 | `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Ubuntu |
 | `fast-tests (windows)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Windows |
 | `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit (ubuntu-latest only; single `audit` status check) |
+| `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes (ubuntu-latest only; single `workflow-guard` status check) |
 | `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes (single check running on `ubuntu-latest`) |
 | `ps-lint (ubuntu)` | REQUIRED | GitHub Actions | PowerShell linting on Ubuntu |
 | `ps-lint (windows)` | REQUIRED | GitHub Actions | PowerShell linting on Windows |
@@ -83,17 +88,17 @@ Under "Branch protection rules" → **main**:
 Under same rule → scroll to "Require status checks to pass before merging":
 
 - [ ] ✅ "Require branches to be up to date before merge" is **checked**
-- [ ] ✅ All 8 required checks are listed and **selected**:
+- [ ] ✅ All 5 required status checks (running across 8 job instances) are listed and **selected**:
   - `fast-tests (ubuntu)`
   - `fast-tests (windows)`
-  - `audit`
-  - `workflow-guard`
+  - `audit` (ubuntu-only, no Windows variant)
+  - `workflow-guard` (ubuntu-only, no Windows variant)
   - `ps-lint (ubuntu)`
   - `ps-lint (windows)`
   - `install-smoke (ubuntu)`
   - `install-smoke (windows)`
 
-**Expected state**: All 8 checks required and green before merge
+**Expected state**: All 5 status checks (8 job instances total) required and green before merge
 
 ### Step 4: Check Rule 3 — Disable Force Pushes & Deletions
 
@@ -134,15 +139,19 @@ BASIC PROTECTIONS:
 [ ] Allow force pushes: NO
 [ ] Allow deletions: NO
 
-REQUIRED STATUS CHECKS (all 8):
+REQUIRED STATUS CHECKS (5 checks, 8 job instances):
 [ ] fast-tests (ubuntu): REQUIRED
 [ ] fast-tests (windows): REQUIRED
-[ ] audit: REQUIRED
-[ ] workflow-guard: REQUIRED
+[ ] audit: REQUIRED (ubuntu-only, no Windows variant)
+[ ] workflow-guard: REQUIRED (ubuntu-only, no Windows variant)
 [ ] ps-lint (ubuntu): REQUIRED
 [ ] ps-lint (windows): REQUIRED
 [ ] install-smoke (ubuntu): REQUIRED
 [ ] install-smoke (windows): REQUIRED
+
+Note: audit and workflow-guard also run as required checks but only on ubuntu-latest
+[ ] audit: REQUIRED (ubuntu-latest only; no platform variants)
+[ ] workflow-guard: REQUIRED (ubuntu-latest only; no platform variants)
 
 ADMIN BYPASS:
 [ ] Stale approval dismissal: YES
@@ -180,7 +189,7 @@ If any rules are missing, here's the configuration order:
 2. Click **Add rule** or edit **main** rule
 3. Enable rules in this order:
    - Basic protections (PR, status checks, up-to-date)
-   - Require all 8 status checks from CI
+   - Require all 5 status checks from CI (8 job instances total)
    - Disable force pushes and deletions
    - Disable admin bypass
 4. Click **Save changes**
