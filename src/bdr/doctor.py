@@ -219,15 +219,15 @@ def format_report(report: DoctorReport) -> str:
     lines.append(f"Version: {report.version}")
     lines.append(f"Python: {report.python_version}")
     lines.append(f"Platform: {report.platform}")
+    lines.append(f"no-exec: {report.no_exec}")
     
     # Detect and show execution mode clearly
     try:
         import_module("src.config_loader")
-        mode_indicator = "📁 Dev Mode (src.* imports)"
+        mode_indicator = "[DEV] src.* imports"
     except ImportError:
-        mode_indicator = "📦 Installed Mode (top-level imports)"
-    lines.append(f"Execution: {mode_indicator}")
-    lines.append(f"no-exec: {report.no_exec}")
+        mode_indicator = "[PKG] top-level imports"
+    lines.append(f"Mode: {mode_indicator}")
     lines.append("")
 
     for check in report.checks:
