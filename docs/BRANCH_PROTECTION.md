@@ -91,10 +91,8 @@ Under same rule → scroll to "Require status checks to pass before merging":
 - [ ] ✅ All 5 required status checks (running across 8 job instances) are listed and **selected**:
   - `fast-tests (ubuntu)`
   - `fast-tests (windows)`
-  - `audit` (ubuntu-latest only)
-  - `workflow-guard` (ubuntu-latest only)
-  - `audit (ubuntu)` _(Ubuntu only - no Windows variant)_
-  - `workflow-guard (ubuntu)` _(Ubuntu only - no Windows variant)_
+  - `audit` (ubuntu-only, no Windows variant)
+  - `workflow-guard` (ubuntu-only, no Windows variant)
   - `ps-lint (ubuntu)`
   - `ps-lint (windows)`
   - `install-smoke (ubuntu)`
@@ -144,6 +142,8 @@ BASIC PROTECTIONS:
 REQUIRED STATUS CHECKS (5 checks, 8 job instances):
 [ ] fast-tests (ubuntu): REQUIRED
 [ ] fast-tests (windows): REQUIRED
+[ ] audit: REQUIRED (ubuntu-only, no Windows variant)
+[ ] workflow-guard: REQUIRED (ubuntu-only, no Windows variant)
 [ ] ps-lint (ubuntu): REQUIRED
 [ ] ps-lint (windows): REQUIRED
 [ ] install-smoke (ubuntu): REQUIRED
