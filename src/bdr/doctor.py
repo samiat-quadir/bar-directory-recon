@@ -152,6 +152,16 @@ def _check_framework_modules() -> Tuple[DoctorCheck, List[str]]:
             getattr(module, class_name)
             details.append(f"OK {dotted}")
         except Exception as exc:  # noqa: BLE001 - surface exact failure
+            # Try alternate import path for installed packages (without src prefix)
+            if module_path.startswith("src."):
+                alt_module_path = module_path[4:]  # Remove "src." prefix
+                try:
+                    module = import_module(alt_module_path)
+                    getattr(module, class_name)
+                    details.append(f"OK {dotted} (installed)")
+                    continue
+                except Exception:  # noqa: BLE001
+                    pass
             details.append(f"FAIL {dotted}: {exc}")
             failed.append(dotted)
             passed = False
