@@ -32,9 +32,14 @@ These checks **MUST pass** before any PR can merge to main:
 
 | Check | Expected | Owner | Notes |
 |-------|----------|-------|-------|
+| `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python pytest on Ubuntu |
+| `fast-tests (windows)` | REQUIRED | GitHub Actions | Python pytest on Windows |
+| `audit (ubuntu)` | REQUIRED | GitHub Actions | Bandit + pip-audit (Ubuntu only) |
+| `workflow-guard (ubuntu)` | REQUIRED | GitHub Actions | No unexpected workflow changes (Ubuntu only) |
 | `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Ubuntu |
 | `fast-tests (windows)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Windows |
 | `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit (ubuntu-latest only; single `audit` status check) |
+| `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes (ubuntu-latest only; single `workflow-guard` status check) |
 | `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes (single check running on `ubuntu-latest`) |
 | `ps-lint (ubuntu)` | REQUIRED | GitHub Actions | PowerShell linting on Ubuntu |
 | `ps-lint (windows)` | REQUIRED | GitHub Actions | PowerShell linting on Windows |
@@ -86,8 +91,10 @@ Under same rule → scroll to "Require status checks to pass before merging":
 - [ ] ✅ All 5 required status checks (running across 8 job instances) are listed and **selected**:
   - `fast-tests (ubuntu)`
   - `fast-tests (windows)`
-  - `audit`
-  - `workflow-guard`
+  - `audit` (ubuntu-latest only)
+  - `workflow-guard` (ubuntu-latest only)
+  - `audit (ubuntu)` _(Ubuntu only - no Windows variant)_
+  - `workflow-guard (ubuntu)` _(Ubuntu only - no Windows variant)_
   - `ps-lint (ubuntu)`
   - `ps-lint (windows)`
   - `install-smoke (ubuntu)`
@@ -131,23 +138,25 @@ BASIC PROTECTIONS:
 [ ] Require status checks: YES
 [ ] Require up-to-date branches: YES
 [ ] Restrict push access: YES
-[ ] Force pushes disabled: YES (NO)
-[ ] Deletions disabled: YES (NO)
+[ ] Force pushes: DISABLED
+[ ] Deletions: DISABLED
 
 REQUIRED STATUS CHECKS (5 checks, 8 job instances):
 [ ] fast-tests (ubuntu): REQUIRED
 [ ] fast-tests (windows): REQUIRED
-[ ] audit: REQUIRED
-[ ] workflow-guard: REQUIRED
 [ ] ps-lint (ubuntu): REQUIRED
 [ ] ps-lint (windows): REQUIRED
 [ ] install-smoke (ubuntu): REQUIRED
 [ ] install-smoke (windows): REQUIRED
 
+Note: audit and workflow-guard also run as required checks but only on ubuntu-latest
+[ ] audit: REQUIRED (ubuntu-latest only; no platform variants)
+[ ] workflow-guard: REQUIRED (ubuntu-latest only; no platform variants)
+
 ADMIN BYPASS:
 [ ] Stale approval dismissal: YES
 [ ] Code owner review: YES (if CODEOWNERS exists)
-[ ] Admin bypass disabled: YES (NO)
+[ ] Admin bypass: DISABLED
 
 SECRET SCANNING:
 [ ] Secret scanning enabled: YES
