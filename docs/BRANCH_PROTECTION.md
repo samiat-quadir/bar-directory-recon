@@ -28,8 +28,8 @@ These checks **MUST pass** before any PR can merge to main:
 
 | Check | Expected | Owner | Notes |
 |-------|----------|-------|-------|
-| `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python pytest on Ubuntu |
-| `fast-tests (windows)` | REQUIRED | GitHub Actions | Python pytest on Windows |
+| `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Ubuntu |
+| `fast-tests (windows)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Windows |
 | `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit (ubuntu-latest only; single `audit` status check) |
 | `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes |
 | `ps-lint (ubuntu)` | REQUIRED | GitHub Actions | PowerShell linting on Ubuntu |
