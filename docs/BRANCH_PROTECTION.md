@@ -28,14 +28,14 @@ These checks **MUST pass** before any PR can merge to main:
 
 | Check | Expected | Owner | Notes |
 |-------|----------|-------|-------|
-| `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python pytest on Ubuntu |
-| `fast-tests (windows)` | REQUIRED | GitHub Actions | Python pytest on Windows |
-| `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit |
+| `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python environment & package installation validation |
+| `fast-tests (windows)` | REQUIRED | GitHub Actions | Python environment & package installation validation |
+| `audit` | REQUIRED | GitHub Actions | Security audit (pip-audit checks) |
 | `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes |
-| `ps-lint (ubuntu)` | REQUIRED | GitHub Actions | PowerShell linting on Ubuntu |
-| `ps-lint (windows)` | REQUIRED | GitHub Actions | PowerShell linting on Windows |
-| `install-smoke (ubuntu)` | REQUIRED | GitHub Actions | Wheel install + CLI smoke test (Ubuntu) |
-| `install-smoke (windows)` | REQUIRED | GitHub Actions | Wheel install + CLI smoke test (Windows) |
+| `ps-lint (ubuntu)` | REQUIRED | GitHub Actions | PowerShell linting |
+| `ps-lint (windows)` | REQUIRED | GitHub Actions | PowerShell linting |
+| `install-smoke (ubuntu)` | REQUIRED | GitHub Actions | Wheel install + CLI smoke test |
+| `install-smoke (windows)` | REQUIRED | GitHub Actions | Wheel install + CLI smoke test |
 
 ### C. Admin Bypass
 
@@ -59,27 +59,24 @@ These checks **MUST pass** before any PR can merge to main:
 
 ### Step 1: Navigate to Settings
 
-1. Go to: https://github.com/samiat-quadir/bar-directory-recon
-2. Click **Settings** (top right, gear icon)
-3. Click **Branches** (left sidebar)
+1. Go to: `https://github.com/samiat-quadir/bar-directory-recon/settings/branches`
+2. Click **Branches** (left sidebar)
 
 ### Step 2: Check Rule 1 — Require PR Before Merge
 
 Under "Branch protection rules" → **main**:
 
-- [ ] ✅ "Require a pull request before merging" is **checked**
-- [ ] ✅ "Require approvals" is set to at least **1**
-- [ ] ✅ "Require code owner reviews" is checked (if applicable)
-- [ ] ✅ "Dismiss stale pull request approvals when new commits are pushed" is **checked**
-
-**Expected state**: PR required, at least 1 approval, auto-dismiss on new commits
+- [ ] "Require a pull request before merging" is **checked**
+- [ ] "Require approvals" is set to at least **1**
+- [ ] "Require code owner reviews" is checked (if applicable)
+- [ ] "Dismiss stale pull request approvals when new commits are pushed" is **checked**
 
 ### Step 3: Check Rule 2 — Require Status Checks
 
-Under same rule → scroll to "Require status checks to pass before merging":
+Under same rule → "Require status checks to pass before merging":
 
-- [ ] ✅ "Require branches to be up to date before merge" is **checked**
-- [ ] ✅ All 8 required checks are listed and **selected**:
+- [ ] "Require branches to be up to date before merge" is **checked**
+- [ ] All required status checks are listed and **selected**:
   - `fast-tests (ubuntu)`
   - `fast-tests (windows)`
   - `audit`
@@ -89,32 +86,26 @@ Under same rule → scroll to "Require status checks to pass before merging":
   - `install-smoke (ubuntu)`
   - `install-smoke (windows)`
 
-**Expected state**: All 8 checks required and green before merge
-
 ### Step 4: Check Rule 3 — Disable Force Pushes & Deletions
 
 Same rule → scroll to bottom:
 
-- [ ] ✅ "Allow force pushes" is **NOT checked** (disabled)
-- [ ] ✅ "Allow deletions" is **NOT checked** (disabled)
-- [ ] ✅ "Allow bypassing the above settings for administrators" is **NOT checked** (disabled)
-
-**Expected state**: Force pushes blocked, deletions blocked, no admin bypass
+- [ ] "Allow force pushes" is **NOT checked** (disabled)
+- [ ] "Allow deletions" is **NOT checked** (disabled)
+- [ ] "Allow bypassing the above settings for administrators" is **NOT checked** (disabled)
 
 ### Step 5: Check Secret Scanning
 
 1. Go to **Settings** → **Code security and analysis**
 2. Scroll to "Secret scanning":
-   - [ ] ✅ "Secret scanning" is **Enabled**
-   - [ ] ✅ "Push protection" is **Enabled**
-
-**Expected state**: Both enabled
+   - [ ] "Secret scanning" is **Enabled**
+   - [ ] "Push protection" is **Enabled**
 
 ---
 
 ## Verification Checklist
 
-Copy this checklist and fill it out:
+Copy and fill out this checklist:
 
 ```
 Branch Protection Verification — main
@@ -127,10 +118,10 @@ BASIC PROTECTIONS:
 [ ] Require status checks: YES
 [ ] Require up-to-date branches: YES
 [ ] Restrict push access: YES
-[ ] Force pushes disabled: YES (NO)
-[ ] Deletions disabled: YES (NO)
+[ ] Force pushes disabled: YES
+[ ] Deletions disabled: YES
 
-REQUIRED STATUS CHECKS (all 8):
+REQUIRED STATUS CHECKS (8 total):
 [ ] fast-tests (ubuntu): REQUIRED
 [ ] fast-tests (windows): REQUIRED
 [ ] audit: REQUIRED
@@ -142,8 +133,50 @@ REQUIRED STATUS CHECKS (all 8):
 
 ADMIN BYPASS:
 [ ] Stale approval dismissal: YES
+[ ] Code owner review: YES or N/A
+[ ] Admin bypass disabled: YES
+
+SECRET SCANNING:
+[ ] Secret scanning enabled: YES
+[ ] Push protection enabled: YES
+
+OVERALL STATUS: _______________
+Notes: _________________________________________________________________
+```
+
+---
+
+## Why These Rules?
+
+| Rule | Benefit |
+|------|---------|
+| **Require PR** | No direct commits to main; all changes reviewed |
+| **Require status checks** | CI gates prevent broken code merges |
+| **Require up-to-date** | Prevents stale branch merges with race conditions |
+| **No force pushes** | Prevents history rewriting on main |
+| **No admin bypass** | Enforces gate rules for all contributors |
+| **Secret scanning** | Prevents credentials from being committed |
+
+---
+
+## References
+
+- GitHub Branch Protection: `https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches`
+- Secret Scanning: `https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning`
+
+---
+
+**Document Status**: Ready for verification by repo maintainer.
+
+
+Note: audit and workflow-guard also run as required checks but only on ubuntu-latest
+[ ] audit: REQUIRED (ubuntu-latest only; no platform variants)
+[ ] workflow-guard: REQUIRED (ubuntu-latest only; no platform variants)
+
+ADMIN BYPASS:
+[ ] Stale approval dismissal: YES
 [ ] Code owner review: YES (if CODEOWNERS exists)
-[ ] Admin bypass disabled: YES (NO)
+Admin bypass: [ ] DISABLED [ ] ENABLED
 
 SECRET SCANNING:
 [ ] Secret scanning enabled: YES
@@ -176,7 +209,7 @@ If any rules are missing, here's the configuration order:
 2. Click **Add rule** or edit **main** rule
 3. Enable rules in this order:
    - Basic protections (PR, status checks, up-to-date)
-   - Require all 8 status checks from CI
+   - Require all 5 status checks from CI (8 job instances total)
    - Disable force pushes and deletions
    - Disable admin bypass
 4. Click **Save changes**
