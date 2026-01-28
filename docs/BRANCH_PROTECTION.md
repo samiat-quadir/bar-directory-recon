@@ -130,15 +130,17 @@ BASIC PROTECTIONS:
 [ ] Force pushes disabled: YES (NO)
 [ ] Deletions disabled: YES (NO)
 
-REQUIRED STATUS CHECKS (all 8):
+REQUIRED STATUS CHECKS (6 platform-specific checks):
 [ ] fast-tests (ubuntu): REQUIRED
 [ ] fast-tests (windows): REQUIRED
-[ ] audit: REQUIRED
-[ ] workflow-guard: REQUIRED
 [ ] ps-lint (ubuntu): REQUIRED
 [ ] ps-lint (windows): REQUIRED
 [ ] install-smoke (ubuntu): REQUIRED
 [ ] install-smoke (windows): REQUIRED
+
+ADDITIONAL CI CHECKS (ubuntu-latest only):
+[ ] audit: runs on ubuntu-latest
+[ ] workflow-guard: runs on ubuntu-latest
 
 ADMIN BYPASS:
 [ ] Stale approval dismissal: YES
