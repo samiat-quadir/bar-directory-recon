@@ -32,6 +32,10 @@ These checks **MUST pass** before any PR can merge to main:
 
 | Check | Expected | Owner | Notes |
 |-------|----------|-------|-------|
+| `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python pytest on Ubuntu |
+| `fast-tests (windows)` | REQUIRED | GitHub Actions | Python pytest on Windows |
+| `audit (ubuntu)` | REQUIRED | GitHub Actions | Bandit + pip-audit (Ubuntu only) |
+| `workflow-guard (ubuntu)` | REQUIRED | GitHub Actions | No unexpected workflow changes (Ubuntu only) |
 | `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Ubuntu |
 | `fast-tests (windows)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Windows |
 | `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit (ubuntu-latest only; single `audit` status check) |
@@ -86,8 +90,8 @@ Under same rule → scroll to "Require status checks to pass before merging":
 - [ ] ✅ All 8 required checks are listed and **selected**:
   - `fast-tests (ubuntu)`
   - `fast-tests (windows)`
-  - `audit`
-  - `workflow-guard`
+  - `audit (ubuntu)` _(Ubuntu only - no Windows variant)_
+  - `workflow-guard (ubuntu)` _(Ubuntu only - no Windows variant)_
   - `ps-lint (ubuntu)`
   - `ps-lint (windows)`
   - `install-smoke (ubuntu)`
