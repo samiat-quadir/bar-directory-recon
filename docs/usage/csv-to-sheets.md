@@ -6,7 +6,7 @@ This guide shows how to export your data from CSV format to Google Sheets using 
 
 - `bar-directory-recon[gsheets]` installed
 - Google Sheets API configured (see [Google Sheets Setup](../setup/gsheets.md))
-- `GOOGLE_APPLICATION_CREDENTIALS` environment variable set
+- `GOOGLE_SHEETS_CREDENTIALS_PATH` environment variable set
 - A Google Sheet ready to receive data
 
 ## Quick Start
@@ -14,28 +14,25 @@ This guide shows how to export your data from CSV format to Google Sheets using 
 The **canonical command** for most use cases:
 
 ```bash
-bdr export csv-to-sheets \
-  --input data.csv \
-  --sheet-id YOUR_SHEET_ID \
-  --worksheet "Sheet1"
+bdr export csv-to-sheets data.csv \
+  --sheet-id YOUR_SHEET_ID
 ```
 
 Replace:
 - `data.csv` with your CSV file path
 - `YOUR_SHEET_ID` with your Google Sheet's ID (found in the sheet's URL)
-- `"Sheet1"` with the worksheet tab name
 
 ## Detailed Usage
 
 ### Basic Export
 
 ```bash
-bdr export csv-to-sheets --input data.csv --sheet-id YOUR_SHEET_ID
+bdr export csv-to-sheets data.csv --sheet-id YOUR_SHEET_ID
 ```
 
 By default:
-- Exports to worksheet "Sheet1"
-- Clears existing data before writing
+- Exports to worksheet "leads"
+- Appends new rows (does not clear existing data)
 - Uses the first row as headers
 
 ### Export to Specific Worksheet
@@ -43,8 +40,7 @@ By default:
 If your Google Sheet has multiple tabs, export to a specific one:
 
 ```bash
-bdr export csv-to-sheets \
-  --input data.csv \
+bdr export csv-to-sheets data.csv \
   --sheet-id YOUR_SHEET_ID \
   --worksheet "Sales Data"
 ```
@@ -53,24 +49,22 @@ The worksheet will be created if it doesn't exist.
 
 ### Deduplication
 
-Remove duplicate rows based on specific columns:
+Remove duplicate rows based on a specific column:
 
 ```bash
-bdr export csv-to-sheets \
-  --input data.csv \
+bdr export csv-to-sheets data.csv \
   --sheet-id YOUR_SHEET_ID \
-  --dedupe-key "id,email"
+  --dedupe-key "email"
 ```
 
-This keeps only the first occurrence of each unique combination of the `id` and `email` columns.
+This keeps only the first occurrence of each unique value in the `email` column.
 
 ### Dry Run (Preview Changes)
 
 See what would be exported without actually writing to Google Sheets:
 
 ```bash
-bdr export csv-to-sheets \
-  --input data.csv \
+bdr export csv-to-sheets data.csv \
   --sheet-id YOUR_SHEET_ID \
   --dry-run
 ```
@@ -105,40 +99,32 @@ bdr export csv-to-sheets --input data.csv --sheet-id ${SHEET_ID#*d/} --sheet-id 
 Export a daily report to a Google Sheet:
 
 ```bash
-bdr export csv-to-sheets \
-  --input daily_report_$(date +%Y-%m-%d).csv \
+bdr export csv-to-sheets daily_report_$(date +%Y-%m-%d).csv \
   --sheet-id 1A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p \
   --worksheet "Daily Reports"
 ```
 
-### Example 2: Merge Data with Deduplication
+### Example 2: Deduplication on Import
 
-Combine multiple CSV files and deduplicate:
+Deduplicate by user ID before uploading:
 
 ```bash
-# First, combine your CSVs
-cat new_data.csv >> existing_data.csv
-
-# Then export with deduping on user_id
-bdr export csv-to-sheets \
-  --input existing_data.csv \
+bdr export csv-to-sheets existing_data.csv \
   --sheet-id 1A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p \
   --dedupe-key "user_id" \
   --worksheet "Users"
 ```
 
-### Example 3: Append to Multiple Worksheets
+### Example 3: Multiple Data Categories
 
 Create worksheets for different data categories:
 
 ```bash
-bdr export csv-to-sheets \
-  --input sales.csv \
+bdr export csv-to-sheets sales.csv \
   --sheet-id 1A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p \
   --worksheet "Sales"
 
-bdr export csv-to-sheets \
-  --input customers.csv \
+bdr export csv-to-sheets customers.csv \
   --sheet-id 1A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p \
   --worksheet "Customers"
 ```
@@ -149,14 +135,12 @@ Always dry-run first on large datasets:
 
 ```bash
 # Preview
-bdr export csv-to-sheets \
-  --input large_data.csv \
+bdr export csv-to-sheets large_data.csv \
   --sheet-id 1A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p \
   --dry-run
 
 # If satisfied, export for real
-bdr export csv-to-sheets \
-  --input large_data.csv \
+bdr export csv-to-sheets large_data.csv \
   --sheet-id 1A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p
 ```
 
