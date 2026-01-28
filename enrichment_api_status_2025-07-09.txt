@@ -148,6 +148,7 @@ MISSING API QUOTA INFO:
 - Gmail token: Requires refresh test ❌
 
 🔧 PLACEHOLDER VALUES DETECTED:
+# pragma: allowlist secret
 - GOOGLE_API_KEY: "your_google_api_key_here" (placeholder)
 - GOOGLE_SHEETS_ID: "your_google_sheets_id_here" (placeholder)
 - MOTION_API_TOKEN: "your_motion_api_token_here" (placeholder)
