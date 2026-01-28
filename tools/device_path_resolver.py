@@ -12,7 +12,6 @@ import json
 import platform
 import sys
 from pathlib import Path
-<<<<<<< HEAD
 from typing import Dict, Optional, Any, cast
 import getpass
 
@@ -26,23 +25,6 @@ DEVICE_CONFIGS = {
 
 
 def get_python_interpreter() -> str:
-=======
-from typing import Dict, Optional, Union, List, Any
-
-# Known device configurations
-DEVICE_CONFIGS = {
-    "DESKTOP-ACER": {
-        "username": "samq",
-        "onedrive_folder": "OneDrive - Digital Age Marketing Group"
-    },
-    "LAPTOP-ASUS": {
-        "username": "samqu",
-        "onedrive_folder": "OneDrive - Digital Age Marketing Group"
-    }
-}
-
-def get_python_interpreter():
->>>>>>> origin/main
     """
     Returns the appropriate Python interpreter path for the current device.
 
@@ -59,16 +41,11 @@ def get_python_interpreter():
     system = platform.system().lower()
 
     # Device-specific overrides (customize based on your environment)
-<<<<<<< HEAD
     device_name = os.environ.get("COMPUTERNAME") or os.environ.get("HOSTNAME", "").lower()
-=======
-    device_name = os.environ.get('COMPUTERNAME') or os.environ.get('HOSTNAME', '').lower()
->>>>>>> origin/main
 
     # Dict of device-specific Python paths (add your devices here)
     device_paths = {
         # Example mappings - replace with your actual device names and paths
-<<<<<<< HEAD
         "salesrep": {
             "windows": r"C:\Python312\python.exe",
             "linux": "/usr/bin/python3",
@@ -82,34 +59,15 @@ def get_python_interpreter():
     }
 
     # Check for device-specific settings
-=======
-        'salesrep': {
-            'windows': r'C:\Python312\python.exe',
-            'linux': '/usr/bin/python3',
-            'darwin': '/usr/local/bin/python3'
-        },
-        'workstation': {
-            'windows': r'C:\Python312\python.exe',
-            'linux': '/usr/bin/python3',
-            'darwin': '/usr/local/bin/python3'
-        }
-    }    # Check for device-specific settings
->>>>>>> origin/main
     if device_name and device_name.lower() in device_paths:
         if system in device_paths[device_name.lower()]:
             return device_paths[device_name.lower()][system]
 
     # Default fallback paths by system
     default_paths = {
-<<<<<<< HEAD
         "windows": r"python.exe",  # Use system PATH
         "linux": "/usr/bin/python3",
         "darwin": "/usr/bin/python3",
-=======
-        'windows': r'python.exe',  # Use system PATH
-        'linux': '/usr/bin/python3',
-        'darwin': '/usr/bin/python3'
->>>>>>> origin/main
     }
 
     # Use system default path if no specific match
@@ -119,10 +77,6 @@ def get_python_interpreter():
     # Final fallback is the current Python executable
     return current_python
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
 def get_current_device() -> Optional[str]:
     """
     Detect the current device based on computer name and username.
@@ -131,10 +85,7 @@ def get_current_device() -> Optional[str]:
         str: Device identifier from DEVICE_CONFIGS, or None if not found
     """
     computer_name = platform.node()
-<<<<<<< HEAD
     username = getpass.getuser()
-=======
->>>>>>> origin/main
     username = os.getlogin()
 
     # First try to match by computer name
@@ -168,25 +119,16 @@ def get_onedrive_path() -> str:
         if os.path.exists(path):
             return path
 
-<<<<<<< HEAD
     possible_paths = [
         os.path.join("C:\\", "Users", "samq", "OneDrive - Digital Age Marketing Group"),
         os.path.join("C:\\", "Users", "samqu", "OneDrive - Digital Age Marketing Group"),
         os.path.join("C:\\", "Users", getpass.getuser(), "OneDrive - Digital Age Marketing Group"),
-=======
-    # If automatic detection fails, try common locations
-    possible_paths = [
-        os.path.join("C:\\", "Users", "samq", "OneDrive - Digital Age Marketing Group"),
-        os.path.join("C:\\", "Users", "samqu", "OneDrive - Digital Age Marketing Group"),
-        os.path.join("C:\\", "Users", os.getlogin(), "OneDrive - Digital Age Marketing Group")
->>>>>>> origin/main
     ]
 
     for path in possible_paths:
         if os.path.exists(path):
             return path
 
-<<<<<<< HEAD
     user_folder = os.path.join("C:\\", "Users", getpass.getuser())
     user_folder = os.path.join("C:\\", "Users", os.getlogin())
     if os.path.exists(user_folder):
@@ -195,13 +137,6 @@ def get_onedrive_path() -> str:
             for f in os.listdir(user_folder)
             if os.path.isdir(os.path.join(user_folder, f)) and f.startswith("OneDrive")
         ]
-=======
-    # If still no match, look for OneDrive folders
-    user_folder = os.path.join("C:\\", "Users", os.getlogin())
-    if os.path.exists(user_folder):
-        onedrive_folders = [f for f in os.listdir(user_folder)
-                          if os.path.isdir(os.path.join(user_folder, f)) and f.startswith("OneDrive")]
->>>>>>> origin/main
         if onedrive_folders:
             return os.path.join(user_folder, onedrive_folders[0])
 
@@ -210,7 +145,6 @@ def get_onedrive_path() -> str:
     return os.getcwd()
 
 
-<<<<<<< HEAD
 def get_project_root_path(
     onedrive_path: Optional[str] = None,
     project_name: str = "bar-directory-recon-new",
@@ -258,58 +192,21 @@ def get_project_root_path(
                 return os.path.join(base_path, folder)
 
     # As a last resort, try current directory or its parent
-=======
-def get_project_root_path(onedrive_path: Optional[str] = None,
-                         project_name: str = "bar-directory-recon",
-                         sub_path: str = "Desktop\\Local Py\\Work Projects") -> Optional[str]:
-    """
-    Get the project root path.
-
-    Args:
-        onedrive_path: Path to OneDrive folder (will auto-detect if None)
-        project_name: Name of the project folder
-        sub_path: Path within OneDrive where the project is located
-
-    Returns:
-        str: Path to the project root, or None if not found
-    """
-    if onedrive_path is None:
-        onedrive_path = get_onedrive_path()
-
-    # First try the expected path within OneDrive
-    project_path = os.path.join(onedrive_path, sub_path, project_name)
-
-    if os.path.exists(project_path):
-        return project_path
-
-    # If not found, check if we're already in the project directory
->>>>>>> origin/main
     current_dir = os.getcwd()
     if os.path.basename(current_dir) == project_name:
         return current_dir
 
-<<<<<<< HEAD
     parent_dir = os.path.dirname(current_dir)
     if os.path.basename(parent_dir) == project_name:
         return parent_dir
 
     # If all else fails, return None
     print(f"Warning: Could not determine project root path for {project_name}.")
-=======
-    # Also try the repository root method as a backup
-    repo_root = get_repository_root()
-    if os.path.basename(repo_root) == project_name:
-        return repo_root
-
-    # If all else fails, return None
-    print(f"Warning: Could not find project path for '{project_name}'. Please specify the path manually.")
->>>>>>> origin/main
     return None
 
 
 def to_project_relative_path(path: str, project_root: Optional[str] = None) -> str:
     """
-<<<<<<< HEAD
     Convert an absolute path to a project-relative path.
 
     Args:
@@ -341,40 +238,10 @@ def to_project_relative_path(path: str, project_root: Optional[str] = None) -> s
     except Exception:
         # If any other error occurs, return the original path
         return path
-=======
-    Convert an absolute path to a path relative to the project root.
-
-    Args:
-        path: The path to convert
-        project_root: Path to the project root (will auto-detect if None)
-
-    Returns:
-        str: Relative path, or original path if not within project
-    """
-    if project_root is None:
-        project_root = get_project_root_path()
-        if project_root is None:
-            return path
-
-    # Ensure both paths are absolute
-    abs_path = os.path.abspath(path)
-    abs_root = os.path.abspath(project_root)
-
-    # Check if the path is within the project root
-    if abs_path.startswith(abs_root):
-        rel_path = abs_path[len(abs_root):]
-        if rel_path.startswith(os.sep):
-            rel_path = rel_path[1:]
-        return rel_path
-
-    # If not within the project, return the original path
-    return path
->>>>>>> origin/main
 
 
 def get_repository_root() -> str:
     """
-<<<<<<< HEAD
     Get the Git repository root for the current project.
 
     Returns:
@@ -400,33 +267,6 @@ def get_repository_root() -> str:
 
     # If no git repository found, return project root
     return project_root
-=======
-    Get the Git repository root directory by traversing up from current dir.
-
-    Returns:
-        str: The repository root path, or current directory if not in a repo
-    """
-    current_dir = os.path.abspath(os.getcwd())
-
-    # Try to find .git directory by walking up from current directory
-    path = Path(current_dir)
-    for _ in range(10):  # Limit search depth to 10 levels
-        if (path / '.git').exists() and (path / '.git').is_dir():
-            return str(path)
-
-        parent = path.parent
-        if parent == path:  # Reached root directory
-            break
-        path = parent
-
-    # If not found, fall back to project root
-    project_root = get_project_root_path()
-    if project_root is not None:
-        return project_root
-
-    # Final fallback to current directory
-    return current_dir
->>>>>>> origin/main
 
 
 def get_data_directory() -> str:
@@ -445,11 +285,7 @@ def get_data_directory() -> str:
     possible_paths = [
         os.path.join(project_root, "data"),
         os.path.join(project_root, "database"),
-<<<<<<< HEAD
         os.path.join(project_root, "datasets"),
-=======
-        os.path.join(project_root, "datasets")
->>>>>>> origin/main
     ]
 
     for path in possible_paths:
@@ -469,7 +305,6 @@ def get_data_directory() -> str:
     return data_dir
 
 
-<<<<<<< HEAD
 def get_device_config(
     key: Optional[str] = None, default_value: Any = None, device_id: Optional[str] = None
 ) -> Any:
@@ -512,8 +347,6 @@ def get_device_config(
     return default_value
 
 
-=======
->>>>>>> origin/main
 def set_device_config(key: str, value: Any, device_id: Optional[str] = None) -> Dict:
     """
     Set device-specific configuration.
@@ -541,25 +374,12 @@ def set_device_config(key: str, value: Any, device_id: Optional[str] = None) -> 
 
     # Load existing config or create new
     if os.path.exists(config_file):
-<<<<<<< HEAD
         with open(config_file, "r") as f:
             config = json.load(f)
     else:
         from datetime import datetime
 
         config = {"DeviceId": device_id, "Settings": {}, "Paths": {}, "LastUpdated": datetime.now().isoformat()}
-=======
-        with open(config_file, 'r') as f:
-            config = json.load(f)
-    else:
-        from datetime import datetime
-        config = {
-            "DeviceId": device_id,
-            "Settings": {},
-            "Paths": {},
-            "LastUpdated": datetime.now().isoformat()
-        }
->>>>>>> origin/main
 
     # Update with new value
     if "Settings" not in config:
@@ -569,28 +389,17 @@ def set_device_config(key: str, value: Any, device_id: Optional[str] = None) -> 
 
     # Update timestamp
     from datetime import datetime
-<<<<<<< HEAD
 
     config["LastUpdated"] = datetime.now().isoformat()
 
     # Save config
     with open(config_file, "w") as f:
-=======
-    config["LastUpdated"] = datetime.now().isoformat()
-
-    # Save config
-    with open(config_file, 'w') as f:
->>>>>>> origin/main
         json.dump(config, f, indent=4)
 
     return config
 
 
-<<<<<<< HEAD
 def register_current_device(force: bool = False) -> Dict[str, Any]:
-=======
-def register_current_device(force: bool = False) -> Dict:
->>>>>>> origin/main
     """
     Register the current device in the configuration.
 
@@ -609,11 +418,7 @@ def register_current_device(force: bool = False) -> Dict:
 
     # Check if device is already registered
     if os.path.exists(config_file) and not force:
-<<<<<<< HEAD
         with open(config_file, "r") as f:
-=======
-        with open(config_file, 'r') as f:
->>>>>>> origin/main
             config = json.load(f)
 
         if config.get("DeviceId") == platform.node():
@@ -628,28 +433,16 @@ def register_current_device(force: bool = False) -> Dict:
     onedrive_path = get_onedrive_path()
 
     from datetime import datetime
-<<<<<<< HEAD
 
     now = datetime.now().isoformat()
     config = {
         "DeviceId": platform.node(),
         "Username": getpass.getuser(),
         "Settings": {"DefaultEditor": "code"},
-=======
-    now = datetime.now().isoformat()
-
-    config = {
-        "DeviceId": platform.node(),
-        "Username": os.getlogin(),
-        "Settings": {
-            "DefaultEditor": "code"
-        },
->>>>>>> origin/main
         "Paths": {
             "OneDrive": onedrive_path,
             "ProjectRoot": project_root,
             "DataDirectory": get_data_directory(),
-<<<<<<< HEAD
             "RepoRoot": get_repository_root(),
         },
         "FirstRegistered": now,
@@ -658,16 +451,6 @@ def register_current_device(force: bool = False) -> Dict:
 
     # Save config
     with open(config_file, "w") as f:
-=======
-            "RepoRoot": get_repository_root()
-        },
-        "FirstRegistered": now,
-        "LastUpdated": now
-    }
-
-    # Save config
-    with open(config_file, 'w') as f:
->>>>>>> origin/main
         json.dump(config, f, indent=4)
 
     print(f"Device registered as: {config['DeviceId']}")
@@ -689,12 +472,8 @@ if __name__ == "__main__":
     parser.add_argument("--force", action="store_true", help="Force registration even if already registered")
     parser.add_argument("--config", nargs="*", help="Get or set configuration")
     args = parser.parse_args()
-<<<<<<< HEAD
 
     # Handle specific output requests
-=======
-      # Handle specific output requests
->>>>>>> origin/main
     if args.onedrive:
         print(get_onedrive_path())
     elif args.project:
@@ -716,10 +495,7 @@ if __name__ == "__main__":
             config = get_device_config()
             if config:
                 import pprint
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/main
                 pprint.pprint(config)
             else:
                 print("No device configuration found.")
@@ -741,21 +517,12 @@ if __name__ == "__main__":
             print("Usage: --config [key [value]]")
     else:
         # Print full diagnostics by default
-<<<<<<< HEAD
         print("Device Path Resolver Information:")
         print("=================================")
         try:
             print(f"Current user: {getpass.getuser()}")
         except Exception:
             print(f"Current user: {os.environ.get('USERNAME') or os.environ.get('USER', 'Unknown')}")
-=======
-        print(f"Device Path Resolver Information:")
-        print(f"=================================")
-        print(f"Current device: {platform.node()}")
-        try:
-            print(f"Current user: {os.getlogin()}")
-        except:
->>>>>>> origin/main
             print(f"Current user: {os.environ.get('USERNAME') or os.environ.get('USER', 'Unknown')}")
         print(f"Detected device config: {get_current_device() or 'Unknown'}")
         print(f"Python interpreter: {get_python_interpreter()}")
