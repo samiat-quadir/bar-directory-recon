@@ -1,9 +1,13 @@
-# Branch Protection Rules — Main Branch
+# [DEPRECATED] Branch Protection Rules — Main Branch
 
-**Purpose**: Document and verify the branch protection rules configured for the `main` branch.
+> [!IMPORTANT]  
+> This file is **deprecated** and kept only for historical reference.  
+> The **authoritative branch protection documentation** is in `docs/branch-protection.md`.
+
+**Purpose**: Historical snapshot of branch protection rules for the `main` branch (non-authoritative).
 
 **Last Verified**: 2026-01-27  
-**Status**: DOCUMENTED FOR VERIFICATION  
+**Status**: DEPRECATED — SEE `docs/branch-protection.md`  
 
 ---
 
