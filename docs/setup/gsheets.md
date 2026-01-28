@@ -64,25 +64,25 @@ This guide walks you through setting up Google Sheets API access for `bar-direct
 
 ## Step 6: Set the Environment Variable
 
-Once you have the JSON key file, set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to it.
+Once you have the JSON key file, set the `GOOGLE_SHEETS_CREDENTIALS_PATH` environment variable to point to it.
 
 ### Linux / macOS (Bash/Zsh)
 
 ```bash
-export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcp-key.json
+export GOOGLE_SHEETS_CREDENTIALS_PATH=~/.config/gcp-key.json
 ```
 
 Add this line to your `~/.bashrc` or `~/.zshrc` to make it persistent:
 
 ```bash
-echo 'export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcp-key.json' >> ~/.bashrc
+echo 'export GOOGLE_SHEETS_CREDENTIALS_PATH=~/.config/gcp-key.json' >> ~/.bashrc
 source ~/.bashrc
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
-$env:GOOGLE_APPLICATION_CREDENTIALS = "C:\Users\YourName\.config\gcp-key.json"
+$env:GOOGLE_SHEETS_CREDENTIALS_PATH = "C:\Users\YourName\.config\gcp-key.json"
 ```
 
 To make it persistent, add it to your PowerShell profile or use the System Environment Variables panel:
@@ -90,14 +90,14 @@ To make it persistent, add it to your PowerShell profile or use the System Envir
 1. Press `Win + R`, type `sysdm.cpl`, and press Enter
 2. Go to **Advanced** → **Environment Variables**
 3. Click **New** (under User variables)
-4. Variable name: `GOOGLE_APPLICATION_CREDENTIALS`
+4. Variable name: `GOOGLE_SHEETS_CREDENTIALS_PATH`
 5. Variable value: `C:\Users\YourName\.config\gcp-key.json`
 6. Click **OK**
 
 ### Windows (Command Prompt)
 
 ```cmd
-set GOOGLE_APPLICATION_CREDENTIALS=C:\Users\YourName\.config\gcp-key.json
+set GOOGLE_SHEETS_CREDENTIALS_PATH=C:\Users\YourName\.config\gcp-key.json
 ```
 
 ## Step 7: Verify Setup
@@ -126,9 +126,9 @@ Overall: PASS
 
 ### "Credentials not found" or "Invalid key"
 
-- Verify `GOOGLE_APPLICATION_CREDENTIALS` is set correctly
+- Verify `GOOGLE_SHEETS_CREDENTIALS_PATH` is set correctly
 - Make sure the JSON key file exists and hasn't been moved
-- Try running `echo $GOOGLE_APPLICATION_CREDENTIALS` (Linux/macOS) or `$env:GOOGLE_APPLICATION_CREDENTIALS` (PowerShell) to confirm
+- Try running `echo $GOOGLE_SHEETS_CREDENTIALS_PATH` (Linux/macOS) or `$env:GOOGLE_SHEETS_CREDENTIALS_PATH` (PowerShell) to confirm
 
 ### "Authentication to Google API failed"
 
