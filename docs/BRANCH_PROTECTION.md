@@ -1,9 +1,13 @@
-# Branch Protection Rules — Main Branch
+# [DEPRECATED] Branch Protection Rules — Main Branch
 
-**Purpose**: Document and verify the branch protection rules configured for the `main` branch.
+> [!IMPORTANT]  
+> This file is **deprecated** and kept only for historical reference.  
+> The **authoritative branch protection documentation** is in `docs/branch-protection.md`.
+
+**Purpose**: Historical snapshot of branch protection rules for the `main` branch (non-authoritative).
 
 **Last Verified**: 2026-01-27  
-**Status**: DOCUMENTED FOR VERIFICATION  
+**Status**: DEPRECATED — SEE `docs/branch-protection.md`  
 
 ---
 
@@ -28,10 +32,10 @@ These checks **MUST pass** before any PR can merge to main:
 
 | Check | Expected | Owner | Notes |
 |-------|----------|-------|-------|
-| `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python pytest on Ubuntu |
-| `fast-tests (windows)` | REQUIRED | GitHub Actions | Python pytest on Windows |
-| `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit |
-| `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes |
+| `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Ubuntu |
+| `fast-tests (windows)` | REQUIRED | GitHub Actions | Python environment & package installation validation on Windows |
+| `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit (ubuntu-latest only; single `audit` status check) |
+| `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes (single check running on `ubuntu-latest`) |
 | `ps-lint (ubuntu)` | REQUIRED | GitHub Actions | PowerShell linting on Ubuntu |
 | `ps-lint (windows)` | REQUIRED | GitHub Actions | PowerShell linting on Windows |
 | `install-smoke (ubuntu)` | REQUIRED | GitHub Actions | Wheel install + CLI smoke test (Ubuntu) |
