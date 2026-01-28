@@ -30,7 +30,7 @@ These checks **MUST pass** before any PR can merge to main:
 |-------|----------|-------|-------|
 | `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python pytest on Ubuntu |
 | `fast-tests (windows)` | REQUIRED | GitHub Actions | Python pytest on Windows |
-| `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit |
+| `audit` | REQUIRED | GitHub Actions | Bandit + pip-audit (ubuntu-latest only; single `audit` status check) |
 | `workflow-guard` | REQUIRED | GitHub Actions | No unexpected workflow changes |
 | `ps-lint (ubuntu)` | REQUIRED | GitHub Actions | PowerShell linting on Ubuntu |
 | `ps-lint (windows)` | REQUIRED | GitHub Actions | PowerShell linting on Windows |
