@@ -136,8 +136,8 @@ BASIC PROTECTIONS:
 [ ] Require status checks: YES
 [ ] Require up-to-date branches: YES
 [ ] Restrict push access: YES
-[ ] Force pushes: DISABLED
-[ ] Deletions: DISABLED
+[ ] Allow force pushes: NO
+[ ] Allow deletions: NO
 
 REQUIRED STATUS CHECKS (5 checks, 8 job instances):
 [ ] fast-tests (ubuntu): REQUIRED
@@ -156,7 +156,7 @@ Note: audit and workflow-guard also run as required checks but only on ubuntu-la
 ADMIN BYPASS:
 [ ] Stale approval dismissal: YES
 [ ] Code owner review: YES (if CODEOWNERS exists)
-[ ] Admin bypass: DISABLED
+[ ] Allow admin bypass: NO
 
 SECRET SCANNING:
 [ ] Secret scanning enabled: YES
