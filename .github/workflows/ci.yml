@@ -55,6 +55,24 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch full history for diff
+
+      - name: Detect if docs-only change
+        id: docs_only
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # Get list of changed files in PR
+            git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -v '^docs/' | grep -v '^\.github/docs' | grep -v '\.md$' > /tmp/code_changes.txt || echo ""
+            if [ ! -s /tmp/code_changes.txt ]; then
+              echo "docs_only=true" >> $GITHUB_OUTPUT
+            else
+              echo "docs_only=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "docs_only=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -65,13 +83,22 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements-dev.txt
 
-      - name: Run Tests and Coverage
+      - name: Run Tests and Coverage (with gate)
+        if: steps.docs_only.outputs.docs_only == 'false'
         run: |
           # Coverage Ratchet: Current gate=21%, target=25%
           # Policy: Increase by +2% per PR when coverage exceeds gate
           echo "📊 Coverage Gate: 21% (ratchet policy - increase when coverage exceeds gate)"
           echo "📊 Next targets: 23% → 25%"
+          echo "📝 Code changes detected - applying coverage gate"
           pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing --cov-fail-under=21
+
+      - name: Run Tests and Coverage (docs-only, no gate)
+        if: steps.docs_only.outputs.docs_only == 'true'
+        run: |
+          echo "📚 Docs-only changes detected - skipping coverage gate"
+          echo "📝 Running tests without --cov-fail-under for documentation changes"
+          pytest -v --cov=src --cov=universal_recon --cov-report=xml --cov-report=term-missing
 
       - name: Print Coverage Summary
         if: always()
