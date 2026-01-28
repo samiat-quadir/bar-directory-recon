@@ -79,11 +79,11 @@ Under "Branch protection rules" → **main**:
 Under same rule → scroll to "Require status checks to pass before merging":
 
 - [ ] ✅ "Require branches to be up to date before merge" is **checked**
-- [ ] ✅ All 8 required checks are listed and **selected**:
+- [ ] ✅ All 8 required checks are listed and **selected** (6 cross-platform + 2 ubuntu-only):
   - `fast-tests (ubuntu)`
   - `fast-tests (windows)`
-  - `audit`
-  - `workflow-guard`
+  - `audit` (ubuntu-latest only)
+  - `workflow-guard` (ubuntu-latest only)
   - `ps-lint (ubuntu)`
   - `ps-lint (windows)`
   - `install-smoke (ubuntu)`
@@ -178,7 +178,7 @@ If any rules are missing, here's the configuration order:
 2. Click **Add rule** or edit **main** rule
 3. Enable rules in this order:
    - Basic protections (PR, status checks, up-to-date)
-   - Require all 8 status checks from CI
+   - Require all 8 status checks from CI (6 cross-platform + 2 ubuntu-only)
    - Disable force pushes and deletions
    - Disable admin bypass
 4. Click **Save changes**
