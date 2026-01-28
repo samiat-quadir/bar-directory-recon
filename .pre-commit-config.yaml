@@ -16,7 +16,7 @@ repos:
     hooks:
       - id: block-main-branch
         name: Block commits on main branch
-        entry: python pre-commit-hooks/block_main_branch.py
+        entry: python .githooks/block_main_branch.py
         language: python
         pass_filenames: false
         always_run: true
