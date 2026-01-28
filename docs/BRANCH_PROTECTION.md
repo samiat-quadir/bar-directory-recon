@@ -30,8 +30,8 @@ These checks **MUST pass** before any PR can merge to main:
 |-------|----------|-------|-------|
 | `fast-tests (ubuntu)` | REQUIRED | GitHub Actions | Python pytest on Ubuntu |
 | `fast-tests (windows)` | REQUIRED | GitHub Actions | Python pytest on Windows |
-| `audit (ubuntu)` | REQUIRED | GitHub Actions | Bandit + pip-audit (ubuntu only) |
-| `workflow-guard (ubuntu)` | REQUIRED | GitHub Actions | No unexpected workflow changes (ubuntu only) |
+| `audit (Ubuntu)` | REQUIRED | GitHub Actions | Bandit + pip-audit (Ubuntu only) |
+| `workflow-guard (Ubuntu)` | REQUIRED | GitHub Actions | No unexpected workflow changes (Ubuntu only) |
 | `ps-lint (ubuntu)` | REQUIRED | GitHub Actions | PowerShell linting on Ubuntu |
 | `ps-lint (windows)` | REQUIRED | GitHub Actions | PowerShell linting on Windows |
 | `install-smoke (ubuntu)` | REQUIRED | GitHub Actions | Wheel install + CLI smoke test (Ubuntu) |
@@ -82,8 +82,8 @@ Under same rule → scroll to "Require status checks to pass before merging":
 - [ ] ✅ All 8 required checks are listed and **selected**:
   - `fast-tests (ubuntu)`
   - `fast-tests (windows)`
-  - `audit (ubuntu)` _(ubuntu only - no windows variant)_
-  - `workflow-guard (ubuntu)` _(ubuntu only - no windows variant)_
+  - `audit (Ubuntu)` _(Ubuntu only - no Windows variant)_
+  - `workflow-guard (Ubuntu)` _(Ubuntu only - no Windows variant)_
   - `ps-lint (ubuntu)`
   - `ps-lint (windows)`
   - `install-smoke (ubuntu)`
