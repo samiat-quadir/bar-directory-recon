@@ -564,6 +564,7 @@ DEFAULT_GOOGLE_SHEET_ID="your-sheet-id"
 
 # Email Notifications (Optional)
 EMAIL_USERNAME="your-email@gmail.com"
+<!-- pragma: allowlist secret -->
 EMAIL_PASSWORD="your-app-password"
 TO_EMAILS="recipient@example.com"
 

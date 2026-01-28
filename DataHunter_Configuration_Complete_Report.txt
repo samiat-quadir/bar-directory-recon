@@ -84,6 +84,7 @@ EMAIL NOTIFICATIONS:
 1. Get Gmail app password: https://support.google.com/accounts/answer/185833
 2. Update config/data_hunter_config.json:
    "username": "your-email@gmail.com"
+   # pragma: allowlist secret
    "password": "your-16-char-app-password"
    "to_emails": ["team@company.com"]
 
