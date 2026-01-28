@@ -1,0 +1,136 @@
+# Wheel Install Smoke Test
+# Validates that the package installs correctly from wheel in a fresh environment
+# Runs on every push/PR to ensure installed-context behavior is correct
+
+name: Wheel Install Smoke
+
+on:
+  push:
+    branches: [ "main", "feature/**", "prep/**", "chore/**" ]
+  pull_request:
+    branches: [ "main", "feature/**", "prep/**", "chore/**" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  wheel-smoke:
+    name: Wheel Install Smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: ['3.11']
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build wheel
+        run: python -m build --wheel
+
+      - name: Create fresh venv and install wheel (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          python -m venv .install-venv
+          source .install-venv/bin/activate
+          pip install --upgrade pip
+          pip install dist/*.whl
+          echo "✓ Wheel installed successfully"
+
+      - name: Create fresh venv and install wheel (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          python -m venv .install-venv
+          .install-venv\Scripts\Activate.ps1
+          pip install --upgrade pip
+          pip install (Get-ChildItem dist\*.whl).FullName
+          Write-Host "✓ Wheel installed successfully"
+
+      - name: Smoke test - bdr --help (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          source .install-venv/bin/activate
+          echo "Testing: bdr --help"
+          bdr --help
+          echo "✓ bdr --help works in installed context"
+
+      - name: Smoke test - bdr --help (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .install-venv\Scripts\Activate.ps1
+          Write-Host "Testing: bdr --help"
+          bdr --help
+          Write-Host "✓ bdr --help works in installed context"
+
+      - name: Smoke test - bdr doctor (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          source .install-venv/bin/activate
+          echo "Testing: bdr doctor"
+          bdr doctor
+          echo "✓ bdr doctor works in installed context"
+
+      - name: Smoke test - bdr doctor (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .install-venv\Scripts\Activate.ps1
+          Write-Host "Testing: bdr doctor"
+          bdr doctor
+          Write-Host "✓ bdr doctor works in installed context"
+
+      - name: Smoke test - bdr export csv-to-sheets --help (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          source .install-venv/bin/activate
+          echo "Testing: bdr export csv-to-sheets --help"
+          bdr export csv-to-sheets --help
+          echo "✓ bdr export csv-to-sheets --help works in installed context"
+
+      - name: Smoke test - bdr export csv-to-sheets --help (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .install-venv\Scripts\Activate.ps1
+          Write-Host "Testing: bdr export csv-to-sheets --help"
+          bdr export csv-to-sheets --help
+          Write-Host "✓ bdr export csv-to-sheets --help works in installed context"
+
+      - name: Verify installed mode output (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          source .install-venv/bin/activate
+          echo "Checking doctor output for installed mode indicator..."
+          bdr doctor 2>&1 | grep -i "installed\|dev mode" || echo "Note: installed/dev mode indicator missing (optional)"
+
+      - name: Verify installed mode output (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .install-venv\Scripts\Activate.ps1
+          Write-Host "Checking doctor output for installed mode indicator..."
+          $output = & bdr doctor 2>&1
+          if ($output -match "installed|dev mode") {
+              Write-Host "✓ Found installed/dev mode indicator"
+          } else {
+              Write-Host "Note: installed/dev mode indicator missing (optional)"
+          }
+
+      - name: Clean up venv
+        if: always()
+        run: |
+          rm -rf .install-venv || rmdir /s /q .install-venv

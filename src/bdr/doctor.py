@@ -144,6 +144,14 @@ def _check_framework_modules() -> Tuple[DoctorCheck, List[str]]:
     details: List[str] = []
     failed: List[str] = []
     passed = True
+    
+    # Detect mode: try src.* imports first to detect dev-mode vs installed-mode
+    dev_mode = False
+    try:
+        import_module("src.config_loader")
+        dev_mode = True
+    except ImportError:
+        dev_mode = False
 
     for module_path, class_name in FRAMEWORK_MODULES:
         dotted = f"{module_path}.{class_name}"
@@ -211,7 +219,15 @@ def format_report(report: DoctorReport) -> str:
     lines.append(f"Version: {report.version}")
     lines.append(f"Python: {report.python_version}")
     lines.append(f"Platform: {report.platform}")
-    lines.append(f"Mode: {'no-exec' if report.no_exec else 'exec'}")
+    
+    # Detect and show execution mode clearly
+    try:
+        import_module("src.config_loader")
+        mode_indicator = "📁 Dev Mode (src.* imports)"
+    except ImportError:
+        mode_indicator = "📦 Installed Mode (top-level imports)"
+    lines.append(f"Execution: {mode_indicator}")
+    lines.append(f"no-exec: {report.no_exec}")
     lines.append("")
 
     for check in report.checks:

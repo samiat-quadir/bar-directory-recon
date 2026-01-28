@@ -1,0 +1,189 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.6, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Code\bar-directory-recon
+configfile: pytest.ini (WARNING: ignoring pytest config in pyproject.toml!)
+plugins: anyio-4.11.0, cov-6.0.0, mock-3.11.1
+collected 511 items / 10 deselected / 501 selected
+
+src\tests\test_core_modules.py ..........                                [  1%]
+src\tests\test_data_hunter.py ........                                   [  3%]
+src\tests\test_hallandale_pipeline.py .                                  [  3%]
+src\tests\test_hallandale_pipeline_success.py .                          [  3%]
+src\tests\test_logger.py ..............                                  [  6%]
+src\tests\test_orchestrator.py .......                                   [  8%]
+src\tests\test_security_manager.py ...................                   [ 11%]
+test_framework.py ...                                                    [ 12%]
+test_google_sheets.py ..                                                 [ 12%]
+test_plugin_architecture.py .                                            [ 13%]
+test_plugin_architecture_fixed.py .                                      [ 13%]
+test_realtor_system.py s...                                              [ 14%]
+test_system.py ......                                                    [ 15%]
+tests\integrity\test_empty_result_failure.py .................           [ 18%]
+tests\integrity\test_validation_threshold.py ...................         [ 22%]
+tests\test_cli_coverage.py ......................                        [ 26%]
+tests\test_cli_parsing.py ..........s....                                [ 29%]
+tests\test_config_loader_defaults.py ...................                 [ 33%]
+tests\test_config_loader_unit.py .........................               [ 38%]
+tests\test_data_extractor.py .................................           [ 45%]
+tests\test_golden_path.py ............s...                               [ 48%]
+tests\test_gsheets_coverage.py ....................                      [ 52%]
+tests\test_gsheets_guardrails.py ...............                         [ 55%]
+tests\test_gsheets_optional.py ...s...s................................. [ 63%]
+........................                                                 [ 68%]
+tests\test_notification_agent.py ...........................             [ 73%]
+tests\test_orchestrator_dryrun.py ......................                 [ 78%]
+tests\test_security_manager_local.py .                                   [ 78%]
+tests\test_security_manager_unit.py ........................             [ 83%]
+tests\test_unified_schema.py .......................                     [ 87%]
+universal_recon\tests\analytics\test_plugin_usage_diff.py ......         [ 89%]
+universal_recon\tests\analytics\test_risk_overlay_emitter.py .....       [ 90%]
+universal_recon\tests\auto_smoke\test_auto_01.py .                       [ 90%]
+universal_recon\tests\auto_smoke\test_auto_02.py .                       [ 90%]
+universal_recon\tests\auto_smoke\test_auto_03.py .                       [ 90%]
+universal_recon\tests\auto_smoke\test_auto_04.py .                       [ 90%]
+universal_recon\tests\auto_smoke\test_auto_05.py .                       [ 91%]
+universal_recon\tests\auto_smoke\test_auto_06.py .                       [ 91%]
+universal_recon\tests\auto_smoke\test_auto_07.py .                       [ 91%]
+universal_recon\tests\auto_smoke\test_auto_08.py .                       [ 91%]
+universal_recon\tests\auto_smoke\test_auto_09.py .                       [ 91%]
+universal_recon\tests\auto_smoke\test_auto_10.py .                       [ 92%]
+universal_recon\tests\infrastructure\test_chromedriver.py s              [ 92%]
+universal_recon\tests\infrastructure\test_network_connectivity.py s      [ 92%]
+universal_recon\tests\plugins\test_firm_parser.py ...                    [ 93%]
+universal_recon\tests\plugins\test_firm_plugin.py ..                     [ 93%]
+universal_recon\tests\plugins\test_loader.py .                           [ 93%]
+universal_recon\tests\plugins\test_ml_labeler.py ..                      [ 94%]
+universal_recon\tests\plugins\test_plugin_dryrun.py ...........          [ 96%]
+universal_recon\tests\plugins\test_social_link_parser.py ..              [ 96%]
+universal_recon\tests\plugins\test_social_plugin.py ..                   [ 97%]
+universal_recon\tests\test_basic.py .                                    [ 97%]
+universal_recon\tests\test_risk_overlay_emitter.py ...                   [ 97%]
+universal_recon\tests\utils\test_audit_report_generator.py ....          [ 98%]
+universal_recon\tests\utils\test_score_predictor.py ....                 [ 99%]
+universal_recon\tests\utils\test_score_visualizer.py ...                 [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\httplib2\auth.py:19
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\httplib2\auth.py:19: DeprecationWarning: 'setName' deprecated - use 'set_name'
+    token = pp.Word(tchar).setName("token")
+
+.venv\Lib\site-packages\httplib2\auth.py:20
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\httplib2\auth.py:20: DeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    token68 = pp.Combine(pp.Word("-._~+/" + pp.nums + pp.alphas) + pp.Optional(pp.Word("=").leaveWhitespace())).setName(
+
+.venv\Lib\site-packages\httplib2\auth.py:20
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\httplib2\auth.py:20: DeprecationWarning: 'setName' deprecated - use 'set_name'
+    token68 = pp.Combine(pp.Word("-._~+/" + pp.nums + pp.alphas) + pp.Optional(pp.Word("=").leaveWhitespace())).setName(
+
+.venv\Lib\site-packages\httplib2\auth.py:24
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\httplib2\auth.py:24: DeprecationWarning: 'setName' deprecated - use 'set_name'
+    quoted_string = pp.dblQuotedString.copy().setName("quoted-string").setParseAction(unquote)
+
+.venv\Lib\site-packages\httplib2\auth.py:24
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\httplib2\auth.py:24: DeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_string = pp.dblQuotedString.copy().setName("quoted-string").setParseAction(unquote)
+
+.venv\Lib\site-packages\httplib2\auth.py:25
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\httplib2\auth.py:25: DeprecationWarning: 'setName' deprecated - use 'set_name'
+    auth_param_name = token.copy().setName("auth-param-name").addParseAction(downcaseTokens)
+
+.venv\Lib\site-packages\httplib2\auth.py:25
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\httplib2\auth.py:25: DeprecationWarning: 'addParseAction' deprecated - use 'add_parse_action'
+    auth_param_name = token.copy().setName("auth-param-name").addParseAction(downcaseTokens)
+
+.venv\Lib\site-packages\httplib2\auth.py:27
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\httplib2\auth.py:27: DeprecationWarning: 'delimitedList' deprecated - use 'DelimitedList'
+    params = pp.Dict(pp.delimitedList(pp.Group(auth_param)))
+
+.venv\Lib\site-packages\httplib2\auth.py:33
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\httplib2\auth.py:33: DeprecationWarning: 'delimitedList' deprecated - use 'DelimitedList'
+    www_authenticate = pp.delimitedList(pp.Group(challenge))
+
+universal_recon\tests\analytics\test_plugin_usage_diff.py:14
+  C:\Code\bar-directory-recon\universal_recon\tests\analytics\test_plugin_usage_diff.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.analytics - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.analytics
+
+universal_recon\tests\analytics\test_risk_overlay_emitter.py:18
+  C:\Code\bar-directory-recon\universal_recon\tests\analytics\test_risk_overlay_emitter.py:18: PytestUnknownMarkWarning: Unknown pytest.mark.analytics - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.analytics
+
+test_framework.py::test_imports
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_framework.py::test_imports returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_framework.py::test_basic_functionality
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_framework.py::test_basic_functionality returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_framework.py::test_config_validation
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_framework.py::test_config_validation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_google_sheets.py::test_cli_arguments
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_google_sheets.py::test_cli_arguments returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_google_sheets.py::test_logs_directory
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_google_sheets.py::test_logs_directory returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_plugin_architecture.py::test_plugin_architecture
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_plugin_architecture.py::test_plugin_architecture returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_plugin_architecture_fixed.py::test_plugin_architecture
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_plugin_architecture_fixed.py::test_plugin_architecture returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_plugin_registry
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_plugin_registry returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_new_plugins
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_new_plugins returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_universal_automation
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_universal_automation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_lead_scoring
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_lead_scoring returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_google_sheets_utils
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_google_sheets_utils returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+test_system.py::test_file_structure
+  C:\Code\bar-directory-recon\.venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but test_system.py::test_file_structure returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========= 494 passed, 7 skipped, 10 deselected, 24 warnings in 4.46s ==========
