@@ -131,8 +131,8 @@ BASIC PROTECTIONS:
 [ ] Require status checks: YES
 [ ] Require up-to-date branches: YES
 [ ] Restrict push access: YES
-[ ] Force pushes disabled: YES (NO)
-[ ] Deletions disabled: YES (NO)
+[ ] Force pushes: DISABLED
+[ ] Deletions: DISABLED
 
 REQUIRED STATUS CHECKS (all 8):
 [ ] fast-tests (ubuntu): REQUIRED
@@ -147,7 +147,7 @@ REQUIRED STATUS CHECKS (all 8):
 ADMIN BYPASS:
 [ ] Stale approval dismissal: YES
 [ ] Code owner review: YES (if CODEOWNERS exists)
-[ ] Admin bypass disabled: YES (NO)
+[ ] Admin bypass: DISABLED
 
 SECRET SCANNING:
 [ ] Secret scanning enabled: YES
