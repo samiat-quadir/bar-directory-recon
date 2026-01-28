@@ -40,6 +40,34 @@ jobs:
       - name: Build wheel and sdist
         run: python -m build
 
+      - name: Verify version alignment (tag vs pyproject.toml)
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          PYPROJECT_VERSION=$(grep -oP '(?<=version = ")([^"]+)' pyproject.toml)
+          
+          echo "📋 Version Alignment Check"
+          echo "================================"
+          echo "Git tag version:        v$TAG_VERSION"
+          echo "pyproject.toml version: $PYPROJECT_VERSION"
+          echo ""
+          echo "📦 Build artifacts:"
+          ls -lh dist/
+          echo ""
+          
+          if [ "$TAG_VERSION" != "$PYPROJECT_VERSION" ]; then
+            echo "❌ VERSION MISMATCH!"
+            echo ""
+            echo "ERROR: Tag version (v$TAG_VERSION) does not match pyproject.toml version ($PYPROJECT_VERSION)"
+            echo ""
+            echo "Fix by:"
+            echo "1. Update pyproject.toml version to: $TAG_VERSION"
+            echo "2. Commit and push to main"
+            echo "3. Delete and recreate the tag: git tag -d v$TAG_VERSION && git tag -a v$TAG_VERSION -m 'v$TAG_VERSION'"
+            exit 1
+          fi
+          
+          echo "✅ Version alignment verified!"
+
       - name: Verify distributions
         run: twine check dist/*
 
