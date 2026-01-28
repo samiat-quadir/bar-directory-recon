@@ -82,8 +82,8 @@ Under same rule → scroll to "Require status checks to pass before merging":
 - [ ] ✅ All 8 required checks are listed and **selected**:
   - `fast-tests (ubuntu)`
   - `fast-tests (windows)`
-  - `audit`
-  - `workflow-guard`
+  - `audit (ubuntu)` _(ubuntu only - no windows variant)_
+  - `workflow-guard (ubuntu)` _(ubuntu only - no windows variant)_
   - `ps-lint (ubuntu)`
   - `ps-lint (windows)`
   - `install-smoke (ubuntu)`
