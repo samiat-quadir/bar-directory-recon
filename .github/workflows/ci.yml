@@ -43,7 +43,7 @@ jobs:
         run: pre-commit run --all-files
 
       - name: Type check with mypy
-        run: mypy . --ignore-missing-imports
+        run: mypy --config-file=mypy.ini
 
   test:
     runs-on: ${{ matrix.os }}
