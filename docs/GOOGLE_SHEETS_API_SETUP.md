@@ -84,8 +84,7 @@ export DEFAULT_GOOGLE_SHEET_NAME="Leads"
 
 # Notification Configuration (for urgent leads)
 export EMAIL_USERNAME="your-email@gmail.com"
-<!-- pragma: allowlist secret -->
-export EMAIL_PASSWORD="your-app-password"
+export EMAIL_PASSWORD="your-app-password"  <!-- pragma: allowlist secret -->
 export TO_EMAILS="recipient1@example.com,recipient2@example.com"
 export SMTP_SERVER="smtp.gmail.com"
 export SMTP_PORT="587"

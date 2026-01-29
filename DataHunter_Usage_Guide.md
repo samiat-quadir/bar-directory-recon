@@ -34,8 +34,7 @@ RunDataHunter.bat
 "email": {
     "enabled": true,
     "username": "your-email@gmail.com",
-    <!-- pragma: allowlist secret -->
-    "password": "your-app-password",
+    "password": "your-app-password",  /* pragma: allowlist secret */
     "to_emails": ["team@company.com"]
 }
 ```
