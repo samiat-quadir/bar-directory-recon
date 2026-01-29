@@ -14,9 +14,13 @@ This checklist walks you through everything needed to deploy and use bar-directo
   python --version  # Should show 3.11.x or higher
   ```
 
-- [ ] **bar-directory-recon v0.1.9 installed**
+- [ ] **bar-directory-recon v0.1.9 installed** (with Google Sheets support)
   ```bash
-  pip install bar-directory-recon==0.1.9
+  pip install "bar-directory-recon[gsheets]==0.1.9"
+  ```
+  Or for latest version:
+  ```bash
+  pip install "bar-directory-recon[gsheets]"
   ```
 
 - [ ] **Validate installation**
@@ -73,6 +77,7 @@ $env:GOOGLE_SHEETS_CREDENTIALS_PATH
 - [ ] Credentials file path set and verified
 - [ ] JSON key readable by current user
 - [ ] Credentials NOT in version control
+- [ ] **Share the target Google Sheet with the Service Account email (Editor access).** (This is required.)
 
 ### C. Get Spreadsheet ID
 
@@ -103,6 +108,10 @@ $env:GOOGLE_SHEETS_CREDENTIALS_PATH
 - [ ] **Choose export mode**:
   - `--mode append` (default): Add rows to existing sheet
   - `--mode replace`: Clear sheet first, then add rows
+**Mode safety:**
+- `append` (recommended): adds/updates rows without clearing the sheet
+- `replace` (destructive): clears the target worksheet before writing new rows
+
 
 - [ ] **Choose target worksheet** (if not using "leads")
   - Default worksheet: `leads`
@@ -112,10 +121,11 @@ $env:GOOGLE_SHEETS_CREDENTIALS_PATH
   - Example: `--dedupe-key email` (removes duplicate emails)
   - Leave blank if no deduplication needed
 
----
-
-## Phase 5: Run Canonical Export
-
+---:
+```bash
+bdr export csv-to-sheets your_data.csv --dry-run
+```
+Note: --dry-run does not write to Google Sheets. Depending on configuration, it may still validate inputs and/or credentials.
 **Dry-run first** (no network calls):
 ```bash
 bdr export csv-to-sheets your_data.csv --dry-run
