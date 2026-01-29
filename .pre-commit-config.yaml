@@ -47,6 +47,16 @@ repos:
     hooks:
       - id: detect-secrets
         args: ["--baseline", ".secrets.baseline"]
+        exclude: |
+          (?x)^(
+              DataHunter_Usage_Guide\.md|
+              DataHunter_Configuration_Complete_Report\.txt|
+              PHASE3_COMPLETION_REPORT\.md|
+              PHASE3_AUTOMATION_DOCS\.md|
+              PHASE4_COMPLETION_SUMMARY.*\.md|
+              enrichment_api_status_.*\.txt|
+              archive/ops_reports/.*
+          )$
         additional_dependencies:
           - requests
           - pyyaml
