@@ -144,7 +144,7 @@ class WebPageMonitor:
 
         # Find all links
         for link in soup.find_all('a', href=True):
-            href = str(link.get('href', ''))  # avoid indexing BeautifulSoup types
+            href = str(link.get('href', '')) if hasattr(link, 'get') else ''  # type: ignore[union-attr]
 
             # Convert relative URLs to absolute
             full_url = urljoin(url, href)
