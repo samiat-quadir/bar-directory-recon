@@ -43,7 +43,7 @@ jobs:
       - name: Verify version alignment (tag vs pyproject.toml)
         run: |
           TAG_VERSION="${GITHUB_REF#refs/tags/v}"
-          PYPROJECT_VERSION=$(grep -oP '(?<=version = ")([^"]+)' pyproject.toml)
+          PYPROJECT_VERSION=$(grep -oP '(?<=version = ")([^"]+)' pyproject.toml | head -n1)
           
           echo "📋 Version Alignment Check"
           echo "================================"
