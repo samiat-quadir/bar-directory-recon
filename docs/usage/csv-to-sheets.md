@@ -4,6 +4,7 @@ This guide shows how to export your data from CSV format to Google Sheets using 
 
 ## Prerequisites
 
+- Python 3.11 or later
 - `bar-directory-recon[gsheets]` installed
 - Google Sheets API configured (see [Google Sheets Setup](../setup/gsheets.md))
 - `GOOGLE_SHEETS_CREDENTIALS_PATH` environment variable set

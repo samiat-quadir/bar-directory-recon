@@ -1,7 +1,7 @@
 # bar-directory-recon Client Onboarding Checklist
 
-**Version**: v0.1.9  
-**Last Updated**: 2026-01-28
+**Version**: v0.1.11  
+**Last Updated**: 2026-02-02
 
 This checklist walks you through everything needed to deploy and use bar-directory-recon in your environment.
 
@@ -14,9 +14,9 @@ This checklist walks you through everything needed to deploy and use bar-directo
   python --version  # Should show 3.11.x or higher
   ```
 
-- [ ] **bar-directory-recon v0.1.9 installed** (with Google Sheets support)
+- [ ] **bar-directory-recon v0.1.11 installed** (with Google Sheets support)
   ```bash
-  pip install "bar-directory-recon[gsheets]==0.1.9"
+  pip install "bar-directory-recon[gsheets]==0.1.11"
   ```
   Or for latest version:
   ```bash
@@ -78,6 +78,7 @@ $env:GOOGLE_SHEETS_CREDENTIALS_PATH
 - [ ] JSON key readable by current user
 - [ ] Credentials NOT in version control
 - [ ] **Share the target Google Sheet with the Service Account email (Editor access).** (This is required.)
+  - If you previously used `GOOGLE_APPLICATION_CREDENTIALS`, update to `GOOGLE_SHEETS_CREDENTIALS_PATH`
 
 ### C. Get Spreadsheet ID
 
@@ -121,15 +122,15 @@ $env:GOOGLE_SHEETS_CREDENTIALS_PATH
   - Example: `--dedupe-key email` (removes duplicate emails)
   - Leave blank if no deduplication needed
 
----:
+---
+
+## Phase 5: Dry Run + Export
+
+**Dry-run first** (no write):
 ```bash
 bdr export csv-to-sheets your_data.csv --dry-run
 ```
-Note: --dry-run does not write to Google Sheets. Depending on configuration, it may still validate inputs and/or credentials.
-**Dry-run first** (no network calls):
-```bash
-bdr export csv-to-sheets your_data.csv --dry-run
-```
+Note: `--dry-run` does not write to Google Sheets. Depending on configuration, it may still validate inputs and/or credentials.
 
 **Full export**:
 ```bash
