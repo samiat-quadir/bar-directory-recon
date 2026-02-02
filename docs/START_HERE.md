@@ -55,6 +55,8 @@ bdr export csv-to-sheets data.csv \
   --sheet-id "YOUR_SHEET_ID_HERE"
 ```
 
+**Logs (optional wrapper):** If you use [scripts/run_export.ps1](../scripts/run_export.ps1), logs are written to `logs/exports/<timestamp>.log`.
+
 **Where do you find the sheet ID?**
 - Open your Google Sheet in a browser
 - Copy the ID from the URL:  
@@ -83,6 +85,7 @@ bdr export csv-to-sheets data.csv \
 
 - Store `service-account-key.json` **outside** the repo (e.g., `~/.config/service-account-key.json`)
 - Use `GOOGLE_SHEETS_CREDENTIALS_PATH` environment variable to point to it
+- If you previously used `GOOGLE_APPLICATION_CREDENTIALS`, update to `GOOGLE_SHEETS_CREDENTIALS_PATH`
 - Never commit credentials to Git
 
 ### ❌ DON'T
@@ -117,7 +120,7 @@ bdr export csv-to-sheets data.csv --sheet-id "YOUR_SHEET_ID"
 |-------|----------|
 | `PermissionError: access denied` | Make sure you shared the sheet with the service account email |
 | `Invalid sheet ID` | Double-check the ID copied from the URL |
-| `credentials not found` | Verify `GOOGLE_APPLICATION_CREDENTIALS` environment variable is set |
+| `credentials not found` | Verify `GOOGLE_SHEETS_CREDENTIALS_PATH` environment variable is set |
 | `Module 'gspread' not found` | Run `pip install bar-directory-recon[gsheets]` again |
 
 See [docs/troubleshooting.md](troubleshooting.md) for more help.

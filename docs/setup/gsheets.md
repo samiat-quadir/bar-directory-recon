@@ -4,6 +4,7 @@ This guide walks you through setting up Google Sheets API access for `bar-direct
 
 ## Prerequisites
 
+- Python 3.11 or later
 - A Google Cloud project (free tier is sufficient)
 - A Google account
 - The `bar-directory-recon` package installed with Google Sheets support
@@ -65,6 +66,8 @@ This guide walks you through setting up Google Sheets API access for `bar-direct
 ## Step 6: Set the Environment Variable
 
 Once you have the JSON key file, set the `GOOGLE_SHEETS_CREDENTIALS_PATH` environment variable to point to it.
+
+If you previously used `GOOGLE_APPLICATION_CREDENTIALS`, update to `GOOGLE_SHEETS_CREDENTIALS_PATH`.
 
 ### Linux / macOS (Bash/Zsh)
 

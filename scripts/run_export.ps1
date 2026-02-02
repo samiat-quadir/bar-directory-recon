@@ -28,8 +28,19 @@ try {
     # Start transcript (captured in finally block)
     Start-Transcript -Path $logFile -Append -ErrorAction SilentlyContinue | Out-Null
     
+    $bdrVersion = ""
+    try {
+        $bdrVersion = (& bdr --version 2>$null)
+    } catch {
+        $bdrVersion = ""
+    }
+
     Write-Host "==========================================" -ForegroundColor Cyan
-    Write-Host "bdr Export Wrapper (v0.1.10)" -ForegroundColor Cyan
+    if ($bdrVersion) {
+        Write-Host "bdr Export Wrapper ($bdrVersion)" -ForegroundColor Cyan
+    } else {
+        Write-Host "bdr Export Wrapper" -ForegroundColor Cyan
+    }
     Write-Host "==========================================" -ForegroundColor Cyan
     Write-Host "Log file: $logFile"
     Write-Host "CSV: $CsvPath"
