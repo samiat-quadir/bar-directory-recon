@@ -1,7 +1,7 @@
 # bar-directory-recon Client Onboarding Checklist
 
-**Version**: v0.1.11  
-**Last Updated**: 2026-02-02
+**Version**: v0.1.12  
+**Last Updated**: 2026-02-03
 
 This checklist walks you through everything needed to deploy and use bar-directory-recon in your environment.
 
@@ -14,13 +14,16 @@ This checklist walks you through everything needed to deploy and use bar-directo
   python --version  # Should show 3.11.x or higher
   ```
 
-- [ ] **bar-directory-recon v0.1.11 installed** (with Google Sheets support)
+- [ ] **bar-directory-recon v0.1.12 installed** (with Google Sheets support)
+  
+  **Recommended: Install from GitHub Release wheel**
   ```bash
-  pip install "bar-directory-recon[gsheets]==0.1.11"
+  pip install https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.12/bar_directory_recon-0.1.12-py3-none-any.whl
   ```
-  Or for latest version:
+  
+  Or install from source (development):
   ```bash
-  pip install "bar-directory-recon[gsheets]"
+  pip install git+https://github.com/samiat-quadir/bar-directory-recon.git[gsheets]
   ```
 
 - [ ] **Validate installation**

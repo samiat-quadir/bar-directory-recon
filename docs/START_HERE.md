@@ -11,11 +11,24 @@ Welcome! This guide will get you exporting data to Google Sheets in under 10 min
 
 ## Installation (2 minutes)
 
+### Option 1: From GitHub Release Wheel (Recommended)
+
+Use this for the latest tested and verified release:
+
 ```bash
-pip install bar-directory-recon[gsheets]
+# Install from GitHub Release (version 0.1.12+)
+pip install https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.12/bar_directory_recon-0.1.12-py3-none-any.whl
 ```
 
-This installs the package with Google Sheets support (includes `google-auth` and `gspread`).
+> **Note:** Replace `v0.1.12` with the desired version from [GitHub Releases](https://github.com/samiat-quadir/bar-directory-recon/releases). Each release includes pre-tested wheels.
+
+### Option 2: From Source (Development)
+
+If you prefer to install from the latest source code:
+
+```bash
+pip install git+https://github.com/samiat-quadir/bar-directory-recon.git[gsheets]
+```
 
 ## Service Account Setup (5 minutes)
 
