@@ -1,6 +1,6 @@
 # bar-directory-recon Client Onboarding Checklist
 
-**Version**: v0.1.12  
+**Version**: v0.1.13  
 **Last Updated**: 2026-02-03
 
 This checklist walks you through everything needed to deploy and use bar-directory-recon in your environment.
@@ -14,12 +14,14 @@ This checklist walks you through everything needed to deploy and use bar-directo
   python --version  # Should show 3.11.x or higher
   ```
 
-- [ ] **bar-directory-recon v0.1.12 installed** (with Google Sheets support)
+- [ ] **bar-directory-recon v0.1.13 installed** (with Google Sheets support)
   
-  **Recommended: Install from GitHub Release wheel**
+  **Recommended: Install from GitHub Release wheel asset** (download from release page)
   ```bash
-  pip install https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.12/bar_directory_recon-0.1.12-py3-none-any.whl
+  pip install https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.13/bar_directory_recon-0.1.13-py3-none-any.whl
   ```
+  
+  > The wheel is a separate asset—not included in the client_pack ZIP. Both are available on the release page.
   
   Or install from source (development):
   ```bash
