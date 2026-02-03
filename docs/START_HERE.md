@@ -16,11 +16,12 @@ Welcome! This guide will get you exporting data to Google Sheets in under 10 min
 Use this for the latest tested and verified release:
 
 ```bash
-# Install from GitHub Release (version 0.1.12+)
-pip install https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.12/bar_directory_recon-0.1.12-py3-none-any.whl
+# Install from GitHub Release wheel asset
+pip install https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.13/bar_directory_recon-0.1.13-py3-none-any.whl
 ```
 
-> **Note:** Replace `v0.1.12` with the desired version from [GitHub Releases](https://github.com/samiat-quadir/bar-directory-recon/releases). Each release includes pre-tested wheels.
+> **Note:** The wheel is a separate asset on the release page—not included in the client_pack ZIP.
+> Replace `v0.1.13` with your desired version from [GitHub Releases](https://github.com/samiat-quadir/bar-directory-recon/releases).
 
 ### Option 2: From Source (Development)
 
