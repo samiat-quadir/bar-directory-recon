@@ -170,6 +170,53 @@ jobs:
           name: dist
           path: dist/
 
+      - name: Create client pack ZIP
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          ZIP_NAME="client_pack_v${VERSION}.zip"
+          
+          # Create a temporary directory for the client pack
+          mkdir -p client-pack-staging
+          
+          # Copy client-facing files
+          cp docs/START_HERE.md client-pack-staging/
+          cp docs/client_pack/CLIENT_ONBOARDING_CHECKLIST.md client-pack-staging/
+          cp scripts/run_export.ps1 client-pack-staging/
+          cp .env.example client-pack-staging/
+          
+          # Create a brief README for the ZIP
+          cat > client-pack-staging/README.md << 'EOF'
+          # Client Pack v${VERSION}
+          
+          This directory contains everything needed to set up and use bar-directory-recon.
+          
+          ## Files
+          - **START_HERE.md** - Quick start guide (2-minute install)
+          - **CLIENT_ONBOARDING_CHECKLIST.md** - Complete setup walkthrough
+          - **run_export.ps1** - PowerShell wrapper for exports with logging
+          - **.env.example** - Environment variables template
+          
+          ## Quick Start
+          1. Read START_HERE.md
+          2. Follow CLIENT_ONBOARDING_CHECKLIST.md
+          3. Use run_export.ps1 for daily exports
+          
+          ## Support
+          For issues, see the project repository:
+          https://github.com/samiat-quadir/bar-directory-recon
+          EOF
+          
+          # Create the ZIP file
+          zip -r "${ZIP_NAME}" client-pack-staging/
+          
+          # List contents for verification
+          echo "📦 Client pack ZIP created: ${ZIP_NAME}"
+          echo "================================"
+          unzip -l "${ZIP_NAME}"
+          
+          # Move to dist for release
+          mv "${ZIP_NAME}" dist/
+
       - name: Generate release notes
         id: notes
         run: |
@@ -178,12 +225,14 @@ jobs:
           echo "" >> release-notes.md
           echo "### Installation" >> release-notes.md
           echo '```bash' >> release-notes.md
-          echo "pip install bar-directory-recon==${VERSION#v}" >> release-notes.md
+          echo "# Install from GitHub Release wheel (recommended)" >> release-notes.md
+          echo "pip install https://github.com/samiat-quadir/bar-directory-recon/releases/download/${VERSION}/bar_directory_recon-${VERSION#v}-py3-none-any.whl" >> release-notes.md
           echo '```' >> release-notes.md
           echo "" >> release-notes.md
           echo "### Artifacts" >> release-notes.md
-          echo "- Wheel: \`$(ls dist/*.whl | xargs basename)\`" >> release-notes.md
-          echo "- Source: \`$(ls dist/*.tar.gz | xargs basename)\`" >> release-notes.md
+          echo "- **Wheel**: \`$(ls dist/*.whl | xargs basename)\`" >> release-notes.md
+          echo "- **Source**: \`$(ls dist/*.tar.gz | xargs basename)\`" >> release-notes.md
+          echo "- **Client Pack**: \`$(ls dist/client_pack_*.zip | xargs basename)\` - Quick start files for setup" >> release-notes.md
           echo "" >> release-notes.md
           echo "### Verification" >> release-notes.md
           echo "✅ Built on ubuntu-latest" >> release-notes.md
