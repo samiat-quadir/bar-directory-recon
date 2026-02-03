@@ -178,32 +178,67 @@ jobs:
           # Create a temporary directory for the client pack
           mkdir -p client-pack-staging
           
-          # Copy client-facing files
+          # Copy quick-start documents
           cp docs/START_HERE.md client-pack-staging/
           cp docs/client_pack/CLIENT_ONBOARDING_CHECKLIST.md client-pack-staging/
-          cp scripts/run_export.ps1 client-pack-staging/
+          
+          # Copy pilot & support documentation
+          mkdir -p client-pack-staging/ops
+          cp docs/ops/PILOT_INTAKE.md client-pack-staging/ops/
+          cp docs/ops/SUPPORT_PACKET.md client-pack-staging/ops/
+          cp docs/ops/PILOT_RUN_SOP.md client-pack-staging/ops/ || echo "Note: PILOT_RUN_SOP.md not found (optional)"
+          
+          # Copy helper scripts
+          mkdir -p client-pack-staging/scripts
+          cp scripts/run_export.ps1 client-pack-staging/scripts/
+          cp scripts/support_bundle.ps1 client-pack-staging/scripts/
+          
+          # Copy environment template
           cp .env.example client-pack-staging/
           
-          # Create a brief README for the ZIP
+          # Create a comprehensive README for the ZIP
           cat > client-pack-staging/README.md << 'EOF'
-          # Client Pack v${VERSION}
+          # bar-directory-recon Client Pack v${VERSION}
           
-          This directory contains everything needed to set up and use bar-directory-recon.
+          Everything you need to set up, run, and troubleshoot bar-directory-recon.
           
-          ## Files
-          - **START_HERE.md** - Quick start guide (2-minute install)
-          - **CLIENT_ONBOARDING_CHECKLIST.md** - Complete setup walkthrough
-          - **run_export.ps1** - PowerShell wrapper for exports with logging
-          - **.env.example** - Environment variables template
+          ## 📋 Quick Start (5 minutes)
+          1. **Read** `START_HERE.md` for install
+          2. **Follow** `CLIENT_ONBOARDING_CHECKLIST.md` for setup
+          3. **Run** `scripts/run_export.ps1` for exports
           
-          ## Quick Start
-          1. Read START_HERE.md
-          2. Follow CLIENT_ONBOARDING_CHECKLIST.md
-          3. Use run_export.ps1 for daily exports
+          ## 📚 Full Documentation
+          - `PILOT_INTAKE.md` (in ops/) - Pre-integration checklist
+          - `PILOT_RUN_SOP.md` (in ops/) - Detailed integration walkthrough (5 phases)
+          - `SUPPORT_PACKET.md` (in ops/) - Troubleshooting guide
+          - `.env.example` - Environment variables template
           
-          ## Support
-          For issues, see the project repository:
-          https://github.com/samiat-quadir/bar-directory-recon
+          ## 🛠️ Helper Scripts (in scripts/)
+          - `run_export.ps1` - PowerShell wrapper with logging
+          - `support_bundle.ps1` - Collect diagnostics for support (no credentials)
+          
+          ## 🚀 First Time?
+          1. Install: `pip install bar_directory_recon-${VERSION}-py3-none-any.whl` (wheel is separate asset)
+          2. Setup: Follow `CLIENT_ONBOARDING_CHECKLIST.md`
+          3. Test: Run `bdr doctor --no-exec`
+          4. Export: Execute `scripts/run_export.ps1 --dry-run` first
+          
+          ## ❓ Issues?
+          1. Check `SUPPORT_PACKET.md` > "Common Errors" table
+          2. Run `scripts/support_bundle.ps1` to collect diagnostics
+          3. Open issue at: https://github.com/samiat-quadir/bar-directory-recon
+          
+          ## 📦 Package Contents
+          - START_HERE.md (quick install guide)
+          - CLIENT_ONBOARDING_CHECKLIST.md (step-by-step setup)
+          - ops/PILOT_INTAKE.md (pre-integration form)
+          - ops/SUPPORT_PACKET.md (diagnostics template)
+          - ops/PILOT_RUN_SOP.md (detailed walkthrough)
+          - scripts/run_export.ps1 (automation helper)
+          - scripts/support_bundle.ps1 (diagnostics collector)
+          - .env.example (configuration template)
+          
+          ✨ No credentials included. Safe to share with support team.
           EOF
           
           # Create the ZIP file
@@ -213,6 +248,8 @@ jobs:
           echo "📦 Client pack ZIP created: ${ZIP_NAME}"
           echo "================================"
           unzip -l "${ZIP_NAME}"
+          echo ""
+          echo "✅ ZIP contents verified"
           
           # Move to dist for release
           mv "${ZIP_NAME}" dist/
