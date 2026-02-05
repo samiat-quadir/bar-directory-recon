@@ -10,6 +10,20 @@
 
 ---
 
+## 🚀 Release Assets Quick Links
+
+**Latest Release**: [v0.1.14](https://github.com/samiat-quadir/bar-directory-recon/releases/tag/v0.1.14)
+
+| Asset | Purpose | Link |
+|-------|---------|------|
+| **Python Wheel** | PyPI installation | [bar_directory_recon-0.1.14-py3-none-any.whl](https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.14/bar_directory_recon-0.1.14-py3-none-any.whl) |
+| **Source Distribution** | Building from source | [bar_directory_recon-0.1.14.tar.gz](https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.14/bar_directory_recon-0.1.14.tar.gz) |
+| **Client Pack** | Pilot onboarding & setup | [client_pack_v0.1.14.zip](https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.14/client_pack_v0.1.14.zip) |
+
+**For all releases**: [GitHub Releases](https://github.com/samiat-quadir/bar-directory-recon/releases)
+
+---
+
 ## ⚡ Quick Start (3 Steps)
 
 ```bash
