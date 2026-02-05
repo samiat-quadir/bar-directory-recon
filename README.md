@@ -24,6 +24,20 @@
 
 ---
 
+## 🚀 Pilot Run (Start Here)
+
+Running a pilot integration? Follow these resources in order:
+
+1. **[Pilot Run Checklist](.github/ISSUE_TEMPLATE/pilot-run.md)** - Create a tracking issue for your pilot run
+2. **[Pilot Run SOP](docs/ops/PILOT_RUN_SOP.md)** - Step-by-step execution guide  
+3. **[Support Packet](docs/ops/SUPPORT_PACKET.md)** - Troubleshooting and escalation guide
+
+**Quick links:**
+- Download the [client pack](https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.14/client_pack_v0.1.14.zip) (includes setup scripts, SOPs, and examples)
+- See [CSV-to-Sheets usage guide](docs/usage/csv-to-sheets.md) for export command details
+
+---
+
 ## ⚡ Quick Start (3 Steps)
 
 ```bash
