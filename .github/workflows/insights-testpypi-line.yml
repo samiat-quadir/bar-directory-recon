@@ -15,22 +15,50 @@ jobs:
         with:
           script: |
             const {owner, repo} = context.repo;
-            async function latest(workflow){ try { const r = await github.rest.actions.listWorkflowRuns({owner, repo, workflow_id: workflow, per_page:1}); return r.data.workflow_runs[0]; } catch(e){ return null; } }
-            const runPack = await latest('cli-pack.yml');
-            let windows='unknown', ubuntu='unknown', last_ok='unknown';
-            if (runPack) {
-              const jobs = await github.rest.actions.listJobsForWorkflowRun({owner, repo, run_id: runPack.id});
-              for (const j of jobs.data.jobs) {
-                const name = (j.name||'').toLowerCase();
-                if (name.includes('windows')) windows = j.conclusion === 'success' ? 'pass' : 'fail';
-                if (name.includes('ubuntu'))  ubuntu  = j.conclusion === 'success' ? 'pass' : 'fail';
+            async function latest(workflow) {
+              try {
+                const r = await github.rest.actions.listWorkflowRuns({
+                  owner,
+                  repo,
+                  workflow_id: workflow,
+                  per_page: 1
+                });
+                return r.data.workflow_runs[0];
+              } catch (e) {
+                core.warning(`Failed to fetch ${workflow}: ${e.message}`);
+                return null;
               }
-              if (runPack.conclusion === 'success') last_ok = runPack.updated_at;
             }
+            
+            const runPack = await latest('cli-pack.yml');
+            let windows = 'unknown', ubuntu = 'unknown', last_ok = 'unknown';
+            
+            if (runPack) {
+              try {
+                const jobs = await github.rest.actions.listJobsForWorkflowRun({
+                  owner,
+                  repo,
+                  run_id: runPack.id
+                });
+                for (const j of jobs.data.jobs) {
+                  const name = (j.name || '').toLowerCase();
+                  if (name.includes('windows')) windows = j.conclusion === 'success' ? 'pass' : 'fail';
+                  if (name.includes('ubuntu')) ubuntu = j.conclusion === 'success' ? 'pass' : 'fail';
+                }
+                if (runPack.conclusion === 'success') last_ok = runPack.updated_at;
+              } catch (e) {
+                core.warning(`Failed to process pack jobs: ${e.message}`);
+              }
+            }
+            
             const runParity = await latest('release-qa-parity.yml');
             const parity_link = runParity?.html_url || 'unknown';
-            core.setOutput('pack_smoke_summary', windows=\ ubuntu=\ last_ok=\);
+            
+            // Output formatted signals with proper template string
+            const packSummary = `windows=${windows} ubuntu=${ubuntu} last_ok=${last_ok}`;
+            core.setOutput('pack_smoke_summary', packSummary);
             core.setOutput('parity_link', parity_link);
+            core.info(`Pack signals: ${packSummary}`);
 
       - name: Append Insights signals
         shell: pwsh
