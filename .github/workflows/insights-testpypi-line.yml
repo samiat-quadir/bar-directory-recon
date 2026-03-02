@@ -34,6 +34,7 @@ jobs:
             let windows = 'unknown', ubuntu = 'unknown', last_ok = 'unknown';
             
             if (runPack) {
+              if (runPack.conclusion === 'success') last_ok = runPack.updated_at;
               try {
                 const jobs = await github.rest.actions.listJobsForWorkflowRun({
                   owner,
@@ -45,7 +46,6 @@ jobs:
                   if (name.includes('windows')) windows = j.conclusion === 'success' ? 'pass' : 'fail';
                   if (name.includes('ubuntu')) ubuntu = j.conclusion === 'success' ? 'pass' : 'fail';
                 }
-                if (runPack.conclusion === 'success') last_ok = runPack.updated_at;
               } catch (e) {
                 core.warning(`Failed to process pack jobs: ${e.message}`);
               }
