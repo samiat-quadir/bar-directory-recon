@@ -13,7 +13,6 @@
 ## 🚀 Release Assets Quick Links
 
 **Latest Release**: [v0.1.14](https://github.com/samiat-quadir/bar-directory-recon/releases/tag/v0.1.14)
-
 | Asset | Purpose | Link |
 |-------|---------|------|
 | **Python Wheel** | PyPI installation | [bar_directory_recon-0.1.14-py3-none-any.whl](https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.14/bar_directory_recon-0.1.14-py3-none-any.whl) |
