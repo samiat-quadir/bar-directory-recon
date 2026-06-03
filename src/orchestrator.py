@@ -18,10 +18,10 @@ from logger import create_logger
 from pagination_manager import PaginationManager
 from unified_schema import SchemaMapper
 
-# webdriver_manager may be an external package or a local module in this repo.
-# Import defensively: prefer local module if present to avoid 'is not a package' errors
+# Import from driver_setup (renamed from webdriver_manager to avoid shadowing
+# the webdriver-manager PyPI package). Stub provided for CI environments without Selenium.
 try:
-    from webdriver_manager import WebDriverManager  # type: ignore
+    from driver_setup import WebDriverManager  # type: ignore
 except Exception:
     # Provide a lightweight stub so import-only tests don't fail when Selenium
     # and webdriver_manager are not installed in the CI environment.
