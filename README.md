@@ -3,9 +3,92 @@
 [![PyPI version](https://img.shields.io/pypi/v/bar-directory-recon.svg)](https://pypi.org/project/bar-directory-recon/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://img.shields.io/badge/tests-33%20passed-green.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions)
+[![Tests](https://img.shields.io/badge/tests-120%2B%20passed-green.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions)
+[![Coverage](https://img.shields.io/badge/coverage-17%25-yellow.svg)](https://github.com/samiat-quadir/bar-directory-recon/actions)
 [![Release](https://img.shields.io/badge/release-v2.0-brightgreen.svg)](https://github.com/samiat-quadir/bar-directory-recon/releases/tag/v2.0)
 [![Bootstrap Ready](https://img.shields.io/badge/bootstrap-ready-success.svg)](./alienware_bootstrap_bundle.zip)
+
+---
+
+## 🚀 Release Assets Quick Links
+
+**Latest Release**: [v0.1.14](https://github.com/samiat-quadir/bar-directory-recon/releases/tag/v0.1.14)
+| Asset | Purpose | Link |
+|-------|---------|------|
+| **Python Wheel** | PyPI installation | [bar_directory_recon-0.1.14-py3-none-any.whl](https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.14/bar_directory_recon-0.1.14-py3-none-any.whl) |
+| **Source Distribution** | Building from source | [bar_directory_recon-0.1.14.tar.gz](https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.14/bar_directory_recon-0.1.14.tar.gz) |
+| **Client Pack** | Pilot onboarding & setup | [client_pack_v0.1.14.zip](https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.14/client_pack_v0.1.14.zip) |
+
+**For all releases**: [GitHub Releases](https://github.com/samiat-quadir/bar-directory-recon/releases)
+
+---
+
+## 🚀 Pilot Run (Start Here)
+
+Running a pilot integration? Follow these resources in order:
+
+1. **[Pilot Run Checklist](.github/ISSUE_TEMPLATE/pilot-run.md)** - Create a tracking issue for your pilot run
+2. **[Pilot Run SOP](docs/ops/PILOT_RUN_SOP.md)** - Step-by-step execution guide  
+3. **[Support Packet](docs/ops/SUPPORT_PACKET.md)** - Troubleshooting and escalation guide
+
+**Quick links:**
+- Download the [client pack](https://github.com/samiat-quadir/bar-directory-recon/releases/download/v0.1.14/client_pack_v0.1.14.zip) (includes setup scripts, SOPs, and examples)
+- See [CSV-to-Sheets usage guide](docs/usage/csv-to-sheets.md) for export command details
+
+---
+
+## ⚡ Quick Start (3 Steps)
+
+```bash
+# 1. Clone & setup virtual environment
+git clone https://github.com/samiat-quadir/bar-directory-recon.git
+cd bar-directory-recon
+python -m venv .venv
+.venv\Scripts\activate  # Windows (PowerShell)
+# source .venv/bin/activate  # Linux/macOS
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Verify installation
+python -m pytest tests/ -v --tb=short  # Run tests
+bdr doctor --no-exec                    # Check environment
+```
+
+### 🧪 Dry-Run Example
+
+Try the plugin system without making real network requests:
+
+```bash
+# Validate plugin registry & infrastructure
+python -m pytest universal_recon/tests/plugins/test_plugin_dryrun.py -v
+
+# List available plugins
+python -c "import json; print(json.dumps(json.load(open('universal_recon/plugin_registry.json')), indent=2))"
+```
+
+### 📄 Configuration
+
+1. Copy `.env.example` to `.env.local` (not tracked in git)
+2. Add your API keys and secrets to `.env.local`
+3. See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for detailed options
+
+---
+
+## Quick demo
+
+![bdr demo](docs/assets/bdr-demo.gif)
+
+```bash
+# install
+pip install bar-directory-recon
+
+# basic usage
+bdr --version
+bdr doctor --no-exec
+```
+
+> Note: `bdr doctor` may report some checks as `WARN` or `FAIL` when you install from PyPI. Those refer to optional, local-only diagnostics modules that are not shipped in the wheel and can be safely ignored in that environment.
 
 ## Workflow Status
 
@@ -20,6 +103,16 @@
 ## Overview
 
 Universal Recon is a comprehensive bar directory reconnaissance and automation tool designed for legal professional data extraction. It provides a modular plugin system for extracting, validating, and analyzing data from legal bar directories and professional websites.
+
+---
+
+## 🚀 Soft Launch Quickstart
+
+New to BDR? Start here: **[Soft Launch Quickstart Guide](docs/soft-launch.md)**
+
+- 5-minute setup with Google Sheets
+- One-command demo: `.\scripts\gsheets-demo.ps1`
+- Offer v1 pricing information
 
 ---
 
@@ -280,12 +373,4 @@ python final_hallandale_pipeline.py  # Adapt for other cities
 
 *This README consolidates all previous documentation, setup guides, and roadmaps. For historical docs, see `docs/archive/`.*
 
-## Using secrets in GitHub Codespaces
 
-- Create a Codespaces secret **SCRAPER_API_KEY** in your GitHub user settings and grant access to this repo.
-- Restart the Codespace; the value is available as `$SCRAPER_API_KEY` (Linux) or `$Env:SCRAPER_API_KEY` (PowerShell).
-- In code, read it with:
-```python
-from universal_recon.util.secrets import get_secret
-API_KEY = get_secret("SCRAPER_API_KEY")
-```

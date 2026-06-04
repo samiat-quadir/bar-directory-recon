@@ -9,9 +9,10 @@ Finds PowerShell and Batch scripts that aren't referenced anywhere in the codeba
 import os
 import re
 from pathlib import Path
+from typing import Set, List, Dict
 
 
-def find_all_scripts(root_dir: str) -> set[str]:
+def find_all_scripts(root_dir: str) -> Set[str]:
     """Find all .bat and .ps1 files in the repository."""
     scripts = set()
     root_path = Path(root_dir)
@@ -19,17 +20,14 @@ def find_all_scripts(root_dir: str) -> set[str]:
     for pattern in ["**/*.bat", "**/*.ps1"]:
         for file_path in root_path.glob(pattern):
             # Skip files in excluded directories
-            if any(
-                excluded in str(file_path)
-                for excluded in [".git", "__pycache__", ".venv", "node_modules"]
-            ):
+            if any(excluded in str(file_path) for excluded in [".git", "__pycache__", ".venv", "node_modules"]):
                 continue
             scripts.add(file_path.name)
 
     return scripts
 
 
-def find_script_references(root_dir: str, scripts: set[str]) -> dict[str, list[str]]:
+def find_script_references(root_dir: str, scripts: Set[str]) -> Dict[str, List[str]]:
     """Find references to scripts in Python, Markdown, JSON, and YAML files."""
     references = {script: [] for script in scripts}
     root_path = Path(root_dir)
@@ -41,13 +39,11 @@ def find_script_references(root_dir: str, scripts: set[str]) -> dict[str, list[s
         if (
             file_path.is_file()
             and file_path.suffix in search_extensions
-            and not any(
-                excluded in str(file_path)
-                for excluded in [".git", "__pycache__", ".venv", "node_modules"]
-            )
+            and not any(excluded in str(file_path) for excluded in [".git", "__pycache__", ".venv", "node_modules"])
         ):
+
             try:
-                with open(file_path, encoding="utf-8", errors="ignore") as f:
+                with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                     content = f.read()
 
                 for script in scripts:
@@ -119,14 +115,14 @@ def main():
         for script in sorted(unreferenced_scripts):
             print(f"📄 {script}")
 
-        print("\n🛠️  RECOMMENDED ACTIONS:")
+        print(f"\n🛠️  RECOMMENDED ACTIONS:")
         print("1. Review each unreferenced script to confirm it's not needed")
         print("2. Move legacy scripts to archive/legacy_scripts/ directory")
         print("3. Document any scripts that should be kept for manual use")
-        print("4. Consider deleting truly obsolete scripts")
+        print(f"4. Consider deleting truly obsolete scripts")
 
         # Show command to create archive directory and move files
-        print("\n📁 To archive unreferenced scripts:")
+        print(f"\n📁 To archive unreferenced scripts:")
         print("mkdir archive\\legacy_scripts")
         for script in sorted(unreferenced_scripts):
             print(f"move {script} archive\\legacy_scripts\\")
@@ -134,7 +130,7 @@ def main():
     else:
         print("✅ All scripts are referenced somewhere in the codebase!")
 
-    print("\n📈 SUMMARY:")
+    print(f"\n📈 SUMMARY:")
     print(f"   Total scripts: {len(scripts)}")
     print(f"   Referenced: {len(referenced_scripts)}")
     print(f"   Unreferenced: {len(unreferenced_scripts)}")

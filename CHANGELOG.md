@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.4] - 2025-11-20
+
+### Fixed
+- Republished the Typer-based `bdr` CLI so the PyPI wheel includes the console script and dependencies after the previous 0.1.3 artifact was cached without the CLI.
+
 ## [v2.0-cross-device] - 2025-08-06 - Phase 2 Cross-Device Parity Close-Out (ASUS)
 
 ### Added

@@ -16,7 +16,7 @@ def emit_status_html():
         print("❌ output_status.json not found.")
         return
 
-    with open(STATUS_JSON, encoding="utf-8") as f:
+    with open(STATUS_JSON, "r", encoding="utf-8") as f:
         status_data = json.load(f)
 
     rows = []

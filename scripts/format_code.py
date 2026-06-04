@@ -86,7 +86,9 @@ def format_codebase():
         print("\n[+] Code formatting completed successfully!")
         print("[*] Next steps:")
         print("   1. Review changes with: git diff")
-        print("   2. Commit with: git add . && git commit --no-verify -m 'Auto-format code'")
+        print(
+            "   2. Commit with: git add . && git commit --no-verify -m 'Auto-format code'"
+        )
     else:
         print("\n[-] Some formatting steps failed. Please review the errors above.")
         return False

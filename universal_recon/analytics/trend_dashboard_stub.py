@@ -1,6 +1,7 @@
 # universal_recon/analytics/trend_dashboard_stub.py
 
 
+
 def run_analysis(records, config=None):
     trend_data = {"plugin": "trend_dashboard_stub", "entries": 0, "trend": []}
 

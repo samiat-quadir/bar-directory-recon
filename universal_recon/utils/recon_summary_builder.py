@@ -2,6 +2,7 @@
 
 import logging
 from collections import defaultdict
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,7 @@ def run_analysis(records, config=None):
     return summary
 
 
-def summarize_records(records: list[dict]) -> dict:
+def summarize_records(records: List[Dict]) -> Dict:
     """
     Summarizes ranked, normalized, and grouped records.
     Outputs stats like completeness, top-ranked fields, and plugin coverage.
@@ -45,8 +46,7 @@ def summarize_records(records: list[dict]) -> dict:
     # Aggregate stats
     summary["score_distribution"].sort(reverse=True)
     summary["average_score"] = round(
-        sum(summary["score_distribution"]) / max(1, len(summary["score_distribution"])),
-        2,
+        sum(summary["score_distribution"]) / max(1, len(summary["score_distribution"])), 2
     )
     summary["completeness_rate"] = round(
         (len(records) - summary["incomplete_records"]) / max(1, len(records)), 2
@@ -55,7 +55,7 @@ def summarize_records(records: list[dict]) -> dict:
     return summary
 
 
-def print_summary(summary: dict):
+def print_summary(summary: Dict):
     """
     Prints a human-readable summary to CLI.
     """

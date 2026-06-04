@@ -12,7 +12,7 @@ import json
 import platform
 import sys
 from pathlib import Path
-from typing import Dict, Optional, Union, List, Any
+from typing import Dict, Optional, Union, Any
 
 # Known device configurations
 DEVICE_CONFIGS = {
@@ -312,7 +312,11 @@ def get_data_directory() -> str:
     return data_dir
 
 
-def get_device_config(key: Optional[str] = None, default_value: Any = None, device_id: Optional[str] = None) -> Union[Dict, Any]:
+def get_device_config(
+    key: Optional[str] = None,
+    default_value: Any = None,
+    device_id: Optional[str] = None,
+) -> Union[Dict, Any]:
     """
     Get device-specific configuration.
 
@@ -527,12 +531,12 @@ if __name__ == "__main__":
             print("Usage: --config [key [value]]")
     else:
         # Print full diagnostics by default
-        print(f"Device Path Resolver Information:")
-        print(f"=================================")
+        print("Device Path Resolver Information:")
+        print("=================================")
         print(f"Current device: {platform.node()}")
         try:
             print(f"Current user: {os.getlogin()}")
-        except:
+        except OSError:
             print(f"Current user: {os.environ.get('USERNAME') or os.environ.get('USER', 'Unknown')}")
         print(f"Detected device config: {get_current_device() or 'Unknown'}")
         print(f"Python interpreter: {get_python_interpreter()}")

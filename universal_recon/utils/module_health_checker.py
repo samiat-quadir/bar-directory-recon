@@ -51,12 +51,16 @@ def check_staleness(path):
     return age_hours
 
 
-def build_html_report(results, file_results, staleness_warnings, missing_matrix, html_path):
+def build_html_report(
+    results, file_results, staleness_warnings, missing_matrix, html_path
+):
     rows = []
     for mod, (status, missing_funcs) in results.items():
         emoji = "✅" if status and not missing_funcs else "❌"
         color = "#2ecc71" if status and not missing_funcs else "#e74c3c"
-        fn_text = "All OK" if not missing_funcs else f"Missing: {', '.join(missing_funcs)}"
+        fn_text = (
+            "All OK" if not missing_funcs else f"Missing: {', '.join(missing_funcs)}"
+        )
         rows.append(
             f"<tr><td>{mod}</td><td style='color:{color}'>{emoji}</td><td>{fn_text}</td></tr>"
         )
@@ -65,10 +69,13 @@ def build_html_report(results, file_results, staleness_warnings, missing_matrix,
         color = "#2ecc71" if exists else "#e67e22"
         status = "Exists" if exists else "Missing"
         rows.append(
-            f"<tr><td>{path}</td><td style='color:{color}'>{emoji}</td>" f"<td>{status}</td></tr>"
+            f"<tr><td>{path}</td><td style='color:{color}'>{emoji}</td>"
+            f"<td>{status}</td></tr>"
         )
     for warning in staleness_warnings:
-        rows.append(f"<tr><td colspan='3' style='color:#f39c12'><b>⚠️ {warning}</b></td></tr>")
+        rows.append(
+            f"<tr><td colspan='3' style='color:#f39c12'><b>⚠️ {warning}</b></td></tr>"
+        )
     if missing_matrix:
         rows.append(
             "<tr><td colspan='3' style='color:#e74c3c'>"
@@ -109,7 +116,8 @@ def main():
         results[mod] = (status, missing_funcs)
         emoji = "✅" if status and not missing_funcs else "❌"
         print(
-            f"{emoji} {mod}" + (f" — Missing: {', '.join(missing_funcs)}" if missing_funcs else "")
+            f"{emoji} {mod}"
+            + (f" — Missing: {', '.join(missing_funcs)}" if missing_funcs else "")
         )
     file_results = {}
     staleness_warnings = []
@@ -128,7 +136,9 @@ def main():
         else:
             if path.endswith("schema_matrix.json"):
                 missing_matrix = True
-    build_html_report(results, file_results, staleness_warnings, missing_matrix, HTML_PATH)
+    build_html_report(
+        results, file_results, staleness_warnings, missing_matrix, HTML_PATH
+    )
     print("\n✅ Diagnostics complete.")
 
 

@@ -15,10 +15,11 @@ Usage:
     python validate_requirements.py --fix
 """
 
-import argparse
-import re
 import sys
+import re
+import argparse
 from pathlib import Path
+from typing import List, Tuple
 
 # Known problematic dependencies and their fixes
 DEPENDENCY_FIXES = {
@@ -38,7 +39,7 @@ FORBIDDEN_DEPENDENCIES = [
 ]
 
 
-def validate_file(file_path: Path) -> list[tuple[str, str, str]]:
+def validate_file(file_path: Path) -> List[Tuple[str, str, str]]:
     """
     Validate a requirements file and return list of issues.
 
@@ -51,7 +52,7 @@ def validate_file(file_path: Path) -> list[tuple[str, str, str]]:
         return [("N/A", f"File not found: {file_path}", "Create the file")]
 
     try:
-        with open(file_path, encoding="utf-8") as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
     except Exception as e:
         return [("N/A", f"Error reading {file_path}: {e}", "Fix file permissions")]
@@ -69,23 +70,11 @@ def validate_file(file_path: Path) -> list[tuple[str, str, str]]:
         # Check for forbidden dependencies
         for forbidden in FORBIDDEN_DEPENDENCIES:
             if forbidden in line:
-                issues.append(
-                    (
-                        str(line_num),
-                        f"Forbidden dependency found: {forbidden}",
-                        "Remove this line entirely",
-                    )
-                )
+                issues.append((str(line_num), f"Forbidden dependency found: {forbidden}", "Remove this line entirely"))
 
         # Check for watchdog version issues specifically
         if re.search(r"watchdog>=3\.\d+\.\d+", line):
-            issues.append(
-                (
-                    str(line_num),
-                    "Outdated dependency: watchdog>=3.x.x",
-                    "Change to: watchdog>=6.0.0,<7.0.0",
-                )
-            )
+            issues.append((str(line_num), "Outdated dependency: watchdog>=3.x.x", "Change to: watchdog>=6.0.0,<7.0.0"))
 
         # Check for specific fixes from our known patterns
         for old_pattern, new_pattern in file_fixes.items():
@@ -112,7 +101,7 @@ def fix_file(file_path: Path) -> bool:
         return False
 
     try:
-        with open(file_path, encoding="utf-8") as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
         print(f"❌ Error reading {file_path}: {e}")
@@ -171,11 +160,7 @@ def main():
     """Main function to validate and optionally fix requirements files."""
     parser = argparse.ArgumentParser(description="Validate requirements files for known issues")
     parser.add_argument("--fix", action="store_true", help="Automatically fix detected issues")
-    parser.add_argument(
-        "--files",
-        nargs="*",
-        help="Specific files to check (default: all known requirements files)",
-    )
+    parser.add_argument("--files", nargs="*", help="Specific files to check (default: all known requirements files)")
 
     args = parser.parse_args()
 
@@ -227,7 +212,7 @@ def main():
 
     # Summary
     if args.fix:
-        print("📊 Summary:")
+        print(f"📊 Summary:")
         print(f"   Files processed: {len(files_to_check)}")
         print(f"   Files with fixes applied: {files_with_fixes}")
         if files_with_fixes > 0:
@@ -235,7 +220,7 @@ def main():
         else:
             print("🎉 All files were already valid!")
     else:
-        print("📊 Summary:")
+        print(f"📊 Summary:")
         print(f"   Files checked: {len(files_to_check)}")
         print(f"   Total issues found: {total_issues}")
         if total_issues == 0:

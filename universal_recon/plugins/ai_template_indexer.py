@@ -1,7 +1,9 @@
 # plugins/ai_template_indexer.py
 
+from typing import Dict, List
 
-def apply(records: list[dict], context: str = "ai_template_indexer") -> list[dict]:
+
+def apply(records: List[Dict], context: str = "ai_template_indexer") -> List[Dict]:
     """
     Classifies grouped records (template blocks) into profile templates:
     e.g., individual, firm, hybrid, or unknown based on field composition.
@@ -28,9 +30,7 @@ def apply(records: list[dict], context: str = "ai_template_indexer") -> list[dic
         template["template_confidence"] = (
             "high"
             if template["template_score"] > 0.75
-            else "medium"
-            if template["template_score"] > 0.5
-            else "low"
+            else "medium" if template["template_score"] > 0.5 else "low"
         )
 
         templates.append(template)

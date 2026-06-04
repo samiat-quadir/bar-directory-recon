@@ -1,0 +1,287 @@
+# Release Workflow
+# Triggered on version tag push (vX.Y.Z)
+# Builds wheel + sdist, runs install-smoke, creates GitHub Release with artifacts
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'  # Pre-release tags like v0.1.4-rc1
+
+permissions:
+  contents: write  # Needed to create releases
+
+jobs:
+  build:
+    name: Build Distribution
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: Build wheel and sdist
+        run: python -m build
+
+      - name: Verify version alignment (tag vs pyproject.toml)
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          PYPROJECT_VERSION=$(grep -oP '(?<=version = ")([^"]+)' pyproject.toml | head -n1)
+          
+          echo "📋 Version Alignment Check"
+          echo "================================"
+          echo "Git tag version:        v$TAG_VERSION"
+          echo "pyproject.toml version: $PYPROJECT_VERSION"
+          echo ""
+          echo "📦 Build artifacts:"
+          ls -lh dist/
+          echo ""
+          
+          if [ "$TAG_VERSION" != "$PYPROJECT_VERSION" ]; then
+            echo "❌ VERSION MISMATCH!"
+            echo ""
+            echo "ERROR: Tag version (v$TAG_VERSION) does not match pyproject.toml version ($PYPROJECT_VERSION)"
+            echo ""
+            echo "Fix by:"
+            echo "1. Update pyproject.toml version to: $TAG_VERSION"
+            echo "2. Commit and push to main"
+            echo "3. Delete and recreate the tag: git tag -d v$TAG_VERSION && git tag -a v$TAG_VERSION -m 'v$TAG_VERSION'"
+            exit 1
+          fi
+          
+          echo "✅ Version alignment verified!"
+
+      - name: Verify distributions
+        run: twine check dist/*
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 5
+
+  install-smoke:
+    name: Install Smoke (${{ matrix.os }})
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout source (for tests if needed)
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create fresh venv and install wheel (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          python -m venv .smoke-venv
+          source .smoke-venv/bin/activate
+          pip install --upgrade pip
+          pip install dist/*.whl
+
+      - name: Create fresh venv and install wheel (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          python -m venv .smoke-venv
+          .smoke-venv\Scripts\Activate.ps1
+          pip install --upgrade pip
+          pip install (Get-ChildItem dist\*.whl).FullName
+
+      - name: Smoke test - bdr --help (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          source .smoke-venv/bin/activate
+          bdr --help
+
+      - name: Smoke test - bdr --help (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .smoke-venv\Scripts\Activate.ps1
+          bdr --help
+
+      - name: Smoke test - bdr --version (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          source .smoke-venv/bin/activate
+          bdr --version || echo "Version command not implemented"
+
+      - name: Smoke test - bdr --version (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .smoke-venv\Scripts\Activate.ps1
+          bdr --version 2>&1 || Write-Host "Version command not implemented"
+
+      - name: Smoke test - bdr doctor (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          source .smoke-venv/bin/activate
+          bdr doctor --no-exec
+
+      - name: Smoke test - bdr doctor (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .smoke-venv\Scripts\Activate.ps1
+          bdr doctor --no-exec
+
+  release:
+    name: Create GitHub Release
+    needs: [build, install-smoke]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create client pack ZIP
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          ZIP_NAME="client_pack_v${VERSION}.zip"
+          
+          # Create a temporary directory for the client pack
+          mkdir -p client-pack-staging
+          
+          # Copy quick-start documents
+          cp docs/START_HERE.md client-pack-staging/
+          cp docs/client_pack/CLIENT_ONBOARDING_CHECKLIST.md client-pack-staging/
+          
+          # Copy pilot & support documentation
+          mkdir -p client-pack-staging/ops
+          cp docs/ops/PILOT_INTAKE.md client-pack-staging/ops/
+          cp docs/ops/SUPPORT_PACKET.md client-pack-staging/ops/
+          cp docs/ops/PILOT_RUN_SOP.md client-pack-staging/ops/ || echo "Note: PILOT_RUN_SOP.md not found (optional)"
+          
+          # Copy helper scripts
+          mkdir -p client-pack-staging/scripts
+          cp scripts/run_export.ps1 client-pack-staging/scripts/
+          cp scripts/support_bundle.ps1 client-pack-staging/scripts/
+          
+          # Copy environment template
+          cp .env.example client-pack-staging/
+          
+          # Create a comprehensive README for the ZIP
+          cat > client-pack-staging/README.md << 'EOF'
+          # bar-directory-recon Client Pack v${VERSION}
+          
+          Everything you need to set up, run, and troubleshoot bar-directory-recon.
+          
+          ## 📋 Quick Start (5 minutes)
+          1. **Read** `START_HERE.md` for install
+          2. **Follow** `CLIENT_ONBOARDING_CHECKLIST.md` for setup
+          3. **Run** `scripts/run_export.ps1` for exports
+          
+          ## 📚 Full Documentation
+          - `PILOT_INTAKE.md` (in ops/) - Pre-integration checklist
+          - `PILOT_RUN_SOP.md` (in ops/) - Detailed integration walkthrough (5 phases)
+          - `SUPPORT_PACKET.md` (in ops/) - Troubleshooting guide
+          - `.env.example` - Environment variables template
+          
+          ## 🛠️ Helper Scripts (in scripts/)
+          - `run_export.ps1` - PowerShell wrapper with logging
+          - `support_bundle.ps1` - Collect diagnostics for support (no credentials)
+          
+          ## 🚀 First Time?
+          1. Install: `pip install bar_directory_recon-${VERSION}-py3-none-any.whl` (wheel is separate asset)
+          2. Setup: Follow `CLIENT_ONBOARDING_CHECKLIST.md`
+          3. Test: Run `bdr doctor --no-exec`
+          4. Export: Execute `scripts/run_export.ps1 --dry-run` first
+          
+          ## ❓ Issues?
+          1. Check `SUPPORT_PACKET.md` > "Common Errors" table
+          2. Run `scripts/support_bundle.ps1` to collect diagnostics
+          3. Open issue at: https://github.com/samiat-quadir/bar-directory-recon
+          
+          ## 📦 Package Contents
+          - START_HERE.md (quick install guide)
+          - CLIENT_ONBOARDING_CHECKLIST.md (step-by-step setup)
+          - ops/PILOT_INTAKE.md (pre-integration form)
+          - ops/SUPPORT_PACKET.md (diagnostics template)
+          - ops/PILOT_RUN_SOP.md (detailed walkthrough)
+          - scripts/run_export.ps1 (automation helper)
+          - scripts/support_bundle.ps1 (diagnostics collector)
+          - .env.example (configuration template)
+          
+          ✨ No credentials included. Safe to share with support team.
+          EOF
+          
+          # Create the ZIP file
+          zip -r "${ZIP_NAME}" client-pack-staging/
+          
+          # List contents for verification
+          echo "📦 Client pack ZIP created: ${ZIP_NAME}"
+          echo "================================"
+          unzip -l "${ZIP_NAME}"
+          echo ""
+          echo "✅ ZIP contents verified"
+          
+          # Move to dist for release
+          mv "${ZIP_NAME}" dist/
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          echo "## Release $VERSION" > release-notes.md
+          echo "" >> release-notes.md
+          echo "### Installation" >> release-notes.md
+          echo '```bash' >> release-notes.md
+          echo "# Install from GitHub Release wheel (recommended)" >> release-notes.md
+          echo "pip install https://github.com/samiat-quadir/bar-directory-recon/releases/download/${VERSION}/bar_directory_recon-${VERSION#v}-py3-none-any.whl" >> release-notes.md
+          echo '```' >> release-notes.md
+          echo "" >> release-notes.md
+          echo "### Artifacts" >> release-notes.md
+          echo "- **Wheel**: \`$(ls dist/*.whl | xargs basename)\`" >> release-notes.md
+          echo "- **Source**: \`$(ls dist/*.tar.gz | xargs basename)\`" >> release-notes.md
+          echo "- **Client Pack**: \`$(ls dist/client_pack_*.zip | xargs basename)\` - Quick start files for setup" >> release-notes.md
+          echo "" >> release-notes.md
+          echo "### Verification" >> release-notes.md
+          echo "✅ Built on ubuntu-latest" >> release-notes.md
+          echo "✅ Install smoke passed on ubuntu-latest" >> release-notes.md
+          echo "✅ Install smoke passed on windows-latest" >> release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release-notes.md
+          files: dist/*
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

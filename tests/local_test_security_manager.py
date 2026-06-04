@@ -50,7 +50,7 @@ class TestSecurityManager:
         test_url = "https://test-vault.vault.azure.net/"
         tenant_id = "test-tenant"
         client_id = "test-client"
-        client_secret = "test-secret"
+        client_secret = "test-secret"  # pragma: allowlist secret
 
         mock_credential_instance = Mock()
         mock_credential.return_value = mock_credential_instance
@@ -70,7 +70,9 @@ class TestSecurityManager:
         mock_credential.assert_called_once_with(
             tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
         )
-        mock_client.assert_called_once_with(vault_url=test_url, credential=mock_credential_instance)
+        mock_client.assert_called_once_with(
+            vault_url=test_url, credential=mock_credential_instance
+        )
         assert manager._connection_healthy
 
     @patch("src.security_manager.SecretClient")
@@ -90,7 +92,9 @@ class TestSecurityManager:
             manager = SecurityManager(keyvault_url=test_url)
 
         mock_credential.assert_called_once()
-        mock_client.assert_called_once_with(vault_url=test_url, credential=mock_credential_instance)
+        mock_client.assert_called_once_with(
+            vault_url=test_url, credential=mock_credential_instance
+        )
         assert manager._connection_healthy
 
     @patch("src.security_manager.SecretClient")
@@ -112,7 +116,10 @@ class TestSecurityManager:
         manager = SecurityManager()
 
         assert manager._convert_secret_name_to_env_var("api-key") == "API_KEY"
-        assert manager._convert_secret_name_to_env_var("database-password") == "DATABASE_PASSWORD"
+        assert (
+            manager._convert_secret_name_to_env_var("database-password")
+            == "DATABASE_PASSWORD"
+        )
         assert manager._convert_secret_name_to_env_var("test secret") == "TEST_SECRET"
         assert (
             manager._convert_secret_name_to_env_var("complex-name-with-spaces")
@@ -121,14 +128,20 @@ class TestSecurityManager:
 
     def test_get_secret_fallback_env_var(self):
         """Test getting secret from environment variable fallback."""
-        with patch.dict(os.environ, {"TEST_SECRET": "env-secret-value"}):
+        with patch.dict(
+            os.environ,
+            {"TEST_SECRET": "env-secret-value"},  # pragma: allowlist secret
+        ):
             manager = SecurityManager()
             result = manager.get_secret("test-secret", "TEST_SECRET")
             assert result == "env-secret-value"
 
     def test_get_secret_auto_env_var_conversion(self):
         """Test automatic environment variable name conversion."""
-        with patch.dict(os.environ, {"API_KEY": "auto-converted-value"}):
+        with patch.dict(
+            os.environ,
+            {"API_KEY": "auto-converted-value"},  # pragma: allowlist secret
+        ):
             manager = SecurityManager()
             result = manager.get_secret("api-key")
             assert result == "auto-converted-value"
@@ -171,7 +184,10 @@ class TestSecurityManager:
         mock_client_instance.get_secret.side_effect = Exception("Azure error")
         mock_client.return_value = mock_client_instance
 
-        with patch.dict(os.environ, {"TEST_SECRET": "env-fallback-value"}):
+        with patch.dict(
+            os.environ,
+            {"TEST_SECRET": "env-fallback-value"},  # pragma: allowlist secret
+        ):
             with patch("src.security_manager.AZURE_AVAILABLE", True):
                 manager = SecurityManager(keyvault_url=test_url)
                 result = manager.get_secret("test-secret", "TEST_SECRET")
@@ -185,7 +201,7 @@ class TestSecurityManager:
             "DATABASE_PORT": "5432",
             "DATABASE_NAME": "testdb",
             "DATABASE_USERNAME": "testuser",
-            "DATABASE_PASSWORD": "testpass",
+            "DATABASE_PASSWORD": "testpass",  # pragma: allowlist secret
         }
 
         with patch.dict(os.environ, env_vars):
@@ -196,7 +212,7 @@ class TestSecurityManager:
         assert config["port"] == "5432"
         assert config["name"] == "testdb"
         assert config["username"] == "testuser"
-        assert config["password"] == "testpass"
+        assert config["password"] == "testpass"  # pragma: allowlist secret
 
     def test_get_email_config(self):
         """Test getting email configuration."""
@@ -204,7 +220,7 @@ class TestSecurityManager:
             "EMAIL_SMTP_SERVER": "smtp.gmail.com",
             "EMAIL_SMTP_PORT": "587",
             "EMAIL_USERNAME": "test@example.com",
-            "EMAIL_PASSWORD": "testpass",
+            "EMAIL_PASSWORD": "testpass",  # pragma: allowlist secret
             "EMAIL_FROM_ADDRESS": "noreply@example.com",
         }
 
@@ -215,24 +231,24 @@ class TestSecurityManager:
         assert config["smtp_server"] == "smtp.gmail.com"
         assert config["smtp_port"] == "587"
         assert config["username"] == "test@example.com"
-        assert config["password"] == "testpass"
+        assert config["password"] == "testpass"  # pragma: allowlist secret
         assert config["from_address"] == "noreply@example.com"
 
     def test_get_api_config(self):
         """Test getting API configuration."""
         env_vars = {
-            "ENRICHMENT_API_KEY": "enrich-key-123",
-            "GEOCODING_API_KEY": "geo-key-456",
-            "WEBHOOK_SECRET": "webhook-secret-789",
+            "ENRICHMENT_API_KEY": "enrich-key-123",  # pragma: allowlist secret
+            "GEOCODING_API_KEY": "geo-key-456",  # pragma: allowlist secret
+            "WEBHOOK_SECRET": "webhook-secret-789",  # pragma: allowlist secret
         }
 
         with patch.dict(os.environ, env_vars):
             manager = SecurityManager()
             config = manager.get_api_config()
 
-        assert config["enrichment_api_key"] == "enrich-key-123"
-        assert config["geocoding_api_key"] == "geo-key-456"
-        assert config["webhook_secret"] == "webhook-secret-789"
+        assert config["enrichment_api_key"] == "enrich-key-123"  # pragma: allowlist secret
+        assert config["geocoding_api_key"] == "geo-key-456"  # pragma: allowlist secret
+        assert config["webhook_secret"] == "webhook-secret-789"  # pragma: allowlist secret
 
     def test_health_check_fallback_mode(self):
         """Test health check in fallback mode."""
@@ -294,7 +310,10 @@ class TestGlobalFunctions:
 
     def test_get_secret_convenience_function(self):
         """Test convenience get_secret function."""
-        with patch.dict(os.environ, {"TEST_SECRET": "convenience-value"}):
+        with patch.dict(
+            os.environ,
+            {"TEST_SECRET": "convenience-value"},  # pragma: allowlist secret
+        ):
             # Clear any existing instance
             import src.security_manager
 
@@ -309,7 +328,10 @@ class TestCaching:
 
     def test_secret_caching(self):
         """Test that secrets are cached properly."""
-        with patch.dict(os.environ, {"CACHED_SECRET": "cached-value"}):
+        with patch.dict(
+            os.environ,
+            {"CACHED_SECRET": "cached-value"},  # pragma: allowlist secret
+        ):
             manager = SecurityManager()
 
             # First call

@@ -1,0 +1,6 @@
+email,name,company,phone,status,created_at,notes
+alice@example.com,Alice Smith,Acme Corp,(555) 123-4567,active,2026-01-15,Contacted re: Q1 campaign
+bob@example.com,Bob Jones,TechStart Inc,(555) 234-5678,lead,2026-01-20,Follow up next week
+charlie@example.com,Charlie Brown,Global Solutions,(555) 345-6789,inactive,2026-01-10,Declined proposal
+diana@example.com,Diana Prince,Enterprise Ltd,(555) 456-7890,active,2026-01-25,Interested in demo
+evan@example.com,Evan Carter,StartUp Hub,(555) 567-8901,lead,2026-01-22,Sent proposal

@@ -1,0 +1,805 @@
+"""
+CI-safe smoke tests for Google Sheets optional integration.
+
+These tests verify that:
+1. Importing the gsheets modules does NOT crash when dependencies are missing
+2. The is_gsheets_available() function returns a boolean
+3. The GSheetsNotInstalledError is raised when calling functions without deps
+4. CLI entrypoint works (--help, --check, arg parsing)
+
+These tests run in CI without installing the [gsheets] extra.
+"""
+
+import pytest
+
+
+class TestGSheetsExporter:
+    """Tests for tools/gsheets_exporter.py"""
+
+    def test_import_does_not_crash(self):
+        """Importing gsheets_exporter should never crash, even without deps."""
+        # This should not raise ImportError
+        from tools import gsheets_exporter
+
+        assert gsheets_exporter is not None
+
+    def test_is_gsheets_available_returns_bool(self):
+        """is_gsheets_available() should return a boolean."""
+        from tools.gsheets_exporter import is_gsheets_available
+
+        result = is_gsheets_available()
+        assert isinstance(result, bool)
+
+    def test_gsheets_not_installed_error_exists(self):
+        """GSheetsNotInstalledError class should be importable."""
+        from tools.gsheets_exporter import GSheetsNotInstalledError
+
+        assert issubclass(GSheetsNotInstalledError, ImportError)
+
+    def test_get_client_raises_friendly_error_when_unavailable(self):
+        """get_client() should raise GSheetsNotInstalledError if deps missing."""
+        from tools.gsheets_exporter import (
+            GSheetsNotInstalledError,
+            get_client,
+            is_gsheets_available,
+        )
+
+        if not is_gsheets_available():
+            with pytest.raises(GSheetsNotInstalledError) as exc_info:
+                get_client()
+            # Check friendly error message
+            assert "pip install" in str(exc_info.value)
+        else:
+            # If deps are installed, we can't test this path
+            pytest.skip("Google Sheets deps are installed; skipping unavailable test")
+
+
+class TestGSheetsUtils:
+    """Tests for universal_recon/plugins/google_sheets_utils.py"""
+
+    def test_import_does_not_crash(self):
+        """Importing google_sheets_utils should never crash, even without deps."""
+        from universal_recon.plugins import google_sheets_utils
+
+        assert google_sheets_utils is not None
+
+    def test_is_gsheets_available_returns_bool(self):
+        """is_gsheets_available() should return a boolean."""
+        from universal_recon.plugins.google_sheets_utils import is_gsheets_available
+
+        result = is_gsheets_available()
+        assert isinstance(result, bool)
+
+    def test_gsheets_not_installed_error_exists(self):
+        """GSheetsNotInstalledError class should be importable."""
+        from universal_recon.plugins.google_sheets_utils import GSheetsNotInstalledError
+
+        assert issubclass(GSheetsNotInstalledError, ImportError)
+
+    def test_export_returns_false_when_unavailable(self):
+        """export_to_google_sheets() should return False gracefully if deps missing."""
+        from universal_recon.plugins.google_sheets_utils import (
+            export_to_google_sheets,
+            is_gsheets_available,
+        )
+
+        if not is_gsheets_available():
+            result = export_to_google_sheets(
+                data=[{"name": "test"}],
+                sheet_id="fake-sheet-id"
+            )
+            assert result is False
+        else:
+            pytest.skip("Google Sheets deps are installed; skipping unavailable test")
+
+
+class TestPyprojectOptionalDeps:
+    """Verify pyproject.toml has gsheets optional dependency."""
+
+    def test_gsheets_extra_defined(self):
+        """pyproject.toml should define [gsheets] optional dependency."""
+        import tomllib
+        from pathlib import Path
+
+        pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
+        assert pyproject_path.exists(), "pyproject.toml not found"
+
+        with open(pyproject_path, "rb") as f:
+            config = tomllib.load(f)
+
+        optional_deps = config.get("project", {}).get("optional-dependencies", {})
+        assert "gsheets" in optional_deps, "gsheets extra not defined in pyproject.toml"
+
+        gsheets_deps = optional_deps["gsheets"]
+        assert any("google-api-python-client" in dep for dep in gsheets_deps)
+        assert any("gspread" in dep for dep in gsheets_deps)
+
+
+class TestGSheetsExporterCLI:
+    """Tests for gsheets_exporter CLI entrypoint (no network calls)."""
+
+    def test_help_flag_shows_usage(self, capsys):
+        """--help should print usage information and exit cleanly."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit) as exc_info:
+            main(["--help"])
+
+        # argparse exits with 0 for --help
+        assert exc_info.value.code == 0
+
+        captured = capsys.readouterr()
+        # Should contain key usage elements
+        assert "gsheets_exporter" in captured.out
+        assert "--demo" in captured.out
+        assert "--check" in captured.out
+
+    def test_check_flag_returns_correct_status(self, capsys):
+        """--check should report dependency status without network calls."""
+        from tools.gsheets_exporter import is_gsheets_available, main
+
+        exit_code = main(["--check"])
+
+        captured = capsys.readouterr()
+        if is_gsheets_available():
+            assert exit_code == 0
+            assert "installed" in captured.out.lower()
+        else:
+            assert exit_code == 1
+            assert "not installed" in captured.out.lower()
+            assert "pip install" in captured.out
+
+    def test_demo_dry_run_no_network(self, capsys):
+        """--demo --dry-run should work without network or credentials."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main(["--demo", "--dry-run"])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "Dry run" in captured.out
+        assert "timestamp" in captured.out
+
+    def test_demo_without_creds_returns_error(self, capsys, monkeypatch):
+        """--demo without credentials should return friendly error."""
+        from tools.gsheets_exporter import main
+
+        # Clear env vars
+        monkeypatch.delenv("GOOGLE_SHEETS_CREDENTIALS_PATH", raising=False)
+        monkeypatch.delenv("GOOGLE_SA_JSON", raising=False)
+
+        exit_code = main(["--demo"])
+
+        assert exit_code == 1
+        captured = capsys.readouterr()
+        assert "GOOGLE_SHEETS_CREDENTIALS_PATH" in captured.out
+
+    def test_invalid_json_data_returns_error(self, capsys):
+        """--data with invalid JSON should return friendly error."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main(["--data", "not valid json"])
+
+        assert exit_code == 1
+        captured = capsys.readouterr()
+        assert "Invalid JSON" in captured.out
+
+    def test_no_args_shows_help(self, capsys):
+        """No arguments should show help (no error)."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main([])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "--help" in captured.out or "usage" in captured.out.lower()
+
+    def test_gsheets_not_installed_error_message(self):
+        """GSheetsNotInstalledError should have install instructions."""
+        from tools.gsheets_exporter import GSheetsNotInstalledError
+
+        error = GSheetsNotInstalledError()
+        msg = str(error)
+
+        assert "pip install" in msg
+        assert "gsheets" in msg.lower()
+
+
+class TestWorksheetNotFoundError:
+    """Tests for WorksheetNotFoundError UX improvements."""
+
+    def test_worksheet_not_found_error_contains_available_list(self):
+        """WorksheetNotFoundError should list available worksheets."""
+        from tools.gsheets_exporter import WorksheetNotFoundError
+
+        error = WorksheetNotFoundError(
+            worksheet_name="NonExistent",
+            available_worksheets=["Sheet1", "Data", "Results"],
+            spreadsheet_id="test-id"
+        )
+        msg = str(error)
+
+        assert "NonExistent" in msg
+        assert "not found" in msg.lower()
+        assert "Sheet1" in msg
+        assert "Data" in msg
+        assert "Results" in msg
+        assert "--worksheet" in msg
+
+    def test_worksheet_not_found_error_suggests_first_available(self):
+        """WorksheetNotFoundError should suggest first available worksheet."""
+        from tools.gsheets_exporter import WorksheetNotFoundError
+
+        error = WorksheetNotFoundError(
+            worksheet_name="BadName",
+            available_worksheets=["FirstSheet", "SecondSheet"],
+            spreadsheet_id="test-id"
+        )
+        msg = str(error)
+
+        # Should suggest using the first available
+        assert "FirstSheet" in msg
+
+    def test_worksheet_not_found_error_handles_empty_list(self):
+        """WorksheetNotFoundError should handle empty worksheet list gracefully."""
+        from tools.gsheets_exporter import WorksheetNotFoundError
+
+        error = WorksheetNotFoundError(
+            worksheet_name="Test",
+            available_worksheets=[],
+            spreadsheet_id="test-id"
+        )
+        msg = str(error)
+
+        assert "Test" in msg
+        assert "not found" in msg.lower()
+
+    def test_worksheet_not_found_is_value_error(self):
+        """WorksheetNotFoundError should be a ValueError subclass."""
+        from tools.gsheets_exporter import WorksheetNotFoundError
+
+        assert issubclass(WorksheetNotFoundError, ValueError)
+
+
+class TestWorksheetFallbackBehavior:
+    """Tests for worksheet fallback and listing behavior (mocked, no network)."""
+
+    def test_list_worksheets_function_exists(self):
+        """list_worksheets function should be importable."""
+        from tools.gsheets_exporter import list_worksheets
+
+        assert callable(list_worksheets)
+
+    def test_get_worksheet_with_fallback_helper_exists(self):
+        """_get_worksheet_with_fallback helper should be importable."""
+        from tools.gsheets_exporter import _get_worksheet_with_fallback
+
+        assert callable(_get_worksheet_with_fallback)
+
+    def test_export_rows_accepts_fallback_param(self):
+        """export_rows should accept fallback_to_first parameter."""
+        import inspect
+
+        from tools.gsheets_exporter import export_rows
+
+        sig = inspect.signature(export_rows)
+        params = list(sig.parameters.keys())
+
+        assert "fallback_to_first" in params
+
+    def test_cli_has_fallback_option(self, capsys):
+        """CLI should have --fallback option."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--fallback" in captured.out
+
+    def test_cli_has_list_worksheets_option(self, capsys):
+        """CLI should have --list-worksheets option."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--list-worksheets" in captured.out
+
+
+class TestCSVImport:
+    """Tests for CSV import functionality."""
+
+    def test_load_csv_function_exists(self):
+        """load_csv function should be importable."""
+        from tools.gsheets_exporter import load_csv
+
+        assert callable(load_csv)
+
+    def test_load_csv_reads_sample_file(self):
+        """load_csv should read the sample CSV file correctly."""
+        from pathlib import Path
+
+        from tools.gsheets_exporter import load_csv
+
+        sample_path = Path(__file__).parent.parent / "docs" / "examples" / "sample_leads.csv"
+        if not sample_path.exists():
+            pytest.skip("Sample CSV not found")
+
+        rows = load_csv(str(sample_path))
+
+        # Should have header + data rows
+        assert len(rows) >= 2
+
+        # Header should have expected columns
+        header = rows[0]
+        assert "name" in header
+        assert "email" in header
+
+    def test_load_csv_file_not_found(self):
+        """load_csv should raise FileNotFoundError for missing files."""
+        from tools.gsheets_exporter import load_csv
+
+        with pytest.raises(FileNotFoundError):
+            load_csv("/nonexistent/path/to/file.csv")
+
+    def test_dedupe_rows_function_exists(self):
+        """dedupe_rows function should be importable."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        assert callable(dedupe_rows)
+
+    def test_dedupe_rows_removes_duplicates(self):
+        """dedupe_rows should remove rows with duplicate key values."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email", "city"],
+            ["John", "john@example.com", "NYC"],
+            ["Jane", "jane@example.com", "Boston"],
+            ["John2", "john@example.com", "LA"],  # Duplicate email
+        ]
+
+        result = dedupe_rows(rows, "email")
+
+        # Should have header + 2 unique rows
+        assert len(result) == 3
+        emails = [row[1] for row in result[1:]]
+        assert emails == ["john@example.com", "jane@example.com"]
+
+    def test_dedupe_rows_preserves_order(self):
+        """dedupe_rows should preserve order (first occurrence wins)."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["id", "value"],
+            ["1", "first"],
+            ["2", "second"],
+            ["1", "duplicate"],  # Duplicate id
+        ]
+
+        result = dedupe_rows(rows, "id")
+
+        # First occurrence should be kept
+        assert result[1] == ["1", "first"]
+        assert len(result) == 3
+
+    def test_dedupe_rows_invalid_column_raises_error(self):
+        """dedupe_rows should raise ValueError for nonexistent column."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+        ]
+
+        with pytest.raises(ValueError) as exc_info:
+            dedupe_rows(rows, "nonexistent")
+
+        assert "nonexistent" in str(exc_info.value).lower()
+
+    def test_export_csv_to_sheets_function_exists(self):
+        """export_csv_to_sheets function should be importable."""
+        from tools.gsheets_exporter import export_csv_to_sheets
+
+        assert callable(export_csv_to_sheets)
+
+    def test_cli_has_csv_option(self, capsys):
+        """CLI should have --csv option."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--csv" in captured.out
+
+    def test_cli_has_mode_option(self, capsys):
+        """CLI should have --mode option with append/replace choices."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--mode" in captured.out
+        assert "append" in captured.out
+        assert "replace" in captured.out
+
+    def test_cli_has_dedupe_key_option(self, capsys):
+        """CLI should have --dedupe-key option."""
+        from tools.gsheets_exporter import main
+
+        with pytest.raises(SystemExit):
+            main(["--help"])
+
+        captured = capsys.readouterr()
+        assert "--dedupe-key" in captured.out
+
+    def test_csv_dry_run_no_network(self, capsys, tmp_path):
+        """--csv with --dry-run should work without network calls."""
+        from tools.gsheets_exporter import main
+
+        # Create a temp CSV file
+        csv_file = tmp_path / "test.csv"
+        csv_file.write_text("name,email\nJohn,john@example.com\n")
+
+        exit_code = main(["--csv", str(csv_file), "--worksheet", "leads", "--dry-run"])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "Dry run" in captured.out
+
+    def test_csv_file_not_found_error(self, capsys):
+        """--csv with nonexistent file should return friendly error."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main(["--csv", "/nonexistent/file.csv", "--worksheet", "leads"])
+
+        assert exit_code == 1
+        captured = capsys.readouterr()
+        assert "not found" in captured.out.lower() or "error" in captured.out.lower()
+
+
+class TestDemoWorksheetDefault:
+    """Tests for demo worksheet default (changelog)."""
+
+    def test_demo_default_worksheet_constant(self):
+        """DEMO_DEFAULT_WORKSHEET should be 'changelog'."""
+        from tools.gsheets_exporter import DEMO_DEFAULT_WORKSHEET
+
+        assert DEMO_DEFAULT_WORKSHEET == "changelog"
+
+    def test_data_default_worksheet_constant(self):
+        """DATA_DEFAULT_WORKSHEET should be 'leads'."""
+        from tools.gsheets_exporter import DATA_DEFAULT_WORKSHEET
+
+        assert DATA_DEFAULT_WORKSHEET == "leads"
+
+    def test_demo_dry_run_uses_changelog(self, capsys):
+        """--demo --dry-run should default to changelog worksheet."""
+        from tools.gsheets_exporter import main
+
+        exit_code = main(["--demo", "--dry-run"])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "changelog" in captured.out.lower()
+
+    def test_csv_dry_run_uses_leads(self, capsys, tmp_path):
+        """--csv --dry-run should default to leads worksheet."""
+        from tools.gsheets_exporter import main
+
+        csv_file = tmp_path / "test.csv"
+        csv_file.write_text("name,email\nJohn,john@example.com\n")
+
+        exit_code = main(["--csv", str(csv_file), "--dry-run"])
+
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        assert "leads" in captured.out.lower()
+
+
+class TestHeaderMapping:
+    """Tests for CSV header mapping functionality."""
+
+    def test_normalize_header_function_exists(self):
+        """_normalize_header function should be importable."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert callable(_normalize_header)
+
+    def test_normalize_header_lowercase(self):
+        """_normalize_header should convert to lowercase."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert _normalize_header("Name") == "name"
+        assert _normalize_header("EMAIL") == "email"
+
+    def test_normalize_header_strips_spaces(self):
+        """_normalize_header should convert spaces to underscores."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert _normalize_header("Full Name") == "full_name"
+        assert _normalize_header("  name  ") == "name"
+
+    def test_normalize_header_converts_dashes(self):
+        """_normalize_header should convert dashes to underscores."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert _normalize_header("bar-number") == "bar_number"
+
+    def test_header_synonyms_exist(self):
+        """HEADER_SYNONYMS should be defined with expected mappings."""
+        from tools.gsheets_exporter import HEADER_SYNONYMS
+
+        assert isinstance(HEADER_SYNONYMS, dict)
+        assert HEADER_SYNONYMS.get("name") == "full_name"
+        assert HEADER_SYNONYMS.get("email") == "email"
+        assert HEADER_SYNONYMS.get("firm") == "firm"
+
+    def test_map_csv_to_sheet_headers_function_exists(self):
+        """_map_csv_to_sheet_headers function should be importable."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        assert callable(_map_csv_to_sheet_headers)
+
+    def test_map_csv_to_sheet_headers_basic_mapping(self):
+        """_map_csv_to_sheet_headers should map matching columns."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email", "city"],
+            ["John", "john@example.com", "NYC"],
+        ]
+        sheet_headers = ["full_name", "email", "city", "state"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        # Should return mapped rows (without header)
+        assert len(mapped_rows) == 1
+        assert info["type"] == "header"
+        assert "name" in info["mapped_columns"]
+        assert "email" in info["mapped_columns"]
+
+    def test_map_csv_to_sheet_headers_synonym_mapping(self):
+        """_map_csv_to_sheet_headers should use synonyms (name -> full_name)."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+        ]
+        sheet_headers = ["full_name", "email", "city"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        # First mapped row should have name in position 0 (full_name)
+        assert mapped_rows[0][0] == "John"
+        assert mapped_rows[0][1] == "john@example.com"
+        assert mapped_rows[0][2] == ""  # city is blank
+
+    def test_map_csv_to_sheet_headers_unmapped_columns(self):
+        """_map_csv_to_sheet_headers should track unmapped columns."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email", "unknown_field"],
+            ["John", "john@example.com", "xyz"],
+        ]
+        sheet_headers = ["full_name", "email"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        assert "unknown_field" in info["unmapped_columns"]
+
+    def test_map_csv_to_sheet_headers_positional_fallback(self):
+        """_map_csv_to_sheet_headers should fall back to positional if no match."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["col_a", "col_b"],
+            ["val1", "val2"],
+        ]
+        sheet_headers = ["totally_different", "headers"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        # Should return original rows and positional type
+        assert info["type"] == "positional"
+        assert mapped_rows == csv_rows
+
+    def test_map_csv_to_sheet_headers_empty_inputs(self):
+        """_map_csv_to_sheet_headers should handle empty inputs."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        # Empty CSV
+        mapped_rows, info = _map_csv_to_sheet_headers([], ["a", "b"])
+        assert info["type"] == "positional"
+
+        # Empty sheet headers
+        mapped_rows, info = _map_csv_to_sheet_headers([["a"], ["1"]], [])
+        assert info["type"] == "positional"
+
+
+class TestEdgeCases:
+    """Edge-case tests for header normalization, dedupe, and replace mode."""
+
+    def test_normalize_header_mixed_case_and_symbols(self):
+        """_normalize_header should handle mixed case and various symbols."""
+        from tools.gsheets_exporter import _normalize_header
+
+        assert _normalize_header("Full-Name") == "full_name"
+        assert _normalize_header("BAR_NUMBER") == "bar_number"
+        assert _normalize_header("  Email Address  ") == "email_address"
+        assert _normalize_header("Company--Name") == "company__name"
+
+    def test_synonym_mapping_covers_all_variants(self):
+        """All documented synonyms should map correctly."""
+        from tools.gsheets_exporter import HEADER_SYNONYMS
+
+        # name variants
+        assert HEADER_SYNONYMS.get("name") == "full_name"
+        assert HEADER_SYNONYMS.get("fullname") == "full_name"
+        assert HEADER_SYNONYMS.get("full_name") == "full_name"
+
+        # firm variants
+        assert HEADER_SYNONYMS.get("firm") == "firm"
+        assert HEADER_SYNONYMS.get("company") == "firm"
+        assert HEADER_SYNONYMS.get("law_firm") == "firm"
+
+        # bar_number variants
+        assert HEADER_SYNONYMS.get("bar_number") == "bar_number"
+        assert HEADER_SYNONYMS.get("bar_id") == "bar_number"
+
+    def test_missing_columns_become_blank(self):
+        """Columns in sheet but not in CSV should become blank."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+        ]
+        sheet_headers = ["full_name", "email", "city", "state", "bar_number"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        # Row should have 5 columns, with city/state/bar_number blank
+        assert len(mapped_rows[0]) == 5
+        assert mapped_rows[0][0] == "John"        # full_name
+        assert mapped_rows[0][1] == "john@example.com"  # email
+        assert mapped_rows[0][2] == ""            # city (blank)
+        assert mapped_rows[0][3] == ""            # state (blank)
+        assert mapped_rows[0][4] == ""            # bar_number (blank)
+
+    def test_extra_columns_tracked_as_unmapped(self):
+        """Columns in CSV but not in sheet should be tracked as unmapped."""
+        from tools.gsheets_exporter import _map_csv_to_sheet_headers
+
+        csv_rows = [
+            ["name", "email", "phone", "notes", "custom_field"],
+            ["John", "john@example.com", "555-1234", "VIP", "xyz"],
+        ]
+        sheet_headers = ["full_name", "email"]
+
+        mapped_rows, info = _map_csv_to_sheet_headers(csv_rows, sheet_headers)
+
+        assert "phone" in info["unmapped_columns"]
+        assert "notes" in info["unmapped_columns"]
+        assert "custom_field" in info["unmapped_columns"]
+        assert len(info["unmapped_columns"]) == 3
+
+    def test_dedupe_is_idempotent(self):
+        """Running dedupe twice should produce same result."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+            ["Jane", "jane@example.com"],
+            ["John2", "john@example.com"],  # duplicate
+        ]
+
+        result1 = dedupe_rows(rows, "email")
+        result2 = dedupe_rows(result1, "email")
+
+        assert result1 == result2
+        assert len(result1) == 3  # header + 2 unique
+
+    def test_dedupe_preserves_first_occurrence(self):
+        """Dedupe should keep first occurrence, not last."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email", "score"],
+            ["First", "same@example.com", "100"],
+            ["Second", "same@example.com", "200"],
+            ["Third", "same@example.com", "300"],
+        ]
+
+        result = dedupe_rows(rows, "email")
+
+        assert len(result) == 2
+        assert result[1][0] == "First"
+        assert result[1][2] == "100"
+
+    def test_dedupe_handles_empty_key_values(self):
+        """Dedupe should handle empty string keys."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+            ["NoEmail1", ""],
+            ["NoEmail2", ""],  # duplicate empty
+        ]
+
+        result = dedupe_rows(rows, "email")
+
+        # Should keep first empty, remove second
+        assert len(result) == 3
+
+    def test_dedupe_handles_single_row(self):
+        """Dedupe should handle single data row."""
+        from tools.gsheets_exporter import dedupe_rows
+
+        rows = [
+            ["name", "email"],
+            ["John", "john@example.com"],
+        ]
+
+        result = dedupe_rows(rows, "email")
+        assert result == rows
+
+
+class TestSecretsRails:
+    """Tests for secrets safety rails."""
+
+    def test_validate_credentials_path_function_exists(self):
+        """_validate_credentials_path should be importable."""
+        from tools.gsheets_exporter import _validate_credentials_path
+
+        assert callable(_validate_credentials_path)
+
+    def test_credentials_inside_repo_raises_error(self, tmp_path):
+        """Credentials path inside repo should raise error."""
+        from tools.gsheets_exporter import _validate_credentials_path
+
+        # Simulate repo root and creds inside it
+        repo_root = tmp_path / "myrepo"
+        repo_root.mkdir()
+        creds_file = repo_root / "secrets" / "creds.json"
+        creds_file.parent.mkdir()
+        creds_file.write_text("{}")
+
+        with pytest.raises(ValueError) as exc_info:
+            _validate_credentials_path(str(creds_file), str(repo_root))
+
+        assert "inside" in str(exc_info.value).lower() or "repo" in str(exc_info.value).lower()
+
+    def test_credentials_outside_repo_is_valid(self, tmp_path):
+        """Credentials path outside repo should be valid."""
+        from tools.gsheets_exporter import _validate_credentials_path
+
+        # Simulate repo root and creds outside it
+        repo_root = tmp_path / "myrepo"
+        repo_root.mkdir()
+        creds_file = tmp_path / "secrets" / "creds.json"
+        creds_file.parent.mkdir()
+        creds_file.write_text("{}")
+
+        # Should not raise
+        _validate_credentials_path(str(creds_file), str(repo_root))
+
+    def test_env_local_in_gitignore(self):
+        """'.env.local' should be in .gitignore."""
+        from pathlib import Path
+
+        gitignore_path = Path(__file__).parent.parent / ".gitignore"
+        if not gitignore_path.exists():
+            pytest.skip(".gitignore not found")
+
+        content = gitignore_path.read_text()
+        # Check for .env.local or *.env* pattern
+        assert ".env.local" in content or ".env*" in content or "*.env*" in content

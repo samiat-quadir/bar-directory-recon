@@ -17,5 +17,5 @@ def load_validation_matrix(yaml_path="validators/validation_matrix.yaml"):
     if not path.exists():
         raise FileNotFoundError(f"Validation matrix not found at: {yaml_path}")
 
-    with open(path, encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)

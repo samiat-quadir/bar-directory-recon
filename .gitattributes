@@ -1,7 +1,6 @@
 *.py text eol=lf
 *.yaml text eol=lf
 *.sh text eol=lf
-*.sh text eol=lf
 *.bat text eol=crlf
 # Prevent merge conflicts on local env/config/trash
 *.env merge=ours

@@ -6,8 +6,7 @@ Unified pagination handling for directory scraping.
 
 import logging
 import time
-from collections.abc import Generator
-from typing import Any
+from typing import Any, Dict, Generator, Optional
 
 from selenium.webdriver.common.by import By
 
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 class PaginationManager:
     """Handles pagination patterns for directory scraping."""
 
-    def __init__(self, driver_manager: Any, config: dict[str, Any]):
+    def __init__(self, driver_manager: Any, config: Dict[str, Any]):
         """Initialize pagination manager."""
         self.driver_manager = driver_manager
         self.config = config
@@ -286,7 +285,7 @@ class PaginationManager:
             logger.error(f"Error navigating to page {page_number}: {e}")
             return False
 
-    def get_total_pages(self) -> int | None:
+    def get_total_pages(self) -> Optional[int]:
         """Try to determine total number of pages."""
         try:
             driver = self.driver_manager.driver

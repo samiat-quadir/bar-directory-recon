@@ -34,7 +34,7 @@ def render_row(site, entry):
 def generate_overlay(
     matrix_path="output/schema_matrix.json", output_path="output/dashboard_overlay.html"
 ):
-    with open(matrix_path, encoding="utf-8") as f:
+    with open(matrix_path, "r", encoding="utf-8") as f:
         matrix = json.load(f)
     rows = [render_row(site, data) for site, data in matrix.get("sites", {}).items()]
     html = TEMPLATE.format(rows="\n".join(rows), date=datetime.today().strftime("%Y-%m-%d"))

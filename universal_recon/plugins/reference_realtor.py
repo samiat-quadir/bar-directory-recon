@@ -4,8 +4,7 @@ This plugin serves as an example of how to implement the Plugin interface
 for realtor directory data sources.
 """
 
-from collections.abc import Iterator
-from typing import Any
+from typing import Iterator, Dict, Any
 
 
 class RealtorPlugin:
@@ -16,7 +15,7 @@ class RealtorPlugin:
         """Return the plugin's unique identifier name."""
         return "reference_realtor"
 
-    def fetch(self) -> Iterator[dict[str, Any]]:
+    def fetch(self) -> Iterator[Dict[str, Any]]:
         """Fetch raw data from the realtor source.
 
         Yields:
@@ -30,7 +29,7 @@ class RealtorPlugin:
                 "office": "Smith Realty Group",
                 "phone": "555-0123",
                 "email": "j.smith@smithrealty.com",
-                "specialties": ["residential", "commercial"],
+                "specialties": ["residential", "commercial"]
             },
             {
                 "id": "realtor_002",
@@ -38,13 +37,14 @@ class RealtorPlugin:
                 "office": "Premium Properties",
                 "phone": "555-0456",
                 "email": "s.johnson@premiumprop.com",
-                "specialties": ["luxury", "waterfront"],
-            },
+                "specialties": ["luxury", "waterfront"]
+            }
         ]
 
-        yield from sample_data
+        for record in sample_data:
+            yield record
 
-    def transform(self, raw_data: dict[str, Any]) -> dict[str, Any]:
+    def transform(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
         """Transform raw data into standardized format.
 
         Args:
@@ -62,10 +62,10 @@ class RealtorPlugin:
             "contact_phone": raw_data.get("phone"),
             "contact_email": raw_data.get("email"),
             "specialties": raw_data.get("specialties", []),
-            "raw_data": raw_data,
+            "raw_data": raw_data
         }
 
-    def validate(self, transformed_data: dict[str, Any]) -> bool:
+    def validate(self, transformed_data: Dict[str, Any]) -> bool:
         """Validate that transformed data meets quality requirements.
 
         Args:
@@ -76,6 +76,4 @@ class RealtorPlugin:
         """
         # Basic validation - ensure required fields are present
         required_fields = ["source", "id", "name"]
-        return all(
-            field in transformed_data and transformed_data[field] for field in required_fields
-        )
+        return all(field in transformed_data and transformed_data[field] for field in required_fields)

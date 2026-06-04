@@ -6,7 +6,7 @@ Unified data extraction from web pages using configurable selectors and patterns
 
 import logging
 import re
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 from bs4 import BeautifulSoup, Tag
 from selenium.webdriver.common.by import By
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class DataExtractor:
     """Unified data extraction with configurable selectors and patterns."""
 
-    def __init__(self, config: dict[str, Any]):
+    def __init__(self, config: Dict[str, Any]):
         """Initialize data extractor with configuration."""
         self.config = config
         self.extraction_rules = config.get("extraction_rules", {})
@@ -32,7 +32,7 @@ class DataExtractor:
             ),
         }
 
-    def extract_from_page(self, driver_manager: Any) -> list[dict[str, Any]]:
+    def extract_from_page(self, driver_manager: Any) -> List[Dict[str, Any]]:
         """Extract all data from current page using configured rules."""
         try:
             page_source = driver_manager.get_page_source()
@@ -43,7 +43,9 @@ class DataExtractor:
             containers = soup.select(container_selector)
 
             if not containers:
-                logger.warning(f"No containers found with selector: {container_selector}")
+                logger.warning(
+                    f"No containers found with selector: {container_selector}"
+                )
                 return []
 
             extracted_data = []
@@ -60,13 +62,15 @@ class DataExtractor:
             logger.error(f"Error extracting data from page: {e}")
             return []
 
-    def extract_from_element(self, element: Tag) -> dict[str, Any]:
+    def extract_from_element(self, element: Tag) -> Dict[str, Any]:
         """Extract data from a single element using configured rules."""
         data = {}
 
         try:
             # Extract each field defined in extraction rules
-            for field_name, field_config in self.extraction_rules.get("fields", {}).items():
+            for field_name, field_config in self.extraction_rules.get(
+                "fields", {}
+            ).items():
                 value = self._extract_field(element, field_config)
                 if value:
                     data[field_name] = value
@@ -86,7 +90,9 @@ class DataExtractor:
             logger.error(f"Error extracting data from element: {e}")
             return {}
 
-    def _extract_field(self, element: Tag, field_config: dict[str, Any]) -> str | None:
+    def _extract_field(
+        self, element: Tag, field_config: Dict[str, Any]
+    ) -> Optional[str]:
         """Extract a specific field using its configuration."""
         try:
             extraction_type = field_config.get("type", "text")
@@ -126,7 +132,7 @@ class DataExtractor:
             logger.error(f"Error extracting field {field_config}: {e}")
             return None
 
-    def _apply_transformations(self, value: str, transformations: list[str]) -> str:
+    def _apply_transformations(self, value: str, transformations: List[str]) -> str:
         """Apply transformations to extracted value."""
         for transform in transformations:
             if transform == "strip":
@@ -152,7 +158,7 @@ class DataExtractor:
 
         return value
 
-    def extract_contact_info(self, text: str) -> dict[str, str]:
+    def extract_contact_info(self, text: str) -> Dict[str, str]:
         """Extract contact information using regex patterns."""
         contact_info = {}
 
@@ -181,7 +187,7 @@ class DataExtractor:
 
         return contact_info
 
-    def extract_listing_urls(self, driver_manager: Any) -> list[str]:
+    def extract_listing_urls(self, driver_manager: Any) -> List[str]:
         """Extract URLs for detail page scraping (two-phase approach)."""
         try:
             page_source = driver_manager.get_page_source()
@@ -216,8 +222,8 @@ class DataExtractor:
             return []
 
     def extract_with_selenium(
-        self, driver_manager: Any, selectors: list[str]
-    ) -> list[dict[str, Any]]:
+        self, driver_manager: Any, selectors: List[str]
+    ) -> List[Dict[str, Any]]:
         """Extract data using Selenium for dynamic content."""
         try:
             driver = driver_manager.driver
@@ -226,7 +232,9 @@ class DataExtractor:
             for selector in selectors:
                 try:
                     elements = driver.find_elements(By.CSS_SELECTOR, selector)
-                    logger.info(f"Found {len(elements)} elements with selector: {selector}")
+                    logger.info(
+                        f"Found {len(elements)} elements with selector: {selector}"
+                    )
 
                     for element in elements:
                         try:
@@ -256,7 +264,7 @@ class DataExtractor:
             logger.error(f"Error in Selenium extraction: {e}")
             return []
 
-    def extract_structured_data(self, page_source: str) -> list[dict[str, Any]]:
+    def extract_structured_data(self, page_source: str) -> List[Dict[str, Any]]:
         """Extract structured data (JSON-LD, microdata) from page."""
         try:
             soup = BeautifulSoup(page_source, "html.parser")
@@ -268,7 +276,9 @@ class DataExtractor:
                 try:
                     import json
 
-                    script_content = getattr(script, "string", None) or script.get_text()
+                    script_content = (
+                        getattr(script, "string", None) or script.get_text()
+                    )
                     if script_content:
                         data = json.loads(script_content)
                     if isinstance(data, dict):
@@ -296,7 +306,7 @@ class DataExtractor:
             logger.error(f"Error extracting structured data: {e}")
             return []
 
-    def _extract_microdata(self, element: Tag) -> dict[str, Any]:
+    def _extract_microdata(self, element: Tag) -> Dict[str, Any]:
         """Extract microdata from element."""
         data = {}
 
@@ -310,13 +320,15 @@ class DataExtractor:
         for prop_element in prop_elements:
             if isinstance(prop_element, Tag):
                 prop_name = prop_element.get("itemprop")
-                prop_value = prop_element.get("content") or prop_element.get_text(strip=True)
+                prop_value = prop_element.get("content") or prop_element.get_text(
+                    strip=True
+                )
                 if prop_name and prop_value:
                     data[str(prop_name)] = prop_value
 
         return data
 
-    def _is_valid_record(self, data: dict[str, Any]) -> bool:
+    def _is_valid_record(self, data: Dict[str, Any]) -> bool:
         """Check if extracted record meets minimum requirements."""
         required_fields = self.config.get("required_fields", [])
 
@@ -337,7 +349,9 @@ class DataExtractor:
 
         return datetime.now().isoformat()
 
-    def clean_extracted_data(self, data_list: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def clean_extracted_data(
+        self, data_list: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         """Clean and deduplicate extracted data."""
         try:
             cleaned_data = []
@@ -370,14 +384,18 @@ class DataExtractor:
 
                     cleaned_data.append(cleaned_record)
 
-            logger.info(f"Cleaned data: {len(data_list)} -> {len(cleaned_data)} records")
+            logger.info(
+                f"Cleaned data: {len(data_list)} -> {len(cleaned_data)} records"
+            )
             return cleaned_data
 
         except Exception as e:
             logger.error(f"Error cleaning data: {e}")
             return data_list
 
-    def validate_and_enrich_data(self, data_list: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def validate_and_enrich_data(
+        self, data_list: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         """Validate and enrich extracted data."""
         try:
             enriched_data = []

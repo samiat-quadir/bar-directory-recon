@@ -14,6 +14,7 @@ MOCK_RECORDS = [
 
 
 class TestScoreVisualizer(unittest.TestCase):
+
     def test_generate_heatmap_data_structure(self):
         heatmap = score_visualizer.generate_heatmap_data(MOCK_RECORDS)
 
@@ -33,7 +34,7 @@ class TestScoreVisualizer(unittest.TestCase):
         heatmap = score_visualizer.generate_heatmap_data(MOCK_RECORDS)
         score_visualizer.save_heatmap_data(site, heatmap)
 
-        with open(f"output/reports/{site}_heatmap.json", encoding="utf-8") as f:
+        with open(f"output/reports/{site}_heatmap.json", "r", encoding="utf-8") as f:
             data = f.read()
         self.assertIn("email_plugin", data)
         self.assertIn("critical", data)

@@ -5,8 +5,7 @@ Using typing.Protocol for duck typing - plugins don't need to inherit,
 just implement the required methods with correct signatures.
 """
 
-from collections.abc import Iterator
-from typing import Any, Protocol
+from typing import Any, Dict, Iterator, Protocol
 
 
 class Plugin(Protocol):
@@ -17,7 +16,7 @@ class Plugin(Protocol):
         """Return the plugin's unique identifier name."""
         ...
 
-    def fetch(self) -> Iterator[dict[str, Any]]:
+    def fetch(self) -> Iterator[Dict[str, Any]]:
         """Fetch raw data from the source.
 
         Yields:
@@ -25,7 +24,7 @@ class Plugin(Protocol):
         """
         ...
 
-    def transform(self, raw_data: dict[str, Any]) -> dict[str, Any]:
+    def transform(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
         """Transform raw data into standardized format.
 
         Args:
@@ -36,7 +35,7 @@ class Plugin(Protocol):
         """
         ...
 
-    def validate(self, transformed_data: dict[str, Any]) -> bool:
+    def validate(self, transformed_data: Dict[str, Any]) -> bool:
         """Validate that transformed data meets quality requirements.
 
         Args:

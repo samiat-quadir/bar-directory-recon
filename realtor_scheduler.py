@@ -3,17 +3,15 @@ Realtor Directory Automation Scheduler
 Weekly automated lead extraction script
 """
 
-import logging
 import os
-
-# Add the project root to the Python path
-import sys
+import schedule
 import time
+import logging
 from datetime import datetime
 from pathlib import Path
 
-import schedule
-
+# Add the project root to the Python path
+import sys
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -22,11 +20,11 @@ from universal_recon.plugins.realtor_directory_plugin import scrape_realtor_dire
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler("logs/automation_scheduler.log"),
-        logging.StreamHandler(),
-    ],
+        logging.FileHandler('logs/automation_scheduler.log'),
+        logging.StreamHandler()
+    ]
 )
 logger = logging.getLogger(__name__)
 
@@ -45,11 +43,11 @@ def run_weekly_scrape():
         result = scrape_realtor_directory(
             output_path=output_path,
             max_records=None,  # No limit for scheduled runs
-            verbose=True,
+            verbose=True
         )
 
-        if result["success"]:
-            logger.info("✅ Weekly scrape completed successfully")
+        if result['success']:
+            logger.info(f"✅ Weekly scrape completed successfully")
             logger.info(f"📁 {result['leads_count']} leads saved to {result['output_path']}")
 
             # Create a symlink to the latest file for easy access
@@ -59,11 +57,10 @@ def run_weekly_scrape():
 
             # For Windows, use copy instead of symlink if not running as admin
             try:
-                os.symlink(result["output_path"], latest_path)
+                os.symlink(result['output_path'], latest_path)
             except OSError:
                 import shutil
-
-                shutil.copy2(result["output_path"], latest_path)
+                shutil.copy2(result['output_path'], latest_path)
                 logger.info(f"📎 Latest file copied to {latest_path}")
 
         else:
@@ -90,11 +87,11 @@ def run_interactive_mode():
 
     search_params = {}
     if state:
-        search_params["state"] = state
+        search_params['state'] = state
     if city:
-        search_params["city"] = city
+        search_params['city'] = city
     if specialty:
-        search_params["specialty"] = specialty
+        search_params['specialty'] = specialty
 
     # Google Sheets integration
     google_sheet_id = input("Google Sheets ID (optional): ").strip()
@@ -105,7 +102,7 @@ def run_interactive_mode():
     output_filename = f"realtor_leads_interactive_{timestamp}.csv"
     output_path = os.path.join("outputs", output_filename)
 
-    print("\n🚀 Starting scrape...")
+    print(f"\n🚀 Starting scrape...")
     print(f"📁 Output will be saved to: {output_path}")
 
     try:
@@ -114,11 +111,11 @@ def run_interactive_mode():
             max_records=max_records,
             search_params=search_params if search_params else None,
             google_sheet_id=google_sheet_id,
-            verbose=True,
+            verbose=True
         )
 
-        if result["success"]:
-            print("\n✅ Scrape completed successfully!")
+        if result['success']:
+            print(f"\n✅ Scrape completed successfully!")
             print(f"📊 Found {result['leads_count']} leads")
             print(f"📁 Saved to: {result['output_path']}")
         else:
@@ -137,7 +134,7 @@ def main():
         "--mode",
         choices=["schedule", "interactive", "once"],
         default="once",
-        help="Execution mode: schedule (run scheduler), interactive (user input), once (single run)",
+        help="Execution mode: schedule (run scheduler), interactive (user input), once (single run)"
     )
     parser.add_argument("--max-records", type=int, help="Maximum records to scrape")
     parser.add_argument("--output", help="Custom output file path")
@@ -174,13 +171,11 @@ def main():
             output_path=output_path,
             max_records=args.max_records,
             google_sheet_id=args.google_sheet_id,
-            verbose=True,
+            verbose=True
         )
 
-        if result["success"]:
-            print(
-                f"✅ Scrape completed: {result['leads_count']} leads saved to {result['output_path']}"
-            )
+        if result['success']:
+            print(f"✅ Scrape completed: {result['leads_count']} leads saved to {result['output_path']}")
         else:
             print(f"❌ Scrape failed: {result.get('error', 'Unknown error')}")
 

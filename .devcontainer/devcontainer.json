@@ -1,20 +1,22 @@
 {
   "name": "bar-directory-recon",
-  "build": { "dockerfile": "Dockerfile" },
-
-  "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/node:1": { "version": "lts" }
-    /* Optional: sshd is usually unnecessary inside a devcontainer
-    , "ghcr.io/devcontainers/features/sshd:1": { "version": "latest" }
-    */
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
   },
-
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "nodeGypDependencies": true,
+      "version": "lts"
+    }
+  },
   "workspaceFolder": "/workspaces/bar-directory-recon",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/bar-directory-recon,type=bind,consistency=cached",
-
   "remoteUser": "vscode",
-
+  "containerUser": "vscode",
   "containerEnv": {
     "PROJECT_NAME": "bar-directory-recon",
     "ENVIRONMENT": "development",
@@ -27,17 +29,22 @@
     "PYTHONUNBUFFERED": "1",
     "PIP_DISABLE_PIP_VERSION_CHECK": "1",
     "DEBIAN_FRONTEND": "noninteractive",
-    "CHROME_BIN": "/usr/local/bin/chrome-no-sandbox"
+    "CHROME_BIN": "/usr/local/bin/chrome-no-sandbox",
+    "DISPLAY": ":99.0"
   },
-
   "customizations": {
     "vscode": {
       "settings": {
-        // Make VS Code inside the container use the venv we create below
         "python.defaultInterpreterPath": "/workspaces/bar-directory-recon/.venv/bin/python",
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
-        "python.testing.pytestArgs": ["-q", "-p", "no:cacheprovider"]
+        "python.testing.pytestArgs": [
+          "src/tests",
+          "universal_recon/tests",
+          "--cov=src",
+          "--cov=universal_recon",
+          "--cov-report=term-missing"
+        ]
       },
       "extensions": [
         "ms-python.python",
@@ -51,32 +58,50 @@
       ]
     }
   },
-
   "forwardPorts": [3000, 5432, 8000, 8080, 9090, 9182],
-
+  "portsAttributes": {
+    "3000": {
+      "label": "Grafana Dashboard",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL Database",
+      "onAutoForward": "silent"
+    },
+    "8000": {
+      "label": "App Metrics",
+      "onAutoForward": "silent"
+    },
+    "8080": {
+      "label": "cAdvisor",
+      "onAutoForward": "silent"
+    },
+    "9090": {
+      "label": "Prometheus",
+      "onAutoForward": "notify"
+    },
+    "9182": {
+      "label": "Windows Exporter",
+      "onAutoForward": "silent"
+    }
+  },
   "mounts": [
-    // Only keep this if you truly need docker-outside-of-docker
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ],
-
-  // Create a project-local venv, install deps, set up hooks, quick sanity checks
   "postCreateCommand": [
     "bash",
     "-lc",
-    "python -m venv .venv && source .venv/bin/activate && \
-     pip install -U pip setuptools wheel && \
-     ( [ -f requirements-dev.txt ] && pip install -r requirements-dev.txt || true ) && \
-     pip install -e . && \
-     if command -v pre-commit >/dev/null 2>&1; then pre-commit install --install-hooks; fi && \
-     python -c 'import sys; print(f\"🐍 {sys.executable}\")' && python -m pytest --version || true"
+    "python -m venv .venv && source .venv/bin/activate && pip install -U pip setuptools wheel && ( [ -f requirements-dev.txt ] && pip install -r requirements-dev.txt || true ) && pip install -e . && if command -v pre-commit >/dev/null 2>&1; then pre-commit install --install-hooks; fi && python -c 'import sys; print(f\"🐍 {sys.executable}\")' && python -m pytest --version || true"
   ],
-
   "postStartCommand": [
     "bash",
     "-lc",
     "git config --global --add safe.directory /workspaces/bar-directory-recon || true"
   ],
-
   "shutdownAction": "stopContainer",
-  "hostRequirements": { "cpus": 2, "memory": "4gb", "storage": "8gb" }
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "4gb",
+    "storage": "8gb"
+  }
 }

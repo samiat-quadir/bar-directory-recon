@@ -2,13 +2,14 @@
 
 import json
 import os
+from typing import Dict, List
 
 from universal_recon.core.logger import get_logger
 
 logger = get_logger(__name__)
 
 
-def generate_heatmap_data(records: list[dict]) -> dict:
+def generate_heatmap_data(records: List[Dict]) -> Dict:
     """Generate heatmap data from validation records."""
     heatmap = {}
     for record in records:
@@ -31,7 +32,7 @@ def generate_heatmap_data(records: list[dict]) -> dict:
     return heatmap
 
 
-def save_heatmap_data(site: str, heatmap: dict) -> None:
+def save_heatmap_data(site: str, heatmap: Dict) -> None:
     """Save heatmap data to JSON file."""
     os.makedirs("output/reports", exist_ok=True)
     output_path = f"output/reports/{site}_heatmap.json"
@@ -39,7 +40,7 @@ def save_heatmap_data(site: str, heatmap: dict) -> None:
         json.dump(heatmap, f, indent=2)
 
 
-def generate_visualization(records: list[dict], site: str) -> dict:
+def generate_visualization(records: List[Dict], site: str) -> Dict:
     """Generate visualization from validation records."""
     try:
         heatmap = generate_heatmap_data(records)

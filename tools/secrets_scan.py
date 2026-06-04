@@ -25,96 +25,73 @@ import re
 import sys
 from datetime import datetime
 
+
 # Default configuration
 DEFAULT_CONFIG = {
     "file_extensions": [
-        ".env",
-        ".ini",
-        ".config",
-        ".xml",
-        ".json",
-        ".yaml",
-        ".yml",
-        ".py",
-        ".js",
-        ".ps1",
-        ".sh",
-        ".bat",
-        ".cmd",
-        ".txt",
-        ".md",
-        ".cs",
-        ".java",
-        ".html",
-        ".htm",
-        ".css",
-        ".sql",
+        ".env", ".ini", ".config", ".xml", ".json", ".yaml", ".yml",
+        ".py", ".js", ".ps1", ".sh", ".bat", ".cmd", ".txt", ".md",
+        ".cs", ".java", ".html", ".htm", ".css", ".sql"
     ],
     "exclude_dirs": [
-        ".git",
-        ".venv",
-        "venv",
-        "env",
-        "node_modules",
-        "__pycache__",
-        "bin",
-        "obj",
-        "dist",
-        "build",
+        ".git", ".venv", "venv", "env", "node_modules",
+        "__pycache__", "bin", "obj", "dist", "build"
     ],
-    "exclude_files": ["package-lock.json", "yarn.lock", "poetry.lock"],
+    "exclude_files": [
+        "package-lock.json", "yarn.lock", "poetry.lock"
+    ],
     "patterns": [
         {
             "name": "API Key",
             "regex": r"(?i)(api[-_]?key|apikey|api[-_]?token)(?:=|:|,|\s|'|\")([a-zA-Z0-9_\-]{10,})(?:'|\"|,|\s|$)",
-            "severity": "HIGH",
+            "severity": "HIGH"
         },
         {
             "name": "AWS Access Key",
             "regex": r"(?i)aws(?:_|-)?(?:access(?:_|-)?)?key(?:_|-)?id(?:=|:|,|\s|'|\")([A-Z0-9]{20})(?:'|\"|,|\s|$)",
-            "severity": "HIGH",
+            "severity": "HIGH"
         },
         {
             "name": "AWS Secret Key",
             "regex": r"(?i)aws(?:_|-)?secret(?:_|-)?(?:access(?:_|-)?)?key(?:=|:|,|\s|'|\")([A-Za-z0-9/+=]{40})(?:'|\"|,|\s|$)",
-            "severity": "HIGH",
+            "severity": "HIGH"
         },
         {
             "name": "Password",
             "regex": r"(?i)(password|passwd|pwd)(?:=|:|,|\s|'|\")(?!.*(?:\$\{|\$\(|\{\{|\$env:))(.{8,})(?:'|\"|,|\s|$)",
-            "severity": "MEDIUM",
+            "severity": "MEDIUM"
         },
         {
             "name": "Database Connection String",
             "regex": r"(?i)((?:connection(?:_|-)?string|conn(?:_|-)?str)(?:=|:|,|\s|'|\").*(?:Server|Host|Database|Uid|Pwd).*(?:'|\"|,|\s|$))",
-            "severity": "HIGH",
+            "severity": "HIGH"
         },
         {
             "name": "Generic Secret",
             "regex": r"(?i)(secret|private[-_]?key)(?:=|:|,|\s|'|\")(.{8,})(?:'|\"|,|\s|$)",
-            "severity": "MEDIUM",
+            "severity": "MEDIUM"
         },
         {
             "name": "JWT Token",
             "regex": r"(?i)(jwt|token|bearer)(?:=|:|,|\s|'|\")([a-zA-Z0-9_=]+\.[a-zA-Z0-9_=]+\.[a-zA-Z0-9_\-\+/=]*)(?:'|\"|,|\s|$)",
-            "severity": "MEDIUM",
+            "severity": "MEDIUM"
         },
         {
             "name": "SSH Private Key",
             "regex": r"-----BEGIN (?:RSA|DSA|EC|OPENSSH) PRIVATE KEY-----",
-            "severity": "HIGH",
+            "severity": "HIGH"
         },
         {
             "name": "GitHub Token",
             "regex": r"(?i)github[_\-\s]*(token|key|secret)[ :='\"]+((?:ghp|gho|ghu|ghs|ghr|github_pat)_[a-zA-Z0-9_]{36,255})",
-            "severity": "HIGH",
+            "severity": "HIGH"
         },
         {
             "name": "Google API Key",
             "regex": r"(?i)(google|firebase|google[-_]?cloud|gcp)[-_]?(key|token|secret)[ :='\"]+(AIza[a-zA-Z0-9_\-]{35})",
-            "severity": "HIGH",
-        },
-    ],
+            "severity": "HIGH"
+        }
+    ]
 }
 
 
@@ -151,7 +128,7 @@ class SecretsScanner:
         self.files_scanned += 1
 
         try:
-            with open(filepath, encoding="utf-8", errors="ignore") as file:
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as file:
                 line_number = 0
                 file_findings = []
 
@@ -169,9 +146,7 @@ class SecretsScanner:
                             secret_value = None
                             if len(match.groups()) > 0:
                                 for group in match.groups():
-                                    if (
-                                        group and len(group) > 4
-                                    ):  # Only consider groups that look like they could be secrets
+                                    if group and len(group) > 4:  # Only consider groups that look like they could be secrets
                                         secret_value = group
                                         break
 
@@ -180,28 +155,28 @@ class SecretsScanner:
                                 secret_value = matched_text
 
                             # Create a redacted line for the report
-                            redacted_line = re.sub(re.escape(secret_value), "[REDACTED]", line)
+                            redacted_line = re.sub(
+                                re.escape(secret_value),
+                                "[REDACTED]",
+                                line
+                            )
 
                             # Add the finding
-                            file_findings.append(
-                                {
-                                    "line_number": line_number,
-                                    "pattern_name": pattern["name"],
-                                    "severity": pattern["severity"],
-                                    "redacted_line": redacted_line,
-                                }
-                            )
+                            file_findings.append({
+                                "line_number": line_number,
+                                "pattern_name": pattern["name"],
+                                "severity": pattern["severity"],
+                                "redacted_line": redacted_line
+                            })
 
                 if file_findings:
                     self.files_with_secrets += 1
-                    self.findings.append(
-                        {
-                            "file_path": filepath,
-                            "relative_path": os.path.relpath(filepath, os.getcwd()),
-                            "secret_count": len(file_findings),
-                            "findings": file_findings,
-                        }
-                    )
+                    self.findings.append({
+                        "file_path": filepath,
+                        "relative_path": os.path.relpath(filepath, os.getcwd()),
+                        "secret_count": len(file_findings),
+                        "findings": file_findings
+                    })
 
         except Exception as e:
             print(f"Error scanning file {filepath}: {str(e)}")
@@ -250,12 +225,8 @@ class SecretsScanner:
         """Generate a JSON report of the findings."""
         report = {
             "scan_info": {
-                "start_time": (
-                    self.start_time.strftime("%Y-%m-%d %H:%M:%S") if self.start_time else None
-                ),
-                "end_time": (
-                    self.end_time.strftime("%Y-%m-%d %H:%M:%S") if self.end_time else None
-                ),
+                "start_time": self.start_time.strftime("%Y-%m-%d %H:%M:%S") if self.start_time else None,
+                "end_time": self.end_time.strftime("%Y-%m-%d %H:%M:%S") if self.end_time else None,
                 "files_scanned": self.files_scanned,
                 "files_with_secrets": self.files_with_secrets,
                 "total_secrets": sum(f["secret_count"] for f in self.findings),
@@ -266,14 +237,14 @@ class SecretsScanner:
                 "Use configuration files that are not checked into source control",
                 "Consider using Azure Key Vault, AWS Secrets Manager, or similar services",
                 "For local development, use a .env file that is in your .gitignore",
-                "For CI/CD, use the secrets management feature of your CI/CD platform",
-            ],
+                "For CI/CD, use the secrets management feature of your CI/CD platform"
+            ]
         }
 
         if report_path:
             try:
                 os.makedirs(os.path.dirname(report_path), exist_ok=True)
-                with open(report_path, "w", encoding="utf-8") as f:
+                with open(report_path, 'w', encoding='utf-8') as f:
                     json.dump(report, f, indent=2)
                 print(f"Report saved to {report_path}")
             except Exception as e:
@@ -283,9 +254,7 @@ class SecretsScanner:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Scan for secrets and sensitive information in files"
-    )
+    parser = argparse.ArgumentParser(description="Scan for secrets and sensitive information in files")
     parser.add_argument("--path", default=os.getcwd(), help="Path to scan (file or directory)")
     parser.add_argument("--report-path", help="Path to save the JSON report")
     parser.add_argument("--config", help="Path to custom configuration JSON file")
@@ -296,7 +265,7 @@ def main():
     config = DEFAULT_CONFIG
     if args.config:
         try:
-            with open(args.config, encoding="utf-8") as f:
+            with open(args.config, 'r', encoding='utf-8') as f:
                 custom_config = json.load(f)
                 config.update(custom_config)
         except Exception as e:

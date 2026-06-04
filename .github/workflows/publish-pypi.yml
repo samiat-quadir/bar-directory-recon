@@ -1,0 +1,38 @@
+name: publish-pypi
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (tag or branch)"
+        required: true
+        default: "0.1.1"
+        type: string
+      skip_existing:
+        description: "Skip files already on PyPI"
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  publish:
+    name: publish to PyPI (manual)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.version }}
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+          twine check dist/*
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          skip-existing: ${{ inputs.skip_existing }}

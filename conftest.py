@@ -14,7 +14,6 @@ retries a few times when ``shutil.rmtree`` raises a transient
 
 # isort: skip_file
 import errno
-import inspect
 import os
 import shutil
 import sys
@@ -33,7 +32,12 @@ if SRC_DIR not in sys.path:
 try:
     _orig_rmtree = shutil.rmtree
 
-    def _safe_rmtree(path, ignore_errors=False, onerror=None, **kwargs):
+    def _safe_rmtree(
+        path,
+        ignore_errors=False,
+        onerror=None,
+        **kwargs,  # Handles onexc (Python 3.12+) and dir_fd flexibly
+    ):
         """Retry a few times for transient PermissionError (WinError 32).
 
         If retries are exhausted and ignore_errors is True, return silently.
@@ -44,19 +48,12 @@ try:
         delay = 0.1
         for attempt in range(retries):
             try:
-                # Handle both old and new versions of shutil.rmtree
-                # In older Python versions, onexc and dir_fd might not exist
-                rmtree_kwargs = {
-                    "path": path,
-                    "ignore_errors": ignore_errors,
-                    "onerror": onerror,
-                }
-                # Only pass kwargs that are accepted by the original function
-                for key, value in kwargs.items():
-                    if key in inspect.signature(_orig_rmtree).parameters:
-                        rmtree_kwargs[key] = value
-
-                return _orig_rmtree(**rmtree_kwargs)
+                return _orig_rmtree(
+                    path,
+                    ignore_errors=ignore_errors,
+                    onerror=onerror,
+                    **kwargs,  # Pass through onexc/dir_fd if supported
+                )
             except PermissionError as exc:
                 # On Windows, winerror == 32 corresponds to "file in use".
                 # Also check errno.EACCES as a secondary indicator.

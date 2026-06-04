@@ -1,0 +1,28 @@
+---
+name: Audit
+
+on:
+  push:
+    branches: ["main", "deps/**"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip==25.3
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      - name: Run pip-audit
+        run: |
+          pip install pip-audit
+          pip-audit --desc || echo "Audit complete with findings"
