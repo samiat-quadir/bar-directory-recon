@@ -11,8 +11,9 @@ name = "example_plugin"
 class ExamplePlugin:
     """Minimal stub so test_plugins_example.py can import without errors."""
 
-    def run(self, *args, **kwargs):
-        return None
+    def run(self, data=None, **kwargs):
+        keys = list(data.keys()) if isinstance(data, dict) else []
+        return {"name": "example", "received_keys": keys}
 
 
 def initialize(*args, **kwargs):

@@ -4,19 +4,19 @@ import pytest
 
 
 def test_hallandale_pipeline_import():
-    """Test that hallandale_pipeline_fixed can be imported"""
+    """Test that hallandale_pipeline can be imported"""
     try:
-        m = importlib.import_module("hallandale_pipeline_fixed")
+        m = importlib.import_module("hallandale_pipeline")
         assert m is not None
         assert hasattr(m, "__file__")
     except ImportError:
-        pytest.skip("hallandale_pipeline_fixed module not available")
+        pytest.skip("hallandale_pipeline module not available")
 
 
 def test_pipeline_dedup_and_idempotent():
     """Test pipeline handles deduplication and is idempotent"""
     try:
-        m = importlib.import_module("hallandale_pipeline_fixed")
+        m = importlib.import_module("hallandale_pipeline")
         fn = (
             getattr(m, "process", None)
             or getattr(m, "run", None)
@@ -48,14 +48,14 @@ def test_pipeline_dedup_and_idempotent():
 
     except Exception:
         # Test degrades gracefully
-        m = importlib.import_module("hallandale_pipeline_fixed")
+        m = importlib.import_module("hallandale_pipeline")
         assert len(dir(m)) > 2
 
 
 def test_pipeline_handles_empty_data():
     """Test pipeline handles empty or invalid data"""
     try:
-        m = importlib.import_module("hallandale_pipeline_fixed")
+        m = importlib.import_module("hallandale_pipeline")
         fn = (
             getattr(m, "process", None)
             or getattr(m, "run", None)
