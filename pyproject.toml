@@ -50,19 +50,7 @@ gsheets = [
 [project.scripts]
 bdr = "bdr.cli:entrypoint"
 
-[tool.black]
-line-length = 88
-target-version = ["py311"]
-include = '\.pyi?$'
-exclude = '''
-(
-  /\.venv.*
-  |/merge_conflicts_backup/
-  |/\.temp_conflicts/
-  |/logs/
-  |/archive/
-)
-'''
+# [tool.black] removed — ruff-format is the formatter now (see .pre-commit-config.yaml)
 
 [tool.isort]
 profile = "black"

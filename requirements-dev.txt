@@ -1,12 +1,12 @@
 # Development dependencies - include production requirements
 -r requirements.txt
 
-# File watching (conditional by Python version) - redundant but explicit for dev
+# File watching (conditional by Python version)
 watchdog>=4,<7; python_version < "3.13"
 watchfiles>=0.20; python_version >= "3.13"
 
 # Development and testing tools
-black==23.9.1
+# black removed — ruff-format is the formatter (avoids black vs ruff-format conflict in pre-commit)
 isort==5.12.0
 flake8==6.1.0
 mypy==1.17.1
@@ -22,11 +22,9 @@ bandit==1.7.5
 pytest-mock==3.11.1
 coverage>=7.5
 pyyaml>=6.0.1
-
-# Required for test collection
+types-aiofiles>=24.1.0
+types-PyYAML>=6.0.1
+types-requests>=2.31.0
 dnspython>=2.4.0
+hypothesis>=6
 lxml>=4.9.0
-
-# Conditional watcher dependencies (align with Ali's implementation)
-watchdog>=4,<7; python_version < "3.13"
-watchfiles>=0.20; python_version >= "3.13"

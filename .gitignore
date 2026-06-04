@@ -96,13 +96,13 @@ src/backups/archives/
 # generic env / secrets
 *.env
 .env*
-.env.*
+# Google OAuth / service account credentials — NEVER commit these
 !.env.example
-# Credential JSON files (OAuth client secrets, service accounts)
 client_secret*.json
 *service_account*.json
 *credentials*.json
 !config/credentials.example.json
+token.json
 # project-specific
 config/device_config.json
 local_device_config.json

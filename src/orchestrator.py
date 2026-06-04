@@ -28,15 +28,24 @@ from unified_schema import SchemaMapper
 
 # Integrity policy imports (optional - graceful degradation)
 try:
-    from policies import ValidationPolicy, ExportPolicy, FailurePolicy, enforce_validation_threshold
-    from reports import DeduplicationReport, ValidationSummary, deduplicate_with_tracking
+    from policies import (
+        ExportPolicy,
+        FailurePolicy,
+        ValidationPolicy,
+        enforce_validation_threshold,
+    )
+    from reports import (
+        DeduplicationReport,
+        ValidationSummary,
+        deduplicate_with_tracking,
+    )
     INTEGRITY_POLICIES_AVAILABLE = True
 except ImportError:
     INTEGRITY_POLICIES_AVAILABLE = False
-# webdriver_manager may be an external package or a local module in this repo.
-# Import defensively: prefer local module if present to avoid 'is not a package' errors
+# Import from driver_setup (renamed from webdriver_manager to avoid shadowing
+# the webdriver-manager PyPI package). Stub provided for CI environments without Selenium.
 try:
-    from webdriver_manager import WebDriverManager  # type: ignore
+    from driver_setup import WebDriverManager  # type: ignore
 except Exception:
     # Provide a lightweight stub so import-only tests don't fail when Selenium
     # and webdriver_manager are not installed in the CI environment.
@@ -62,7 +71,7 @@ class ScrapingOrchestrator:
     """Main orchestrator for unified scraping operations."""
 
     def __init__(
-        self, 
+        self,
         config_path: Union[str, Path],
         min_validation_score: float = 0.0,
         allow_empty: bool = True,
@@ -71,7 +80,7 @@ class ScrapingOrchestrator:
     ):
         """
         Initialize the scraping orchestrator.
-        
+
         Args:
             config_path: Path to configuration file
             min_validation_score: Minimum score for record acceptance (0-100, default 0 = no filtering)
@@ -84,7 +93,7 @@ class ScrapingOrchestrator:
         # Load integrity config if present (with CLI arg override)
         integrity_cfg = getattr(self.config, 'integrity', None) or {}
         integrity_enabled = integrity_cfg.get('enable', False)
-        
+
         # Use config values if integrity.enable=true, otherwise use CLI args (with backward-compatible defaults)
         if integrity_enabled:
             min_validation_score = integrity_cfg.get('min_validation_score', 0.0)
@@ -109,7 +118,7 @@ class ScrapingOrchestrator:
         self.extracted_data: List[Dict[str, Any]] = []
         self.processed_urls: List[str] = []
         self.failed_urls: List[str] = []
-        
+
         # Integrity policies (if available)
         if INTEGRITY_POLICIES_AVAILABLE:
             self.validation_policy = ValidationPolicy(
@@ -252,8 +261,8 @@ class ScrapingOrchestrator:
             # Remove duplicates with tracking (if policies available)
             if INTEGRITY_POLICIES_AVAILABLE and self.dedup_report:
                 unique_urls = deduplicate_with_tracking(
-                    all_urls, 
-                    self.dedup_report, 
+                    all_urls,
+                    self.dedup_report,
                     category='urls'
                 )
                 # Log deduplication summary
@@ -442,19 +451,19 @@ class ScrapingOrchestrator:
             # Apply validation threshold (if policies available)
             accepted_data = mapped_data
             rejected_data = []
-            
+
             if INTEGRITY_POLICIES_AVAILABLE and self.validation_policy:
                 accepted_data, rejected_data = enforce_validation_threshold(
                     mapped_data,
                     self.validation_policy,
                     self.validation_summary
                 )
-                
+
                 # Log validation results
                 total_count = len(mapped_data)
                 accepted_count = len(accepted_data)
                 rejected_count = len(rejected_data)
-                
+
                 if rejected_count > 0:
                     self.logger.warning(
                         f"Validation threshold enforcement: {total_count} total records → "
@@ -509,7 +518,7 @@ class ScrapingOrchestrator:
                 self.logger.warning(f"Failed to save Excel file: {e}")
 
             # Export rejected records (if policies available and configured)
-            if (INTEGRITY_POLICIES_AVAILABLE and self.validation_policy and 
+            if (INTEGRITY_POLICIES_AVAILABLE and self.validation_policy and
                 self.validation_policy.export_rejected and rejected_data):
                 rejected_df = schema_mapper.create_export_dataframe(
                     rejected_data, export_type="standard"
